@@ -202,7 +202,7 @@ if ($filter)
 
 
 // open database, die on error
-$dblink = mysqli_connect($dbserver, $dbuser, $dbpassword, $dbname);
+$dblink = mysqli_connect($dbserver, $dbuser, $dbpassword, $world_dbname);
 if (mysqli_connect_errno())
   MajorProblem ("Cannot connect to server $dbserver: " . mysqli_connect_error());
 
