@@ -11,23 +11,23 @@
 
 // table names
 
-define ('CREATURE_LOOT_TEMPLATE',       "$world_dbname.creature_loot_template");
-define ('CREATURE_QUEST_FINISHER',      "$world_dbname.creature_quest_finisher");
-define ('CREATURE_QUEST_STARTER',       "$world_dbname.creature_quest_starter");
-define ('CREATURE_TEMPLATE',            "$world_dbname.creature_template");
-define ('FACTION',                      "$dbc_dbname.faction");
-define ('GAMEOBJECT_QUESTRELATION',     "$world_dbname.gameobject_questrelation");
-define ('GAMEOBJECT_TEMPLATE',          "$world_dbname.gameobject_template");
-define ('ITEM_TEMPLATE',                "$world_dbname.item_template");
-define ('MAP',                          "$dbc_dbname.map");
-define ('NPC_VENDOR',                   "$world_dbname.npc_vendor");
-define ('PICKPOCKETING_LOOT_TEMPLATE',  "$world_dbname.pickpocketing_loot_template");
-define ('QUEST_TEMPLATE',               "$world_dbname.quest_template");
-define ('REFERENCE_LOOT_TEMPLATE',      "$world_dbname.reference_loot_template");
-define ('SKILLLINE',                    "$dbc_dbname.skillline");
-define ('SPAWNS_CREATURES',             "$world_dbname.spawns_creatures");
-define ('SPAWNS_GAMEOBJECTS',           "$world_dbname.spawns_gameobjects");
-define ('SPELL',                        "$dbc_dbname.spell");
+define ('CREATURE_LOOT_TEMPLATE',       "`$world_dbname`.creature_loot_template");
+define ('CREATURE_QUEST_FINISHER',      "`$world_dbname`.creature_quest_finisher");
+define ('CREATURE_QUEST_STARTER',       "`$world_dbname`.creature_quest_starter");
+define ('CREATURE_TEMPLATE',            "`$world_dbname`.creature_template");
+define ('FACTION',                      "`$dbc_dbname`.faction");
+define ('GAMEOBJECT_QUESTRELATION',     "`$world_dbname`.gameobject_questrelation");
+define ('GAMEOBJECT_TEMPLATE',          "`$world_dbname`.gameobject_template");
+define ('ITEM_TEMPLATE',                "`$world_dbname`.item_template");
+define ('MAP',                          "`$dbc_dbname`.map");
+define ('NPC_VENDOR',                   "`$world_dbname`.npc_vendor");
+define ('PICKPOCKETING_LOOT_TEMPLATE',  "`$world_dbname`.pickpocketing_loot_template");
+define ('QUEST_TEMPLATE',               "`$world_dbname`.quest_template");
+define ('REFERENCE_LOOT_TEMPLATE',      "`$world_dbname`.reference_loot_template");
+define ('SKILLLINE',                    "`$dbc_dbname`.skillline");
+define ('SPAWNS_CREATURES',             "`$world_dbname`.spawns_creatures");
+define ('SPAWNS_GAMEOBJECTS',           "`$world_dbname`.spawns_gameobjects");
+define ('SPELL',                        "`$dbc_dbname`.spell");
 
 
 define ('SPELL_SCHOOLS', array (
