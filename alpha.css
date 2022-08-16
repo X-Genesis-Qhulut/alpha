@@ -1,0 +1,99 @@
+body {
+     font-family:sans-serif;
+     background-color:whitesmoke;
+    }
+
+
+.error_message {
+  color:red;
+}
+
+.warning_message {
+  color:goldenrod;
+}
+
+.info_message {
+  color:cyan;
+}
+
+.banner {
+  color:brown;
+  font-size:24px;
+  width: fit-content;
+  font-weight:bold;
+  text-shadow: -1px -1px yellow, 1px -1px yellow, -1px 1px yellow, 1px 1px yellow;
+}
+
+.banner a {
+  text-decoration: none;
+  color:brown;
+}
+
+table {
+  border:2px solid black;
+
+  }
+
+table td + td { border-left:1px solid black; }
+
+td {
+  padding: 5px;
+  max-width: 40em;
+  }
+
+tr:nth-child(even)
+  {
+  background-color: initial;
+  }
+
+tr:nth-child(odd)
+  {
+  background-color: #d2d2d2;
+  }
+
+.tdl {
+  text-align: left;
+  }
+
+.tdr {
+  text-align: right;
+  }
+
+.one_item {
+  color:white;
+  background-color:green;
+  width: fit-content;
+  padding: 5px;
+  border-radius: 5px;
+  }
+
+.menu_item {
+  display:inline-block;
+  background-color: darkgreen;
+  font-size: 2rem;
+  padding:10px;
+  width: fit-content;
+  border-radius: 5px;
+  margin:5px;
+
+  }
+
+.menu_item a {
+  text-decoration: none;
+  color: white;
+}
+
+ .menu_item a:hover {
+    color:lightblue;
+  }
+
+.quest {
+  background-color: lightyellow;
+  border:4px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  max-width:50em;
+	box-shadow: 3px 3px 5px gray;
+
+}
+

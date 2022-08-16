@@ -1,0 +1,100 @@
+<?php
+
+/*
+  Author: X'Genesis Qhulut <XGenesis-Qhulut@protonmail.com>
+  Date:   August 2022
+
+  See LICENSE for license details.
+*/
+
+// GAME OBJECTS
+
+function showOneGameObject ($id)
+  {
+  global $maps, $quests;
+
+  showOneThing (GAMEOBJECT_TEMPLATE, 'entry', $id, "Game Object", "name",
+    array (
+        'faction' => 'faction',
+        'type' => 'gameobject_type',
+
+    ));
+
+ // show spawn points
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
+            WHERE spawn_entry = ? AND ignored = 0", array ('i', &$id));
+
+  if (count ($results) > 0)
+    {
+    echo "<h2 title='Table: alpha_world.spawns_gameobjects'>Spawn points</h2>\n<ul>\n";
+    foreach ($results as $spawnRow)
+      {
+      $x = $spawnRow ['spawn_positionX'];
+      $y = $spawnRow ['spawn_positionY'];
+      $z = $spawnRow ['spawn_positionZ'];
+      $map = $spawnRow ['spawn_map'];
+      echo "<li>$x $y $z $map (" . htmlspecialchars ($maps [$map]) . ")";
+      } // for each spawn point
+    } // if any spawn points
+    echo "</ul>\n";
+
+
+  // what quests they give
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE entry = ?", array ('i', &$id));
+  if (count ($results) > 0)
+    {
+    echo "<h2 title='Table: alpha_world.gameobject_questrelation'>Game object starts these quests</h2><ul>\n";
+    foreach ($results as $questRow)
+      {
+      listThing ('', $quests, $questRow ['quest'], 'show_quest');
+      } // for each quest starter GO
+    echo "</ul>\n";
+    }
+
+
+  } // end of showOneGameObject
+
+
+function showGameObjects ()
+  {
+  global $where, $params, $factions;
+
+  echo "<h2>Game Objects</h2>\n";
+
+  $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
+  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
+
+  setUpSearch ('entry', array ('name'));
+
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." $where ORDER BY name LIMIT " . QUERY_LIMIT,
+                    $params);
+
+  showSearchForm ();
+
+  if (count ($results) == 0)
+    {
+    echo "No matches.";
+    return;
+    } // end of nothing
+
+  echo "<table>\n";
+  headings (array ('Entry', 'Name', 'Faction'));
+  foreach ($results as $row)
+    {
+    echo "<tr>\n";
+    $id = $row ['entry'];
+    tdhr ("<a href='?action=show_go&id=$id'>$id</a>");
+    $tdr ('name');
+    $tdr ('faction');
+ //   $faction = $row ['faction'];
+ //   tdxr ($faction ? "$faction: " .
+ //                                 (isset ($factions [$faction]) ? $factions [$faction] : '(not found)' ): $faction);
+
+    echo "</tr>\n";
+    }
+  echo "</table>\n";
+
+  showCount ($results);
+
+  } // end of showGameObjects
+  ?>

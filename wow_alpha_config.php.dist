@@ -1,0 +1,9 @@
+<?php
+$dbserver = 'localhost';
+$dbuser = 'USERNAME';
+$dbpassword = 'PASSWORD';
+$dbc_dbname = 'alpha_dbc';
+$world_dbname = 'alpha_world';
+
+$executionDir = '/alpha';
+?>
