@@ -7,6 +7,7 @@
   See LICENSE for license details.
 */
 
+// SPELLS
 
 function showOneSpell ($id)
   {
@@ -52,13 +53,8 @@ function showSpells ()
   $results = dbQueryParam ("SELECT * FROM ".SPELL." $where ORDER BY Name_enUS, NameSubtext_enUS LIMIT " . QUERY_LIMIT,
             $params);
 
-  showSearchForm ();
-
-  if (count ($results) == 0)
-    {
-    echo "No matches.";
+  if (!showSearchForm ($results))
     return;
-    } // end of nothing
 
   echo "<table>\n";
   headings (array ('ID', 'Name', 'Subtext', 'School', 'Category',

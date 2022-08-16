@@ -7,6 +7,7 @@
   See LICENSE for license details.
 */
 
+// CREATURES (NPCs)
 
 function showOneCreature ($id)
   {
@@ -228,13 +229,8 @@ function showCreatures ()
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_TEMPLATE." $where AND entry <= " . MAX_CREATURE . " ORDER BY name LIMIT " . QUERY_LIMIT,
                     $params);
 
-  showSearchForm ();
-
-  if (count ($results) == 0)
-    {
-    echo "No matches.";
+  if (!showSearchForm ($results))
     return;
-    } // end of nothing
 
   echo "<table>\n";
   headings (array ('Entry', 'Name', 'Subname', 'Level'));

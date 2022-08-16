@@ -28,6 +28,7 @@ define ('SKILLLINE',                    "`$dbc_dbname`.skillline");
 define ('SPAWNS_CREATURES',             "`$world_dbname`.spawns_creatures");
 define ('SPAWNS_GAMEOBJECTS',           "`$world_dbname`.spawns_gameobjects");
 define ('SPELL',                        "`$dbc_dbname`.spell");
+define ('WORLDMAPAREA',                 "`$dbc_dbname`.worldmaparea");
 
 
 define ('SPELL_SCHOOLS', array (

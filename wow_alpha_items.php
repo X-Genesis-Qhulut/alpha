@@ -8,6 +8,7 @@
 */
 
 
+// ITEMS
 
 function lookupItemHelper ($id, $count)
   {
@@ -106,13 +107,8 @@ function showItems ()
   $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." $where AND ignored = 0 ORDER BY name LIMIT " . QUERY_LIMIT,
                     $params);
 
-  showSearchForm ();
-
-  if (count ($results) == 0)
-    {
-    echo "No matches.";
+  if (!showSearchForm ($results))
     return;
-    } // end of nothing
 
   echo "<table>\n";
   headings (array ('Entry', 'Class', 'Subclass', 'Name', 'Description'));

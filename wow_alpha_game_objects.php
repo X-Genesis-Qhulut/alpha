@@ -69,13 +69,9 @@ function showGameObjects ()
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." $where ORDER BY name LIMIT " . QUERY_LIMIT,
                     $params);
 
-  showSearchForm ();
-
-  if (count ($results) == 0)
-    {
-    echo "No matches.";
+  if (!showSearchForm ($results))
     return;
-    } // end of nothing
+
 
   echo "<table>\n";
   headings (array ('Entry', 'Name', 'Faction'));

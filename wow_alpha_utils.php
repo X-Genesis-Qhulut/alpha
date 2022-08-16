@@ -140,7 +140,7 @@ function showBacktrace ($howFarBack = 1)
   echo "<hr>\n";
   }   // end of showBacktrace
 
-function showSearchForm ()
+function showSearchForm ($results)
   {
   global $filter, $action;
 
@@ -170,6 +170,14 @@ function showSearchForm ()
 
   echo "</p>\n";
   echo "</form>\n";
+
+  if (count ($results) == 0)
+    {
+    echo "No matches.";
+    return false;
+    } // end of nothing
+
+  return true;
   } // end of showSearchForm
 
 // show how many rows matched a query
@@ -234,6 +242,18 @@ function setUpSearch ($keyname, $fieldsToSearch)
 
   if ($filter)
     {
+    // check filter regexp is OK
+    $ok = @preg_match ("`$filter`", "whatever", $matches);
+    if ($ok === false)
+      {
+      echo "<h2>Filter error</h2>\n";
+      $warnings = error_get_last();
+      $warning = $warnings ['message'];
+      ShowWarning ("Error evaluating regular expression: $filter\n\n$warning");
+      return;
+      } // if not OK
+
+
     if (preg_match ('|^\d+$|', $filter))
       {
       $where .= " AND $keyname = ?";

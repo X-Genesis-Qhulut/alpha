@@ -7,6 +7,8 @@
   See LICENSE for license details.
 */
 
+// QUESTS
+
 function fixQuestText ($s)
   {
   return str_ireplace ('$b', "<br>", htmlspecialchars ($s));
@@ -14,6 +16,8 @@ function fixQuestText ($s)
 
 function simulateQuest ($id)
   {
+  global $game_objects, $creatures, $zones, $quests;
+
  // simulate quest
 
   // we need the creature info in this function
@@ -81,11 +85,14 @@ function simulateQuest ($id)
            ($row ["RewChoiceItemId6"] ? 1 : 0);
 
   if ($count > 1)
-    echo "<h4>Choice of:</h4>\n";
+    echo "<h4>Choice of:</h4><ul>\n";
 
   for ($n = 1; $n <= 6; $n++)
     if ($row ["RewChoiceItemId$n"])
-      echo (lookupItemHelper ($row ["RewChoiceItemId$n"], $row ["RewChoiceItemCount$n"]) . "<br>");
+      echo ('<li>' . lookupItemHelper ($row ["RewChoiceItemId$n"], $row ["RewChoiceItemCount$n"]) . "<br>");
+
+  if ($count > 1)
+    echo "</ul>\n";
 
   if ($row ['RewXP'])
     echo "<p>" . $row ['RewXP'] . " XP<br>";
@@ -112,10 +119,21 @@ function simulateQuest ($id)
     for ($n = 1; $n <= 5; $n++)
       if ($row ["RewRepValue$n"])
         echo (($row ["RewRepValue$n"] > 0 ? '+' : '' ). $row ["RewRepValue$n"] . ' with ' . getFaction ($row ["RewRepFaction$n"]));
+    } // end of any reputation adjustment
+
+  echo "<hr>\n";
 
 
+  echo "<br><b>Zone</b>: " . $zones [$row ['ZoneOrSort']];
+  echo "<br><b>Minimum level</b>: " . $row ['MinLevel'];
+  echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
+  if ($row ['PrevQuestId'])
+   echo "<br><b>Previous quest</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
+  if ($row ['NextQuestId'])
+   echo "<br><b>Next quest</b>: " . lookupThing ($quests, $row ['NextQuestId'], 'show_quest');
+  if ($row ['NextQuestInChain'])
+   echo "<br><b>Next quest in chain</b>: " . lookupThing ($quests, $row ['NextQuestInChain'], 'show_quest');
 
-    }
 
   echo "</div>\n";
   } // end of simulateQuest
@@ -222,13 +240,8 @@ function showQuests ()
   $results = dbQueryParam ("SELECT * FROM ".QUEST_TEMPLATE." $where AND ignored = 0 ORDER BY Title LIMIT " . QUERY_LIMIT,
                     $params);
 
-  showSearchForm ();
-
-  if (count ($results) == 0)
-    {
-    echo "No matches.";
+  if (!showSearchForm ($results))
     return;
-    } // end of nothing
 
   echo "<table>\n";
   headings (array ('Entry', 'Title' ,'Level'));

@@ -9,7 +9,12 @@ body {
 }
 
 .warning_message {
-  color:goldenrod;
+  color:brown;
+  border:3px solid red;
+  width: fit-content;
+  padding: 8px;
+  background-color:mistyrose;
+
 }
 
 .info_message {
@@ -97,3 +102,22 @@ tr:nth-child(odd)
 
 }
 
+.links_at_top {
+  font-size: smaller;
+}
+
+.links_at_top a {
+  text-decoration: none;
+  color: inherit;
+  padding:3px;
+  font-size: x-small;
+  background-color: lavenderblush;
+  border: 1px;
+  border-radius: 2px;
+  font-weight:bold;
+  border:1px solid grey;
+}
+
+.links_at_top a:hover {
+    color:#958ED8;
+  }

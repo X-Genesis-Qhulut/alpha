@@ -28,6 +28,8 @@ require ("wow_alpha_quests.php");
 require ("wow_alpha_items.php");
 require ("wow_alpha_spells.php");
 require ("wow_alpha_game_objects.php");
+require ("wow_alpha_maps.php");
+require ("wow_alpha_zones.php");
 
 define ('QUERY_LIMIT', 200);
 define ('MAX_CREATURE', 5759);    // creatures > this are not in 0.5.3 alpha
@@ -41,6 +43,21 @@ $time = filemtime ("$documentRoot$executionDir/alpha.css");
 echo "<link rel='stylesheet' href='$executionDir/alpha.css?v=$time'>\n";
 echo "</head>\n";
 echo "<body>\n";
+
+// menu at top of page
+
+define ('MENU', array (
+  'Creatures'     => 'creatures',
+  'Game Objects'  => 'game_objects',
+  'Items'         => 'items',
+  'Spells'        => 'spells',
+  'Maps'          => 'maps',
+  'Quests'        => 'quests',
+  'Zones'         => 'zones',
+
+// more here
+));
+
 
 function expandField ($value, $expandType)
   {
@@ -153,24 +170,23 @@ function getThings (&$theArray, $table, $key, $description, $condition = '')
   dbFree ($result);
 } // end of getThings
 
-function showMenu ()
+function showBigMenu ()
   {
-  $menu = array (
-    'Spells'        => 'spells',
-    'Items'         => 'items',
-    'Creatures'     => 'creatures',
-    'Quests'        => 'quests',
-    'Game Objects'  => 'game_objects',
-
-  // more here
-  );
-
-  asort ($menu);
-
-  foreach ($menu as $desc => $newAction)
+  foreach (MENU as $desc => $newAction)
     {
     echo "<div class='menu_item'><a href='?action=$newAction'>$desc</a></div>\n";
     }
+  } // end of showBigMenu
+
+
+function showMenu ()
+  {
+  echo "<div class='links_at_top'>\n";
+  foreach (MENU as $desc => $newAction)
+    {
+    echo "<a href='?action=$newAction'>$desc</a>\n";
+    }
+  echo "</div>\n";
 
   } // end of showMenu
 
@@ -186,21 +202,6 @@ $id      = getGP ('id',      8, $VALID_NUMBER);
 // get filter
 $filter  = getP ('filter');
 
-// check filter regexp is OK
-if ($filter)
-  {
-  $ok = @preg_match ("`$filter`", "whatever", $matches);
-  if ($ok === false)
-    {
-    echo "<h2>Filter error</h2>\n";
-    $warnings = error_get_last();
-    $warning = $warnings ['message'];
-    showSearchForm ();
-    Problem ("Error evaluating regular expression: $filter\n\n$warning");
-    } // if not OK
-  } // if we have a filter
-
-
 // open database, die on error
 $dblink = mysqli_connect($dbserver, $dbuser, $dbpassword, $world_dbname);
 if (mysqli_connect_errno())
@@ -213,39 +214,50 @@ echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0
 // grab things we are likely to cross-reference a lot
 if ($action)
   {
-  getThings ($items,        ITEM_TEMPLATE,  'entry',    'name', 'WHERE ignored = 0');              // items
-  getThings ($skills,       SKILLLINE,      'ID',       'DisplayName_enUS');  // skills
-  getThings ($spells,       SPELL,          'ID',       'Name_enUS');         // spells
-  getThings ($factions,     FACTION,        'ID',       'Name_enUS');         // factions
-  getThings ($creatures,    CREATURE_TEMPLATE, 'entry', 'name', 'WHERE entry <= ' . MAX_CREATURE);              // creatures
-  getThings ($game_objects, GAMEOBJECT_TEMPLATE, 'entry', 'name');         // game objects
-  getThings ($quests,       QUEST_TEMPLATE, 'entry',     'Title', 'WHERE ignored = 0');            // quests
-  getThings ($maps,         MAP, 'ID',     'Directory');                      // maps
+  getThings ($items,        ITEM_TEMPLATE,       'entry', 'name', 'WHERE ignored = 0');     // items
+  getThings ($skills,       SKILLLINE,           'ID',    'DisplayName_enUS');  // skills
+  getThings ($spells,       SPELL,               'ID',    'Name_enUS');         // spells
+  getThings ($factions,     FACTION,             'ID',    'Name_enUS');         // factions
+  getThings ($creatures,    CREATURE_TEMPLATE,   'entry', 'name', 'WHERE entry <= ' . MAX_CREATURE); // creatures
+  getThings ($game_objects, GAMEOBJECT_TEMPLATE, 'entry', 'name');              // game objects
+  getThings ($quests,       QUEST_TEMPLATE,      'entry', 'Title', 'WHERE ignored = 0'); // quests
+  getThings ($maps,         MAP,                 'ID',    'Directory');         // maps
+  getThings ($zones,        WORLDMAPAREA,        'AreaID',    'AreaName');          // zones
   }
 
-switch ($action)
-{
-  case 'spells'     : showSpells (); break;
-  case 'show_spell' : showOneSpell ($id); break;
-
-  case 'items'      : showItems (); break;
-  case 'show_item'  : showOneItem ($id); break;
-
-  case 'creatures'  : showCreatures (); break;
-  case 'show_creature'  : showOneCreature ($id); break;
-
-  case 'quests'      : showQuests (); break;
-  case 'show_quest'  : showOneQuest ($id); break;
-
-  case 'game_objects' : showGameObjects (); break;
-  case 'show_go'      : showOneGameObject ($id); break;
-
-  default: showMenu (); break;
-
-} // end of switch on action
-
 if ($action)
+  {
+  showMenu ();
+  switch ($action)
+    {
+      case 'spells'     : showSpells (); break;
+      case 'show_spell' : showOneSpell ($id); break;
+
+      case 'items'      : showItems (); break;
+      case 'show_item'  : showOneItem ($id); break;
+
+      case 'creatures'  : showCreatures (); break;
+      case 'show_creature'  : showOneCreature ($id); break;
+
+      case 'quests'      : showQuests (); break;
+      case 'show_quest'  : showOneQuest ($id); break;
+
+      case 'game_objects' : showGameObjects (); break;
+      case 'show_go'      : showOneGameObject ($id); break;
+
+      case 'maps'         : showMaps (); break;
+      case 'show_map'     : showOneMap ($id); break;
+
+      case 'zones'        : showZones (); break;
+      case 'show_zone'    : showOneZone ($id); break;
+
+      default: ShowWarning ('Unknown action'); break;
+
+    } // end of switch on action
   echo "<hr><a href='$PHP_SELF'>Main Menu</a>\n";
+  }
+else
+  showBigMenu ();
 
 echo "<p><a href='$PHP_SELF'><img src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a><p>
       Designed and coded by X’Genesis Qhulut.
