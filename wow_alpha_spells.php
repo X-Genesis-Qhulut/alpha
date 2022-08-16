@@ -10,7 +10,7 @@
 
 function showOneSpell ($id)
   {
-  showOneThing (SPELL, 'ID', $id, "Spell", "Name_enUS",
+  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell", "Name_enUS",
                 array (
                   'Reagent_1' => 'item',
                   'Reagent_2' => 'item',

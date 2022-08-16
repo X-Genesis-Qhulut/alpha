@@ -41,7 +41,7 @@ function showOneCreature ($id)
     $extras  ['trainer_race'] = 'race';
     }
 
-  showOneThing (CREATURE_TEMPLATE, 'entry', $id, "Creature", "name", $extras);
+  showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry', $id, "Creature", "name", $extras);
 
   // show spawn points
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."

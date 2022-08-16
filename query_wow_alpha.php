@@ -103,7 +103,7 @@ function expandField ($value, $expandType)
   } // end of expandField
 
 // shows all fields from any table
-function showOneThing ($table, $key, $id, $description, $nameField, $expand)
+function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand)
   {
   $info = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
 
@@ -117,7 +117,7 @@ function showOneThing ($table, $key, $id, $description, $nameField, $expand)
   $name = htmlspecialchars ($row [$nameField]);
 
   echo "<h1 class='one_item'>" . htmlspecialchars ($description) . " $id - $name</h1>\n";
-  echo "<h2 class='one_item_table'>Table: " . htmlspecialchars ($table) . "</h2>\n";
+  echo "<h2 class='one_item_table'>Table: " . htmlspecialchars ($table_display_name) . "</h2>\n";
   echo "<table>\n";
   echo "<tr>\n";
 

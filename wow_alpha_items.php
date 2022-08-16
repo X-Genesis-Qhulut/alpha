@@ -53,7 +53,7 @@ function showOneItem ($id)
   {
   global $quests, $creatures;
 
-  showOneThing (ITEM_TEMPLATE, 'entry', $id, "Item", "name",
+  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item", "name",
     array (
         'required_skill' => 'skill',
         'spellid_1' => 'spell',

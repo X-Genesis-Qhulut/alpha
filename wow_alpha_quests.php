@@ -16,7 +16,7 @@ function showOneQuest ($id)
   {
   global $quests, $creatures, $items, $game_objects, $spells;
 
-  showOneThing (QUEST_TEMPLATE, 'entry', $id, "Quest", "Title",
+  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title",
     array (
         'ReqItemId1' => 'item',
         'ReqItemId2' => 'item',

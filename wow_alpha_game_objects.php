@@ -13,7 +13,7 @@ function showOneGameObject ($id)
   {
   global $maps, $quests;
 
-  showOneThing (GAMEOBJECT_TEMPLATE, 'entry', $id, "Game Object", "name",
+  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry', $id, "Game Object", "name",
     array (
         'faction' => 'faction',
         'type' => 'gameobject_type',
