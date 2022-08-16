@@ -208,19 +208,19 @@ if (mysqli_connect_errno())
 
 $PHP_SELF = $_SERVER['PHP_SELF'];
 
-echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0.5.3 database</a></div>\n";
+echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0.5.3 database browser</a></div>\n";
 
 // grab things we are likely to cross-reference a lot
 if ($action)
   {
-  getThings ($items,    ITEM_TEMPLATE,  'entry',    'name', 'WHERE ignored = 0');              // items
-  getThings ($skills,   SKILLLINE,      'ID',       'DisplayName_enUS');  // skills
-  getThings ($spells,   SPELL,          'ID',       'Name_enUS');         // spells
-  getThings ($factions, FACTION,        'ID',       'Name_enUS');         // factions
-  getThings ($creatures, CREATURE_TEMPLATE, 'entry', 'name', 'WHERE entry <= ' . MAX_CREATURE);              // creatures
-  getThings ($game_objects,GAMEOBJECT_TEMPLATE, 'entry', 'name');         // game objects
-  getThings ($quests,   QUEST_TEMPLATE, 'entry',     'Title', 'WHERE ignored = 0');            // quests
-  getThings ($maps,     MAP, 'ID',     'Directory');                      // maps
+  getThings ($items,        ITEM_TEMPLATE,  'entry',    'name', 'WHERE ignored = 0');              // items
+  getThings ($skills,       SKILLLINE,      'ID',       'DisplayName_enUS');  // skills
+  getThings ($spells,       SPELL,          'ID',       'Name_enUS');         // spells
+  getThings ($factions,     FACTION,        'ID',       'Name_enUS');         // factions
+  getThings ($creatures,    CREATURE_TEMPLATE, 'entry', 'name', 'WHERE entry <= ' . MAX_CREATURE);              // creatures
+  getThings ($game_objects, GAMEOBJECT_TEMPLATE, 'entry', 'name');         // game objects
+  getThings ($quests,       QUEST_TEMPLATE, 'entry',     'Title', 'WHERE ignored = 0');            // quests
+  getThings ($maps,         MAP, 'ID',     'Directory');                      // maps
   }
 
 switch ($action)
@@ -245,9 +245,16 @@ switch ($action)
 } // end of switch on action
 
 if ($action)
-  echo "<p><a href='$PHP_SELF'>Main Menu</a>\n";
+  echo "<hr><a href='$PHP_SELF'>Main Menu</a>\n";
 
-echo "<p><a href='$PHP_SELF'><img src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a> Designed and coded by X’Genesis Qhulut.</p>\n";
+echo "<p><a href='$PHP_SELF'><img src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a><p>
+      Designed and coded by X’Genesis Qhulut.
+      <br>Source code for this browser at GitHub:
+      <a href='https://github.com/X-Genesis-Qhulut/alpha'>X-Genesis-Qhulut / alpha</a><br>
+      WoW Alpha Project at: GitHub: <a href='https://github.com/The-Alpha-Project/alpha-core'>
+      The-Alpha-Project / alpha-core</a>
+      <br>Thanks to the original developers of WoW and also John Staats for writing
+      “The WoW Diary: A Journal of Computer Game Development”.\n";
 
 // wrap up web page
 echo "\n</body>\n</html>\n";

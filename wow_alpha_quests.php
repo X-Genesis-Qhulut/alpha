@@ -12,91 +12,14 @@ function fixQuestText ($s)
   return str_ireplace ('$b', "<br>", htmlspecialchars ($s));
   } // end of fixQuestText
 
-function showOneQuest ($id)
+function simulateQuest ($id)
   {
-  global $quests, $creatures, $items, $game_objects, $spells;
-
-  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title",
-    array (
-        'ReqItemId1' => 'item',
-        'ReqItemId2' => 'item',
-        'ReqItemId3' => 'item',
-        'ReqItemId4' => 'item',
-        'RewItemId1' => 'item',
-        'RewItemId2' => 'item',
-        'RewItemId3' => 'item',
-        'RewItemId4' => 'item',
-        'ReqCreatureOrGOId1' => 'creature_or_go',
-        'ReqCreatureOrGOId2' => 'creature_or_go',
-        'ReqCreatureOrGOId3' => 'creature_or_go',
-        'ReqCreatureOrGOId4' => 'creature_or_go',
-        'RewChoiceItemId1' => 'item',
-        'RewChoiceItemId2' => 'item',
-        'RewChoiceItemId3' => 'item',
-        'RewChoiceItemId4' => 'item',
-        'RewChoiceItemId5' => 'item',
-        'RewChoiceItemId6' => 'item',
-        'SrcItemId' => 'item',
-        'PrevQuestId' => 'quest',
-        'NextQuestId' => 'quest',
-        'NextQuestInChain' => 'quest',
-        'ReqSpellCast1' => 'spell',
-        'ReqSpellCast2' => 'spell',
-        'ReqSpellCast3' => 'spell',
-        'ReqSpellCast4' => 'spell',
-        'RewSpellCast' => 'spell',
-        'RewSpell' => 'spell',
-        'RewRepFaction1' => 'faction',
-        'RewRepFaction2' => 'faction',
-        'RewRepFaction3' => 'faction',
-        'RewRepFaction4' => 'faction',
-        'RewRepFaction5' => 'faction',
-        'RequiredRaces' => 'race_mask',
-        'RequiredClasses' => 'class_mask',
-        'RequiredSkill' => 'skill',
-        'RewOrReqMoney' => 'gold',
-
-
-    ));
-
-  // who gives this quest
-  echo "<h2  title='Table: alpha_world.creature_quest_starter'>Quest givers</h2><ul>\n";
-  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('NPC', $creatures, $row ['entry'], 'show_creature');
-    } // for each quest starter NPC
-
-  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE start_quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('Item', $items, $row ['entry'], 'show_item');
-    } // for each quest starter item
-
-
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('Game object', $game_objects, $row ['entry'], 'show_go');
-    } // for each quest starter game object
-
-  echo "</ul>\n";
-
-  // who finishes this quest
-  echo "<h2  title='Table: alpha_world.creature_quest_finisher'>Quest finishers</h2><ul>\n";
-  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('', $creatures, $row ['entry'], 'show_creature');
-    } // for each quest finisher
-  echo "</ul>\n";
-
-  // simulate quest
+ // simulate quest
 
   // we need the creature info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
-  echo "<div class='quest'>\n";
+  echo "<p><div class='quest'>\n";
   echo "<h2>" . htmlspecialchars ($row ['Title']) . "</h2>\n";
   echo "<p>" . fixQuestText ($row ['Details'] ). "</h2>\n";
 
@@ -195,6 +118,88 @@ function showOneQuest ($id)
     }
 
   echo "</div>\n";
+  } // end of simulateQuest
+
+function showOneQuest ($id)
+  {
+  global $quests, $creatures, $items, $game_objects, $spells;
+
+  simulateQuest ($id);
+
+  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title",
+    array (
+        'ReqItemId1' => 'item',
+        'ReqItemId2' => 'item',
+        'ReqItemId3' => 'item',
+        'ReqItemId4' => 'item',
+        'RewItemId1' => 'item',
+        'RewItemId2' => 'item',
+        'RewItemId3' => 'item',
+        'RewItemId4' => 'item',
+        'ReqCreatureOrGOId1' => 'creature_or_go',
+        'ReqCreatureOrGOId2' => 'creature_or_go',
+        'ReqCreatureOrGOId3' => 'creature_or_go',
+        'ReqCreatureOrGOId4' => 'creature_or_go',
+        'RewChoiceItemId1' => 'item',
+        'RewChoiceItemId2' => 'item',
+        'RewChoiceItemId3' => 'item',
+        'RewChoiceItemId4' => 'item',
+        'RewChoiceItemId5' => 'item',
+        'RewChoiceItemId6' => 'item',
+        'SrcItemId' => 'item',
+        'PrevQuestId' => 'quest',
+        'NextQuestId' => 'quest',
+        'NextQuestInChain' => 'quest',
+        'ReqSpellCast1' => 'spell',
+        'ReqSpellCast2' => 'spell',
+        'ReqSpellCast3' => 'spell',
+        'ReqSpellCast4' => 'spell',
+        'RewSpellCast' => 'spell',
+        'RewSpell' => 'spell',
+        'RewRepFaction1' => 'faction',
+        'RewRepFaction2' => 'faction',
+        'RewRepFaction3' => 'faction',
+        'RewRepFaction4' => 'faction',
+        'RewRepFaction5' => 'faction',
+        'RequiredRaces' => 'race_mask',
+        'RequiredClasses' => 'class_mask',
+        'RequiredSkill' => 'skill',
+        'RewOrReqMoney' => 'gold',
+
+
+    ));
+
+  // who gives this quest
+  echo "<h2  title='Table: alpha_world.creature_quest_starter'>Quest givers</h2><ul>\n";
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $row)
+    {
+    listThing ('NPC', $creatures, $row ['entry'], 'show_creature');
+    } // for each quest starter NPC
+
+  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE start_quest = ?", array ('i', &$id));
+  foreach ($results as $row)
+    {
+    listThing ('Item', $items, $row ['entry'], 'show_item');
+    } // for each quest starter item
+
+
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $row)
+    {
+    listThing ('Game object', $game_objects, $row ['entry'], 'show_go');
+    } // for each quest starter game object
+
+  echo "</ul>\n";
+
+  // who finishes this quest
+  echo "<h2  title='Table: alpha_world.creature_quest_finisher'>Quest finishers</h2><ul>\n";
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $row)
+    {
+    listThing ('', $creatures, $row ['entry'], 'show_creature');
+    } // for each quest finisher
+  echo "</ul>\n";
 
   } // end of showOneQuest
 
