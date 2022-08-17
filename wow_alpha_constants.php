@@ -30,6 +30,7 @@ define ('SPAWNS_CREATURES',             "`$world_dbname`.spawns_creatures");
 define ('SPAWNS_GAMEOBJECTS',           "`$world_dbname`.spawns_gameobjects");
 define ('SPELL',                        "`$dbc_dbname`.spell");
 define ('WORLDMAPAREA',                 "`$dbc_dbname`.worldmaparea");
+define ('WORLDPORTS',                   "`$world_dbname`.worldports");
 
 
 define ('SPELL_SCHOOLS', array (
@@ -85,6 +86,14 @@ define ('CREATURE_TYPES', array (
    9  =>'Mechanical',
    10 =>'Not_specified',
   ));
+
+define ('SKILL_TYPES', array (
+  1 => 'Max skill',
+  2 => 'Weapon skill',
+  3 => 'Class skill',
+  4 => 'Secondary skill',
+));
+
 
 define ('SPELL_EFFECTS', array (
   0x0 => 'None',

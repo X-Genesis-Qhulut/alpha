@@ -383,7 +383,10 @@ function expandClassMask ($mask)
   $s = array ();
   for ($i = 0; $i < count (CLASSES); $i++)
     if ($mask & (1 << $i))
-      $s [] = CLASSES [$i + 1];
+      if (isset (CLASSES [$i + 1]))
+        $s [] = CLASSES [$i + 1];
+      else
+        $s [] = 'Unknown: ' . ($i + 1);
 
   return implode (", ", $s);
 } // end of expandClassMask

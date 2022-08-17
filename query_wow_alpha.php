@@ -30,6 +30,8 @@ require ("wow_alpha_spells.php");
 require ("wow_alpha_game_objects.php");
 require ("wow_alpha_maps.php");
 require ("wow_alpha_zones.php");
+require ("wow_alpha_ports.php");
+require ("wow_alpha_skills.php");
 
 define ('QUERY_LIMIT', 200);
 define ('MAX_CREATURE', 5759);    // creatures > this are not in 0.5.3 alpha
@@ -52,7 +54,9 @@ define ('MENU', array (
   'Items'         => 'items',
   'Spells'        => 'spells',
   'Maps'          => 'maps',
+  'Ports'         => 'ports',
   'Quests'        => 'quests',
+  'Skills'        => 'skills',
   'Zones'         => 'zones',
 
 // more here
@@ -84,6 +88,7 @@ function expandField ($value, $expandType)
       case 'power_type':    tdxr ("$value: " . POWER_TYPES [$value]); break;
       case 'movement_type': tdxr ("$value: " . MOVEMENT_TYPE [$value]); break;
       case 'trainer_type':  tdxr ("$value: " . TRAINER_TYPE [$value]); break;
+      case 'skill_type':    tdxr ("$value" . ($value ? ': ' . SKILL_TYPES [$value] : '')); break;
       case 'rank':          tdxr ("$value: " . CREATURE_RANK [$value]); break;
       case 'item_stats':          tdxr ("$value: " . ITEM_STATS [$value]); break;
       case 'gameobject_type':          tdxr ("$value: " . GAMEOBJECT_TYPE [$value]); break;
@@ -252,6 +257,12 @@ if ($action)
 
       case 'zones'        : showZones (); break;
       case 'show_zone'    : showOneZone ($id); break;
+
+      case 'ports'       : showPorts (); break;
+      case 'show_port'   : showOnePort ($id); break;
+
+      case 'skills'      : showSkills (); break;
+      case 'show_skill'  : showOneSkill ($id); break;
 
       default: ShowWarning ('Unknown action'); break;
 

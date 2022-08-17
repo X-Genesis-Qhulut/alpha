@@ -127,6 +127,8 @@ function simulateQuest ($id)
   echo "<br><b>Zone</b>: " . $zones [$row ['ZoneOrSort']];
   echo "<br><b>Minimum level</b>: " . $row ['MinLevel'];
   echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
+  if ($row ['LimitTime'])
+    echo "<br><b>Time limit</b>: " . ($row ['LimitTime'] / 60) . 'm';
   if ($row ['PrevQuestId'])
    echo "<br><b>Previous quest</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
   if ($row ['NextQuestId'])

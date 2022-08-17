@@ -75,7 +75,7 @@ tr:nth-child(odd)
 .menu_item {
   display:inline-block;
   background-color: darkgreen;
-  font-size: 2rem;
+  font-size: 20px;
   padding:10px;
   width: fit-content;
   border-radius: 5px;
@@ -128,14 +128,15 @@ tr:nth-child(odd)
 
 .links_at_top {
   font-size: smaller;
+  margin-top: 6px;
 }
 
 .links_at_top a {
   text-decoration: none;
-  color: inherit;
+  color: white;
   padding:3px;
-  font-size: x-small;
-  background-color: lavenderblush;
+  font-size: small;
+  background-color: darkgreen;
   border: 1px;
   border-radius: 2px;
   font-weight:bold;
@@ -143,6 +144,6 @@ tr:nth-child(odd)
 }
 
 .links_at_top a:hover {
-    color:#958ED8;
+    color:lightblue;
   }
 
