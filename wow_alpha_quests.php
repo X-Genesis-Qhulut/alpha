@@ -20,7 +20,7 @@ function simulateQuest ($id)
 
  // simulate quest
 
-  // we need the creature info in this function
+  // we need the quest info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
   echo "<p><div class='quest'>\n";
@@ -215,8 +215,19 @@ function showOneQuest ($id)
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
   foreach ($results as $row)
     {
-    listThing ('', $creatures, $row ['entry'], 'show_creature');
+    listThing ('NPC', $creatures, $row ['entry'], 'show_creature');
     } // for each quest finisher
+
+
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE quest = ?", array ('i', &$id));
+  if (count ($results) > 0)
+    {
+    foreach ($results as $questRow)
+      {
+      listThing ('Game object', $game_objects, $questRow ['entry'], 'show_go');
+      } // for each quest finisher GO
+    }
+
   echo "</ul>\n";
 
   } // end of showOneQuest

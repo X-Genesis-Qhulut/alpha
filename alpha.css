@@ -99,8 +99,32 @@ tr:nth-child(odd)
   padding: 10px;
   max-width:50em;
 	box-shadow: 3px 3px 5px gray;
-
 }
+
+.item {
+  color:white;
+  background-color: #222222;
+  border:2px solid white;
+  border-radius: 10px;
+  padding: 10px;
+  width: fit-content;
+	box-shadow: 3px 3px 5px gray;
+}
+
+.item a {
+  color:deepskyblue;
+  }
+
+.item_rh
+  {
+  float:right;
+  margin-left:2em;
+  }
+
+.item_lh
+  {
+  float:left;
+  }
 
 .links_at_top {
   font-size: smaller;
@@ -121,3 +145,4 @@ tr:nth-child(odd)
 .links_at_top a:hover {
     color:#958ED8;
   }
+

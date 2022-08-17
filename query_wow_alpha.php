@@ -85,12 +85,14 @@ function expandField ($value, $expandType)
       case 'movement_type': tdxr ("$value: " . MOVEMENT_TYPE [$value]); break;
       case 'trainer_type':  tdxr ("$value: " . TRAINER_TYPE [$value]); break;
       case 'rank':          tdxr ("$value: " . CREATURE_RANK [$value]); break;
+      case 'item_stats':          tdxr ("$value: " . ITEM_STATS [$value]); break;
       case 'gameobject_type':          tdxr ("$value: " . GAMEOBJECT_TYPE [$value]); break;
       case 'inventory_type':  tdxr ("$value: " . INVENTORY_TYPE [$value]); break;
-      case 'item_class'   : tdxr ("$value: " . ITEM_CLASS [$value]);
+      case 'item_class'   : tdxr (getItemClass ($value));
                               $lastItemClass = $value;    // remember for when the subclass comes along
                               break;
-      case 'item_subclass'   : tdxr ("$value: " . ITEM_SUBCLASSES [$lastItemClass] [$value]); break;
+      case 'item_subclass'   : tdxr (getItemSubClass ($value)); break;
+      case 'item_subclass_mask'   : tdxr (expandItemSubclassMask ($lastItemClass, $value)); break;
       case 'class'       : if ($value)
                              tdxr ("$value: " . CLASSES [$value]);
                            else

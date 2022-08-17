@@ -51,6 +51,18 @@ function showOneGameObject ($id)
     echo "</ul>\n";
     }
 
+ // what quests they finish
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE entry = ?", array ('i', &$id));
+  if (count ($results) > 0)
+    {
+    echo "<h2 title='Table: alpha_world.gameobject_involvedrelation'>Game object finishes these quests</h2><ul>\n";
+    foreach ($results as $questRow)
+      {
+      listThing ('', $quests, $questRow ['quest'], 'show_quest');
+      } // for each quest starter GO
+    echo "</ul>\n";
+    }
+
 
   } // end of showOneGameObject
 

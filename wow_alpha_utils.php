@@ -191,6 +191,13 @@ function showCount ($results)
     echo ("<p>Warning: Only " . QUERY_LIMIT . " rows will be displayed - there may be more.");
   } // end of showCount
 
+function addSign ($value)
+  {
+  if ($value > 0)
+    return '+' . $value;
+  return $value;
+  } // end of addSign
+
 function tdx ($s, $c='tdl')
   {
   echo "<td class='$c'>";
@@ -343,6 +350,24 @@ function getFaction ($which)
 
   } // end of getFaction
 
+function getItemClass ($which)
+{
+  if ($which >= 0)
+    return "$which: " . ITEM_CLASS [$which];
+  else
+    return $which;
+} // end of getItemClass
+
+function getItemSubClass ($which)
+{
+  global $lastItemClass;
+
+  if ($which >= 0 && $lastItemClass >= 0)
+    return "$which: " . ITEM_SUBCLASSES [$lastItemClass] [$which];
+  else
+    return $which;
+} // end of getItemSubClass
+
 function expandRaceMask ($mask)
 {
   $s = array ();
@@ -405,6 +430,19 @@ function expandFlagsExtraMask ($mask)
 
   return implode (", ", $s);
 } // end of expandFlagsExtraMask
+
+function expandItemSubclassMask ($itemClass, $mask)
+{
+  if ($itemClass < 0)
+    return $mask;
+
+  $s = array ();
+  for ($i = 0; $i < count (ITEM_SUBCLASSES [$itemClass]); $i++)
+    if ($mask & (1 << $i))
+      $s [] = ITEM_SUBCLASSES [$itemClass] [$i];
+
+  return $mask . ': ' . implode (", ", $s);
+} // end of expandItemSubclassMask
 
 function expandNpcFlagsMask ($mask)
 {

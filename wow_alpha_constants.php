@@ -17,6 +17,7 @@ define ('CREATURE_QUEST_STARTER',       "`$world_dbname`.creature_quest_starter"
 define ('CREATURE_TEMPLATE',            "`$world_dbname`.creature_template");
 define ('FACTION',                      "`$dbc_dbname`.faction");
 define ('GAMEOBJECT_QUESTRELATION',     "`$world_dbname`.gameobject_questrelation");
+define ('GAMEOBJECT_INVOLVEDRELATION',  "`$world_dbname`.gameobject_involvedrelation");
 define ('GAMEOBJECT_TEMPLATE',          "`$world_dbname`.gameobject_template");
 define ('ITEM_TEMPLATE',                "`$world_dbname`.item_template");
 define ('MAP',                          "`$dbc_dbname`.map");
@@ -195,6 +196,26 @@ define ('ITEM_CLASS', array (
   15 => 'Junk',
 ));
 
+define ('ITEM_STATS', array (
+  0 => 'Mana',
+  1 => 'Health',
+  3 => 'Agility',
+  4 => 'Strength',
+  5 => 'Intellect',
+  6 => 'Spirit',
+  7 => 'Stamina',
+));
+
+define ('ITEM_QUALITY_COLOR', array (
+    0 => '#9d9d9d',
+    1 => '#ffffff',
+    2 => '#1eff00',
+    3 => '#0070dd',
+    4 => '#a335ee',
+    5 => '#ff0000',
+    6 => '#f1e38a'
+));
+
 
 // 0: Consumable
 
@@ -222,26 +243,26 @@ define ('ITEM_SUBCLASS_1', array (
 
 define ('ITEM_SUBCLASS_2', array (
   0  => 'Axe',
-  1  => 'Twohand_axe',
+  1  => 'Two handed axe',
   2  => 'Bow',
   3  => 'Gun',
   4  => 'Mace',
-  5  => 'Twohand_mace',
+  5  => 'Twohanded mace',
   6  => 'Polearm',
   7  => 'Sword',
-  8  => 'Twohand_sword',
-  9  => 'Weapon_obsolete',
+  8  => 'Twohanded sword',
+  9  => 'Weapon - obsolete',
   10 => 'Staff',
-  11 => 'Weapon_exotic',
-  12 => 'Weapon_exotic2',
-  13 => 'Fist_weapon',
-  14 => 'Misc_weapon',
+  11 => 'Weapon exotic',
+  12 => 'Weapon exotic2',
+  13 => 'Fist weapon',
+  14 => 'Misc weapon',
   15 => 'Dagger',
   16 => 'Thrown',
   17 => 'Spear',
   18 => 'Crossbow',
   19 => 'Wand',
-  20 => 'Fishing_pole',
+  20 => 'Fishing pole',
 ));
 
 // 3: Jewellery

@@ -9,6 +9,9 @@
 
 // CREATURES (NPCs)
 
+// See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/creature-loot-template.html
+
+
 function showOneCreature ($id)
   {
   global $quests, $items, $maps;
@@ -160,7 +163,7 @@ function showOneCreature ($id)
   // if the mincountOrRef field is negative, which may lead to multiple loot items for one reference
   // item - I presume to allow batches of loot to be attached to one creature_loot_template entry
 
-  $lootRow = dbQueryParam ("SELECT $reference_loot_template.item AS refItem,
+  $lootResults = dbQueryParam ("SELECT $reference_loot_template.item AS refItem,
                             $creature_loot_template.ChanceOrQuestChance AS chance,
                             $reference_loot_template.mincountOrRef as minCount
                            FROM $creature_loot_template
@@ -170,12 +173,12 @@ function showOneCreature ($id)
                             AND $creature_loot_template.mincountOrRef < 0
                             ORDER BY $reference_loot_template.item", array ('i', &$loot_id));
 
-  if (count ($lootRow) > 0)
+  if (count ($lootResults) > 0)
     {
     echo "</ul><h2 title='Table: alpha_world.creature_loot_template'>Reference loot</h2>\n<ul>\n";
     }
 
-  foreach ($results as $lootRow)
+  foreach ($lootResults as $lootRow)
     {
     $count++;
     $chance = $lootRow ['chance'];

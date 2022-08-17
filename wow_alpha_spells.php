@@ -35,6 +35,8 @@ function showOneSpell ($id)
                   'Targets' => 'spell_target_type_mask',
                   'Attributes' => 'spell_attributes_mask',
                   'AttributesEx' => 'spell_attributes_ex_mask',
+                  'EquippedItemClass' => 'item_class',
+                  'EquippedItemSubclass' => 'item_subclass_mask',
 
                 ));
   } // end of showOneSpell
