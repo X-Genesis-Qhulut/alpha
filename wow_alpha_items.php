@@ -74,10 +74,12 @@ function simulateItem ($id)
     {
     $icon = $imageRow ['InventoryIcon'] . '.png';
     if (file_exists ("$documentRoot$executionDir/icons/$icon"))
-      echo "<img src='icons/$icon'>\n";
+      echo "<img src='icons/$icon' alt='Item icon' title='" . htmlspecialchars ($imageRow ['InventoryIcon']) . "'>\n";
     else
-      echo "<img src='icons/INV_Misc_QuestionMark.png'>\n";
+      echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
     }
+  else
+    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
 
   echo '<p><b>' . ITEM_CLASS [$row ['class']] . "</b><br>\n";
   echo ITEM_SUBCLASSES  [$row ['class']]  [$row ['subclass']] . "<br>\n";
@@ -204,7 +206,18 @@ function showOneItem ($id)
 
 function showItems ()
   {
-  global $where, $params;
+  global $where, $params, $sort_order;
+
+  $sortFields = array (
+    'entry',
+    'class',
+    'subclass',
+    'name',
+    'description',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'name';
 
   echo "<h2>Items</h2>\n";
 
@@ -213,13 +226,13 @@ function showItems ()
 
   setUpSearch ('entry', array ('name', 'description'));
 
-  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." $where AND ignored = 0 ORDER BY name LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('Entry', 'Class', 'Subclass', 'Name', 'Description'));
   foreach ($results as $row)
     {

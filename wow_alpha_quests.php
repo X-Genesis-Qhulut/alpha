@@ -238,7 +238,17 @@ function showOneQuest ($id)
 
 function showQuests ()
   {
-  global $where, $params;
+  global $where, $params, $sort_order;
+
+
+  $sortFields = array (
+    'entry',
+    'Title',
+    'MinLevel',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'Title';
 
 
   echo "<h2>Quests</h2>\n";
@@ -250,13 +260,13 @@ function showQuests ()
                                 'RequestItemsText', 'EndText', 'ObjectiveText1', 'ObjectiveText2',
                                 'ObjectiveText3', 'ObjectiveText4' ));
 
-  $results = dbQueryParam ("SELECT * FROM ".QUEST_TEMPLATE." $where AND ignored = 0 ORDER BY Title LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".QUEST_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('Entry', 'Title' ,'Level'));
   foreach ($results as $row)
     {

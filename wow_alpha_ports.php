@@ -19,7 +19,19 @@ function showOnePort ($id)
 
 function showPorts ()
   {
-  global $where, $params, $maps;
+  global $where, $params, $maps, $sort_order;
+
+  $sortFields = array (
+    'entry',
+    'Name_enUS',
+    'x',
+    'y',
+    'z',
+    'map',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'name';
 
   echo "<h2>World Ports</h2>\n";
 
@@ -30,13 +42,13 @@ function showPorts ()
 
   setUpSearch ('id', array ('name'));
 
-  $results = dbQueryParam ("SELECT * FROM ".WORLDPORTS." $where AND (map = 0 or map = 1) ORDER BY name LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".WORLDPORTS." $where AND (map = 0 or map = 1) ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('Entry', 'Name', 'x', 'y', 'z', 'Map'));
   foreach ($results as $row)
     {

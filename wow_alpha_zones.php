@@ -19,7 +19,16 @@ function showOneZone ($id)
 
 function showZones ()
   {
-  global $where, $params;
+  global $where, $params, $sort_order;
+
+  $sortFields = array (
+    'ID',
+    'AreaName',
+    'AreaID',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'AreaName';
 
   echo "<h2>Zones</h2>\n";
 
@@ -28,13 +37,13 @@ function showZones ()
 
   setUpSearch ('id', array ('directory'));
 
-  $results = dbQueryParam ("SELECT * FROM ".WORLDMAPAREA." $where ORDER BY AreaName LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".WORLDMAPAREA." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('ID', 'Name', 'Area ID'));
   foreach ($results as $row)
     {

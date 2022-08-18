@@ -69,7 +69,17 @@ function showOneGameObject ($id)
 
 function showGameObjects ()
   {
-  global $where, $params, $factions;
+  global $where, $params, $factions, $sort_order;
+
+
+  $sortFields = array (
+    'entry',
+    'name',
+    'faction',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'name';
 
   echo "<h2>Game Objects</h2>\n";
 
@@ -78,14 +88,14 @@ function showGameObjects ()
 
   setUpSearch ('entry', array ('name'));
 
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." $where ORDER BY name LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." $where ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('Entry', 'Name', 'Faction'));
   foreach ($results as $row)
     {

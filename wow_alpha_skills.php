@@ -21,7 +21,19 @@ function showOneSkill ($id)
 
 function showSkills ()
   {
-  global $where, $params, $maps;
+  global $where, $params, $maps, $sort_order;
+
+  $sortFields = array (
+    'ID',
+    'DisplayName_enUS',
+    'RaceMask',
+    'ClassMask',
+    'MaxRank',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'DisplayName_enUS';
+
 
   echo "<h2>Skills</h2>\n";
 
@@ -30,13 +42,13 @@ function showSkills ()
 
   setUpSearch ('ID', array ('DisplayName_enUS'));
 
-  $results = dbQueryParam ("SELECT * FROM ".SKILLLINE." $where ORDER BY DisplayName_enUS LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".SKILLLINE." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('ID', 'Name', 'Race', 'Class', 'Max Rank'));
   foreach ($results as $row)
     {

@@ -16,7 +16,17 @@ function showOneMap ($id)
 
 function showMaps ()
   {
-  global $where, $params;
+  global $where, $params, $sort_order;
+
+
+  $sortFields = array (
+    'ID',
+    'Directory',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'Directory';
+
 
   echo "<h2>Maps</h2>\n";
 
@@ -25,13 +35,13 @@ function showMaps ()
 
   setUpSearch ('id', array ('directory'));
 
-  $results = dbQueryParam ("SELECT * FROM ".MAP." $where ORDER BY directory LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".MAP." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('ID', 'Name'));
   foreach ($results as $row)
     {

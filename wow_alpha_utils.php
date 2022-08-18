@@ -14,6 +14,7 @@ $VALID_DATE       = '^[\w \-]+$';              // Expect letters, numbers spaces
 $VALID_DATE_TIME  = '^[\w :\-]+$';             // Expect letters, numbers spaces, hyphens, and colons
 $VALID_ACTION     = '^[\w ]+$';                // actions are usually just words with underscore and maybe numbers and spaces
 $VALID_BOOLEAN    = '^[01]$';                  // must be 0 or 1
+$VALID_SQL_ID     = '^\w+$';                   // SQL names are usually just words with underscore and maybe numbers (max 30 probably)
 
 
 function nl2br_http ($text)
@@ -140,22 +141,37 @@ function showBacktrace ($howFarBack = 1)
   echo "<hr>\n";
   }   // end of showBacktrace
 
-function showSearchForm ($results)
+function showSearchForm ($sortFields, $results)
   {
-  global $filter, $action;
+  global $filter, $action, $sort_order;
 
   $PHP_SELF = $_SERVER['PHP_SELF'];
 
   echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
+  echo "<input Type=hidden Name=action Value=$action>\n";
   echo "Filter: ";
-  echo "<input type=text Name='filter' size=40 Value='$filter' autofocus>\n";
-  echo "<input Type=submit Name=Submit Value='Filter'>\n";
-  echo "<details><summary>Regular expression tips</summary>\n";
+  echo " <input style='margin-right:1em;' type=text Name='filter' size=40 Value='$filter' placeholder='ID or regular expression' autofocus>\n";
+
+  echo " Sort by: ";
+  echo "<select name='sort_order' size='1'>\n";
+  foreach ($sortFields as $field)
+    {
+    if ($field == $sort_order)
+      $selected = "selected = 'selected'";
+    else
+      $selected = '';
+    echo "<option value='" . htmlspecialchars ($field) . "' $selected>" .
+          htmlspecialchars (($field)) . "</option>\n";
+    }
+  echo "</select name='sort_order' size='1'>\n";
+  echo "<input style='margin-left:1em;' Type=submit Name=Submit Value='Filter'>\n";
+  echo "<details style='margin-top:3px;'><summary>Regular expression tips</summary>\n";
   echo "<ul>\n";
   echo "<li><i>A number on its own</i>: the item database ID (key)\n";
+  echo "<li>Ordinary text: itself\n";
   echo "<li>At beginning: ^\n";
   echo "<li>At end: $\n";
-  echo "<li>Word boundaries: [[:<:]]word[[:>:]]\n";
+  echo "<li>Word boundaries: [[:&lt;:]]word[[:&gt;:]]\n";
   echo "<li>Choice: this|that\n";
   echo "<li>Numbers: [0-9]+\n";
   echo "<li>Zero or one: x?\n";
@@ -165,10 +181,7 @@ function showSearchForm ($results)
   echo "<li>Groups: (this is a group)\n";
   echo "</ul>\n";
   echo "</details>\n";
-  echo "</td>\n";
-  echo "<input Type=hidden Name=action Value=$action>\n";
 
-  echo "</p>\n";
   echo "</form>\n";
 
   if (count ($results) == 0)
@@ -285,6 +298,47 @@ function setUpSearch ($keyname, $fieldsToSearch)
     } // end of having a filter
 
   } // end of setUpSearch
+
+// shows all fields from any table
+function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand)
+  {
+  $info = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
+
+  $row = dbQueryOneParam ("SELECT * FROM $table WHERE $key = ?", array ('i', &$id));
+  if (!$row)
+    {
+    ShowWarning ("$description $id is not on the database");
+    return;
+    }
+
+  $name = htmlspecialchars ($row [$nameField]);
+
+  echo "<h1 class='one_item'>" . htmlspecialchars ($description) . " $id - $name</h1>\n";
+  echo "<h2 class='one_item_table'>Table: " . htmlspecialchars ($table_display_name) . "</h2>\n";
+  echo "<table class='one_row'>\n";
+  echo "<tr>\n";
+
+  th ('Field');
+  th ('Value');
+  echo "</tr>\n";
+
+  foreach ($info as $col)
+    {
+    echo "<tr>\n";
+    $fieldName = $col ['Field'];
+    tdx ($fieldName);
+    // check if we can be more informative, like show an item name
+    if (isset ($expand [$fieldName]))
+      expandField ($row [$fieldName], $expand [$fieldName]);
+    else
+      tdx ($row [$fieldName], $col ['Type'] == 'text' ? 'tdl' : 'tdr');
+    echo "</tr>\n";
+    } // end of foreach
+  echo "</table>\n";
+
+  } // end of showOneThing
+
+
 
 function lookupThing ($array, $id, $action)
   {

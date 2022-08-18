@@ -141,9 +141,32 @@ tr:nth-child(odd)
   border-radius: 2px;
   font-weight:bold;
   border:1px solid grey;
+  margin-bottom: 1em;
 }
 
 .links_at_top a:hover {
     color:lightblue;
   }
 
+.search_results {
+  margin-top:5px;
+  margin-left:10px;
+  border:3px solid black;
+	box-shadow: 3px 3px 5px gray;
+
+  }
+
+.one_row {
+  margin-top:5px;
+  margin-left:10px;
+  border:3px solid black;
+	box-shadow: 3px 3px 5px gray;
+
+}
+
+img {
+  max-width: 200px;
+  max-height: 200px;
+  margin-top:5px;
+  margin-left:10px;
+  }

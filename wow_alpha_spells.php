@@ -43,7 +43,22 @@ function showOneSpell ($id)
 
 function showSpells ()
   {
-  global $where, $params;
+  global $where, $params, $sort_order;
+
+  $sortFields = array (
+    'ID',
+    'Name_enUS',
+    'NameSubtext_enUS',
+    'School',
+    'Category',
+    'PowerType',
+    'Description_enUS',
+  );
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'Name_enUS';
+
+
 
   echo "<h2>Spells</h2>\n";
 
@@ -52,13 +67,13 @@ function showSpells ()
 
   setUpSearch ('ID', array ('Name_enUS', 'Description_enUS'));
 
-  $results = dbQueryParam ("SELECT * FROM ".SPELL." $where ORDER BY Name_enUS, NameSubtext_enUS LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".SPELL." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
             $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('ID', 'Name', 'Subtext', 'School', 'Category',
                    'Power Type', 'Reagents', 'Effect Item', 'Description'));
   foreach ($results as $row)

@@ -126,46 +126,6 @@ function expandField ($value, $expandType)
 
   } // end of expandField
 
-// shows all fields from any table
-function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand)
-  {
-  $info = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
-
-  $row = dbQueryOneParam ("SELECT * FROM $table WHERE $key = ?", array ('i', &$id));
-  if (!$row)
-    {
-    ShowWarning ("$description $id is not on the database");
-    return;
-    }
-
-  $name = htmlspecialchars ($row [$nameField]);
-
-  echo "<h1 class='one_item'>" . htmlspecialchars ($description) . " $id - $name</h1>\n";
-  echo "<h2 class='one_item_table'>Table: " . htmlspecialchars ($table_display_name) . "</h2>\n";
-  echo "<table>\n";
-  echo "<tr>\n";
-
-  th ('Field');
-  th ('Value');
-  echo "</tr>\n";
-
-  foreach ($info as $col)
-    {
-    echo "<tr>\n";
-    $fieldName = $col ['Field'];
-    tdx ($fieldName);
-    // check if we can be more informative, like show an item name
-    if (isset ($expand [$fieldName]))
-      expandField ($row [$fieldName], $expand [$fieldName]);
-    else
-      tdx ($row [$fieldName], $col ['Type'] == 'text' ? 'tdl' : 'tdr');
-    echo "</tr>\n";
-    } // end of foreach
-  echo "</table>\n";
-
-  } // end of showOneThing
-
-
 // look up items for cross-referencing (eg. in spells)
 function getThings (&$theArray, $table, $key, $description, $condition = '')
 {
@@ -208,6 +168,8 @@ $action  = getGP ('action', 40, $VALID_ACTION);
 $id      = getGP ('id',      8, $VALID_NUMBER);
 // get filter
 $filter  = getP ('filter');
+// get sorting order
+$sort_order = getP ('sort_order', 30, $VALID_SQL_ID);
 
 // open database, die on error
 $dblink = mysqli_connect($dbserver, $dbuser, $dbpassword, $world_dbname);

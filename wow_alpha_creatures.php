@@ -11,10 +11,10 @@
 
 // See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/creature-loot-template.html
 
-
 function showOneCreature ($id)
   {
   global $quests, $items, $maps;
+  global $documentRoot, $executionDir;
 
   $extras = array (
         'spell_id1' => 'spell',
@@ -44,6 +44,18 @@ function showOneCreature ($id)
     $extras  ['trainer_class'] = 'class';
     $extras  ['trainer_race'] = 'race';
     }
+
+/*
+ // fallback icon: INV_Misc_QuestionMark.png
+
+
+  $icon = $row ['display_id1'] . '.png';
+  if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
+    echo "<img src='creatures/$icon' alt='Creature image'>\n";
+  else
+    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Creature image'>\n";
+
+*/
 
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry', $id, "Creature", "name", $extras);
 
@@ -220,7 +232,19 @@ function showOneCreature ($id)
 
 function showCreatures ()
   {
-  global $where, $params;
+  global $where, $params, $sort_order;
+
+  $sortFields = array (
+    'entry',
+    'name',
+    'subname',
+    'name',
+    'level_min',
+  );
+
+
+  if (!in_array ($sort_order, $sortFields))
+    $sort_order = 'name';
 
   echo "<h2>Creatures (NPCs)</h2>\n";
 
@@ -229,13 +253,13 @@ function showCreatures ()
 
   setUpSearch ('entry', array ('name', 'subname'));
 
-  $results = dbQueryParam ("SELECT * FROM ".CREATURE_TEMPLATE." $where AND entry <= " . MAX_CREATURE . " ORDER BY name LIMIT " . QUERY_LIMIT,
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_TEMPLATE." $where AND entry <= " . MAX_CREATURE . " ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($results))
+  if (!showSearchForm ($sortFields, $results))
     return;
 
-  echo "<table>\n";
+  echo "<table class='search_results'>\n";
   headings (array ('Entry', 'Name', 'Subname', 'Level'));
   foreach ($results as $row)
     {
