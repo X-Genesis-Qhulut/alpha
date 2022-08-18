@@ -52,6 +52,7 @@ function lookupItems ($row, $items, $counts)
 function simulateItem ($id)
   {
   global $game_objects, $creatures, $zones, $quests, $spells;
+  global $documentRoot, $executionDir;
 
  // simulate item
 
@@ -63,10 +64,25 @@ function simulateItem ($id)
 
   echo "<h3 style='color:$color;'>" . htmlspecialchars ($row ['name']) . "</h3>\n";
 
-  echo '<b>' . ITEM_CLASS [$row ['class']] . "</b><br>\n";
+  // image
+
+  // fallback icon: INV_Misc_QuestionMark.png
+
+  $imageRow = dbQueryOneParam ("SELECT * FROM alpha_dbc.itemdisplayinfo WHERE ID = ?", array ('i', &$row ['display_id']));
+
+  if ($imageRow)
+    {
+    $icon = $imageRow ['InventoryIcon'] . '.png';
+    if (file_exists ("$documentRoot$executionDir/icons/$icon"))
+      echo "<img src='icons/$icon'>\n";
+    else
+      echo "<img src='icons/INV_Misc_QuestionMark.png'>\n";
+    }
+
+  echo '<p><b>' . ITEM_CLASS [$row ['class']] . "</b><br>\n";
   echo ITEM_SUBCLASSES  [$row ['class']]  [$row ['subclass']] . "<br>\n";
   echo INVENTORY_TYPE [$row ['inventory_type']] . "<br>\n";
-  echo 'Requires level: ' . $row ['required_level'] . "<br>\n";
+  echo 'Level ' . $row ['item_level'] . ' (Min ' . $row ['required_level'] . ")<br>\n";
 
   // damage
 
@@ -103,7 +119,7 @@ function simulateItem ($id)
 
   echo "<p>\n";
   if ($row ['armor'] )
-    echo 'Armor: ' . $row ['armor'] . "<br>\n";
+    echo $row ['armor'] . " Armor<br>\n";
   if ($row ['block'] )
     echo 'Block: ' . $row ['block'] . "<br>\n";
 

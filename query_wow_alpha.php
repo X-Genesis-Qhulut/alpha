@@ -279,7 +279,12 @@ echo "<p><a href='$PHP_SELF'><img src='avatar.jpg' alt='Avatar' title='Click for
       WoW Alpha Project at: GitHub: <a href='https://github.com/The-Alpha-Project/alpha-core'>
       The-Alpha-Project / alpha-core</a>
       <br>Thanks to the original developers of WoW and also John Staats for writing
-      “The WoW Diary: A Journal of Computer Game Development”.\n";
+      “The WoW Diary: A Journal of Computer Game Development”.\n
+      <details><summary>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</summary>\n
+      <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
+      “for home, noncommercial and personal use only”.
+      <p><b>Blizzard Entertainment®</b>
+      <br>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</details>\n";
 
 // wrap up web page
 echo "\n</body>\n</html>\n";
