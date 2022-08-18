@@ -72,6 +72,7 @@ function expandField ($value, $expandType)
     switch ($expandType)
       {
       case 'item':          lookupItem ($value, 1); break;
+      case 'time':          tdxr (convertTime ($value)); break;
       case 'gold':          tdxr (convertGold ($value)); break;
       case 'spell':         tdhr (lookupThing ($spells, $value, 'show_spell'));  break;
       case 'map':           tdxr ("$value: " . $maps [$value]); break;
@@ -88,6 +89,7 @@ function expandField ($value, $expandType)
       case 'power_type':    tdxr ("$value: " . POWER_TYPES [$value]); break;
       case 'movement_type': tdxr ("$value: " . MOVEMENT_TYPE [$value]); break;
       case 'trainer_type':  tdxr ("$value: " . TRAINER_TYPE [$value]); break;
+      case 'bonding':       tdxr ("$value: " . BONDING [$value]); break;
       case 'skill_type':    tdxr ("$value" . ($value ? ': ' . SKILL_TYPES [$value] : '')); break;
       case 'rank':          tdxr ("$value: " . CREATURE_RANK [$value]); break;
       case 'item_stats':          tdxr ("$value: " . ITEM_STATS [$value]); break;

@@ -351,6 +351,18 @@ function lookupThing ($array, $id, $action)
   } // end of lookupThing
 
 
+function convertTime ($time, $ms = true)
+  {
+  // some things seem to have negative time
+  if ($time <= 0)
+    return $time;
+
+  if ($ms)
+    $time /= 1000;
+
+  return ($time / 60) . 'm';
+  } // end of convertTime
+
 function listThing ($what, $array, $id, $action)
   {
   echo "<li>";
@@ -393,14 +405,17 @@ function showItemCount ($n)
   return " x$n";
   } // end of showItemCount
 
-function getFaction ($which)
+function getFaction ($which, $showID = true)
   {
   global $factions;
 
+  if (!$which)
+    return '';
+
   if (isset ($factions [$which]))
-    return $which . ': ' . $factions [$which];
+    return ($showID ? $which . ': ' : '') . $factions [$which];
   else
-    return $which . ': (not known)';
+    return ($showID ? $which . ': ' : '') . '(not known)';
 
   } // end of getFaction
 

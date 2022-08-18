@@ -84,7 +84,9 @@ function simulateItem ($id)
   echo '<p><b>' . ITEM_CLASS [$row ['class']] . "</b><br>\n";
   echo ITEM_SUBCLASSES  [$row ['class']]  [$row ['subclass']] . "<br>\n";
   echo INVENTORY_TYPE [$row ['inventory_type']] . "<br>\n";
-  echo 'Level ' . $row ['item_level'] . ' (Min ' . $row ['required_level'] . ")<br>\n";
+  echo 'Level ' . $row ['item_level'];
+  if ($row ['required_level'])
+    echo ' (Min ' . $row ['required_level'] . ")<br>\n";
 
   // damage
 
@@ -120,10 +122,10 @@ function simulateItem ($id)
     echo addSign ($row ['arcane_res']) . " arcane resistance<br>\n";
 
   echo "<p>\n";
-  if ($row ['armor'] )
+  if ($row ['armor'])
     echo $row ['armor'] . " Armor<br>\n";
-  if ($row ['block'] )
-    echo 'Block: ' . $row ['block'] . "<br>\n";
+  if ($row ['block'])
+    echo $row ['block'] . " Block<br>\n";
 
   $count = 0;
   for ($i = 1; $i <= 5; $i++)
@@ -146,6 +148,9 @@ function simulateItem ($id)
 
   // clear float
   echo "<div style='clear: both;'></div>\n";
+
+  if ($row ['bonding'])
+    echo BONDING [$row ['bonding']];
 
   echo "</div>\n";
 
@@ -176,12 +181,21 @@ function showOneItem ($id)
         'sell_price' => 'gold',
         'min_money_loot' => 'gold',
         'max_money_loot' => 'gold',
+        'bonding' => 'bonding',
 
     );
 
   for ($i = 1; $i <= 10; $i++)
     if ($row ["stat_value$i"])
       $extras ["stat_type$i"] = 'item_stats';
+
+  for ($i = 1; $i <= 5; $i++)
+    {
+    if ($row ["spellcooldown_$i"])
+      $extras ["spellcooldown_$i"] = 'time';
+    if ($row ["spellcategorycooldown_$i"])
+      $extras ["spellcategorycooldown_$i"] = 'time';
+    }
 
   showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item", "name", $extras);
 

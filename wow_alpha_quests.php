@@ -106,6 +106,7 @@ function simulateQuest ($id)
   if ($row ['RewSpell'])
     echo "<p>" . lookupThing ($spells, $row ["RewSpell"], 'show_spell') . " will be cast on you<br>";
 
+  // reputation
 
  $count = ($row ["RewRepValue1"] ? 1 : 0) +
           ($row ["RewRepValue2"] ? 1 : 0) +
@@ -115,10 +116,11 @@ function simulateQuest ($id)
 
   if ($count > 0)
     {
-    echo "<h4>Reputation adjustment</h4>\n";
+    echo "<h4>Reputation adjustment</h4><ul>\n";
     for ($n = 1; $n <= 5; $n++)
       if ($row ["RewRepValue$n"])
-        echo (($row ["RewRepValue$n"] > 0 ? '+' : '' ). $row ["RewRepValue$n"] . ' with ' . getFaction ($row ["RewRepFaction$n"]));
+        echo ('<li>' . addSign ($row ["RewRepValue$n"]) . ' with ' . getFaction ($row ["RewRepFaction$n"], false));
+    echo "</ul>\n";
     } // end of any reputation adjustment
 
   echo "<hr>\n";
@@ -128,7 +130,7 @@ function simulateQuest ($id)
   echo "<br><b>Minimum level</b>: " . $row ['MinLevel'];
   echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
   if ($row ['LimitTime'])
-    echo "<br><b>Time limit</b>: " . ($row ['LimitTime'] / 60) . 'm';
+    echo "<br><b>Time limit</b>: " . convertTime ($row ['LimitTime'], true);
   if ($row ['PrevQuestId'])
    echo "<br><b>Previous quest</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
   if ($row ['NextQuestId'])

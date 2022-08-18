@@ -218,7 +218,7 @@ define ('ITEM_STATS', array (
 
 define ('ITEM_QUALITY_COLOR', array (
     0 => '#9d9d9d',
-    1 => '#ffffff',
+    1 => '#ffffff',   // changed by me from #ffc600 - which didn't look right
     2 => '#1eff00',
     3 => '#0070dd',
     4 => '#a335ee',
@@ -421,7 +421,7 @@ define ('ITEM_SUBCLASSES', array (
 
 
 define ('INVENTORY_TYPE', array (
-  0x00 => 'None Equip',
+  0x00 => 'Cannot Equip',
   0x01 => 'Head',
   0x02 => 'Neck',
   0x03 => 'Shoulder',
@@ -475,6 +475,13 @@ define ('CREATURE_RANK', array (
   4 => 'Rare',
 ));
 
+define ('BONDING', array (
+  0 => 'No bind',
+  1 => 'Binds when picked up',
+  2 => 'Binds when equipped',
+  3 => 'Binds when used',
+  4 => 'Quest item',
+));
 
 // for creatures
 define ('FLAGS_EXTRA', array (
