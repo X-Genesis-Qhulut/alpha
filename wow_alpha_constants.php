@@ -20,6 +20,7 @@ define ('GAMEOBJECT_QUESTRELATION',     "`$world_dbname`.gameobject_questrelatio
 define ('GAMEOBJECT_INVOLVEDRELATION',  "`$world_dbname`.gameobject_involvedrelation");
 define ('GAMEOBJECT_TEMPLATE',          "`$world_dbname`.gameobject_template");
 define ('ITEM_TEMPLATE',                "`$world_dbname`.item_template");
+define ('ITEMDISPLAYINFO',              "`$dbc_dbname`.itemdisplayinfo");
 define ('MAP',                          "`$dbc_dbname`.map");
 define ('NPC_VENDOR',                   "`$world_dbname`.npc_vendor");
 define ('PICKPOCKETING_LOOT_TEMPLATE',  "`$world_dbname`.pickpocketing_loot_template");

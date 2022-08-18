@@ -68,7 +68,7 @@ function simulateItem ($id)
 
   // fallback icon: INV_Misc_QuestionMark.png
 
-  $imageRow = dbQueryOneParam ("SELECT * FROM alpha_dbc.itemdisplayinfo WHERE ID = ?", array ('i', &$row ['display_id']));
+  $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
 
   if ($imageRow)
     {
