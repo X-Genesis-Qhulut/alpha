@@ -125,8 +125,8 @@ function simulateQuest ($id)
 
   echo "<hr>\n";
 
-
-  echo "<br><b>Zone</b>: " . $zones [$row ['ZoneOrSort']];
+  $zone = $row ['ZoneOrSort'];
+  echo "<br><b>Zone</b>: " . (array_key_exists ($zone, $zones) ? $zones [$zone] : ($zone . ' (unknown)'));
   echo "<br><b>Minimum level</b>: " . $row ['MinLevel'];
   echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
   if ($row ['LimitTime'])
