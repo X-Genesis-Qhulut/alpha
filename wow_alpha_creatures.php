@@ -17,113 +17,44 @@ function extraCreatureInformation ($id, $row)
   global $quests, $items, $maps;
   global $documentRoot, $executionDir;
 
-  // show spawn points
+  // show spawn points - Eastern Kingdoms
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
             WHERE (spawn_entry1 = ?
             OR spawn_entry2 = ?
             OR spawn_entry3 = ?
             OR spawn_entry4 = ?)
-            AND ignored = 0", array ('iiii', &$id, &$id, &$id, &$id,));
+            AND ignored = 0
+            AND map = 0", array ('iiii', &$id, &$id, &$id, &$id,));
 
   if (count ($results) > 0)
-    {
+    showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
+                    'position_x', 'position_y', 'position_z', 'map');
 
-    $map0 = 0;
-    $map1 = 0;
+  // show spawn points - Kalimdor
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+            WHERE (spawn_entry1 = ?
+            OR spawn_entry2 = ?
+            OR spawn_entry3 = ?
+            OR spawn_entry4 = ?)
+            AND ignored = 0
+            AND map = 1", array ('iiii', &$id, &$id, &$id, &$id,));
 
-    foreach ($results as $spawnRow)
-      if ($spawnRow ['map'] == 0)
-        $map0 ++;   // Eastern Kingdoms
-      elseif ($spawnRow ['map'] == 1)
-        $map1 ++;   // Kalimdor
+  if (count ($results) > 0)
+    showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
+                    'position_x', 'position_y', 'position_z', 'map');
 
-    $mapName = '';
-    if ($map0 > 0)
-      {
-      $mapName = 'Eastern_Kingdoms';
-      $mapLeftPoint = 3300;
-      $mapTopPoint = 4600;
-      $mapWidth = 9500;
-      $mapHeight = 19700;
-      }
-    elseif ($map1 > 0)
-      {
-      $mapName = 'Kalimdor';
-      $mapLeftPoint = 4200;
-      $mapTopPoint = 11700;
-      $mapWidth = 11950;
-      $mapHeight = 21050;
-      }
+  // show spawn points - other
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+            WHERE (spawn_entry1 = ?
+            OR spawn_entry2 = ?
+            OR spawn_entry3 = ?
+            OR spawn_entry4 = ?)
+            AND ignored = 0
+            AND map > 1", array ('iiii', &$id, &$id, &$id, &$id,));
 
-    if ($mapName)
-      {
-        // get width and height
-      $imageSize = getimagesize ("maps/$mapName.jpg");
-      $imageWidth  = $imageSize [0];
-      $imageHeight = $imageSize [1];
-
-      echo "<div style='position:relative;'>\n";    // make a position context
-      echo "<img src='maps/{$mapName}.jpg' style='display:block;
-            max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
-            alt='{$mapName} map' title='{$mapName} map' >\n";
-      } // if we are showing a map
-
-    // draw an SVG circle for each spawn point
-    foreach ($results as $spawnRow)
-      {
-      $x = $spawnRow ['position_x'];
-      $y = $spawnRow ['position_y'];
-      $z = $spawnRow ['position_z'];
-      $map = $spawnRow ['map'];
-
-      if ($mapName)
-        {
-        // draw on map
-
-        $mapx = (1 - ($y - $mapLeftPoint)) / $mapWidth ;
-        $mapy = (1 - ($x - $mapTopPoint)) / $mapHeight;
-
-        $mapx *= $imageWidth;     // width of JPG
-        $mapy *= $imageHeight;    // height of JPG
-
-        $mapx = round ($mapx);
-        $mapy = round ($mapy);
-
-        $mapDotSize = MAP_DOT_SIZE;
-        $halfMapDotSize = MAP_DOT_SIZE / 2;
-
-        $mapx -= $halfMapDotSize;
-        $mapy -= $halfMapDotSize;
-
-        echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point'
-              style='top:{$mapy}px; left:{$mapx}px;'>\n";
-        echo "<circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
-        echo "</svg>\n";
-
-        } // end of if we have a mapName
-
-      } // for each spawn point
-
-
-    if ($mapName)   // end of position context
-      echo "</div><p>\n";
-
-
-    echo "<h2 title='Table: alpha_world.spawns_creatures'>Spawn points</h2>\n";
-
-    echo "<ul>\n";
-    foreach ($results as $spawnRow)
-      {
-      $x = $spawnRow ['position_x'];
-      $y = $spawnRow ['position_y'];
-      $z = $spawnRow ['position_z'];
-      $map = $spawnRow ['map'];
-      echo "<li>$x $y $z $map (" . htmlspecialchars ($maps [$map]) . ")";
-      } // for each spawn point
-
-    echo "</ul>\n";
-
-    } // if any spawn points
+  if (count ($results) > 0)
+    showSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_creatures',
+                    'position_x', 'position_y', 'position_z', 'map');
 
   // show quests they start
 
@@ -165,8 +96,6 @@ function extraCreatureInformation ($id, $row)
       } // for each quest finisher NPC
     echo "</ul>\n";
     }
-
-
 
   // show loot
 

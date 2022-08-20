@@ -14,14 +14,11 @@ function fixQuestText ($s)
   return str_ireplace ('$b', "<br>", htmlspecialchars ($s));
   } // end of fixQuestText
 
-function simulateQuest ($id)
+function simulateQuest ($id, $row)
   {
   global $game_objects, $creatures, $zones, $quests;
 
  // simulate quest
-
-  // we need the quest info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
   echo "<p><div class='quest'>\n";
   echo "<h2>" . htmlspecialchars ($row ['Title']) . "</h2>\n";
@@ -146,8 +143,6 @@ function showOneQuest ($id)
   {
   global $quests, $creatures, $items, $game_objects, $spells;
 
-  simulateQuest ($id);
-
   showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title",
     array (
         'ReqItemId1' => 'item',
@@ -189,7 +184,8 @@ function showOneQuest ($id)
         'RewOrReqMoney' => 'gold',
 
 
-    ));
+    ),
+    'simulateQuest');
 
   // who gives this quest
   echo "<h2  title='Table: alpha_world.creature_quest_starter'>Quest givers</h2><ul>\n";

@@ -9,12 +9,20 @@
 
 // WORLD PORTS (for use with .tel command)
 
+function extraPortInformation ($id, $row)
+  {
+    showSpawnPoints (array ($row), 'Teleport location', 'alpha_world.worldports',
+                    'x', 'y', 'z', 'map');
+
+  } // end of extraPortInformation
+
 function showOnePort ($id)
   {
   showOneThing (WORLDPORTS, 'alpha_world.worldports', 'entry', $id, "World Port", "entry",
       array (
         'map' => 'map',
-      ));
+      ),
+      'extraPortInformation');
   } // end of showOnePort
 
 function showPorts ()

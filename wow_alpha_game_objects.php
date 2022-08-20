@@ -9,35 +9,34 @@
 
 // GAME OBJECTS
 
-function showOneGameObject ($id)
+function extraGameObjectInformation ($id, $row)
   {
   global $maps, $quests;
 
-  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry', $id, "Game Object", "name",
-    array (
-        'faction' => 'faction',
-        'type' => 'gameobject_type',
-
-    ));
-
- // show spawn points
+ // show spawn points - Eastern Kingdoms'
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
-            WHERE spawn_entry = ? AND ignored = 0", array ('i', &$id));
+            WHERE spawn_entry = ? AND ignored = 0 AND spawn_map = 0", array ('i', &$id));
 
   if (count ($results) > 0)
-    {
-    echo "<h2 title='Table: alpha_world.spawns_gameobjects'>Spawn points</h2>\n<ul>\n";
-    foreach ($results as $spawnRow)
-      {
-      $x = $spawnRow ['spawn_positionX'];
-      $y = $spawnRow ['spawn_positionY'];
-      $z = $spawnRow ['spawn_positionZ'];
-      $map = $spawnRow ['spawn_map'];
-      echo "<li>$x $y $z $map (" . htmlspecialchars ($maps [$map]) . ")";
-      } // for each spawn point
-    } // if any spawn points
-    echo "</ul>\n";
+    showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_gameobjects',
+                    'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
+ // show spawn points - Kalimdor
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
+            WHERE spawn_entry = ? AND ignored = 0 AND spawn_map = 1", array ('i', &$id));
+
+  if (count ($results) > 0)
+    showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_gameobjects',
+                    'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+
+
+  // show spawn points - everywhere else
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
+            WHERE spawn_entry = ? AND ignored = 0 AND spawn_map > 1", array ('i', &$id));
+
+  if (count ($results) > 0)
+    showSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_gameobjects',
+                    'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
   // what quests they give
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE entry = ?", array ('i', &$id));
@@ -62,6 +61,19 @@ function showOneGameObject ($id)
       } // for each quest starter GO
     echo "</ul>\n";
     }
+
+
+  } // end of extraGameObjectInformation
+
+function showOneGameObject ($id)
+  {
+
+  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry', $id, "Game Object", "name",
+    array (
+        'faction' => 'faction',
+        'type' => 'gameobject_type',
+
+    ), 'extraGameObjectInformation');
 
 
   } // end of showOneGameObject
