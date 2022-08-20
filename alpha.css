@@ -170,3 +170,20 @@ img {
   margin-top:5px;
   margin-left:10px;
   }
+
+.spawn_point
+  {
+  position:absolute;
+  }
+
+.one_thing_container
+  {
+  display:flex;
+  flex-wrap: wrap;
+  }
+
+.one_thing_section
+  {
+  display: inline-block;
+  margin: 1em;
+  }

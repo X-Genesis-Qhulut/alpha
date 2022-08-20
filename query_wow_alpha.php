@@ -182,6 +182,22 @@ $PHP_SELF = $_SERVER['PHP_SELF'];
 
 echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0.5.3 database browser</a></div>\n";
 
+/*
+// The <noscript> tag doesn't detect if NoScript is in use - so put up a message and use scripting to hide it
+    echo "
+<div id='noscript_warning_id'>
+<noscript>
+<p><i>(Enable Javascript to view spawn points on the map.)</i></p>
+</noscript>
+</div>
+<script>
+document.getElementById('noscript_warning_id').style.display = 'none';
+</script>
+";
+
+*/
+
+
 // grab things we are likely to cross-reference a lot
 if ($action)
   {
@@ -244,6 +260,7 @@ echo "<p><a href='$PHP_SELF'><img src='avatar.jpg' alt='Avatar' title='Click for
       The-Alpha-Project / alpha-core</a>
       <br>Thanks to the original developers of WoW and also John Staats for writing
       “The WoW Diary: A Journal of Computer Game Development”.\n
+      <br>Maps courtesy of Entropy and <a href='https://wow.tools/maps/Kalimdor/'>WoW.tools</a>\n
       <details><summary>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</summary>\n
       <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
       “for home, noncommercial and personal use only”.

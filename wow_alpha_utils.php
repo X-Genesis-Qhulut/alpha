@@ -300,7 +300,7 @@ function setUpSearch ($keyname, $fieldsToSearch)
   } // end of setUpSearch
 
 // shows all fields from any table
-function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand)
+function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand, $func = false)
   {
   $info = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
 
@@ -313,8 +313,13 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
 
   $name = htmlspecialchars ($row [$nameField]);
 
+
   echo "<h1 class='one_item'>" . htmlspecialchars ($description) . " $id - $name</h1>\n";
   echo "<h2 class='one_item_table'>Table: " . htmlspecialchars ($table_display_name) . "</h2>\n";
+
+  echo "<div class='one_thing_container'>\n";
+  echo "<div class='one_thing_section'>\n";
+
   echo "<table class='one_row'>\n";
   echo "<tr>\n";
 
@@ -335,6 +340,17 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     echo "</tr>\n";
     } // end of foreach
   echo "</table>\n";
+  echo "</div>\n";  // end of database details
+
+  // extra stuff
+  if ($func)
+    {
+    echo "<div class='one_thing_section'>\n";
+    $func ($id, $row);
+    echo "</div>\n";  // end of other stuff
+    }
+
+  echo "</div>\n";  // end of flex container
 
   } // end of showOneThing
 

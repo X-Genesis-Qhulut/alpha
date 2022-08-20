@@ -34,6 +34,10 @@ define ('WORLDMAPAREA',                 "`$dbc_dbname`.worldmaparea");
 define ('WORLDPORTS',                   "`$world_dbname`.worldports");
 
 
+define ('MAP_DOT_SIZE', 8); // pixels
+define ('MAP_DOT_FILL', 'yellow');
+define ('MAP_DOT_STROKE', 'black');
+
 define ('SPELL_SCHOOLS', array (
    0 => 'Normal',
    1 => 'Holy',

@@ -11,53 +11,11 @@
 
 // See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/creature-loot-template.html
 
-function showOneCreature ($id)
+
+function extraCreatureInformation ($id, $row)
   {
   global $quests, $items, $maps;
   global $documentRoot, $executionDir;
-
-  $extras = array (
-        'spell_id1' => 'spell',
-        'spell_id2' => 'spell',
-        'spell_id3' => 'spell',
-        'spell_id4' => 'spell',
-        'spell_id5' => 'spell',
-        'faction'   => 'faction',
-        'mechanic_immune_mask' => 'mechanic_immune_mask',
-        'inhabit_type'  => 'inhabit_type_mask',
-        'movement_type' => 'movement_type',
-        'flags_extra'   => 'flags_extra_mask',
-        'npc_flags'     => 'npc_flags_mask',
-        'rank'          => 'rank',
-        'gold_min'          => 'gold',
-        'gold_max'          => 'gold',
- //       'trainer_spell' => 'spell',   // Hmmm, must have the wrong end of the stick here
-
-    );
-
-  // we need the creature info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
-
-  if ($row ['npc_flags'] & TRAINER_FLAG)
-    {
-    $extras  ['trainer_type'] = 'trainer_type';
-    $extras  ['trainer_class'] = 'class';
-    $extras  ['trainer_race'] = 'race';
-    }
-
-/*
- // fallback icon: INV_Misc_QuestionMark.png
-
-
-  $icon = $row ['display_id1'] . '.png';
-  if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
-    echo "<img src='creatures/$icon' alt='Creature image'>\n";
-  else
-    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Creature image'>\n";
-
-*/
-
-  showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry', $id, "Creature", "name", $extras);
 
   // show spawn points
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
@@ -69,7 +27,91 @@ function showOneCreature ($id)
 
   if (count ($results) > 0)
     {
-    echo "<h2 title='Table: alpha_world.spawns_creatures'>Spawn points</h2>\n<ul>\n";
+
+    $map0 = 0;
+    $map1 = 0;
+
+    foreach ($results as $spawnRow)
+      if ($spawnRow ['map'] == 0)
+        $map0 ++;   // Eastern Kingdoms
+      elseif ($spawnRow ['map'] == 1)
+        $map1 ++;   // Kalimdor
+
+    $mapName = '';
+    if ($map0 > 0)
+      {
+      $mapName = 'Eastern_Kingdoms';
+      $mapLeftPoint = 3300;
+      $mapTopPoint = 4600;
+      $mapWidth = 9500;
+      $mapHeight = 19700;
+      }
+    elseif ($map1 > 0)
+      {
+      $mapName = 'Kalimdor';
+      $mapLeftPoint = 4200;
+      $mapTopPoint = 11700;
+      $mapWidth = 11950;
+      $mapHeight = 21050;
+      }
+
+    if ($mapName)
+      {
+        // get width and height
+      $imageSize = getimagesize ("maps/$mapName.jpg");
+      $imageWidth  = $imageSize [0];
+      $imageHeight = $imageSize [1];
+
+      echo "<div style='position:relative;'>\n";    // make a position context
+      echo "<img src='maps/{$mapName}.jpg' style='display:block;
+            max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
+            alt='{$mapName} map' title='{$mapName} map' >\n";
+      } // if we are showing a map
+
+    // draw an SVG circle for each spawn point
+    foreach ($results as $spawnRow)
+      {
+      $x = $spawnRow ['position_x'];
+      $y = $spawnRow ['position_y'];
+      $z = $spawnRow ['position_z'];
+      $map = $spawnRow ['map'];
+
+      if ($mapName)
+        {
+        // draw on map
+
+        $mapx = (1 - ($y - $mapLeftPoint)) / $mapWidth ;
+        $mapy = (1 - ($x - $mapTopPoint)) / $mapHeight;
+
+        $mapx *= $imageWidth;     // width of JPG
+        $mapy *= $imageHeight;    // height of JPG
+
+        $mapx = round ($mapx);
+        $mapy = round ($mapy);
+
+        $mapDotSize = MAP_DOT_SIZE;
+        $halfMapDotSize = MAP_DOT_SIZE / 2;
+
+        $mapx -= $halfMapDotSize;
+        $mapy -= $halfMapDotSize;
+
+        echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point'
+              style='top:{$mapy}px; left:{$mapx}px;'>\n";
+        echo "<circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
+        echo "</svg>\n";
+
+        } // end of if we have a mapName
+
+      } // for each spawn point
+
+
+    if ($mapName)   // end of position context
+      echo "</div><p>\n";
+
+
+    echo "<h2 title='Table: alpha_world.spawns_creatures'>Spawn points</h2>\n";
+
+    echo "<ul>\n";
     foreach ($results as $spawnRow)
       {
       $x = $spawnRow ['position_x'];
@@ -78,8 +120,10 @@ function showOneCreature ($id)
       $map = $spawnRow ['map'];
       echo "<li>$x $y $z $map (" . htmlspecialchars ($maps [$map]) . ")";
       } // for each spawn point
-    } // if any spawn points
+
     echo "</ul>\n";
+
+    } // if any spawn points
 
   // show quests they start
 
@@ -226,6 +270,59 @@ function showOneCreature ($id)
 
   if (count($results) == 0)
     echo "<p>None.\n";
+
+
+  } // end of extraCreatureInformation
+
+function showOneCreature ($id)
+  {
+
+
+  $extras = array (
+        'spell_id1' => 'spell',
+        'spell_id2' => 'spell',
+        'spell_id3' => 'spell',
+        'spell_id4' => 'spell',
+        'spell_id5' => 'spell',
+        'faction'   => 'faction',
+        'mechanic_immune_mask' => 'mechanic_immune_mask',
+        'inhabit_type'  => 'inhabit_type_mask',
+        'movement_type' => 'movement_type',
+        'flags_extra'   => 'flags_extra_mask',
+        'npc_flags'     => 'npc_flags_mask',
+        'rank'          => 'rank',
+        'gold_min'          => 'gold',
+        'gold_max'          => 'gold',
+ //       'trainer_spell' => 'spell',   // Hmmm, must have the wrong end of the stick here
+
+    );
+
+  // we need the creature info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+
+  if ($row ['npc_flags'] & TRAINER_FLAG)
+    {
+    $extras  ['trainer_type'] = 'trainer_type';
+    $extras  ['trainer_class'] = 'class';
+    $extras  ['trainer_race'] = 'race';
+    }
+
+/*
+ // fallback icon: INV_Misc_QuestionMark.png
+
+
+  $icon = $row ['display_id1'] . '.png';
+  if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
+    echo "<img src='creatures/$icon' alt='Creature image'>\n";
+  else
+    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Creature image'>\n";
+
+*/
+
+
+  showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
+              $id, "Creature", "name", $extras, 'extraCreatureInformation');
+
 
   } // end of showOneCreature
 
