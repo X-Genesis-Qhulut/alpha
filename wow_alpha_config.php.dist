@@ -1,9 +1,14 @@
 <?php
-$dbserver = 'localhost';
-$dbuser = 'USERNAME';
-$dbpassword = 'PASSWORD';
-$dbc_dbname = 'alpha_dbc';
-$world_dbname = 'alpha_world';
+define ('DBSERVER',     'localhost');
+define ('DBUSER',       'USERNAME');
+define ('DBPASSWORD',   'PASSWORD');
+define ('DBC_DBNAME',   'alpha_dbc');
+define ('WORLD_DBNAME', 'alpha_world');
 
-$executionDir = '/alpha';
+// where this code is relative to the server document root
+define ('EXECUTIONDIR', '/alpha');
+
+// make this true if you are using MySQL database server which
+//  forces table names to lower-case
+define ('LOWER_CASE_SQL_TABLES', true);
 ?>
