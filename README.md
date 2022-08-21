@@ -84,19 +84,26 @@ You can enter a database ID (number) directly to go to that item. For example, 4
 
     ```
     <?php
-    $dbserver = 'localhost';
-    $dbuser = 'USERNAME';
-    $dbpassword = 'PASSWORD';
-    $dbc_dbname = 'alpha_dbc';
-    $world_dbname = 'alpha_world';
+    define ('DBSERVER',     'localhost');
+    define ('DBUSER',       'USERNAME');
+    define ('DBPASSWORD',   'PASSWORD');
+    define ('DBC_DBNAME',   'alpha_dbc');
+    define ('WORLD_DBNAME', 'alpha_world');
 
-    $executionDir = '/alpha';
+    // where this code is relative to the server document root
+    define ('EXECUTIONDIR', '/alpha');
+
+    // make this true if you are using MySQL database server which
+    //  forces table names to lower-case
+    define ('LOWER_CASE_SQL_TABLES', true);
     ?>
     ```
 
     You need to put in that file the username and password for your MySQL account on the server. Also the server address of your MySQL server. Also alter the table names "alpha_dbc" and "alpha_world" to suit the tables you created above. For example my server provider forces me to use different database names than the ones I showed above.
 
-    The variable $executionDir should be the name of the directory containing the files from this project, *relative to the Apache document root*.
+    The constant EXECUTIONDIR should be the name of the directory containing the files from this project, *relative to the Apache document root*.
+
+    If you are using MySQL then LOWER_CASE_SQL_TABLES should be true. If you are using MariaDB then LOWER_CASE_SQL_TABLES should be false.
 
 It should now be ready to run. Try connecting to index.php (or query_wow_alpha.php) in your web browser and you should see the main menu.
 

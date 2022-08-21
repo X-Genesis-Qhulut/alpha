@@ -11,27 +11,34 @@
 
 // table names
 
-define ('CREATURE_LOOT_TEMPLATE',       "`$world_dbname`.creature_loot_template");
-define ('CREATURE_QUEST_FINISHER',      "`$world_dbname`.creature_quest_finisher");
-define ('CREATURE_QUEST_STARTER',       "`$world_dbname`.creature_quest_starter");
-define ('CREATURE_TEMPLATE',            "`$world_dbname`.creature_template");
-define ('FACTION',                      "`$dbc_dbname`.faction");
-define ('GAMEOBJECT_QUESTRELATION',     "`$world_dbname`.gameobject_questrelation");
-define ('GAMEOBJECT_INVOLVEDRELATION',  "`$world_dbname`.gameobject_involvedrelation");
-define ('GAMEOBJECT_TEMPLATE',          "`$world_dbname`.gameobject_template");
-define ('ITEM_TEMPLATE',                "`$world_dbname`.item_template");
-define ('ITEMDISPLAYINFO',              "`$dbc_dbname`.itemdisplayinfo");
-define ('MAP',                          "`$dbc_dbname`.map");
-define ('NPC_VENDOR',                   "`$world_dbname`.npc_vendor");
-define ('PICKPOCKETING_LOOT_TEMPLATE',  "`$world_dbname`.pickpocketing_loot_template");
-define ('QUEST_TEMPLATE',               "`$world_dbname`.quest_template");
-define ('REFERENCE_LOOT_TEMPLATE',      "`$world_dbname`.reference_loot_template");
-define ('SKILLLINE',                    "`$dbc_dbname`.skillline");
-define ('SPAWNS_CREATURES',             "`$world_dbname`.spawns_creatures");
-define ('SPAWNS_GAMEOBJECTS',           "`$world_dbname`.spawns_gameobjects");
-define ('SPELL',                        "`$dbc_dbname`.spell");
-define ('WORLDMAPAREA',                 "`$dbc_dbname`.worldmaparea");
-define ('WORLDPORTS',                   "`$world_dbname`.worldports");
+function lwr ($s)
+  {
+  if (LOWER_CASE_SQL_TABLES)
+    return strtolower ($s);
+  return $s;
+  } // end of lwr
+
+define ('CREATURE_LOOT_TEMPLATE',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_loot_template'));
+define ('CREATURE_QUEST_FINISHER',      '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_finisher'));
+define ('CREATURE_QUEST_STARTER',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_starter'));
+define ('CREATURE_TEMPLATE',            '`' . WORLD_DBNAME. '`.' . lwr ('creature_template'));
+define ('FACTION',                      '`' . DBC_DBNAME  . '`.' . lwr ('Faction'));
+define ('GAMEOBJECT_QUESTRELATION',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_questrelation'));
+define ('GAMEOBJECT_INVOLVEDRELATION',  '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_involvedrelation'));
+define ('GAMEOBJECT_TEMPLATE',          '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_template'));
+define ('ITEM_TEMPLATE',                '`' . WORLD_DBNAME. '`.' . lwr ('item_template'));
+define ('ITEMDISPLAYINFO',              '`' . DBC_DBNAME  . '`.' . lwr ('ItemDisplayInfo'));
+define ('MAP',                          '`' . DBC_DBNAME  . '`.' . lwr ('Map'));
+define ('NPC_VENDOR',                   '`' . WORLD_DBNAME. '`.' . lwr ('npc_vendor'));
+define ('PICKPOCKETING_LOOT_TEMPLATE',  '`' . WORLD_DBNAME. '`.' . lwr ('pickpocketing_loot_template'));
+define ('QUEST_TEMPLATE',               '`' . WORLD_DBNAME. '`.' . lwr ('quest_template'));
+define ('REFERENCE_LOOT_TEMPLATE',      '`' . WORLD_DBNAME. '`.' . lwr ('reference_loot_template'));
+define ('SKILLLINE',                    '`' . DBC_DBNAME  . '`.' . lwr ('SkillLine'));
+define ('SPAWNS_CREATURES',             '`' . WORLD_DBNAME. '`.' . lwr ('spawns_creatures'));
+define ('SPAWNS_GAMEOBJECTS',           '`' . WORLD_DBNAME. '`.' . lwr ('spawns_gameobjects'));
+define ('SPELL',                        '`' . DBC_DBNAME  . '`.' . lwr ('Spell'));
+define ('WORLDMAPAREA',                 '`' . DBC_DBNAME  . '`.' . lwr ('WorldMapArea'));
+define ('WORLDPORTS',                   '`' . WORLD_DBNAME. '`.' . lwr ('worldports'));
 
 
 define ('MAP_DOT_SIZE', 8); // pixels

@@ -11,7 +11,7 @@
 
 function showOneSkill ($id)
   {
-  showOneThing (SKILLLINE, 'alpha_dbc.skillline', 'ID', $id, "Skill", "ID",
+  showOneThing (SKILLLINE, 'alpha_dbc.skillline', 'ID', $id, "Skill", "DisplayName_enUS",
       array (
         'RaceMask'  => 'race_mask',
         'ClassMask' => 'class_mask',

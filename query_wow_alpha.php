@@ -41,6 +41,7 @@ $documentRoot = $_SERVER['DOCUMENT_ROOT'];
 $dblink = false;
 
 // incorporate our stylesheet
+$executionDir = EXECUTIONDIR;
 $time = filemtime ("$documentRoot$executionDir/alpha.css");
 echo "<link rel='stylesheet' href='$executionDir/alpha.css?v=$time'>\n";
 echo "</head>\n";
@@ -71,58 +72,61 @@ function expandField ($value, $expandType)
 
     switch ($expandType)
       {
-      case 'item':          lookupItem ($value, 1); break;
+
+      // not table lookups, just formatting
       case 'time':          tdxr (convertTime ($value)); break;
       case 'gold':          tdxr (convertGold ($value)); break;
+
+      // these things give hyperlinks
       case 'spell':         tdhr (lookupThing ($spells, $value, 'show_spell'));  break;
-      case 'map':           tdxr ("$value: " . $maps [$value]); break;
       case 'creature':      tdhr (lookupThing ($creatures, $value, 'show_creature'));  break;
-      case 'creature_or_go':
-              if ($value < 0)
-                tdhr (lookupThing ($game_objects, -$value, 'show_go'));
-              else
-                tdhr (lookupThing ($creatures, $value, 'show_creature'));
-              break;
       case 'quest':         tdhr (lookupThing ($quests, $value, 'show_quest'));  break;
-      case 'spell_school':  tdxr ("$value: " . SPELL_SCHOOLS [$value]); break;
-      case 'spell_effect':  tdxr ("$value: " . SPELL_EFFECTS [$value]); break;
-      case 'power_type':    tdxr ("$value: " . POWER_TYPES [$value]); break;
-      case 'movement_type': tdxr ("$value: " . MOVEMENT_TYPE [$value]); break;
-      case 'trainer_type':  tdxr ("$value: " . TRAINER_TYPE [$value]); break;
-      case 'bonding':       tdxr ("$value: " . BONDING [$value]); break;
-      case 'skill_type':    tdxr ("$value" . ($value ? ': ' . SKILL_TYPES [$value] : '')); break;
-      case 'rank':          tdxr ("$value: " . CREATURE_RANK [$value]); break;
-      case 'item_stats':          tdxr ("$value: " . ITEM_STATS [$value]); break;
-      case 'gameobject_type':          tdxr ("$value: " . GAMEOBJECT_TYPE [$value]); break;
-      case 'inventory_type':  tdxr ("$value: " . INVENTORY_TYPE [$value]); break;
-      case 'item_class'   : tdxr (getItemClass ($value));
-                              $lastItemClass = $value;    // remember for when the subclass comes along
-                              break;
-      case 'item_subclass'   : tdxr (getItemSubClass ($value)); break;
-      case 'item_subclass_mask'   : tdxr (expandItemSubclassMask ($lastItemClass, $value)); break;
-      case 'class'       : if ($value)
-                             tdxr ("$value: " . CLASSES [$value]);
-                           else
-                             tdxr ($value);
-                           break;
-      case 'race'       : if ($value)
-                             tdxr ("$value: " . RACES [$value]);
-                           else
-                             tdxr ($value);
-                           break;
-      case 'skill':         tdxr ($value ? "$value: " . $skills [$value]: $value); break;
-      case 'faction':       tdxr (getFaction ($value));  break;
-      case 'race_mask':             tdxr (expandRaceMask ($value)); break;
-      case 'class_mask':            tdxr (expandClassMask ($value)); break;
-      case 'inhabit_type_mask':     tdxr (inhabitTypeMask ($value)); break;
-      case 'mechanic_immune_mask':  tdxr (expandMechanicImmuneMask ($value)); break;
-      case 'flags_extra_mask':      tdxr (expandFlagsExtraMask ($value)); break;
-      case 'npc_flags_mask':        tdxr (expandNpcFlagsMask ($value)); break;
-      case 'item_flags_mask':        tdxr (expandItemFlagsMask ($value)); break;
-      case 'spell_target_type_mask':  tdxr (expandSpellTargetTypeMask ($value)); break;
-      case 'spell_attributes_mask':   tdxr (expandSpellAttributesMask ($value)); break;
-      case 'spell_attributes_ex_mask':   tdxr (expandSpellAttributesExMask ($value)); break;
-      default:              tdxr ("$expandType not known, id = $value"); break;
+      case 'item':          lookupItem ($value, 1); break;
+
+      case 'creature_or_go':
+                            if ($value < 0)
+                              tdhr (lookupThing ($game_objects, -$value, 'show_go'));
+                            else
+                              tdhr (lookupThing ($creatures, $value, 'show_creature'));
+                            break;
+
+      // table lookups
+      case 'spell_school':       tdxr (expandSimple (SPELL_SCHOOLS,   $value)); break;
+      case 'spell_effect':       tdxr (expandSimple (SPELL_EFFECTS,   $value)); break;
+      case 'power_type':         tdxr (expandSimple (POWER_TYPES,     $value)); break;
+      case 'movement_type':      tdxr (expandSimple (MOVEMENT_TYPE,   $value)); break;
+      case 'trainer_type':       tdxr (expandSimple (TRAINER_TYPE,    $value)); break;
+      case 'bonding':            tdxr (expandSimple (BONDING,         $value)); break;
+      case 'skill_type':         tdxr (expandSimple (SKILL_TYPES,     $value)); break;
+      case 'rank':               tdxr (expandSimple (CREATURE_RANK,   $value)); break;
+      case 'item_stats':         tdxr (expandSimple (ITEM_STATS,      $value)); break;
+      case 'gameobject_type':    tdxr (expandSimple (GAMEOBJECT_TYPE, $value)); break;
+      case 'inventory_type':     tdxr (expandSimple (INVENTORY_TYPE,  $value)); break;
+      case 'class'       :       tdxr (expandSimple (CLASSES,         $value)); break;
+      case 'race'       :        tdxr (expandSimple (RACES,           $value)); break;
+      case 'map':                tdxr (expandSimple ($maps,           $value)); break;
+      case 'skill':              tdxr (expandSimple ($skills,         $value)); break;
+
+      case 'item_class'   :      tdxr (getItemClass ($value));
+                                 $lastItemClass = $value;    // remember for when the subclass comes along
+                                 break;
+
+      case 'item_subclass'   :      tdxr (getItemSubClass ($value)); break;
+
+      // masks (ie. possible multiple results depending on the bits matching)
+      case 'item_subclass_mask'   :    tdxr (expandItemSubclassMask ($lastItemClass, $value)); break;
+      case 'faction':                  tdxr (getFaction ($value));                  break;
+      case 'race_mask':                tdxr (expandRaceMask ($value));              break;
+      case 'class_mask':               tdxr (expandClassMask ($value));             break;
+      case 'inhabit_type_mask':        tdxr (inhabitTypeMask ($value));             break;
+      case 'mechanic_immune_mask':     tdxr (expandMechanicImmuneMask ($value));    break;
+      case 'flags_extra_mask':         tdxr (expandFlagsExtraMask ($value));        break;
+      case 'npc_flags_mask':           tdxr (expandNpcFlagsMask ($value));          break;
+      case 'item_flags_mask':          tdxr (expandItemFlagsMask ($value));         break;
+      case 'spell_target_type_mask':   tdxr (expandSpellTargetTypeMask ($value));   break;
+      case 'spell_attributes_mask':    tdxr (expandSpellAttributesMask ($value));   break;
+      case 'spell_attributes_ex_mask': tdxr (expandSpellAttributesExMask ($value)); break;
+      default:                         tdxr ("$expandType not known, id = $value"); break;
 
       } // end of switch
 
@@ -174,9 +178,9 @@ $filter  = getP ('filter');
 $sort_order = getP ('sort_order', 30, $VALID_SQL_ID);
 
 // open database, die on error
-$dblink = mysqli_connect($dbserver, $dbuser, $dbpassword, $world_dbname);
+$dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
 if (mysqli_connect_errno())
-  MajorProblem ("Cannot connect to server $dbserver: " . mysqli_connect_error());
+  MajorProblem ("Cannot connect to server " . DBSERVER . ':' . mysqli_connect_error());
 
 $PHP_SELF = $_SERVER['PHP_SELF'];
 

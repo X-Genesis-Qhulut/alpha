@@ -504,7 +504,11 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
     $y = $spawnRow [$yName];
     $z = $spawnRow [$zName];
     $map = $spawnRow [$mName];
-    echo "<li>$x $y $z $map (" . htmlspecialchars ($maps [$map]) . ")";
+    if ($map < 2)
+      echo "<li>$x $y $z $map";
+    else
+      echo "<li>$x $y $z $map (" . htmlspecialchars ($maps [$map]) . ")";
+
     } // for each spawn point
 
   echo "</ul>\n";
@@ -519,164 +523,186 @@ function showItemCount ($n)
   return " x$n";
   } // end of showItemCount
 
+/*
+
+There are three types of expansions of numbers/bitmasks. Take for example the RACES array:
+
+define ('RACES', array (
+   1 =>'Human',
+   2 =>'Orc',
+   3 =>'Dwarf',
+   4 =>'Night Elf',
+   5 =>'Undead',
+   6 =>'Tauren',
+   7 =>'Gnome',
+   8 =>'Troll',
+  ));
+
+1. The simple expansion is to turn a number into its equivalent text, eg. 2 becomes Orc.
+
+    This case is handled by expandSimple. It returns the original number if wanted, then
+    sees if the table has that key. If so it returns it, otherwise '(unknown)'.
+
+    This is done by: expandSimple ($table, $ID, $showID = true)
+
+2. A bitmask is supplied for the above table, for example 6 would be Orc,Dwarf (2 + 4).
+
+    In this case we have to test each bit in the supplied mask, and if it matches we add
+    the corresponding string to our results.
+
+    This is done by expandMask ($table, $mask, $showMask = true)
+
+3. A bitmask where the table already has the masks shifted. For example, ITEM_FLAGS:
+
+    define ('ITEM_FLAGS', array (
+         0x1 => 'No Pickup',
+         0x2 => 'Conjured',
+         0x4 => 'Has Loot',
+         0x8 => 'Exotic',
+     ...
+    ));
+
+    In this case we don't have to shift bits left as that has been done in the table.
+    We just compare each bit in the supplied mask to see if it exists in the table,
+    and if so return the description, and if not show the mask bit and '(unknown)'.
+
+    This is done by expandShiftedMask ($table, $mask, $showMask = true)
+
+*/
+
+// Case 1: A simple lookup
+function expandSimple ($table, $ID, $showID = true)
+  {
+
+  // sometimes -1 means "nothing"
+  if ($ID < 0)
+    return $ID;
+
+  // if we can find it, return it, optionally with the ID in front
+  if (array_key_exists ($ID, $table))
+    return ($showID ? ($ID . ': ') : '') . $table [$ID];
+
+  // we can't find it, so return it without the ID
+  return $ID . ': (unknown)';
+
+  } // end of expandSimple
+
+// Case 2: The table has sequential numbers, not a shifted mask
+function expandMask ($table, $mask, $showMask = true)
+{
+  $s = array ();  // results
+
+  // for each bit we know of (others will be ignored)
+  for ($i = 0; $i < count ($table); $i++)
+    {
+    if ($mask & (1 << $i))
+      {
+      if (array_key_exists ($i + 1, $table))
+        $s [] = $table [$i + 1];
+      else
+        $s [] = 'Unknown: ' . ($i + 1);
+      }   // end of this bit is set
+    } // end of for each bit
+
+  return ($showMask ? ($mask . ': ') : '') . implode (", ", $s);
+} // end of expandMask
+
+// Case 3: The table has mask values (eg. 0x01, 0x02, 0x04, 0x08)
+function expandShiftedMask ($table, $mask, $showMask = true)
+{
+  if ($mask == 0)
+    return 'None';    // we don't need to show zero I don't think
+
+  $s = array ();
+  for ($i = 0; $i < count ($table); $i++)
+    if ($mask & (1 << $i))
+      $s [] = array_key_exists (1 << $i, $table) ? $table [1 << $i] : '$i: (unknown)';
+
+  return ($showMask ? ($mask . ': ') : '') . implode (", ", $s);
+} // end of expandShiftedMask
+
+// ------------------------------------------------------------
+// Array and mask expansion functions
+// ------------------------------------------------------------
+
 function getFaction ($which, $showID = true)
   {
   global $factions;
-
-  if (!$which)
-    return '';
-
-  if (isset ($factions [$which]))
-    return ($showID ? $which . ': ' : '') . $factions [$which];
-  else
-    return ($showID ? $which . ': ' : '') . '(not known)';
-
+  return expandSimple ($factions, $which, $showID);
   } // end of getFaction
 
 function getItemClass ($which)
 {
-  if ($which >= 0)
-    return "$which: " . ITEM_CLASS [$which];
-  else
-    return $which;
+  return expandSimple (ITEM_CLASS, $which, false);
 } // end of getItemClass
 
 function getItemSubClass ($which)
 {
   global $lastItemClass;
 
-  if ($which >= 0 && $lastItemClass >= 0)
-    return "$which: " . ITEM_SUBCLASSES [$lastItemClass] [$which];
+  if ($which >= 0 && $lastItemClass >= 0 && array_key_exists ($lastItemClass, ITEM_SUBCLASSES))
+    return expandSimple (ITEM_SUBCLASSES [$lastItemClass], $which, false);
   else
     return $which;
 } // end of getItemSubClass
 
 function expandRaceMask ($mask)
 {
-  $s = array ();
-  for ($i = 0; $i < count (RACES); $i++)
-    if ($mask & (1 << $i))
-      $s [] = RACES [$i + 1];
-
-  return implode (", ", $s);
+  return expandMask (RACES, $mask, false);
 } // end of expandRaceMask
 
 function expandClassMask ($mask)
 {
-  $s = array ();
-  for ($i = 0; $i < count (CLASSES); $i++)
-    if ($mask & (1 << $i))
-      if (isset (CLASSES [$i + 1]))
-        $s [] = CLASSES [$i + 1];
-      else
-        $s [] = 'Unknown: ' . ($i + 1);
-
-  return implode (", ", $s);
+  return expandMask (CLASSES, $mask, false);
 } // end of expandClassMask
 
 function inhabitTypeMask ($mask)
 {
-  $s = array ();
-  for ($i = 0; $i < count (INHABIT_TYPE); $i++)
-    if ($mask & (1 << $i))
-      $s [] = INHABIT_TYPE [$i + 1];
-
-  return implode (", ", $s);
+  return expandMask (INHABIT_TYPE, $mask, false);
 } // end of inhabitTypeMask
 
 function expandItemFlagsMask ($mask)
 {
-  if ($mask == 0)
-    return 'None';
-
-  $s = array ();
-  for ($i = 0; $i < count (ITEM_FLAGS); $i++)
-    if ($mask & (1 << $i))
-      $s [] = isset (ITEM_FLAGS [1 << $i]) ? ITEM_FLAGS [1 << $i] : '(unknown)';
-
-  return $mask . ': ' . implode (", ", $s);
+  return expandShiftedMask (ITEM_FLAGS, $mask);
 } // end of expandItemFlagsMask
 
 function expandMechanicImmuneMask ($mask)
 {
-  $s = array ();
-  for ($i = 0; $i < count (MECHANIC_IMMUNE); $i++)
-    if ($mask & (1 << $i))
-      $s [] = MECHANIC_IMMUNE [1 << $i];
-
-  return implode (", ", $s);
+  return expandShiftedMask (MECHANIC_IMMUNE, $mask);
 } // end of expandMechanicImmuneMask
 
 function expandFlagsExtraMask ($mask)
 {
-  $s = array ();
-  for ($i = 0; $i < count (FLAGS_EXTRA); $i++)
-    if ($mask & (1 << $i))
-      $s [] = FLAGS_EXTRA [1 << $i];
-
-  return implode (", ", $s);
+  return expandShiftedMask (FLAGS_EXTRA, $mask);
 } // end of expandFlagsExtraMask
 
 function expandItemSubclassMask ($itemClass, $mask)
 {
-  if ($itemClass < 0)
+  // give up if we don't know the item class or it is negative
+  if ($itemClass < 0 || !array_key_exists ($itemClass, ITEM_SUBCLASSES))
     return $mask;
 
-  $s = array ();
-  for ($i = 0; $i < count (ITEM_SUBCLASSES [$itemClass]); $i++)
-    if ($mask & (1 << $i))
-      $s [] = ITEM_SUBCLASSES [$itemClass] [$i];
-
-  return $mask . ': ' . implode (", ", $s);
+  return expandShiftedMask (ITEM_SUBCLASSES [$itemClass], $mask);
 } // end of expandItemSubclassMask
 
 function expandNpcFlagsMask ($mask)
 {
-  $s = array ();
-  for ($i = 0; $i < count (NPC_FLAG); $i++)
-    if ($mask & (1 << $i))
-      $s [] = isset (NPC_FLAG [1 << $i]) ? NPC_FLAG [1 << $i] : '(unknown)';
-
-  return $mask . ': ' . implode (", ", $s);
+  return expandShiftedMask (NPC_FLAG, $mask, true);
 } // end of expandNpcFlagsMask
 
 function expandSpellTargetTypeMask ($mask)
 {
-  if ($mask == 0)
-    return 'None';
-
-  $s = array ();
-  for ($i = 0; $i < count (SPELL_TARGET_TYPE); $i++)
-    if ($mask & (1 << $i))
-      $s [] = isset (SPELL_TARGET_TYPE [1 << $i]) ? SPELL_TARGET_TYPE [1 << $i] : '(unknown)';
-
-  return $mask . ': ' . implode (", ", $s);
+  return expandShiftedMask (SPELL_TARGET_TYPE, $mask, true);
 } // end of expandSpellTargetTypeMask
 
 function expandSpellAttributesMask ($mask)
 {
-  if ($mask == 0)
-    return 'None';
-
-  $s = array ();
-  for ($i = 0; $i < count (SPELL_ATTRIBUTES); $i++)
-    if ($mask & (1 << $i))
-      $s [] = isset (SPELL_ATTRIBUTES [1 << $i]) ? SPELL_ATTRIBUTES [1 << $i] : '(unknown)';
-
-  return $mask . ': ' . implode (", ", $s);
+  return expandShiftedMask (SPELL_ATTRIBUTES, $mask, true);
 } // end of expandSpellAttributesMask
 
 function expandSpellAttributesExMask ($mask)
 {
-  if ($mask == 0)
-    return 'None';
-
-  $s = array ();
-  for ($i = 0; $i < count (SPELL_ATTRIBUTES_EX); $i++)
-    if ($mask & (1 << $i))
-      $s [] = isset (SPELL_ATTRIBUTES_EX [1 << $i]) ? SPELL_ATTRIBUTES_EX [1 << $i] : '(unknown)';
-
-  return $mask . ': ' . implode (", ", $s);
+  return expandShiftedMask (SPELL_ATTRIBUTES_EX, $mask, true);
 } // end of expandSpellAttributesExMask
 
 
