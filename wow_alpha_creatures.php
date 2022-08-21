@@ -56,6 +56,13 @@ function extraCreatureInformation ($id, $row)
     showSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_creatures',
                     'position_x', 'position_y', 'position_z', 'map');
 
+
+
+  $icon = $row ['display_id1'] . '.webp';
+  if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
+    echo "<img src='creatures/$icon' alt='Creature image'>\n";
+
+
   // show quests they start
 
   // what quests they give
@@ -235,18 +242,6 @@ function showOneCreature ($id)
     $extras  ['trainer_class'] = 'class';
     $extras  ['trainer_race'] = 'race';
     }
-
-/*
- // fallback icon: INV_Misc_QuestionMark.png
-
-
-  $icon = $row ['display_id1'] . '.png';
-  if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
-    echo "<img src='creatures/$icon' alt='Creature image'>\n";
-  else
-    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Creature image'>\n";
-
-*/
 
 
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',

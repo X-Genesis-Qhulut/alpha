@@ -204,3 +204,8 @@ img {
   display: inline-block;
   margin: 1em;
   }
+
+.one_thing_section img {
+  max-width: initial;
+  max-height: initial;
+  }
