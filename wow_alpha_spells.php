@@ -9,6 +9,166 @@
 
 // SPELLS
 
+function simulateSpell ($id, $row)
+  {
+  global $spells, $items;
+  global $documentRoot, $executionDir;
+
+  echo "<p><div class='spell'>\n";
+  echo "<h3 style='color:yellow;'>" . htmlspecialchars ($row ['Name_enUS']) . "</h3>\n";
+
+ // image
+
+  // fallback icon: INV_Misc_QuestionMark.png
+
+  $imageRow = dbQueryOneParam ("SELECT * FROM ".SPELLICON." WHERE ID = ?", array ('i', &$row ['SpellIconID']));
+
+  if ($imageRow)
+    {
+    $TextureFilename = $imageRow ['TextureFilename'] ;
+
+    if (preg_match ("|([^\\\\]+)$|i", $TextureFilename, $matches))
+      $TextureFilename = $matches [1];
+    $TextureFilename  .= '.png';
+
+    if (file_exists ("$documentRoot$executionDir/icons/$TextureFilename"))
+      echo "<img src='icons/$TextureFilename' alt='Spell icon' title='" . htmlspecialchars ($imageRow ['TextureFilename']) . "'>\n";
+    else
+      echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
+    }
+  else
+    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
+
+  // spell type (left) and mana cost (right)
+  echo "<div>\n";
+  echo "<p class='item_lh'>" . expandSimple (SPELL_SCHOOLS,   $row ['School'], false)  . " Magic </p>\n";
+  if ($row ['ManaCost'] )
+    echo "<p class='item_rh'>" . $row ['ManaCost'] . ' ' . expandSimple (POWER_TYPES, $row ['PowerType'], false) . " </p>\n";
+  echo "</div>\n";
+  // clear float
+  echo "<div style='clear: both;'></div>\n";
+
+  // look up the cast time in another table
+  $spellCastTimeRow = dbQueryOneParam ("SELECT * FROM ".SPELLCASTTIMES." WHERE ID = ?", array ('i', &$row ['CastingTimeIndex']));
+
+  // cast time (left) and cooldown time (right)
+  echo "<div>\n";
+  echo "<span class='item_lh'>";
+  if ($spellCastTimeRow ['Base'] == 0)
+    echo "Instant cast\n";
+  else
+    echo convertTimeSeconds ($spellCastTimeRow ['Base']) . " sec cast\n";
+  echo "</span><span class='item_rh'>";
+  if ($row ['CategoryRecoveryTime'])
+    if ($row ['CategoryRecoveryTime'] >= 60000)
+      echo convertTimeMinutes($row ['CategoryRecoveryTime']) . " min cooldown\n";
+    else
+      echo convertTimeSeconds($row ['CategoryRecoveryTime']) . " sec cooldown\n";
+  echo "</span></div>\n";
+  // clear float
+  echo "<div style='clear: both;'></div>\n";
+
+  // look up the range in another table
+  $spellRangeRow = dbQueryOneParam ("SELECT * FROM ".SPELLRANGE." WHERE ID = ?", array ('i', &$row ['RangeIndex']));
+
+  if ($spellRangeRow ['RangeMax'] > 0)
+    echo '<br>' . $spellRangeRow ['RangeMax'] . ' yd range';
+
+  // look up the duration in another table
+  $spellDurationRow = dbQueryOneParam ("SELECT * FROM ".SPELLDURATION." WHERE ID = ?", array ('i', &$row ['DurationIndex']));
+
+  // show what it casts
+
+  $count = 0;
+  for ($i = 1; $i <= 3; $i++)
+    if ($row ["EffectTriggerSpell_$i"])
+      $count++;
+
+  if ($count)
+    {
+    echo "<p><b>Effect trigger spells:</b><br>\n";
+    for ($i = 1; $i <= 3; $i++)
+      if ($row ["EffectTriggerSpell_$i"])
+         echo '<br>' . lookupThing ($spells, $row ["EffectTriggerSpell_$i"], 'show_spell');
+    }
+
+  // show effects
+
+  $count = 0;
+  for ($i = 1; $i <= 3; $i++)
+    if ($row ["Effect_$i"])
+      $count++;
+
+  if ($count)
+    {
+    echo "<p><b>Effects:</b>\n";
+    for ($i = 1; $i <= 3; $i++)
+      if ($row ["Effect_$i"])
+         echo '<br>' . expandSimple (SPELL_EFFECTS, $row ["Effect_$i"], false);
+    }
+
+  // show effect auras
+  if ($row ['EffectAura_1'] || $row ['EffectAura_2'] || $row ['EffectAura_3'])
+    {
+    echo "<p><b>Auras:</b>\n";
+    for ($i = 1; $i <= 3; $i++)
+      if ($row ["EffectAura_$i"])
+         echo '<br>' . expandSimple (SPELL_AURAS, $row ["EffectAura_$i"]);
+    } // end if any auras
+
+
+  // reagents
+
+  $count = 0;
+  for ($i = 1; $i <= 8; $i++)
+    if ($row ["Reagent_$i"])
+      $count++;
+
+  if ($count)
+    {
+    echo "<p><b>Reagents:</b><br>\n";
+    echo (lookupItems ($row,
+                 array ('Reagent_1', 'Reagent_2', 'Reagent_3', 'Reagent_4', 'Reagent_5', 'Reagent_6', 'Reagent_7', 'Reagent_8'),
+                 array ('ReagentCount_1', 'ReagentCount_2', 'ReagentCount_3', 'ReagentCount_4', 'ReagentCount_5', 'ReagentCount_6', 'ReagentCount_7', 'ReagentCount_8')));
+    }
+
+  // show effect items
+
+  $count = 0;
+  for ($i = 1; $i <= 3; $i++)
+    if ($row ["EffectItemType_$i"])
+      $count++;
+
+  if ($count)
+    {
+    echo "<p><b>Effect items:</b><br>\n";
+    tdh (lookupItems ($row,
+                 array ('EffectItemType_1',   'EffectItemType_2',   'EffectItemType_3'),
+                 array ('EffectMiscValue_1',  'EffectMiscValue_2',  'EffectMiscValue_3')));
+    }
+
+
+  echo "<hr>\n";
+
+  $s1 = spellRoll ($row ['EffectDieSides_1'], $row ['EffectBaseDice_1'], $row ['EffectDicePerLevel_1'],
+                   $row ['EffectBasePoints_1']);
+
+  $description = $row ['Description_enUS'];
+
+  $description = str_replace ('$s1', $s1, $description);
+  if ($spellDurationRow ['Duration'] >= 60000)
+    $description = str_replace ('$d',  convertTimeMinutes ($spellDurationRow ['Duration']) . ' min', $description);
+  else
+    $description = str_replace ('$d',  convertTimeSeconds ($spellDurationRow ['Duration']) . ' sec', $description);
+
+  echo "<span style='color:yellow;'>" . htmlspecialchars ($description) . "</span>\n";
+
+
+
+  echo "</div>\n";    // end of simulation box
+
+  } // end of
+
 function showOneSpell ($id)
   {
   showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell", "Name_enUS",
@@ -37,8 +197,11 @@ function showOneSpell ($id)
                   'AttributesEx' => 'spell_attributes_ex_mask',
                   'EquippedItemClass' => 'item_class',
                   'EquippedItemSubclass' => 'item_subclass_mask',
+                  'EffectAura_1' => 'spell_aura',
+                  'EffectAura_2' => 'spell_aura',
+                  'EffectAura_3' => 'spell_aura',
 
-                ));
+                ), 'simulateSpell');
   } // end of showOneSpell
 
 function showSpells ()
@@ -88,12 +251,12 @@ function showSpells ()
     $tdr ('Category');
     $powerType = $row ['PowerType'];
     tdx ("$powerType: " . POWER_TYPES [$powerType]);
-    lookupItems ($row,
+    tdh (lookupItems ($row,
                  array ('Reagent_1', 'Reagent_2', 'Reagent_3', 'Reagent_4', 'Reagent_5', 'Reagent_6', 'Reagent_7', 'Reagent_8'),
-                 array ('ReagentCount_1', 'ReagentCount_2', 'ReagentCount_3', 'ReagentCount_4', 'ReagentCount_5', 'ReagentCount_6', 'ReagentCount_7', 'ReagentCount_8'));
-    lookupItems ($row,
+                 array ('ReagentCount_1', 'ReagentCount_2', 'ReagentCount_3', 'ReagentCount_4', 'ReagentCount_5', 'ReagentCount_6', 'ReagentCount_7', 'ReagentCount_8')));
+    tdh (lookupItems ($row,
                  array ('EffectItemType_1',   'EffectItemType_2',   'EffectItemType_3'),
-                 array ('EffectMiscValue_1',  'EffectMiscValue_2',  'EffectMiscValue_3'));
+                 array ('EffectMiscValue_1',  'EffectMiscValue_2',  'EffectMiscValue_3')));
     $td ('Description_enUS');
     echo "</tr>\n";
     }

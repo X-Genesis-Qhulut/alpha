@@ -18,7 +18,7 @@ function extraPortInformation ($id, $row)
 
 function showOnePort ($id)
   {
-  showOneThing (WORLDPORTS, 'alpha_world.worldports', 'entry', $id, "World Port", "entry",
+  showOneThing (WORLDPORTS, 'alpha_world.worldports', 'entry', $id, "World Port", "name",
       array (
         'map' => 'map',
       ),

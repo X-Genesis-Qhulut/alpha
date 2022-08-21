@@ -46,18 +46,15 @@ function lookupItems ($row, $items, $counts)
       }
     } // end of foreach
 
-  tdh ($s);
+  return $s;
   } // end of lookupItems
 
-function simulateItem ($id)
+function simulateItem ($id, $row)
   {
   global $game_objects, $creatures, $zones, $quests, $spells;
   global $documentRoot, $executionDir;
 
  // simulate item
-
-  // we need the item info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
   echo "<p><div class='item'>\n";
   $color = ITEM_QUALITY_COLOR [$row ['quality']];
@@ -160,8 +157,6 @@ function showOneItem ($id)
   {
   global $quests, $creatures;
 
-  simulateItem ($id);
-
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
@@ -197,7 +192,7 @@ function showOneItem ($id)
       $extras ["spellcategorycooldown_$i"] = 'time';
     }
 
-  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item", "name", $extras);
+  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item", "name", $extras, 'simulateItem');
 
  // who sells it
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE item = ?", array ('i', &$id));

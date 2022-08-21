@@ -74,13 +74,13 @@ function expandField ($value, $expandType)
       {
 
       // not table lookups, just formatting
-      case 'time':          tdxr (convertTime ($value)); break;
+      case 'time':          tdxr (convertTimeMinutes ($value) . 'm'); break;
       case 'gold':          tdxr (convertGold ($value)); break;
 
       // these things give hyperlinks
-      case 'spell':         tdhr (lookupThing ($spells, $value, 'show_spell'));  break;
-      case 'creature':      tdhr (lookupThing ($creatures, $value, 'show_creature'));  break;
-      case 'quest':         tdhr (lookupThing ($quests, $value, 'show_quest'));  break;
+      case 'spell':         tdhr (lookupThing ($spells,     $value, 'show_spell'));  break;
+      case 'creature':      tdhr (lookupThing ($creatures,  $value, 'show_creature'));  break;
+      case 'quest':         tdhr (lookupThing ($quests,     $value, 'show_quest'));  break;
       case 'item':          lookupItem ($value, 1); break;
 
       case 'creature_or_go':
@@ -91,25 +91,26 @@ function expandField ($value, $expandType)
                             break;
 
       // table lookups
-      case 'spell_school':       tdxr (expandSimple (SPELL_SCHOOLS,   $value)); break;
-      case 'spell_effect':       tdxr (expandSimple (SPELL_EFFECTS,   $value)); break;
-      case 'power_type':         tdxr (expandSimple (POWER_TYPES,     $value)); break;
-      case 'movement_type':      tdxr (expandSimple (MOVEMENT_TYPE,   $value)); break;
-      case 'trainer_type':       tdxr (expandSimple (TRAINER_TYPE,    $value)); break;
-      case 'bonding':            tdxr (expandSimple (BONDING,         $value)); break;
-      case 'skill_type':         tdxr (expandSimple (SKILL_TYPES,     $value)); break;
-      case 'rank':               tdxr (expandSimple (CREATURE_RANK,   $value)); break;
-      case 'item_stats':         tdxr (expandSimple (ITEM_STATS,      $value)); break;
-      case 'gameobject_type':    tdxr (expandSimple (GAMEOBJECT_TYPE, $value)); break;
-      case 'inventory_type':     tdxr (expandSimple (INVENTORY_TYPE,  $value)); break;
-      case 'class'       :       tdxr (expandSimple (CLASSES,         $value)); break;
-      case 'race'       :        tdxr (expandSimple (RACES,           $value)); break;
-      case 'map':                tdxr (expandSimple ($maps,           $value)); break;
-      case 'skill':              tdxr (expandSimple ($skills,         $value)); break;
+      case 'spell_school':    tdxr (expandSimple (SPELL_SCHOOLS,   $value)); break;
+      case 'spell_effect':    tdxr (expandSimple (SPELL_EFFECTS,   $value)); break;
+      case 'spell_aura':      tdxr (expandSimple (SPELL_AURAS,     $value)); break;
+      case 'power_type':      tdxr (expandSimple (POWER_TYPES,     $value)); break;
+      case 'movement_type':   tdxr (expandSimple (MOVEMENT_TYPE,   $value)); break;
+      case 'trainer_type':    tdxr (expandSimple (TRAINER_TYPE,    $value)); break;
+      case 'bonding':         tdxr (expandSimple (BONDING,         $value)); break;
+      case 'skill_type':      tdxr (expandSimple (SKILL_TYPES,     $value)); break;
+      case 'rank':            tdxr (expandSimple (CREATURE_RANK,   $value)); break;
+      case 'item_stats':      tdxr (expandSimple (ITEM_STATS,      $value)); break;
+      case 'gameobject_type': tdxr (expandSimple (GAMEOBJECT_TYPE, $value)); break;
+      case 'inventory_type':  tdxr (expandSimple (INVENTORY_TYPE,  $value)); break;
+      case 'class'       :    tdxr (expandSimple (CLASSES,         $value)); break;
+      case 'race'       :     tdxr (expandSimple (RACES,           $value)); break;
+      case 'map':             tdxr (expandSimple ($maps,           $value)); break;
+      case 'skill':           tdxr (expandSimple ($skills,         $value)); break;
 
-      case 'item_class'   :      tdxr (getItemClass ($value));
-                                 $lastItemClass = $value;    // remember for when the subclass comes along
-                                 break;
+      case 'item_class'   :   tdxr (getItemClass ($value));
+                              $lastItemClass = $value;    // remember for when the subclass comes along
+                              break;
 
       case 'item_subclass'   :      tdxr (getItemSubClass ($value)); break;
 

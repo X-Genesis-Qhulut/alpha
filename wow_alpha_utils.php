@@ -367,7 +367,7 @@ function lookupThing ($array, $id, $action)
   } // end of lookupThing
 
 
-function convertTime ($time, $ms = true)
+function convertTimeMinutes ($time, $ms = true)
   {
   // some things seem to have negative time
   if ($time <= 0)
@@ -376,8 +376,19 @@ function convertTime ($time, $ms = true)
   if ($ms)
     $time /= 1000;
 
-  return ($time / 60) . 'm';
-  } // end of convertTime
+  return round ($time / 60, 1);
+  } // end of convertTimeMinutes
+
+function convertTimeSeconds ($time)
+  {
+  // some things seem to have negative time
+  if ($time <= 0)
+    return $time;
+
+  $time /= 1000;
+
+  return $time;
+  } // end of convertTimeSeconds
 
 function listThing ($what, $array, $id, $action)
   {
@@ -522,6 +533,28 @@ function showItemCount ($n)
 
   return " x$n";
   } // end of showItemCount
+
+function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints)
+  {
+  // lowest roll
+  if ($dieSides)
+    $rolled_points = 1 + $dicePerLevel;
+  else
+    $rolled_points = 0;
+  $min = $basePoints + $rolled_points;
+
+  // highest level
+  if ($dieSides)
+    $rolled_points = $dieSides + $dicePerLevel;
+  else
+    $rolled_points = 0;
+  $max = $basePoints + $rolled_points;
+
+  if ($min != $max)
+    return "$min to $max";
+  else
+    return $min;
+  }
 
 /*
 
