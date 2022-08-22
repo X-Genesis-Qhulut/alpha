@@ -100,10 +100,12 @@ function showGameObjects ()
 
   setUpSearch ('entry', array ('name'));
 
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." $where ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
+  $offset = getQueryOffset(); // based on the requested page number
+
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." $where ORDER BY $sort_order LIMIT $offset , " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($sortFields, $results))
+  if (!showSearchForm ($sortFields, $results, GAMEOBJECT_TEMPLATE, $where))
     return;
 
 

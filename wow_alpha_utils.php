@@ -141,14 +141,22 @@ function showBacktrace ($howFarBack = 1)
   echo "<hr>\n";
   }   // end of showBacktrace
 
-function showSearchForm ($sortFields, $results)
+function showSearchForm ($sortFields, $results, $table, $where)
   {
-  global $filter, $action, $sort_order;
+  global $filter, $action, $sort_order, $params, $page, $matches;
+
+  // find maximum matches
+  $row = dbQueryOneParam ("SELECT COUNT(*) AS count FROM $table $where ORDER BY $sort_order", $params);
+
+  $matches = $row ['count'];
+
+  $pages = ceil ($matches / QUERY_LIMIT);
 
   $PHP_SELF = $_SERVER['PHP_SELF'];
 
   echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
   echo "<input Type=hidden Name=action Value=$action>\n";
+  echo "<input Type=hidden Name=page Value=$page>\n";
   echo "Filter: ";
   echo " <input style='margin-right:1em;' type=text Name='filter' size=40 Value='$filter' placeholder='ID or regular expression' autofocus>\n";
 
@@ -164,7 +172,14 @@ function showSearchForm ($sortFields, $results)
           htmlspecialchars (($field)) . "</option>\n";
     }
   echo "</select name='sort_order' size='1'>\n";
-  echo "<input style='margin-left:1em;' Type=submit Name=Submit Value='Filter'>\n";
+  echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Filter'>\n";
+  echo "<div class='navigation'>\n";
+  if ($page > 1)
+    echo "<input type='image' class='arrow' name='LeftArrow' title='Previous page' alt='Previous page' src='left-arrow.png'>\n";
+  echo " Page $page of $pages ";
+  if ($page < $pages)
+    echo "<input type='image' class='arrow' name='RightArrow' title='Next page' alt='Next page' src='right-arrow.png'>\n";
+  echo "</div>\n";  // end of navigation
   echo "<details style='margin-top:3px;'><summary>Regular expression tips</summary>\n";
   echo "<ul>\n";
   echo "<li><i>A number on its own</i>: the item database ID (key)\n";
@@ -181,7 +196,14 @@ function showSearchForm ($sortFields, $results)
   echo "<li>Groups: (this is a group)\n";
   echo "</ul>\n";
   echo "</details>\n";
+  echo "</form>\n";
 
+  // next page button
+  $nextPage = $page + 1;
+  echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
+  echo "<input Type=hidden Name=action Value=$action>\n";
+  echo "<input Type=hidden Name=filter Value=$action>\n";
+  echo "<input Type=hidden Name=page Value=$nextPage>\n";
   echo "</form>\n";
 
   if (count ($results) == 0)
@@ -193,16 +215,46 @@ function showSearchForm ($sortFields, $results)
   return true;
   } // end of showSearchForm
 
+// work out what our query offset should be
+function getQueryOffset ()
+  {
+  global $page;
+  if (!$page || $page < 1)
+    $page = 1;
+
+  return ($page - 1) * QUERY_LIMIT; // first page starts at offset zero
+  } // end of getQueryOffset
+
 // show how many rows matched a query
 function showCount ($results)
   {
+  global $matches, $page;
   $s = 's';
   if (count ($results) == 1)
     $s = '';
   echo ("<p>Showing " . count ($results) . " row$s.");
-  if (count ($results) >= QUERY_LIMIT)
-    echo ("<p>Warning: Only " . QUERY_LIMIT . " rows will be displayed - there may be more.");
+  $pages = ceil ($matches / QUERY_LIMIT);
+  $s1 = 'es';
+  if ($matches == 1)
+    $s1 = '';
+  $s2 = 's';
+  if ($pages == 1)
+    $s2 = '';
+  echo ("<p>$matches match$s1 for this query ($pages page$s2). This is page $page of $pages.");
   } // end of showCount
+
+// This for stuff like EffectTriggerSpell_1, EffectTriggerSpell_2, EffectTriggerSpell_3
+// We want to know if any of them are non-zero, because then we display a heading
+// eg.  $count = getCount ('EffectTriggerSpell_', 3);
+
+function getCount ($row, $field, $n)
+  {
+  $count = 0;
+  for ($i = 1; $i <= $n; $i++)
+    if ($row [$field . $i])
+      $count++;
+  return $count;
+  } // end of getCount
 
 function addSign ($value)
   {
@@ -389,6 +441,28 @@ function convertTimeSeconds ($time)
 
   return $time;
   } // end of convertTimeSeconds
+
+function convertTimeGeneral ($time)
+  {
+  // some things seem to have negative time
+  if ($time <= 0)
+    return $time;
+
+  $time /= 1000;
+
+  // small times show in seconds
+  if ($time < 60)
+    return $time . ' sec';
+
+  // up to an hour show in minutes
+  if ($time < 3600)
+    return round ($time / 60, 1) . ' min';
+
+  // otherwise show in hours
+  return round ($time / 3600, 1) . ' hour';
+
+  } // end of convertTimeGeneral
+
 
 function listThing ($what, $array, $id, $action)
   {
@@ -649,7 +723,7 @@ function expandShiftedMask ($table, $mask, $showMask = true)
   $s = array ();
   for ($i = 0; $i < count ($table); $i++)
     if ($mask & (1 << $i))
-      $s [] = array_key_exists (1 << $i, $table) ? $table [1 << $i] : '$i: (unknown)';
+      $s [] = array_key_exists (1 << $i, $table) ? $table [1 << $i] : "$i: (unknown)";
 
   return ($showMask ? ($mask . ': ') : '') . implode (", ", $s);
 } // end of expandShiftedMask
@@ -715,7 +789,7 @@ function expandItemSubclassMask ($itemClass, $mask)
   if ($itemClass < 0 || !array_key_exists ($itemClass, ITEM_SUBCLASSES))
     return $mask;
 
-  return expandShiftedMask (ITEM_SUBCLASSES [$itemClass], $mask);
+  return expandMask (ITEM_SUBCLASSES [$itemClass], $mask);
 } // end of expandItemSubclassMask
 
 function expandNpcFlagsMask ($mask)

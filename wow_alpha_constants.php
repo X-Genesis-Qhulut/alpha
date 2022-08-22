@@ -357,7 +357,7 @@ define ('ITEM_SUBCLASS_2', array (
   2  => 'Bow',
   3  => 'Gun',
   4  => 'Mace',
-  5  => 'Twohanded mace',
+  5  => 'Two handed mace',
   6  => 'Polearm',
   7  => 'Sword',
   8  => 'Twohanded sword',

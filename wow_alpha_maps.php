@@ -11,7 +11,7 @@
 
 function showOneMap ($id)
   {
-  showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "ID",  array ());
+  showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  array ());
   } // end of showOneMap
 
 function showMaps ()
@@ -35,10 +35,12 @@ function showMaps ()
 
   setUpSearch ('id', array ('directory'));
 
-  $results = dbQueryParam ("SELECT * FROM ".MAP." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
+  $offset = getQueryOffset(); // based on the requested page number
+
+  $results = dbQueryParam ("SELECT * FROM ".MAP." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($sortFields, $results))
+  if (!showSearchForm ($sortFields, $results, MAP, $where))
     return;
 
   echo "<table class='search_results'>\n";

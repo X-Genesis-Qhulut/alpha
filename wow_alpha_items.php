@@ -235,10 +235,12 @@ function showItems ()
 
   setUpSearch ('entry', array ('name', 'description'));
 
-  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
+  $offset = getQueryOffset(); // based on the requested page number
+
+  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order LIMIT $offset, " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($sortFields, $results))
+  if (!showSearchForm ($sortFields, $results, ITEM_TEMPLATE, "$where AND ignored = 0"))
     return;
 
   echo "<table class='search_results'>\n";

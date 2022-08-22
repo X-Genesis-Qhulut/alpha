@@ -274,10 +274,13 @@ function showCreatures ()
 
   setUpSearch ('entry', array ('name', 'subname'));
 
-  $results = dbQueryParam ("SELECT * FROM ".CREATURE_TEMPLATE." $where AND entry <= " . MAX_CREATURE . " ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
-                    $params);
+  $offset = getQueryOffset(); // based on the requested page number
 
-  if (!showSearchForm ($sortFields, $results))
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_TEMPLATE." $where AND entry <= " . MAX_CREATURE .
+                            " ORDER BY $sort_order LIMIT $offset, " . QUERY_LIMIT,
+                            $params);
+
+  if (!showSearchForm ($sortFields, $results, CREATURE_TEMPLATE, "$where AND entry <= " . MAX_CREATURE))
     return;
 
   echo "<table class='search_results'>\n";

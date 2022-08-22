@@ -174,9 +174,25 @@ $action  = getGP ('action', 40, $VALID_ACTION);
 // get ID (eg. spell ID)
 $id      = getGP ('id',      8, $VALID_NUMBER);
 // get filter
-$filter  = getP ('filter');
+$filter  = getGP ('filter');
 // get sorting order
 $sort_order = getP ('sort_order', 30, $VALID_SQL_ID);
+// get page number
+$page = getGP ('page',      8, $VALID_NUMBER);
+
+// see if they used the right arrow
+$rightArrow = getP ('RightArrow_x',    8, $VALID_NUMBER);
+// see if they used the left arrow
+$leftArrow = getP ('LeftArrow_x',      8, $VALID_NUMBER);
+
+if (!$page || $page < 1)
+  $page = 1;
+if ($rightArrow)
+  $page++;
+elseif ($leftArrow)
+  $page--;
+else
+  $page = 1;  // if no arrow pressed, show page 1
 
 // open database, die on error
 $dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
@@ -257,20 +273,21 @@ if ($action)
 else
   showBigMenu ();
 
-echo "<p><a href='$PHP_SELF'><img src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a><p>
-      Designed and coded by X’Genesis Qhulut.
-      <br>Source code for this browser at GitHub:
-      <a href='https://github.com/X-Genesis-Qhulut/alpha'>X-Genesis-Qhulut / alpha</a><br>
-      WoW Alpha Project at: GitHub: <a href='https://github.com/The-Alpha-Project/alpha-core'>
+echo "<div class='credits'><a href='$PHP_SELF'><img style='width:50px; float:left; margin-left: 0px; margin-right:5px;' src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a>
+      Designed and coded in August 2022 by X’Genesis Qhulut.
+      <br>This browser at GitHub:
+      <a href='https://github.com/X-Genesis-Qhulut/alpha' style='white-space: nowrap;'>X-Genesis-Qhulut / alpha</a><br>
+      <b>WoW Alpha Project</b> at GitHub: <a href='https://github.com/The-Alpha-Project/alpha-core'  style='white-space: nowrap;'>
       The-Alpha-Project / alpha-core</a>
-      <br>Thanks to the original developers of WoW and also John Staats for writing
-      “The WoW Diary: A Journal of Computer Game Development”.\n
+      <p>Thanks to the original developers of WoW and also John Staats for writing
+      <br><i>The WoW Diary: A Journal of Computer Game Development.</i>\n
       <br>Maps courtesy of Entropy and <a href='https://wow.tools/maps/Kalimdor/'>WoW.tools</a>\n
       <details><summary>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</summary>\n
       <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
       “for home, noncommercial and personal use only”.
       <p><b>Blizzard Entertainment®</b>
-      <br>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</details>\n";
+      <br>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</details>\n
+      </div>\n";
 
 // wrap up web page
 echo "\n</body>\n</html>\n";

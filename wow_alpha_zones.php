@@ -37,10 +37,12 @@ function showZones ()
 
   setUpSearch ('id', array ('directory'));
 
-  $results = dbQueryParam ("SELECT * FROM ".WORLDMAPAREA." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
+  $offset = getQueryOffset(); // based on the requested page number
+
+  $results = dbQueryParam ("SELECT * FROM ".WORLDMAPAREA." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($sortFields, $results))
+  if (!showSearchForm ($sortFields, $results, WORLDMAPAREA, $where))
     return;
 
   echo "<table class='search_results'>\n";

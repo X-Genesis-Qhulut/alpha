@@ -42,10 +42,12 @@ function showSkills ()
 
   setUpSearch ('ID', array ('DisplayName_enUS'));
 
-  $results = dbQueryParam ("SELECT * FROM ".SKILLLINE." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
+  $offset = getQueryOffset(); // based on the requested page number
+
+  $results = dbQueryParam ("SELECT * FROM ".SKILLLINE." $where ORDER BY $sort_order, ID LIMIT $offset , " . QUERY_LIMIT,
                     $params);
 
-  if (!showSearchForm ($sortFields, $results))
+  if (!showSearchForm ($sortFields, $results, SKILLLINE, $where))
     return;
 
   echo "<table class='search_results'>\n";

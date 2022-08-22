@@ -17,7 +17,7 @@ function simulateSpell ($id, $row)
   echo "<p><div class='spell'>\n";
   echo "<h3 style='color:yellow;'>" . htmlspecialchars ($row ['Name_enUS']) . "</h3>\n";
 
- // image
+  // spell icon
 
   // fallback icon: INV_Misc_QuestionMark.png
 
@@ -68,23 +68,18 @@ function simulateSpell ($id, $row)
   // clear float
   echo "<div style='clear: both;'></div>\n";
 
-  // look up the range in another table
+  // look up the range in yet another table
   $spellRangeRow = dbQueryOneParam ("SELECT * FROM ".SPELLRANGE." WHERE ID = ?", array ('i', &$row ['RangeIndex']));
 
   if ($spellRangeRow ['RangeMax'] > 0)
     echo '<br>' . $spellRangeRow ['RangeMax'] . ' yd range';
 
-  // look up the duration in another table
+  // look up the duration in yet another table again
   $spellDurationRow = dbQueryOneParam ("SELECT * FROM ".SPELLDURATION." WHERE ID = ?", array ('i', &$row ['DurationIndex']));
 
   // show what it casts
 
-  $count = 0;
-  for ($i = 1; $i <= 3; $i++)
-    if ($row ["EffectTriggerSpell_$i"])
-      $count++;
-
-  if ($count)
+  if (getCount ($row, 'EffectTriggerSpell_', 3))
     {
     echo "<p><b>Effect trigger spells:</b><br>\n";
     for ($i = 1; $i <= 3; $i++)
@@ -94,12 +89,7 @@ function simulateSpell ($id, $row)
 
   // show effects
 
-  $count = 0;
-  for ($i = 1; $i <= 3; $i++)
-    if ($row ["Effect_$i"])
-      $count++;
-
-  if ($count)
+  if (getCount ($row, 'Effect_', 3))
     {
     echo "<p><b>Effects:</b>\n";
     for ($i = 1; $i <= 3; $i++)
@@ -108,7 +98,7 @@ function simulateSpell ($id, $row)
     }
 
   // show effect auras
-  if ($row ['EffectAura_1'] || $row ['EffectAura_2'] || $row ['EffectAura_3'])
+  if (getCount ($row, 'EffectAura_', 3))
     {
     echo "<p><b>Auras:</b>\n";
     for ($i = 1; $i <= 3; $i++)
@@ -119,12 +109,7 @@ function simulateSpell ($id, $row)
 
   // reagents
 
-  $count = 0;
-  for ($i = 1; $i <= 8; $i++)
-    if ($row ["Reagent_$i"])
-      $count++;
-
-  if ($count)
+  if (getCount ($row, 'Reagent_', 8))
     {
     echo "<p><b>Reagents:</b><br>\n";
     echo (lookupItems ($row,
@@ -134,12 +119,7 @@ function simulateSpell ($id, $row)
 
   // show effect items
 
-  $count = 0;
-  for ($i = 1; $i <= 3; $i++)
-    if ($row ["EffectItemType_$i"])
-      $count++;
-
-  if ($count)
+  if (getCount ($row, 'EffectItemType_', 3))
     {
     echo "<p><b>Effect items:</b><br>\n";
     tdh (lookupItems ($row,
@@ -150,16 +130,18 @@ function simulateSpell ($id, $row)
 
   echo "<hr>\n";
 
-  $s1 = spellRoll ($row ['EffectDieSides_1'], $row ['EffectBaseDice_1'], $row ['EffectDicePerLevel_1'],
-                   $row ['EffectBasePoints_1']);
+  $s1 =
 
   $description = $row ['Description_enUS'];
 
-  $description = str_replace ('$s1', $s1, $description);
-  if ($spellDurationRow ['Duration'] >= 60000)
-    $description = str_replace ('$d',  convertTimeMinutes ($spellDurationRow ['Duration']) . ' min', $description);
-  else
-    $description = str_replace ('$d',  convertTimeSeconds ($spellDurationRow ['Duration']) . ' sec', $description);
+  // calculate spell roll ranges for all three effect die
+  for ($i = 1; $i <= 3; $i++)
+    $description = str_replace ('$s' . $i,
+                  spellRoll ($row ["EffectDieSides_$i"], $row ["EffectBaseDice_$i"], $row ["EffectDicePerLevel_$i"],
+                             $row ["EffectBasePoints_$i"]),
+                    $description);
+
+  $description = str_replace ('$d',  convertTimeGeneral ($spellDurationRow ['Duration']), $description);
 
   echo "<span style='color:yellow;'>" . htmlspecialchars ($description) . "</span>\n";
 
@@ -230,10 +212,12 @@ function showSpells ()
 
   setUpSearch ('ID', array ('Name_enUS', 'Description_enUS'));
 
-  $results = dbQueryParam ("SELECT * FROM ".SPELL." $where ORDER BY $sort_order, ID LIMIT " . QUERY_LIMIT,
+  $offset = getQueryOffset(); // based on the requested page number
+
+  $results = dbQueryParam ("SELECT * FROM ".SPELL." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
             $params);
 
-  if (!showSearchForm ($sortFields, $results))
+  if (!showSearchForm ($sortFields, $results, SPELL, $where))
     return;
 
   echo "<table class='search_results'>\n";

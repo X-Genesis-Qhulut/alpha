@@ -258,10 +258,12 @@ function showQuests ()
                                 'RequestItemsText', 'EndText', 'ObjectiveText1', 'ObjectiveText2',
                                 'ObjectiveText3', 'ObjectiveText4' ));
 
-  $results = dbQueryParam ("SELECT * FROM ".QUEST_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order, entry LIMIT " . QUERY_LIMIT,
-                    $params);
+  $offset = getQueryOffset(); // based on the requested page number
 
-  if (!showSearchForm ($sortFields, $results))
+  $results = dbQueryParam ("SELECT * FROM ".QUEST_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order LIMIT $offset, " .
+                            QUERY_LIMIT,  $params);
+
+  if (!showSearchForm ($sortFields, $results, QUEST_TEMPLATE, "$where AND ignored = 0"))
     return;
 
   echo "<table class='search_results'>\n";
