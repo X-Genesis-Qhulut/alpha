@@ -41,6 +41,7 @@ define ('SPELLICON',                    '`' . DBC_DBNAME  . '`.' . lwr ('SpellIc
 define ('SPELLCASTTIMES',               '`' . DBC_DBNAME  . '`.' . lwr ('SpellCastTimes'));
 define ('SPELLDURATION',                '`' . DBC_DBNAME  . '`.' . lwr ('SpellDuration'));
 define ('SPELLRANGE',                   '`' . DBC_DBNAME  . '`.' . lwr ('SpellRange'));
+define ('TRAINER_TEMPLATE',             '`' . WORLD_DBNAME. '`.' . lwr ('trainer_template'));
 define ('WORLDMAPAREA',                 '`' . DBC_DBNAME  . '`.' . lwr ('WorldMapArea'));
 define ('WORLDPORTS',                   '`' . WORLD_DBNAME. '`.' . lwr ('worldports'));
 
@@ -272,7 +273,41 @@ define ('SPELL_AURAS', array (
   88 => 'Mod health regen percent',
 ));
 
-
+define ('SPELL_IMPLICIT_TARGET', array (
+   0 => 'Initial',
+   1 => 'Self',
+   2 => 'Random enemy chain in area',
+   4 => 'Unit near caster',
+   5 => 'Pet',
+   6 => 'Enemy unit',
+   7 => 'Areaeffect custom',
+   9 => 'Innkeeper coordinates',
+  11 => '11',
+  15 => 'All enemy in area',
+  16 => 'All enemy in area instant',
+  17 => 'Table x y z coordinates',
+  18 => 'Effect select',
+  20 => 'Around caster party',
+  21 => 'Selected friend',
+  22 => 'All around caster',
+  23 => 'Selected gameobject',
+  24 => 'Infront',
+  25 => 'Unit',
+  26 => 'Gameobject and item',
+  27 => 'Master',
+  28 => 'Area effect enemy channel',
+  30 => 'All friendly units around caster',
+  31 => 'All friendly units in area',
+  32 => 'Minion',
+  33 => 'All party',
+  34 => 'All party around caster 2',
+  35 => 'Single party',
+  36 => 'Hostile unit selection',
+  37 => 'Areaeffect party',
+  38 => 'Script',
+  39 => 'Self fishing',
+  40 => 'Gameobject script near caster',
+));
 
 define ('TRAINER_FLAG', 0x8);
 

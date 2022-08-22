@@ -158,7 +158,8 @@ function showSearchForm ($sortFields, $results, $table, $where)
   echo "<input Type=hidden Name=action Value=$action>\n";
   echo "<input Type=hidden Name=page Value=$page>\n";
   echo "Filter: ";
-  echo " <input style='margin-right:1em;' type=text Name='filter' size=40 Value='$filter' placeholder='ID or regular expression' autofocus>\n";
+  echo " <input style='margin-right:1em;' type=text Name='filter' size=40 Value='" . htmlspecialchars ($filter) .
+        "' placeholder='ID or regular expression' autofocus>\n";
 
   echo " Sort by: ";
   echo "<select name='sort_order' size='1'>\n";
@@ -171,7 +172,7 @@ function showSearchForm ($sortFields, $results, $table, $where)
     echo "<option value='" . htmlspecialchars ($field) . "' $selected>" .
           htmlspecialchars (($field)) . "</option>\n";
     }
-  echo "</select name='sort_order' size='1'>\n";
+  echo "</select>\n";
   echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Filter'>\n";
   echo "<div class='navigation'>\n";
   if ($page > 1)

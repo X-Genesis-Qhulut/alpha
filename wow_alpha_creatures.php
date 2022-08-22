@@ -12,10 +12,32 @@
 // See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/creature-loot-template.html
 
 
+function trainer_spell_compare ($a, $b)
+  {
+  global $spells;
+  if ($spells [$a ['playerspell']] == $spells [$b ['playerspell']])
+    return $a ['playerspell'] <=> $b ['playerspell'];
+  return $spells [$a ['playerspell']] <=> $spells [$b ['playerspell']];
+  } // end of trainer_spell_compare
+
+function item_compare ($a, $b)
+  {
+  global $items;
+  return $items [$a ['item']] <=> $items [$b ['item']];
+  } // end of item_compare
+
+function reference_item_compare ($a, $b)
+  {
+  global $items;
+  return $items [$a ['refItem']] <=> $items [$b ['refItem']];
+  } // end of reference_item_compare
+
 function extraCreatureInformation ($id, $row)
   {
-  global $quests, $items, $maps;
+  global $quests, $items, $maps, $spells;
   global $documentRoot, $executionDir;
+
+  // ---------------- SPAWN POINTS -----------------
 
   // show spawn points - Eastern Kingdoms
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
@@ -57,11 +79,14 @@ function extraCreatureInformation ($id, $row)
                     'position_x', 'position_y', 'position_z', 'map');
 
 
+  // ---------------- IMAGE OF CREATURE -----------------
 
   $icon = $row ['display_id1'] . '.webp';
   if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
     echo "<img src='creatures/$icon' alt='Creature image'>\n";
 
+
+  // ---------------- QUESTS -----------------
 
   // show quests they start
 
@@ -89,10 +114,13 @@ function extraCreatureInformation ($id, $row)
     echo "</ul>\n";
     }
 
+  // ---------------- VENDOR ITEMS -----------------
+
  // what they sell
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE entry = ?", array ('i', &$id));
   if (count ($results) > 0)
     {
+    usort($results, 'item_compare');
     echo "<h2 title='Table: alpha_world.npc_vendor'>NPC sells</h2><ul>\n";
     foreach ($results as $vendorRow)
       {
@@ -100,9 +128,28 @@ function extraCreatureInformation ($id, $row)
       $maxcount = $vendorRow ['maxcount'];
       if ($maxcount  > 0)
         echo (" (limit $maxcount)");
-      } // for each quest finisher NPC
+      } // for each vendor NPC
     echo "</ul>\n";
     }
+
+  // ---------------- TRAINER ITEMS -----------------
+
+  // what they train
+
+  $results = dbQueryParam ("SELECT * FROM ".TRAINER_TEMPLATE." WHERE template_entry = ?",
+                            array ('i', &$row ['trainer_id']));
+  if (count ($results) > 0)
+    {
+    echo "<h2 title='Table: alpha_world.trainer_id'>NPC trains</h2><ul>\n";
+    usort($results, 'trainer_spell_compare');
+    foreach ($results as $trainerRow)
+      {
+      listThing ('', $spells, $trainerRow ['playerspell'], 'show_spell');
+      } // for each trainer NPC
+    echo "</ul>\n";
+    }
+
+  // ---------------- LOOT-----------------
 
   // show loot
 
@@ -120,6 +167,7 @@ function extraCreatureInformation ($id, $row)
 
   // count quest items - they have a negative drop chance
   $count = 0;
+  usort($results, 'item_compare');
   foreach ($results as $lootRow)
     if ($lootRow ['ChanceOrQuestChance'] < 0)
         $count++;
@@ -170,6 +218,7 @@ function extraCreatureInformation ($id, $row)
     echo "</ul><h2 title='Table: alpha_world.creature_loot_template'>Reference loot</h2>\n<ul>\n";
     }
 
+  usort ($lootResults, 'reference_item_compare');
   foreach ($lootResults as $lootRow)
     {
     $count++;
@@ -187,6 +236,8 @@ function extraCreatureInformation ($id, $row)
   if ($count == 0)
     echo "<p>None.\n";
 
+  // ---------------- PICK POCKETING LOOT -----------------
+
   // show pickpocketing loot
 
   $loot_id = $row ['pickpocket_loot_id'];
@@ -195,6 +246,7 @@ function extraCreatureInformation ($id, $row)
 
   $results = dbQueryParam ("SELECT * FROM ".PICKPOCKETING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
   echo "<h2 title='Table: alpha_world.pickpocketing_loot_template'>Pickpocketing loot</h2>\n<ul>\n";
+  usort($results, 'item_compare');
 
   foreach ($results as $lootRow)
     {

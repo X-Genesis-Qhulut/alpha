@@ -79,7 +79,8 @@ function simulateItem ($id, $row)
     echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
 
   echo '<p><b>' . ITEM_CLASS [$row ['class']] . "</b><br>\n";
-  echo ITEM_SUBCLASSES  [$row ['class']]  [$row ['subclass']] . "<br>\n";
+  if ($row ['subclass'])
+    echo ITEM_SUBCLASSES  [$row ['class']]  [$row ['subclass']] . "<br>\n";
   echo INVENTORY_TYPE [$row ['inventory_type']] . "<br>\n";
   echo 'Level ' . $row ['item_level'];
   if ($row ['required_level'])

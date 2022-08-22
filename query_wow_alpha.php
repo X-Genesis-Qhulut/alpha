@@ -94,6 +94,7 @@ function expandField ($value, $expandType)
       case 'spell_school':    tdxr (expandSimple (SPELL_SCHOOLS,   $value)); break;
       case 'spell_effect':    tdxr (expandSimple (SPELL_EFFECTS,   $value)); break;
       case 'spell_aura':      tdxr (expandSimple (SPELL_AURAS,     $value)); break;
+      case 'spell_implicit_target':  tdxr (expandSimple (SPELL_IMPLICIT_TARGET, $value)); break;
       case 'power_type':      tdxr (expandSimple (POWER_TYPES,     $value)); break;
       case 'movement_type':   tdxr (expandSimple (MOVEMENT_TYPE,   $value)); break;
       case 'trainer_type':    tdxr (expandSimple (TRAINER_TYPE,    $value)); break;

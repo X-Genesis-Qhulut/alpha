@@ -9,13 +9,23 @@
 
 // SPELLS
 
+function creature_compare ($a, $b)
+  {
+  global $creatures;
+  return $creatures [$a ['npc']] <=> $creatures [$b ['npc']];
+  } // end of item_compare
+
+
 function simulateSpell ($id, $row)
   {
-  global $spells, $items;
+  global $spells, $items, $creatures;
   global $documentRoot, $executionDir;
 
   echo "<p><div class='spell'>\n";
-  echo "<h3 style='color:yellow;'>" . htmlspecialchars ($row ['Name_enUS']) . "</h3>\n";
+  echo "<h3 style='color:yellow;'>" . htmlspecialchars ($row ['Name_enUS'] );
+  if ($row ['NameSubtext_enUS'])
+    echo " - " . htmlspecialchars ($row ['NameSubtext_enUS']);
+  echo "</h3>\n";
 
   // spell icon
 
@@ -130,8 +140,6 @@ function simulateSpell ($id, $row)
 
   echo "<hr>\n";
 
-  $s1 =
-
   $description = $row ['Description_enUS'];
 
   // calculate spell roll ranges for all three effect die
@@ -145,11 +153,36 @@ function simulateSpell ($id, $row)
 
   echo "<span style='color:yellow;'>" . htmlspecialchars ($description) . "</span>\n";
 
-
-
   echo "</div>\n";    // end of simulation box
 
-  } // end of
+  // ---------------- WHO TRAINS THIS -----------------
+
+  // what they train
+
+  $trainer_template = TRAINER_TEMPLATE;
+  $creature_template = CREATURE_TEMPLATE;
+  $results = dbQueryParam ("SELECT * FROM $trainer_template
+                          LEFT JOIN $creature_template ON $trainer_template.template_entry = $creature_template.trainer_id
+                          WHERE $trainer_template.playerspell = ? AND entry <= ".MAX_CREATURE." ORDER BY name, subname",
+                            array ('i', &$id));
+
+  if (count ($results) > 0)
+    {
+    echo "<h2 title='Table: alpha_world.trainer_id'>NPCs that train this spell</h2><ul>\n";
+    foreach ($results as $trainerRow)
+      {
+      listThing ('', $creatures, $trainerRow ['entry'], 'show_creature');
+
+// yeah, nah, looks crappy
+//      if ($trainerRow ['subname'])
+//        echo " " . htmlspecialchars ('<' . $trainerRow ['subname'] . '>');
+
+      } // for each trainer NPC entry
+    echo "</ul>\n";
+    }
+
+
+  } // end of simulateSpell
 
 function showOneSpell ($id)
   {
@@ -182,6 +215,12 @@ function showOneSpell ($id)
                   'EffectAura_1' => 'spell_aura',
                   'EffectAura_2' => 'spell_aura',
                   'EffectAura_3' => 'spell_aura',
+                  'ImplicitTargetA_1' => 'spell_implicit_target',
+                  'ImplicitTargetA_2' => 'spell_implicit_target',
+                  'ImplicitTargetA_3' => 'spell_implicit_target',
+                  'ImplicitTargetB_1' => 'spell_implicit_target',
+                  'ImplicitTargetB_2' => 'spell_implicit_target',
+                  'ImplicitTargetB_3' => 'spell_implicit_target',
 
                 ), 'simulateSpell');
   } // end of showOneSpell

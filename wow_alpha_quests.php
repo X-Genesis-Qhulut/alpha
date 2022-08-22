@@ -11,7 +11,12 @@
 
 function fixQuestText ($s)
   {
-  return str_ireplace ('$b', "<br>", htmlspecialchars ($s));
+  $s = str_ireplace ('$n', "<name>", $s);
+  $s = str_ireplace ('$r', "<race>", $s);
+  $s = str_ireplace ('$c', "<class>", $s);
+
+  $s = htmlspecialchars ($s);
+  return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText
 
 function simulateQuest ($id, $row)
