@@ -51,6 +51,7 @@ function showMaps ()
     $id = $row ['ID'];
     tdhr ("<a href='?action=show_map&id=$id'>$id</a>");
     $td ('Directory');
+    showFilterColumn ($row);
     echo "</tr>\n";
     }
   echo "</table>\n";

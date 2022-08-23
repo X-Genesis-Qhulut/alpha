@@ -176,6 +176,20 @@ $action  = getGP ('action', 40, $VALID_ACTION);
 $id      = getGP ('id',      8, $VALID_NUMBER);
 // get filter
 $filter  = getGP ('filter');
+// and secondary filter
+$filter_column = getGP ('filter_column', 30, $VALID_SQL_ID);
+// secondary filter comparison
+$filter_compare = getGP ('filter_compare', 30, $VALID_ACTION);
+// secondary filter value - a number, a hex number or a float
+$filter_value = getGP ('filter_value', 12, '(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)');
+// convert from hex or binary to decimal for the SQL query
+if (preg_match ('/0[xX]([0-9A-Fa-f]+)/', $filter_value, $matches))
+  $fixed_filter_value = hexdec ($matches [1]);
+elseif (preg_match ('/0[bB]([01]+)/', $filter_value, $matches))
+  $fixed_filter_value = bindec ($matches [1]);
+else
+  $fixed_filter_value = $filter_value;
+
 // get sorting order
 $sort_order = getP ('sort_order', 30, $VALID_SQL_ID);
 // get page number
@@ -218,7 +232,6 @@ document.getElementById('noscript_warning_id').style.display = 'none';
 ";
 
 */
-
 
 // grab things we are likely to cross-reference a lot
 if ($action)
@@ -273,6 +286,7 @@ if ($action)
   }
 else
   showBigMenu ();
+
 
 echo "<div class='credits'><a href='$PHP_SELF'><img style='width:50px; float:left; margin-left: 0px; margin-right:5px;' src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a>
       Designed and coded in August 2022 by X’Genesis Qhulut.

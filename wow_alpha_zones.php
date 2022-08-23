@@ -54,6 +54,7 @@ function showZones ()
     tdhr ("<a href='?action=show_zone&id=$id'>$id</a>");
     $td ('AreaName');
     $tdr ('AreaID');
+    showFilterColumn ($row);
     echo "</tr>\n";
     }
   echo "</table>\n";

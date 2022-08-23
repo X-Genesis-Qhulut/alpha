@@ -61,6 +61,7 @@ function showSkills ()
     tdx (expandRaceMask ($row ['RaceMask']));
     tdx (expandClassMask ($row ['ClassMask']));
     $tdr ('MaxRank');
+    showFilterColumn ($row);
     echo "</tr>\n";
     }
   echo "</table>\n";

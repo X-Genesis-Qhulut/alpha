@@ -53,10 +53,10 @@ function showSQLerror ($sql)
 
   echo "<hr>\n";
   echo "<h2><font color=darkred>Problem with SQL</font></h2>\n";
-  echo (htmlspecialchars (mysqli_error ($dblink), ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5));
+  echo (fixHTML (mysqli_error ($dblink)));
   echo "<hr>\n";
   echo "<div class='sqlerror'>\n";
-  echo (htmlspecialchars ($sql, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5). "\n");
+  echo (fixHTML ($sql). "\n");
   echo "</div>\n";
 
   showBacktrace (2);

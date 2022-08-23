@@ -22,9 +22,9 @@ function simulateSpell ($id, $row)
   global $documentRoot, $executionDir;
 
   echo "<p><div class='spell'>\n";
-  echo "<h3 style='color:yellow;'>" . htmlspecialchars ($row ['Name_enUS'] );
+  echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
   if ($row ['NameSubtext_enUS'])
-    echo " - " . htmlspecialchars ($row ['NameSubtext_enUS']);
+    echo " - " . fixHTML ($row ['NameSubtext_enUS']);
   echo "</h3>\n";
 
   // spell icon
@@ -42,7 +42,7 @@ function simulateSpell ($id, $row)
     $TextureFilename  .= '.png';
 
     if (file_exists ("$documentRoot$executionDir/icons/$TextureFilename"))
-      echo "<img src='icons/$TextureFilename' alt='Spell icon' title='" . htmlspecialchars ($imageRow ['TextureFilename']) . "'>\n";
+      echo "<img src='icons/$TextureFilename' alt='Spell icon' title='" . fixHTML ($imageRow ['TextureFilename']) . "'>\n";
     else
       echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
     }
@@ -151,7 +151,7 @@ function simulateSpell ($id, $row)
 
   $description = str_replace ('$d',  convertTimeGeneral ($spellDurationRow ['Duration']), $description);
 
-  echo "<span style='color:yellow;'>" . htmlspecialchars ($description) . "</span>\n";
+  echo "<span style='color:yellow;'>" . fixHTML ($description) . "</span>\n";
 
   echo "</div>\n";    // end of simulation box
 
@@ -175,7 +175,7 @@ function simulateSpell ($id, $row)
 
 // yeah, nah, looks crappy
 //      if ($trainerRow ['subname'])
-//        echo " " . htmlspecialchars ('<' . $trainerRow ['subname'] . '>');
+//        echo " " . fixHTML ('<' . $trainerRow ['subname'] . '>');
 
       } // for each trainer NPC entry
     echo "</ul>\n";
@@ -281,6 +281,7 @@ function showSpells ()
                  array ('EffectItemType_1',   'EffectItemType_2',   'EffectItemType_3'),
                  array ('EffectMiscValue_1',  'EffectMiscValue_2',  'EffectMiscValue_3')));
     $td ('Description_enUS');
+    showFilterColumn ($row);
     echo "</tr>\n";
     }
   echo "</table>\n";

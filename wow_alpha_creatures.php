@@ -315,7 +315,6 @@ function showCreatures ()
     'level_min',
   );
 
-
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
@@ -348,6 +347,8 @@ function showCreatures ()
       tdxr  ($row ['level_min'] . '-' . $row ['level_max'] );
     else
       $tdr ('level_min');
+    showFilterColumn ($row);
+
     echo "</tr>\n";
     }
   echo "</table>\n";

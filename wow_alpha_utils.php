@@ -16,16 +16,34 @@ $VALID_ACTION     = '^[\w ]+$';                // actions are usually just words
 $VALID_BOOLEAN    = '^[01]$';                  // must be 0 or 1
 $VALID_SQL_ID     = '^\w+$';                   // SQL names are usually just words with underscore and maybe numbers (max 30 probably)
 
+// filter comparison operators
+define ('SECONDARY_FILTER', array (
+        'equal' => ' = ? ',
+        'not equal' => ' <> ? ',
+        'less than' => ' < ? ',
+        'less than or equal' => ' <= ? ',
+        'greater than' => ' > ? ',
+        'greater than or equal' => ' >= ? ',
+        'masked by any bit' => ' & ? <> 0 ',
+        'not masked by any bit' => ' & ? = 0 ',
+        'masked by all bits' => ' & ? = ? ',
+        'not masked by all bits' => ' & ? <> ? ',
+));
 
 function nl2br_http ($text)
   {
   return str_replace ("\n", "<br>", $text);
   } // end of nl2br_http
 
+function fixHTML ($s)
+  {
+  return htmlspecialchars ($s, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5);
+  } // end of fixHTML
+
 function ShowError ($theerror)
   {
   echo "<div class='error_message'>\n";
-  echo (nl2br_http (htmlspecialchars ($theerror, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5) . "\n"));
+  echo (nl2br_http (fixHTML ($theerror) . "\n"));
   echo "</div>\n";
   } // end of ShowError
 
@@ -36,7 +54,7 @@ function ShowWarningH ($theWarning)
 
 function ShowWarning ($theWarning)
   {
-  ShowWarningH (nl2br_http (htmlspecialchars ($theWarning, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5)));
+  ShowWarningH (nl2br_http (fixHTML ($theWarning)));
   } // end of ShowWarning
 
 function ShowInfoH ($theInfo)
@@ -46,7 +64,7 @@ function ShowInfoH ($theInfo)
 
 function ShowInfo ($theInfo)
   {
-  ShowInfoH (nl2br_http (htmlspecialchars ($theInfo, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5)));
+  ShowInfoH (nl2br_http (fixHTML ($theInfo)));
   } // end of ShowInfo
 
 
@@ -81,9 +99,10 @@ function validateArgument ($name, $value, $maxLength, $validation, $decode = fal
   // first decode it if required
   if ($decode)
     $value = urldecode ($value);
-
   if ($maxLength > 0 && strlen ($value) > $maxLength)
+    {
     Problem ("Parameter '$name' is too long");
+    }
   if (strlen ($value) && $validation)
     {
     if (!preg_match ("\xFF" . $validation . "\xFF" . 'i', $value))
@@ -132,18 +151,24 @@ function showBacktrace ($howFarBack = 1)
     $item = $bt [$i];
     echo "<li>\n";
     echo "<ul>\n";
-    echo ("<li>" . "Function: "     . htmlspecialchars ($item ['function'], ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5));
-    echo ("<li>" . "Called from: "  . htmlspecialchars ($item ['file'], ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5));
-    echo ("<li>" . "Line: "         . htmlspecialchars ($item ['line'], ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5));
+    echo ("<li>" . "Function: "     . fixHTML ($item ['function']));
+    echo ("<li>" . "Called from: "  . fixHTML ($item ['file']));
+    echo ("<li>" . "Line: "         . fixHTML ($item ['line']));
     echo "</ul><p>\n";
     }
   echo "</ol>\n";
   echo "<hr>\n";
   }   // end of showBacktrace
 
+function columns_compare ($a, $b)
+  {
+  return $a ['Field'] <=> $b ['Field'];
+  } // end of columns_compare
+
 function showSearchForm ($sortFields, $results, $table, $where)
   {
   global $filter, $action, $sort_order, $params, $page, $matches;
+  global $filter_column, $filter_compare, $filter_value;
 
   // find maximum matches
   $row = dbQueryOneParam ("SELECT COUNT(*) AS count FROM $table $where ORDER BY $sort_order", $params);
@@ -158,29 +183,70 @@ function showSearchForm ($sortFields, $results, $table, $where)
   echo "<input Type=hidden Name=action Value=$action>\n";
   echo "<input Type=hidden Name=page Value=$page>\n";
   echo "Filter: ";
-  echo " <input style='margin-right:1em;' type=text Name='filter' size=40 Value='" . htmlspecialchars ($filter) .
-        "' placeholder='ID or regular expression' autofocus>\n";
+  echo " <input style='margin-right:1em;' type=text Name='filter' size=40 Value='" . fixHTML ($filter) .
+        "' placeholder='ID or regular expression' autofocus title='Enter a number, text, or a regular expression'>\n";
 
   echo " Sort by: ";
-  echo "<select name='sort_order' size='1'>\n";
+  echo "<select name='sort_order' size='1' title='Which column to sort on'>\n";
   foreach ($sortFields as $field)
     {
     if ($field == $sort_order)
       $selected = "selected = 'selected'";
     else
       $selected = '';
-    echo "<option value='" . htmlspecialchars ($field) . "' $selected>" .
-          htmlspecialchars (($field)) . "</option>\n";
+    echo "<option value='" . fixHTML ($field) . "' $selected>" .
+          fixHTML (($field)) . "</option>\n";
     }
   echo "</select>\n";
-  echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Filter'>\n";
+  echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Filter' title='Click to search'>\n";
   echo "<div class='navigation'>\n";
   if ($page > 1)
     echo "<input type='image' class='arrow' name='LeftArrow' title='Previous page' alt='Previous page' src='left-arrow.png'>\n";
-  echo " Page $page of $pages ";
+  if ($pages > 0)
+    echo " Page $page of $pages ";
   if ($page < $pages)
     echo "<input type='image' class='arrow' name='RightArrow' title='Next page' alt='Next page' src='right-arrow.png'>\n";
   echo "</div>\n";  // end of navigation
+
+  // secondary filter - field name
+
+  echo "<p>Also match: ";
+  $tableFields = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
+  usort ($tableFields, 'columns_compare');
+  echo "<select name='filter_column' size='1' title='Which database column to filter on'>\n";
+  foreach ($tableFields as $field)
+    {
+    if (preg_match ('`int|float`', $field ['Type']))
+      {
+      if ($field ['Field'] == $filter_column)
+        $selected = "selected = 'selected'";
+      else
+        $selected = '';
+      echo "<option value='" . fixHTML ($field ['Field']) . "' $selected>" .
+            fixHTML ($field ['Field']) . "</option>\n";
+      } // end of being a number
+    }   // end of foreach field
+  echo "</select>\n";
+
+  // secondary filter - comparison
+
+  echo "<select name='filter_compare' size='1' title='What comparison to do'>\n";
+  foreach (SECONDARY_FILTER as $compare => $operator)
+    {
+    if ($compare == $filter_compare)
+      $selected = "selected = 'selected'";
+    else
+      $selected = '';
+    echo "<option value='" . fixHTML ($compare) . "' $selected>" .
+          fixHTML ($compare) . "</option>\n";
+    } // end of foreach comparison
+  echo "</select>\n";
+
+  // secondary filter - value to compare to
+
+  echo " <input type=text Name='filter_value' size=10 Value='" . fixHTML ($filter_value) .
+        "' placeholder='Number/hex/bin' title='Leave empty for no secondary filtering.\nHex numbers: 0x0123ABCD\nBinary numbers: 0b01010'>\n";
+
   echo "<details style='margin-top:3px;'><summary>Regular expression tips</summary>\n";
   echo "<ul>\n";
   echo "<li><i>A number on its own</i>: the item database ID (key)\n";
@@ -189,6 +255,7 @@ function showSearchForm ($sortFields, $results, $table, $where)
   echo "<li>At end: $\n";
   echo "<li>Word boundaries: [[:&lt;:]]word[[:&gt;:]]\n";
   echo "<li>Choice: this|that\n";
+  echo "<li>Letters: [A-Z]+\n";
   echo "<li>Numbers: [0-9]+\n";
   echo "<li>Zero or one: x?\n";
   echo "<li>One or more: x+\n";
@@ -267,7 +334,7 @@ function addSign ($value)
 function tdx ($s, $c='tdl')
   {
   echo "<td class='$c'>";
-  echo (htmlspecialchars ($s, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5));
+  echo (fixHTML ($s));
   echo "</td>\n";
   } // end of tdx
 
@@ -290,27 +357,38 @@ function tdh ($s)
 function th ($s)
   {
   echo "<th>";
-  echo (htmlspecialchars ($s, ENT_SUBSTITUTE | ENT_QUOTES | ENT_HTML5));
+  echo (fixHTML ($s));
   echo "</th>\n";
   } // end of th
 
 
 function headings ($what)
 {
+  global $filter_column, $filter_value;
+  if (strlen ($filter_value) > 0 && strlen ($filter_column) > 0)
+    $what [] = $filter_column;
+
   echo "<tr>\n";
   foreach ($what as $hdg)
     th ($hdg);
   echo "</tr>\n";
 } // end of headings
 
-
+function showFilterColumn ($row)
+  {
+    global $filter_column, $filter_value;
+    if (strlen ($filter_value) > 0 && strlen ($filter_column) > 0)
+      tdx ($row  [$filter_column], 'tdr');
+  } // end of showFilterColumn
 
 function setUpSearch ($keyname, $fieldsToSearch)
   {
   global $filter, $where, $params;
+  global $filter_column, $filter_compare, $filter_value, $fixed_filter_value;
 
   $where = 'WHERE TRUE ';
   $params = array ();
+  $params [0] = '';
   $filter = trim ($filter);
 
   if ($filter)
@@ -350,6 +428,22 @@ function setUpSearch ($keyname, $fieldsToSearch)
       } // end of if
     } // end of having a filter
 
+  // secondary comparison
+  if (strlen ($filter_value) > 0 && strlen ($filter_column) > 0)
+    {
+    $where .= " AND ($filter_column ";
+    $where .= SECONDARY_FILTER [$filter_compare];
+    $params [0] .= 'i';
+    $params [] = &$fixed_filter_value;
+    // [not] masked by all bits needs the value again
+    if (strstr ($filter_compare, 'all'))
+      {
+      $params [0] .= 'i';
+      $params [] = &$fixed_filter_value;
+      }
+    $where .= ')';
+    } // end of secondary comparison
+
   } // end of setUpSearch
 
 // shows all fields from any table
@@ -364,11 +458,11 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     return;
     }
 
-  $name = htmlspecialchars ($row [$nameField]);
+  $name = fixHTML ($row [$nameField]);
 
 
-  echo "<h1 class='one_item'>" . htmlspecialchars ($description) . " $id - $name</h1>\n";
-  echo "<h2 class='one_item_table'>Table: " . htmlspecialchars ($table_display_name) . "</h2>\n";
+  echo "<h1 class='one_item'>" . fixHTML ($description) . " $id - $name</h1>\n";
+  echo "<h2 class='one_item_table'>Table: " . fixHTML ($table_display_name) . "</h2>\n";
 
   echo "<div class='one_thing_container'>\n";
   echo "<div class='one_thing_section'>\n";
@@ -593,7 +687,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
     if ($map < 2)
       echo "<li>$x $y $z $map";
     else
-      echo "<li>$x $y $z $map (" . htmlspecialchars ($maps [$map]) . ")";
+      echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
 
     } // for each spawn point
 

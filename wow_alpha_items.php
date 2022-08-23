@@ -59,7 +59,7 @@ function simulateItem ($id, $row)
   echo "<p><div class='item'>\n";
   $color = ITEM_QUALITY_COLOR [$row ['quality']];
 
-  echo "<h3 style='color:$color;'>" . htmlspecialchars ($row ['name']) . "</h3>\n";
+  echo "<h3 style='color:$color;'>" . fixHTML ($row ['name']) . "</h3>\n";
 
   // image
 
@@ -71,7 +71,7 @@ function simulateItem ($id, $row)
     {
     $icon = $imageRow ['InventoryIcon'] . '.png';
     if (file_exists ("$documentRoot$executionDir/icons/$icon"))
-      echo "<img src='icons/$icon' alt='Item icon' title='" . htmlspecialchars ($imageRow ['InventoryIcon']) . "'>\n";
+      echo "<img src='icons/$icon' alt='Item icon' title='" . fixHTML ($imageRow ['InventoryIcon']) . "'>\n";
     else
       echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
     }
@@ -150,7 +150,25 @@ function simulateItem ($id, $row)
   if ($row ['bonding'])
     echo BONDING [$row ['bonding']];
 
+  // end of item box
   echo "</div>\n";
+
+
+ // who sells it
+  $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE item = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
+  if (count ($results) > 0)
+    {
+    echo "<h2>Sold by</h2><ul>\n";
+    foreach ($results as $vendorRow)
+      {
+      listThing ('', $creatures, $vendorRow ['entry'], 'show_creature');
+      $maxcount = $vendorRow ['maxcount'];
+      if ($maxcount  > 0)
+        echo (" (limit $maxcount)");
+      } // for each quest finisher NPC
+    echo "</ul>\n";
+    }
+
 
   } // end of simulateItem
 
@@ -194,22 +212,6 @@ function showOneItem ($id)
     }
 
   showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item", "name", $extras, 'simulateItem');
-
- // who sells it
-  $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE item = ?", array ('i', &$id));
-  if (count ($results) > 0)
-    {
-    echo "<h2>Sold by</h2><ul>\n";
-    foreach ($results as $vendorRow)
-      {
-      listThing ('', $creatures, $vendorRow ['entry'], 'show_creature');
-      $maxcount = $vendorRow ['maxcount'];
-      if ($maxcount  > 0)
-        echo (" (limit $maxcount)");
-      } // for each quest finisher NPC
-    echo "</ul>\n";
-    }
-
 
   } // end of showOneItem
 
@@ -257,6 +259,7 @@ function showItems ()
     tdx ("$item_subclass : " . ITEM_SUBCLASSES [$item_class] [$item_subclass]);
     $td  ('name');
     $td  ('description');
+    showFilterColumn ($row);
     echo "</tr>\n";
     }
   echo "</table>\n";

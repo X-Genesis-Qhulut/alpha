@@ -121,6 +121,7 @@ function showGameObjects ()
  //   $faction = $row ['faction'];
  //   tdxr ($faction ? "$faction: " .
  //                                 (isset ($factions [$faction]) ? $factions [$faction] : '(not found)' ): $faction);
+    showFilterColumn ($row);
 
     echo "</tr>\n";
     }

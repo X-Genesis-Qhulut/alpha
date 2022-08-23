@@ -15,7 +15,7 @@ function fixQuestText ($s)
   $s = str_ireplace ('$r', "<race>", $s);
   $s = str_ireplace ('$c', "<class>", $s);
 
-  $s = htmlspecialchars ($s);
+  $s = fixHTML ($s);
   return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText
 
@@ -26,7 +26,7 @@ function simulateQuest ($id, $row)
  // simulate quest
 
   echo "<p><div class='quest'>\n";
-  echo "<h2>" . htmlspecialchars ($row ['Title']) . "</h2>\n";
+  echo "<h2>" . fixHTML ($row ['Title']) . "</h2>\n";
   echo "<p>" . fixQuestText ($row ['Details'] ). "</h2>\n";
 
   echo "<h3>Objectives</h3>\n";
@@ -283,6 +283,7 @@ function showQuests ()
       tdxr  ($row ['MinLevel'] . '-' . $row ['MaxLevel'] );
     else
       $tdr ('MinLevel');
+    showFilterColumn ($row);
     echo "</tr>\n";
     }
   echo "</table>\n";

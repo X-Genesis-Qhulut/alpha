@@ -71,7 +71,8 @@ function showPorts ()
     $tdr ('y');
     $tdr ('z');
     $map = $row ['map'];
-    tdh ($map . ': ' . $maps [$map]);
+    tdh (expandSimple ($maps, $map));
+    showFilterColumn ($row);
     echo "</tr>\n";
     }
   echo "</table>\n";
