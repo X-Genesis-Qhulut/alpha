@@ -18,12 +18,12 @@ $VALID_SQL_ID     = '^\w+$';                   // SQL names are usually just wor
 
 // filter comparison operators
 define ('SECONDARY_FILTER', array (
-        'equal' => ' = ? ',
-        'not equal' => ' <> ? ',
+        'equals' => ' = ? ',
+        'not equals' => ' <> ? ',
         'less than' => ' < ? ',
-        'less than or equal' => ' <= ? ',
+        'less than or equals' => ' <= ? ',
         'greater than' => ' > ? ',
-        'greater than or equal' => ' >= ? ',
+        'greater than or equals' => ' >= ? ',
         'masked by any bit' => ' & ? <> 0 ',
         'not masked by any bit' => ' & ? = 0 ',
         'masked by all bits' => ' & ? = ? ',
@@ -81,8 +81,8 @@ function Problem ($why)
 // Use this before database opened
 function MajorProblem ($why)
   {
-echo "<div class='major_problem' >
-      <p>We apologise that there has been a problem with the server ...</p>";
+  echo "<div class='major_problem' >
+        <p>We apologise that there has been a problem with the server ...</p>";
 
   ShowError ($why);
   echo "<p>Error occurred at " . strftime ("%Y-%m-%d %H:%M:%S", time()) . "</p>
@@ -308,7 +308,10 @@ function showCount ($results)
   $s2 = 's';
   if ($pages == 1)
     $s2 = '';
-  echo ("<p>$matches match$s1 for this query ($pages page$s2). This is page $page of $pages.");
+  echo ("<p>$matches match$s1 for this query ($pages page$s2).");
+  if ($pages > 1)
+    echo "This is page $page of $pages.";
+  echo "\n";
   } // end of showCount
 
 // This for stuff like EffectTriggerSpell_1, EffectTriggerSpell_2, EffectTriggerSpell_3

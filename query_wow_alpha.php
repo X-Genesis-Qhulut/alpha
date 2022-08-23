@@ -32,6 +32,7 @@ require ("wow_alpha_maps.php");
 require ("wow_alpha_zones.php");
 require ("wow_alpha_ports.php");
 require ("wow_alpha_skills.php");
+require ("wow_alpha_tables.php");
 
 define ('QUERY_LIMIT', 200);
 define ('MAX_CREATURE', 5759);    // creatures > this are not in 0.5.3 alpha
@@ -58,6 +59,7 @@ define ('MENU', array (
   'Ports'         => 'ports',
   'Quests'        => 'quests',
   'Skills'        => 'skills',
+  'Tables'        => 'tables',
   'Zones'         => 'zones',
 
 // more here
@@ -195,6 +197,11 @@ $sort_order = getP ('sort_order', 30, $VALID_SQL_ID);
 // get page number
 $page = getGP ('page',      8, $VALID_NUMBER);
 
+// table name
+$table  = getG ('table', 30, $VALID_SQL_ID);
+// database name
+$database  = getG ('database', 15, $VALID_SQL_ID);
+
 // see if they used the right arrow
 $rightArrow = getP ('RightArrow_x',    8, $VALID_NUMBER);
 // see if they used the left arrow
@@ -278,6 +285,9 @@ if ($action)
 
       case 'skills'      : showSkills (); break;
       case 'show_skill'  : showOneSkill ($id); break;
+
+      case 'tables'      : showTables (); break;
+      case 'show_table'  : showOneTable ($id); break;
 
       default: ShowWarning ('Unknown action'); break;
 
