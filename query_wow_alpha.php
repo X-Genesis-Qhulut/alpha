@@ -153,12 +153,66 @@ function getThings (&$theArray, $table, $key, $description, $condition = '')
   dbFree ($result);
 } // end of getThings
 
+define ('MONTHS', array (
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ));
+
+// The applied updates dates are in the format: DDMMYYYYs where s is a sequence number
+// To get the latest we need to get them into YYYYMMDDs sequence, then find the highest
+function checkAppliedUpdates ($table)
+  {
+
+  $latest = 0;
+
+  $result = dbQuery ("SELECT * FROM $table");
+  while ($row = dbFetch ($result))
+    {
+    $s = strval ($row ['id']);
+    $year = substr ($s, 4, 4);
+    $month = substr ($s, 2, 2);
+    $day = substr ($s, 0, 2);
+    $seq = substr ($s, 8, 1);
+    // ignore bad dates, <sigh>
+    if (intval ($day) < 1 || intval ($day) > 31)
+      continue;
+    if (intval ($month) < 1 || intval ($month) > 12)
+      continue;
+    $revDate = $year . $month . $day . $seq;
+    if ($revDate > $latest)
+      $latest = $revDate;
+    }
+  dbFree ($result);
+
+  return $latest;
+  } // end of checkAppliedUpdates
+
+function convertDate ($date)
+{
+  echo substr ($date, 6, 2) . ' ' .
+       MONTHS [intval (substr ($date, 4, 2)) - 1] . ' ' .
+       substr ($date, 0, 4);
+  if (strlen ($date) > 8)
+        echo " - sequence: " . substr ($date, 8, 1);
+} // end of convertDate
+
 function showBigMenu ()
   {
   foreach (MENU as $desc => $newAction)
     {
     echo "<div class='menu_item'><a href='?action=$newAction'>$desc</a></div>\n";
     }
+
+  // find last database updates
+
+  $latest_dbc   = checkAppliedUpdates (APPLIED_UPDATES_DBC);
+  echo "<p>Latest DBC table update: ";
+  convertDate ($latest_dbc) . "\n";
+
+  $latest_world = checkAppliedUpdates (APPLIED_UPDATES_WORLD);
+  echo "<br>Latest World table update: ";
+  convertDate ($latest_world) . "\n";
+
   } // end of showBigMenu
 
 
@@ -189,11 +243,11 @@ $filter_column = getGP ('filter_column', 30, $VALID_SQL_ID);
 // secondary filter comparison
 $filter_compare = getGP ('filter_compare', 30, $VALID_ACTION);
 // secondary filter value - a number, a hex number or a float
-$filter_value = getGP ('filter_value', 12, '(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)');
+$filter_value = getGP ('filter_value', 12);
 // convert from hex or binary to decimal for the SQL query
-if (preg_match ('/0[xX]([0-9A-Fa-f]+)/', $filter_value, $matches))
+if (preg_match ('/^0[xX]([0-9A-Fa-f]+)$/', $filter_value, $matches))
   $fixed_filter_value = hexdec ($matches [1]);
-elseif (preg_match ('/0[bB]([01]+)/', $filter_value, $matches))
+elseif (preg_match ('/^0[bB]([01]+)$/', $filter_value, $matches))
   $fixed_filter_value = bindec ($matches [1]);
 else
   $fixed_filter_value = $filter_value;

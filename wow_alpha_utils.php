@@ -384,6 +384,8 @@ function showFilterColumn ($row)
       tdx ($row  [$filter_column], 'tdr');
   } // end of showFilterColumn
 
+//
+
 function setUpSearch ($keyname, $fieldsToSearch)
   {
   global $filter, $where, $params;
@@ -400,10 +402,9 @@ function setUpSearch ($keyname, $fieldsToSearch)
     $ok = @preg_match ("`$filter`", "whatever", $matches);
     if ($ok === false)
       {
-      echo "<h2>Filter error</h2>\n";
       $warnings = error_get_last();
       $warning = $warnings ['message'];
-      ShowWarning ("Error evaluating regular expression: $filter\n\n$warning");
+      ShowWarning ("Error evaluating regular expression: $filter\n\n$warning\n\nFilter ignored.");
       return;
       } // if not OK
 
@@ -434,6 +435,12 @@ function setUpSearch ($keyname, $fieldsToSearch)
   // secondary comparison
   if (strlen ($filter_value) > 0 && strlen ($filter_column) > 0)
     {
+    if (!preg_match ('/(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)/', $filter_value))
+      {
+      ShowWarning ("Filter comparison value not decimal, hex or binary number: $filter\n\n" .
+                   "Secondary filter ignored.");
+      return;
+      }
     $where .= " AND ($filter_column ";
     $where .= SECONDARY_FILTER [$filter_compare];
     $params [0] .= 'i';

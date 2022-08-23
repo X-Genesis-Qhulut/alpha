@@ -18,6 +18,8 @@ function lwr ($s)
   return $s;
   } // end of lwr
 
+define ('APPLIED_UPDATES_DBC',          '`' . DBC_DBNAME.   '`.' . lwr ('applied_updates'));
+define ('APPLIED_UPDATES_WORLD',        '`' . WORLD_DBNAME. '`.' . lwr ('applied_updates'));
 define ('CREATURE_LOOT_TEMPLATE',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_loot_template'));
 define ('CREATURE_QUEST_FINISHER',      '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_finisher'));
 define ('CREATURE_QUEST_STARTER',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_starter'));

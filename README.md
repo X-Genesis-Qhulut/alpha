@@ -44,6 +44,8 @@ The "masked by" comparisons need a bit of explanation.
 
 * Not masked by all bits: This is the inverse of the above. Thus it matches if `(field & mask) != mask`
 
+The number to compare to can be entered in decimal, eg. 666, hex, eg. 0xBADBAD or binary, eg. 0b010011.
+
 To avoid the effect of the secondary filter just leave the "comparison value" box empty.
 
 ---

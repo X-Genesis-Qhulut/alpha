@@ -9,11 +9,15 @@
 
 // QUESTS
 
+// See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/quest-template.html
+
+
 function fixQuestText ($s)
   {
   $s = str_ireplace ('$n', "<name>", $s);
   $s = str_ireplace ('$r', "<race>", $s);
   $s = str_ireplace ('$c', "<class>", $s);
+  $s = preg_replace ('/\$g([^:]+):([^;]+);/i', '<\1/\2>', $s);
 
   $s = fixHTML ($s);
   return str_ireplace ('$b', "<br>", $s);
@@ -38,7 +42,7 @@ function simulateQuest ($id, $row)
     if ($row ["ReqItemId$n"])
       echo (lookupItemHelper ($row ["ReqItemId$n"], $row ["ReqItemCount$n"]) . "<br>");
 
-  // creatures of game objects
+  // creatures or game objects
 
   for ($n = 1; $n <= 4; $n++)
     {
@@ -49,7 +53,7 @@ function simulateQuest ($id, $row)
         echo (lookupThing ($game_objects, -$value, 'show_go'));
       else
         echo (lookupThing ($creatures, $value, 'show_creature'));
-      echo (showItemCount ($row ['ReqCreatureOrGOCount1']));
+      echo (showItemCount ($row ["ReqCreatureOrGOCount$n"]));
       echo "<br>";
       }
     } // end of for each creature or game object objective
@@ -128,7 +132,10 @@ function simulateQuest ($id, $row)
   echo "<hr>\n";
 
   $zone = $row ['ZoneOrSort'];
-  echo "<br><b>Zone</b>: " . (array_key_exists ($zone, $zones) ? $zones [$zone] : ($zone . ' (unknown)'));
+  if ($zone > 0)  // quest zone
+    {
+    echo "<br><b>Zone</b>: " . expandSimple ($zones, $zone, false);
+    }
   echo "<br><b>Minimum level</b>: " . $row ['MinLevel'];
   echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
   if ($row ['LimitTime'])
@@ -150,14 +157,14 @@ function simulateQuest ($id, $row)
 
   while ($row ['PrevQuestId'])
     {
+    if (in_array ($row ['PrevQuestId'], $foundQuests))
+      break;  // avoid going into a loop
+    $foundQuests [] = $row ['PrevQuestId']; // add this one to the chain
     // get the previous one
     $row = dbQueryOneParam ("SELECT entry, PrevQuestId FROM ".QUEST_TEMPLATE." WHERE entry = ? AND ignored = 0",
                             array ('i', &$row ['PrevQuestId']));
     if (!$row)  // not on file?
       break;
-    if (in_array ($row ['entry'], $foundQuests))
-      break;  // avoid going into a loop
-    $foundQuests [] = $row ['entry']; // add this one to the chain
     } // while we still have previous quest IDs
 
   $foundQuests = array_reverse ($foundQuests);  // get into ascending order
@@ -170,14 +177,14 @@ function simulateQuest ($id, $row)
 
   while ($row ['NextQuestInChain'])
     {
+    if (in_array ($row ['NextQuestInChain'], $foundQuests))
+      break;  // avoid going into a loop
+    $foundQuests [] = $row ['NextQuestInChain']; // add this one to the chain
     // get the next one
     $row = dbQueryOneParam ("SELECT entry, NextQuestInChain FROM ".QUEST_TEMPLATE." WHERE entry = ? AND ignored = 0",
                             array ('i', &$row ['NextQuestInChain']));
     if (!$row)  // not on file?
       break;
-    if (in_array ($row ['entry'], $foundQuests))
-      break;  // avoid going into a loop
-    $foundQuests [] = $row ['entry']; // add this one to the chain
     } // while we still have previous quest IDs
 
   if (count ($foundQuests) > 1)
@@ -187,7 +194,7 @@ function simulateQuest ($id, $row)
       {
       echo ("<li>" . lookupThing ($quests,     $quest, 'show_quest'));
       if ($quest == $id)
-        echo fixHTML (' <-- this quest');
+        echo ' <i>(this quest)</i>';
       } // end of foreach
     echo "</ul>\n";
     } // end of previous quests in the chain
