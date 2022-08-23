@@ -132,7 +132,7 @@ function simulateQuest ($id, $row)
   echo "<br><b>Minimum level</b>: " . $row ['MinLevel'];
   echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
   if ($row ['LimitTime'])
-    echo "<br><b>Time limit</b>: " . convertTimeMinutes ($row ['LimitTime'] . 'm', true);
+    echo "<br><b>Time limit</b>: " . convertTimeGeneral ($row ['LimitTime'] * 1000);
   if ($row ['PrevQuestId'])
    echo "<br><b>Previous quest</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
   if ($row ['NextQuestId'])
