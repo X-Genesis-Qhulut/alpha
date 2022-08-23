@@ -10,6 +10,44 @@ You can enter a database ID (number) directly to go to that item. For example, 4
 
 ---
 
+## Filtering
+
+The main tables can be filtered by text or numeric comparisons, reducing the number of rows returned to those that match the filter.
+
+### Text filter
+
+The "Filter" box can be used to filter on text. This is used to search descriptions, names, and so on. It is not used to search numeric fields. You can enter:
+
+* Nothing. If the filter is left blank, all rows will be returned, subject to the secondary filter described below.
+
+* A number. This will be used to go straight to that database record by key. For example, enter "257" to see the quest "A Hunter's Boast". This is useful for situations where you know the database key (from looking at another table) and simply want to look it up.
+
+* A regular expression. This will search text fields for a match on the regular expression. For tables with multiple text fields (like quests) a match on any of them will suffice. The website [Regular Expressions 101](https://regex101.com/) can be used to experiment with regular expressions. Do not worry too much about the details of regular expressions. Simple text just matches itself, for example enter "Dark Threat" to match any quest with that in its title or description. If you happen to want to search for a pure number, like all quests with "10" in the description, put it in brackets, eg. "(10)" to stop the browser from trying to look up record key 10.
+
+### Numeric comparison filter (secondary filter)
+
+In addition to searching for text, you can narrow down results by using the secondary filter "Also match:" beneath the filter box. This lets you choose *any* field from that database table, and compare it to a number.
+
+You select the fieldname from a drop-down list, for example: "Effect_1". Then choose a comparison (eg. equal, not equal, greater) and then enter a number which is the comparison number. So, you might have: "if Effect_1 equal 36" (learn spell).
+
+The field you choose is added as a right-hand column to the columns displayed, so you can see what its value was. This is more useful for comparisons like "greater than".
+
+In fact, you could choose to use this to simply view some column, like "min_level" to simply see what it is. To do this just enter a comparison that will always be true. One such comparison is "masked by all bits: 0".
+
+The "masked by" comparisons need a bit of explanation.
+
+* Masked by any bit: This matches if any bit in the selected field matches **one** of the mask bits. That is: `(field & mask) != 0`. So, for example for spells "Targets" "masked by any bit" 0x4010 would return any spells that target "Game Object Item" (0x4000) **or** "Item" (0x10).
+
+* Not masked by any bit: This is the inverse of the above. Thus it matches if **none** of the mask bits match. That is: `(field & mask) == 0`.
+
+* Masked by all bits: This matches if **all** the bits in the selected field matches **all** of the mask bits. That is: `(field & mask) == mask`
+
+* Not masked by all bits: This is the inverse of the above. Thus it matches if `(field & mask) != mask`
+
+To avoid the effect of the secondary filter just leave the "comparison value" box empty.
+
+---
+
 ## How to install on your own server
 
 1. Put all the files into a folder on your server, somewhere inside the document root. Personally I put them in:
