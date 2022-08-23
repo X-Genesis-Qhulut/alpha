@@ -273,14 +273,22 @@ function showOneCreature ($id)
         'spell_id4' => 'spell',
         'spell_id5' => 'spell',
         'faction'   => 'faction',
-        'mechanic_immune_mask' => 'mechanic_immune_mask',
+        'mechanic_immune_mask' => 'mechanic_mask',
+        'school_immune_mask' => 'school_mask',    // I think this might be out by one
         'inhabit_type'  => 'inhabit_type_mask',
         'movement_type' => 'movement_type',
         'flags_extra'   => 'flags_extra_mask',
         'npc_flags'     => 'npc_flags_mask',
         'rank'          => 'rank',
-        'gold_min'          => 'gold',
-        'gold_max'          => 'gold',
+        'gold_min'      => 'gold',
+        'gold_max'      => 'gold',
+        'dmg_school'    => 'spell_school',
+        'base_attack_time'    => 'time',
+        'ranged_attack_time'    => 'time',
+        'type'    => 'creature_type',
+
+         'static_flags'   => 'creature_static_flags',
+
  //       'trainer_spell' => 'spell',   // Hmmm, must have the wrong end of the stick here
 
     );

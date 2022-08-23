@@ -111,6 +111,25 @@ define ('SKILL_TYPES', array (
   4 => 'Secondary skill',
 ));
 
+define ('QUEST_FLAGS', array (
+  0x00000000 => 'None',
+  0x00000001 => 'Stay alive',
+  0x00000002 => 'Party accept',
+  0x00000004 => 'Exploration',
+  0x00000008 => 'Sharable',
+  0x00000020 => 'Epic',
+  0x00000040 => 'Raid',
+  0x00000200 => 'Hidden rewards',
+  0x00000400 => 'Auto rewarded',
+));
+
+define ('QUEST_SPECIAL_FLAGS', array (
+  0 => 'None',
+  1 => 'Repeatable',
+  2 => 'Script',
+));
+
+
 
 define ('SPELL_EFFECTS', array (
   0x0 => 'None',
@@ -321,6 +340,32 @@ define ('NPC_FLAG', array (
   0x40 => 'Tabard Designer',
   0x80 => 'Petitioner',
 ));
+
+define ('CREATURE_STATIC_FLAGS', array (
+       1 => 'Mountable',
+       2 => 'No XP',
+       4 => 'No loot',
+       8 => 'Unkillable',
+      16 => 'Tameable',
+      32 => 'Immune player',
+      64 => 'Immune NPC',
+     128 => 'Can wield loot',
+     256 => 'Sessile',
+     512 => 'Unselectable',
+    1024 => 'No auto regen',
+    2048 => 'Corpse none',
+    4096 => 'Corpse raid',
+    8192 => 'Creator loot',
+   16384 => 'No defense',
+   32768 => 'No spell defense',
+   65536 => 'Tabard vendor',
+  131072 => 'Combat ping',
+  262144 => 'Aquatic',
+  524288 => 'Amphibious',
+ 1048576 => 'No melee',
+
+));
+
 
 define ('ITEM_CLASS', array (
   0  => 'Consumable',

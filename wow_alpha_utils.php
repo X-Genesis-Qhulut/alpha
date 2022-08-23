@@ -871,7 +871,7 @@ function expandItemFlagsMask ($mask)
   return expandShiftedMask (ITEM_FLAGS, $mask);
 } // end of expandItemFlagsMask
 
-function expandMechanicImmuneMask ($mask)
+function expandMechanicMask ($mask)
 {
   return expandShiftedMask (MECHANIC_IMMUNE, $mask);
 } // end of expandMechanicImmuneMask

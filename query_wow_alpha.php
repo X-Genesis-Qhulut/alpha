@@ -76,7 +76,8 @@ function expandField ($value, $expandType)
       {
 
       // not table lookups, just formatting
-      case 'time':          tdxr (convertTimeMinutes ($value) . 'm'); break;
+      case 'time':          tdxr (convertTimeGeneral ($value)); break;
+      case 'time_secs':     tdxr (convertTimeGeneral ($value * 1000)); break;
       case 'gold':          tdxr (convertGold ($value)); break;
 
       // these things give hyperlinks
@@ -103,6 +104,7 @@ function expandField ($value, $expandType)
       case 'bonding':         tdxr (expandSimple (BONDING,         $value)); break;
       case 'skill_type':      tdxr (expandSimple (SKILL_TYPES,     $value)); break;
       case 'rank':            tdxr (expandSimple (CREATURE_RANK,   $value)); break;
+      case 'creature_type':   tdxr (expandSimple (CREATURE_TYPES,   $value)); break;
       case 'item_stats':      tdxr (expandSimple (ITEM_STATS,      $value)); break;
       case 'gameobject_type': tdxr (expandSimple (GAMEOBJECT_TYPE, $value)); break;
       case 'inventory_type':  tdxr (expandSimple (INVENTORY_TYPE,  $value)); break;
@@ -122,14 +124,18 @@ function expandField ($value, $expandType)
       case 'faction':                  tdxr (getFaction ($value));                  break;
       case 'race_mask':                tdxr (expandRaceMask ($value));              break;
       case 'class_mask':               tdxr (expandClassMask ($value));             break;
+      case 'school_mask':              tdxr (expandMask (SPELL_SCHOOLS, $value));   break;
       case 'inhabit_type_mask':        tdxr (inhabitTypeMask ($value));             break;
-      case 'mechanic_immune_mask':     tdxr (expandMechanicImmuneMask ($value));    break;
+      case 'mechanic_mask':            tdxr (expandMechanicMask ($value));          break;
       case 'flags_extra_mask':         tdxr (expandFlagsExtraMask ($value));        break;
       case 'npc_flags_mask':           tdxr (expandNpcFlagsMask ($value));          break;
       case 'item_flags_mask':          tdxr (expandItemFlagsMask ($value));         break;
       case 'spell_target_type_mask':   tdxr (expandSpellTargetTypeMask ($value));   break;
       case 'spell_attributes_mask':    tdxr (expandSpellAttributesMask ($value));   break;
       case 'spell_attributes_ex_mask': tdxr (expandSpellAttributesExMask ($value)); break;
+      case 'creature_static_flags'   : tdxr (expandShiftedMask (CREATURE_STATIC_FLAGS, $value)); break;
+      case 'quest_flags'   :           tdxr (expandShiftedMask (QUEST_FLAGS, $value)); break;
+      case 'quest_special_flags'   :   tdxr (expandShiftedMask (QUEST_SPECIAL_FLAGS, $value)); break;
       default:                         tdxr ("$expandType not known, id = $value"); break;
 
       } // end of switch

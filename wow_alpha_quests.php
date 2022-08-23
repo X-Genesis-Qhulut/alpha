@@ -21,7 +21,7 @@ function fixQuestText ($s)
 
 function simulateQuest ($id, $row)
   {
-  global $game_objects, $creatures, $zones, $quests;
+  global $game_objects, $creatures, $zones, $quests, $spells;
 
  // simulate quest
 
@@ -142,6 +142,56 @@ function simulateQuest ($id, $row)
 
 
   echo "</div>\n";
+
+
+  // find previous quests in the chain
+
+  $foundQuests = array ($id);    // stop looping
+
+  while ($row ['PrevQuestId'])
+    {
+    // get the previous one
+    $row = dbQueryOneParam ("SELECT entry, PrevQuestId FROM ".QUEST_TEMPLATE." WHERE entry = ? AND ignored = 0",
+                            array ('i', &$row ['PrevQuestId']));
+    if (!$row)  // not on file?
+      break;
+    if (in_array ($row ['entry'], $foundQuests))
+      break;  // avoid going into a loop
+    $foundQuests [] = $row ['entry']; // add this one to the chain
+    } // while we still have previous quest IDs
+
+  $foundQuests = array_reverse ($foundQuests);  // get into ascending order
+
+  // now get the next quests in the chain
+
+  // get this quest back
+  $row = dbQueryOneParam ("SELECT entry, NextQuestInChain FROM ".QUEST_TEMPLATE." WHERE entry = ?",
+                          array ('i', &$id));
+
+  while ($row ['NextQuestInChain'])
+    {
+    // get the next one
+    $row = dbQueryOneParam ("SELECT entry, NextQuestInChain FROM ".QUEST_TEMPLATE." WHERE entry = ? AND ignored = 0",
+                            array ('i', &$row ['NextQuestInChain']));
+    if (!$row)  // not on file?
+      break;
+    if (in_array ($row ['entry'], $foundQuests))
+      break;  // avoid going into a loop
+    $foundQuests [] = $row ['entry']; // add this one to the chain
+    } // while we still have previous quest IDs
+
+  if (count ($foundQuests) > 1)
+    {
+    echo "<h2>Quest chain</h2><ul>\n";
+    foreach ($foundQuests as $quest)
+      {
+      echo ("<li>" . lookupThing ($quests,     $quest, 'show_quest'));
+      if ($quest == $id)
+        echo fixHTML (' <-- this quest');
+      } // end of foreach
+    echo "</ul>\n";
+    } // end of previous quests in the chain
+
   } // end of simulateQuest
 
 function showOneQuest ($id)
@@ -172,6 +222,7 @@ function showOneQuest ($id)
         'PrevQuestId' => 'quest',
         'NextQuestId' => 'quest',
         'NextQuestInChain' => 'quest',
+        'ExclusiveGroup' => 'quest',
         'ReqSpellCast1' => 'spell',
         'ReqSpellCast2' => 'spell',
         'ReqSpellCast3' => 'spell',
@@ -187,6 +238,9 @@ function showOneQuest ($id)
         'RequiredClasses' => 'class_mask',
         'RequiredSkill' => 'skill',
         'RewOrReqMoney' => 'gold',
+        'LimitTime' => 'time_secs',
+        'QuestFlags' => 'quest_flags',
+        'SpecialFlags' => 'quest_special_flags',
 
 
     ),
