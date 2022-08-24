@@ -51,7 +51,7 @@ function lookupItems ($row, $items, $counts)
 
 function simulateItem ($id, $row)
   {
-  global $game_objects, $creatures, $zones, $quests, $spells;
+  global $game_objects, $creatures, $zones, $quests, $spells, $skills;
   global $documentRoot, $executionDir;
 
  // simulate item
@@ -84,7 +84,12 @@ function simulateItem ($id, $row)
   echo INVENTORY_TYPE [$row ['inventory_type']] . "<br>\n";
   echo 'Level ' . $row ['item_level'];
   if ($row ['required_level'])
-    echo ' (Min ' . $row ['required_level'] . ")<br>\n";
+    echo ' (Min ' . $row ['required_level'] . ")\n";
+  echo "<br>\n";
+
+  if ($row ['required_skill'])
+    echo 'Requires ' . expandSimple ($skills, $row ['required_skill'], false) .
+         ' (' . $row ['required_skill_rank'] . ")\n";
 
   // damage
 

@@ -435,20 +435,23 @@ function setUpSearch ($keyname, $fieldsToSearch)
   // secondary comparison
   if (strlen ($filter_value) > 0 && strlen ($filter_column) > 0)
     {
-    if (!preg_match ('/(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)/', $filter_value))
+    if (!preg_match ('/(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)|^[+\-]?(\d*\.)?(\d+)$/', $filter_value))
       {
-      ShowWarning ("Filter comparison value not decimal, hex or binary number: $filter\n\n" .
-                   "Secondary filter ignored.");
+      ShowWarningH ("Filter comparison value not decimal, float, hex or binary number: " . fixHTML ($filter_value) .
+                   "<br><br><b>Secondary</b> filter ignored.");
       return;
       }
+    $paramType = 'i';
+    if (strpos ($fixed_filter_value, '.') !== false)
+      $paramType = 'd';   // turn to a double since it has a decimal place
     $where .= " AND ($filter_column ";
     $where .= SECONDARY_FILTER [$filter_compare];
-    $params [0] .= 'i';
+    $params [0] .= $paramType;
     $params [] = &$fixed_filter_value;
     // [not] masked by all bits needs the value again
     if (strstr ($filter_compare, 'all'))
       {
-      $params [0] .= 'i';
+      $params [0] .= $paramType;
       $params [] = &$fixed_filter_value;
       }
     $where .= ')';

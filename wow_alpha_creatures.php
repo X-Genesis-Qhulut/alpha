@@ -86,6 +86,44 @@ function extraCreatureInformation ($id, $row)
     echo "<img src='creatures/$icon' alt='Creature image'>\n";
 
 
+  // ---------------- SPELL LISTS --------------
+
+
+  if ($row ['spell_list_id'])
+    {
+    $spellListRow = dbQueryOneParam ("SELECT * FROM ".CREATURE_SPELLS." WHERE entry = ?", array ('i', &$row ['spell_list_id']));
+    if ($spellListRow)
+      {
+      echo "<h2 title='Table: alpha_world.creature_spells'>Spells this NPC casts</h2><ul>\n";
+      for ($i = 1; $i <= 8; $i++)
+        {
+        if ($spellListRow ["spellId_$i"])
+          {
+          echo "<li>";
+          echo (lookupThing ($spells,   $spellListRow ["spellId_$i"], 'show_spell'));
+          echo "<ul>\n";
+          echo "<li>Probability: " . $spellListRow ["probability_$i"] . "%";
+          echo "<li>Target type: " . expandSimple (TARGET_TYPE, $spellListRow ["castTarget_$i"]);
+          if ($spellListRow ["targetParam1_$i"] || $spellListRow ["targetParam2_$i"])
+            {
+            echo " (param1: " . $spellListRow ["targetParam1_$i"];
+            echo ", param2: " . $spellListRow ["targetParam2_$i"] . ")";
+            }
+          if ($spellListRow ["castFlags_$i"])
+            echo "<li>Flags: "  . expandShiftedMask (SPELL_CAST_FLAGS, $spellListRow ["castFlags_$i"], false);
+
+          echo "<li>Initial delay: "  . $spellListRow ["delayInitialMin_$i"] . ' to ' . $spellListRow ["delayInitialMax_$i"];
+          echo "<li>Repeat delay: "  . $spellListRow ["delayRepeatMin_$i"] . ' to ' . $spellListRow ["delayRepeatMax_$i"];
+          if ($spellListRow ["scriptId_$i"])
+            echo "<li>Script ID: "  . $spellListRow ["scriptId_$i"];
+          echo "</ul>\n";
+          }   // end of if this spell entry is there (non-zero)
+        } // end of for each of the 8 possible spells
+      echo "</ul>\n";
+      } // if we found the spell list
+
+    } // end of if they had a spell_list_id
+
   // ---------------- QUESTS -----------------
 
   // show quests they start

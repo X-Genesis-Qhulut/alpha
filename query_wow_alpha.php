@@ -83,7 +83,7 @@ function expandField ($value, $expandType)
       // these things give hyperlinks
       case 'spell':         tdhr (lookupThing ($spells,     $value, 'show_spell'));  break;
       case 'creature':      tdhr (lookupThing ($creatures,  $value, 'show_creature'));  break;
-      case 'quest':         tdhr (lookupThing ($quests,     $value, 'show_quest'));  break;
+      case 'quest':         tdhr (lookupThing ($quests,     abs($value), 'show_quest'));  break;
       case 'item':          lookupItem ($value, 1); break;
 
       case 'creature_or_go':
@@ -112,6 +112,7 @@ function expandField ($value, $expandType)
       case 'race'       :     tdxr (expandSimple (RACES,           $value)); break;
       case 'map':             tdxr (expandSimple ($maps,           $value)); break;
       case 'skill':           tdxr (expandSimple ($skills,         $value)); break;
+      case 'quest_type':      tdxr (expandSimple (QUEST_TYPE,      $value)); break;
 
       case 'item_class'   :   tdxr (getItemClass ($value));
                               $lastItemClass = $value;    // remember for when the subclass comes along
@@ -136,6 +137,7 @@ function expandField ($value, $expandType)
       case 'creature_static_flags'   : tdxr (expandShiftedMask (CREATURE_STATIC_FLAGS, $value)); break;
       case 'quest_flags'   :           tdxr (expandShiftedMask (QUEST_FLAGS, $value)); break;
       case 'quest_special_flags'   :   tdxr (expandShiftedMask (QUEST_SPECIAL_FLAGS, $value)); break;
+      case 'spell_interrupt_flags'   : tdxr (expandShiftedMask (SPELL_INTERRUPT_FLAGS, $value)); break;
       default:                         tdxr ("$expandType not known, id = $value"); break;
 
       } // end of switch
@@ -205,6 +207,7 @@ function showBigMenu ()
 
   // find last database updates
 
+  echo "<h3>Database updates</h3>\n";
   $latest_dbc   = checkAppliedUpdates (APPLIED_UPDATES_DBC);
   echo "<p>Latest DBC table update: ";
   convertDate ($latest_dbc) . "\n";
@@ -212,6 +215,9 @@ function showBigMenu ()
   $latest_world = checkAppliedUpdates (APPLIED_UPDATES_WORLD);
   echo "<br>Latest World table update: ";
   convertDate ($latest_world) . "\n";
+
+  echo "<p>Databases from <a href='https://github.com/The-Alpha-Project/alpha-core/tree/master/etc/databases'>
+    GitHub: alpha-core/etc/databases/</a>\n";
 
   } // end of showBigMenu
 
@@ -363,10 +369,14 @@ echo "<div class='credits'><a href='$PHP_SELF'><img style='width:50px; float:lef
       <br>This browser at GitHub:
       <a href='https://github.com/X-Genesis-Qhulut/alpha' style='white-space: nowrap;'>X-Genesis-Qhulut / alpha</a><br>
       <b>WoW Alpha Project</b> at GitHub: <a href='https://github.com/The-Alpha-Project/alpha-core'  style='white-space: nowrap;'>
-      The-Alpha-Project / alpha-core</a>
+      The-Alpha-Project / alpha-core</a>";
+
+// echo "<br><b>Discord channel</b>: <a href='https://discord.com/channels/628574828038717470/'>Alpha Project</a>.\n";
+echo "<br>Thanks to Grender!\n
       <p>Thanks to the original developers of WoW and also John Staats for writing
       <br><i>The WoW Diary: A Journal of Computer Game Development.</i>\n
-      <br>Maps courtesy of Entropy and <a href='https://wow.tools/maps/Kalimdor/'>WoW.tools</a>\n
+      <br>Maps courtesy of Entropy and <a href='https://wow.tools/maps/Kalimdor/'>WoW.tools</a>.
+      Creature screenshots by Daribon.\n
       <details><summary>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</summary>\n
       <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
       “for home, noncommercial and personal use only”.

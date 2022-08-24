@@ -221,6 +221,7 @@ function showOneSpell ($id)
                   'ImplicitTargetB_1' => 'spell_implicit_target',
                   'ImplicitTargetB_2' => 'spell_implicit_target',
                   'ImplicitTargetB_3' => 'spell_implicit_target',
+                  'InterruptFlags' => 'spell_interrupt_flags',
 
                 ), 'simulateSpell');
   } // end of showOneSpell

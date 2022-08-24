@@ -52,6 +52,12 @@ function showOneTable ()
     }
   echo "</table>\n";
 
+  $row = dbQueryOne ("SELECT COUNT(*) AS count FROM " .
+              ($database == 'alpha_dbc' ? DBC_DBNAME : WORLD_DBNAME) . '.' . $table);
+
+  echo ('<p>' . $row ['count'] . " rows in this table.\n");
+
+
   } // end of showOneTable
 
 function showTablesHelper ($tableName, $headingName)

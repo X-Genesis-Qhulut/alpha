@@ -17,7 +17,11 @@ function fixQuestText ($s)
   $s = str_ireplace ('$n', "<name>", $s);
   $s = str_ireplace ('$r', "<race>", $s);
   $s = str_ireplace ('$c', "<class>", $s);
-  $s = preg_replace ('/\$g([^:]+):([^;]+);/i', '<\1/\2>', $s);
+
+  // gendered alternatives, eg. lad/lass, brother/sister, good sir/my lady etc.
+  // Example: "$gmister:lady;"    becomes "<mister/lady>"
+
+  $s = preg_replace ('/\$g ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
 
   $s = fixHTML ($s);
   return str_ireplace ('$b', "<br>", $s);
@@ -131,6 +135,12 @@ function simulateQuest ($id, $row)
 
   echo "<hr>\n";
 
+  $quest_type = $row ['Type'];
+  if ($quest_type > 0)  // quest type
+    {
+    echo "<br><b>Type</b>: " . expandSimple (QUEST_TYPE, $quest_type, false);
+    }
+
   $zone = $row ['ZoneOrSort'];
   if ($zone > 0)  // quest zone
     {
@@ -140,15 +150,66 @@ function simulateQuest ($id, $row)
   echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
   if ($row ['LimitTime'])
     echo "<br><b>Time limit</b>: " . convertTimeGeneral ($row ['LimitTime'] * 1000);
-  if ($row ['PrevQuestId'])
-   echo "<br><b>Previous quest</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
+
+  $PrevQuestId = $row ['PrevQuestId'];
+  if ($PrevQuestId > 0)
+    echo "<br><b>Requires completion of</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
+  if ($PrevQuestId < 0)
+    echo "<br><b>This quest must be active</b>: " . lookupThing ($quests, abs ($row ['PrevQuestId']), 'show_quest');
+
   if ($row ['NextQuestId'])
-   echo "<br><b>Next quest</b>: " . lookupThing ($quests, $row ['NextQuestId'], 'show_quest');
+   echo "<br><b>Next quest</b>: " . lookupThing ($quests, abs ($row ['NextQuestId']), 'show_quest');
   if ($row ['NextQuestInChain'])
    echo "<br><b>Next quest in chain</b>: " . lookupThing ($quests, $row ['NextQuestInChain'], 'show_quest');
 
 
-  echo "</div>\n";
+  echo "</div>\n";    // end of simulated quest box
+
+// ===============================================================================================================
+
+
+ // who gives this quest
+  echo "<h2  title='Table: alpha_world.creature_quest_starter'>Quest givers</h2><ul>\n";
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $questStarterRow)
+    {
+    listThing ('NPC', $creatures, $questStarterRow ['entry'], 'show_creature');
+    } // for each quest starter NPC
+
+  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE start_quest = ?", array ('i', &$id));
+  foreach ($results as $questStarterRow)
+    {
+    listThing ('Item', $items, $questStarterRow ['entry'], 'show_item');
+    } // for each quest starter item
+
+
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $questStarterRow)
+    {
+    listThing ('Game object', $game_objects, $questStarterRow ['entry'], 'show_go');
+    } // for each quest starter game object
+
+  echo "</ul>\n";
+
+  // who finishes this quest
+  echo "<h2  title='Table: alpha_world.creature_quest_finisher'>Quest finishers</h2><ul>\n";
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $questFinisherRow)
+    {
+    listThing ('NPC', $creatures, $questFinisherRow ['entry'], 'show_creature');
+    } // for each quest finisher
+
+
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE quest = ?", array ('i', &$id));
+  if (count ($results) > 0)
+    {
+    foreach ($results as $questFinisherRow)
+      {
+      listThing ('Game object', $game_objects, $questFinisherRow ['entry'], 'show_go');
+      } // for each quest finisher GO
+    }
+
+  echo "</ul>\n";
 
 
   // find previous quests in the chain
@@ -157,12 +218,14 @@ function simulateQuest ($id, $row)
 
   while ($row ['PrevQuestId'])
     {
-    if (in_array ($row ['PrevQuestId'], $foundQuests))
+    $PrevQuestId = abs ($row ['PrevQuestId']);
+
+    if (in_array ($PrevQuestId, $foundQuests))
       break;  // avoid going into a loop
-    $foundQuests [] = $row ['PrevQuestId']; // add this one to the chain
+    $foundQuests [] = $PrevQuestId; // add this one to the chain
     // get the previous one
     $row = dbQueryOneParam ("SELECT entry, PrevQuestId FROM ".QUEST_TEMPLATE." WHERE entry = ? AND ignored = 0",
-                            array ('i', &$row ['PrevQuestId']));
+                            array ('i', &$PrevQuestId));
     if (!$row)  // not on file?
       break;
     } // while we still have previous quest IDs
@@ -172,17 +235,21 @@ function simulateQuest ($id, $row)
   // now get the next quests in the chain
 
   // get this quest back
-  $row = dbQueryOneParam ("SELECT entry, NextQuestInChain FROM ".QUEST_TEMPLATE." WHERE entry = ?",
+  $row = dbQueryOneParam ("SELECT entry, NextQuestId, NextQuestInChain FROM ".QUEST_TEMPLATE." WHERE entry = ?",
                           array ('i', &$id));
 
-  while ($row ['NextQuestInChain'])
+  while ($row ['NextQuestInChain'] || $row ['NextQuestId'] )
     {
-    if (in_array ($row ['NextQuestInChain'], $foundQuests))
+    $NextQuest = $row ['NextQuestInChain'];
+    if (!$NextQuest)
+      $NextQuest = abs ($row ['NextQuestId']);
+
+    if (in_array ($NextQuest, $foundQuests))
       break;  // avoid going into a loop
-    $foundQuests [] = $row ['NextQuestInChain']; // add this one to the chain
+    $foundQuests [] = $NextQuest; // add this one to the chain
     // get the next one
-    $row = dbQueryOneParam ("SELECT entry, NextQuestInChain FROM ".QUEST_TEMPLATE." WHERE entry = ? AND ignored = 0",
-                            array ('i', &$row ['NextQuestInChain']));
+    $row = dbQueryOneParam ("SELECT entry, NextQuestId, NextQuestInChain FROM ".QUEST_TEMPLATE." WHERE entry = ? AND ignored = 0",
+                            array ('i', &$NextQuest));
     if (!$row)  // not on file?
       break;
     } // while we still have previous quest IDs
@@ -248,53 +315,10 @@ function showOneQuest ($id)
         'LimitTime' => 'time_secs',
         'QuestFlags' => 'quest_flags',
         'SpecialFlags' => 'quest_special_flags',
-
+        'Type' => 'quest_type',
 
     ),
     'simulateQuest');
-
-  // who gives this quest
-  echo "<h2  title='Table: alpha_world.creature_quest_starter'>Quest givers</h2><ul>\n";
-  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('NPC', $creatures, $row ['entry'], 'show_creature');
-    } // for each quest starter NPC
-
-  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE start_quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('Item', $items, $row ['entry'], 'show_item');
-    } // for each quest starter item
-
-
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('Game object', $game_objects, $row ['entry'], 'show_go');
-    } // for each quest starter game object
-
-  echo "</ul>\n";
-
-  // who finishes this quest
-  echo "<h2  title='Table: alpha_world.creature_quest_finisher'>Quest finishers</h2><ul>\n";
-  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $row)
-    {
-    listThing ('NPC', $creatures, $row ['entry'], 'show_creature');
-    } // for each quest finisher
-
-
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE quest = ?", array ('i', &$id));
-  if (count ($results) > 0)
-    {
-    foreach ($results as $questRow)
-      {
-      listThing ('Game object', $game_objects, $questRow ['entry'], 'show_go');
-      } // for each quest finisher GO
-    }
-
-  echo "</ul>\n";
 
   } // end of showOneQuest
 

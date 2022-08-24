@@ -73,7 +73,7 @@ To avoid the effect of the secondary filter just leave the "comparison value" bo
 
     ... where `/var/www/html/` is the web server document root.
 
-    The "icons" folder would remain a sub-folder of that main folder.
+    The "icons" and "creatures" folders would remain sub-folders of that main folder.
 
     More specifically, to get started the first time:
 
@@ -123,7 +123,7 @@ To avoid the effect of the secondary filter just leave the "comparison value" bo
 
     These instructions assume that you have downloaded the alpha-core project from GitHub and are in the "alpha-core" directory.
 
-    Of course, use your own username, password and server address. If you are running locally the server could be "localhost".
+    Of course, use your own username, password and server address. If you are running locally the server could be "localhost" (or just omit the -h option altogether).
 
     Perhaps turn the above four lines into a shell script and run that when appropriate.
 

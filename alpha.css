@@ -213,11 +213,13 @@ img {
 .credits {
   font-size:smaller;
   border:1px solid black;
-  border-radius: 4px;
+  border-radius: 6px;
   background-color: cornsilk;
   padding: 1em;
   width: fit-content;
   margin-top:1em;
+	box-shadow: 3px 3px 3px gray;
+
 }
 
 .arrow {

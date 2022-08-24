@@ -23,6 +23,7 @@ define ('APPLIED_UPDATES_WORLD',        '`' . WORLD_DBNAME. '`.' . lwr ('applied
 define ('CREATURE_LOOT_TEMPLATE',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_loot_template'));
 define ('CREATURE_QUEST_FINISHER',      '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_finisher'));
 define ('CREATURE_QUEST_STARTER',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_starter'));
+define ('CREATURE_SPELLS',              '`' . WORLD_DBNAME. '`.' . lwr ('creature_spells'));
 define ('CREATURE_TEMPLATE',            '`' . WORLD_DBNAME. '`.' . lwr ('creature_template'));
 define ('FACTION',                      '`' . DBC_DBNAME  . '`.' . lwr ('Faction'));
 define ('GAMEOBJECT_QUESTRELATION',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_questrelation'));
@@ -330,6 +331,15 @@ define ('SPELL_IMPLICIT_TARGET', array (
   40 => 'Gameobject script near caster',
 ));
 
+define ('SPELL_INTERRUPT_FLAGS', array (
+  0x01 => 'Movement',
+  0x02 => 'Damage',
+  0x04 => 'Interrupt',
+  0x08 => 'Autoattack',
+  0x10 => 'Partial',
+));
+
+
 define ('TRAINER_FLAG', 0x8);
 
 define ('NPC_FLAG', array (
@@ -400,7 +410,7 @@ define ('ITEM_STATS', array (
 
 define ('ITEM_QUALITY_COLOR', array (
     0 => '#9d9d9d',
-    1 => '#ffffff',   // changed by me from #ffc600 - which didn't look right
+    1 => '#ffc600',
     2 => '#1eff00',
     3 => '#0070dd',
     4 => '#a335ee',
@@ -804,6 +814,61 @@ define ('SPELL_ATTRIBUTES_EX', array (
   0x80000000 => 'Cast when learned',
 ));
 
+define ('SPELL_CAST_FLAGS', array (
+  0x001 => 'Interrupt previous',
+  0x002 => 'Triggered',
+  0x004 => 'Force cast',
+  0x008 => 'Main ranged spell',
+  0x010 => 'Target unreachable',
+  0x020 => 'Aura not present',
+  0x040 => 'Only in melee',
+  0x080 => 'Not in melee',
+  0x100 => 'Target casting',
+));
+
+define ('TARGET_TYPE', array (
+   0 => 'Provided target',
+   1 => 'Hostile',
+   2 => 'Hostile second aggro',
+   3 => 'Hostile last aggro',
+   4 => 'Hostile random',
+   5 => 'Hostile random not top',
+   6 => 'Owner or self',
+   7 => 'Owner',
+   8 => 'Nearest creature with entry',
+   9 => 'Creature with guid',
+  10 => 'Creature from instance data',
+  11 => 'Nearest gameobject with entry',
+  12 => 'Gameobject with guid',
+  13 => 'Gameobject from instance data',
+  14 => 'Friendly',
+  15 => 'Friendly injured',
+  16 => 'Friendly injured except provided target',
+  17 => 'Friendly missing buff',
+  18 => 'Friendly missing buff except provided target',
+  19 => 'Friendly cc',
+  20 => 'Map event source',
+  21 => 'Map event target',
+  22 => 'Map event extra target',
+  23 => 'Nearest player',
+  24 => 'Nearest hostile player',
+  25 => 'Nearest friendly player',
+  26 => 'Random creature with entry',
+  27 => 'Random gameobject with entry',
+));
+
+// I got this from: https://mangoszero-docs.readthedocs.io/en/latest/database/world/quest-template.html
+
+define ('QUEST_TYPE', array (
+  0 	=> 'Normal',
+  1 	=> 'Elite',
+  21 	=> 'Life',
+  41 	=> 'PvP',
+  62 	=> 'Raid',
+  81 	=> 'Dungeon',
+  82 	=> 'World Event',
+  83 	=> 'Legendary',
+));
 
 // ---------------------------------------
 
