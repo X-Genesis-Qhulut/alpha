@@ -22,13 +22,19 @@ The "Filter" box can be used to filter on text. This is used to search descripti
 
 * A number. This will be used to go straight to that database record by key. For example, enter "257" to see the quest "A Hunter's Boast". This is useful for situations where you know the database key (from looking at another table) and simply want to look it up.
 
-* A regular expression. This will search text fields for a match on the regular expression. For tables with multiple text fields (like quests) a match on any of them will suffice. The website [Regular Expressions 101](https://regex101.com/) can be used to experiment with regular expressions. Do not worry too much about the details of regular expressions. Simple text just matches itself, for example enter "Dark Threat" to match any quest with that in its title or description. If you happen to want to search for a pure number, like all quests with "10" in the description, put it in brackets, eg. "(10)" to stop the browser from trying to look up record key 10.
+* A regular expression.
+    * This will search text fields for a match on the regular expression.
+    * For tables with multiple text fields (like quests) a match on any of them will suffice.
+    * The website [Regular Expressions 101](https://regex101.com/) can be used to experiment with regular expressions.
+    * Do not worry too much about the details of regular expressions. Simple text just matches itself, for example enter "Dark Threat" to match any quest with that in its title or description.
+    * If you happen to want to search for a pure number, like all quests with "10" in the description, put it in brackets, eg. "(10)" to stop the browser from trying to look up record key 10.
+    * Searches are not case-sensitive.
 
 ### Numeric comparison filter (secondary filter)
 
 In addition to searching for text, you can narrow down results by using the secondary filter "Also match:" beneath the filter box. This lets you choose *any* field from that database table, and compare it to a number.
 
-You select the fieldname from a drop-down list, for example: "Effect_1". Then choose a comparison (eg. equal, not equal, greater) and then enter a number which is the comparison number. So, you might have: "if Effect_1 equal 36" (learn spell).
+You select the fieldname from a drop-down list, for example: "Effect_1". Then choose a comparison (eg. equal, not equal, greater) and then enter a number which is the comparison value. So, you might have: "if Effect_1 equal 36" (learn spell).
 
 The field you choose is added as a right-hand column to the columns displayed, so you can see what its value was. This is more useful for comparisons like "greater than".
 
@@ -44,9 +50,16 @@ The "masked by" comparisons need a bit of explanation.
 
 * Not masked by all bits: This is the inverse of the above. Thus it matches if `(field & mask) != mask`
 
-The number to compare to can be entered in decimal, eg. 666, hex, eg. 0xBADBAD or binary, eg. 0b010011.
+The number to compare to can be entered in:
+
+* Decimal, eg. 666
+* Floating-point, eg. 12.34
+* Hex, eg. 0xBADBAD
+* Binary, eg. 0b010011
 
 To avoid the effect of the secondary filter just leave the "comparison value" box empty.
+
+**Warning**: Comparing floating-point values (eg. map coordinates) for equality may fail due to implementation issues in the SQL server.
 
 ---
 
