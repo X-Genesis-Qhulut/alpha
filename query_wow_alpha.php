@@ -34,9 +34,6 @@ require ("wow_alpha_ports.php");
 require ("wow_alpha_skills.php");
 require ("wow_alpha_tables.php");
 
-define ('QUERY_LIMIT', 200);
-define ('MAX_CREATURE', 5759);    // creatures > this are not in 0.5.3 alpha
-
 $documentRoot = $_SERVER['DOCUMENT_ROOT'];
 
 $dblink = false;

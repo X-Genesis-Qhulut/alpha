@@ -177,6 +177,138 @@ function simulateItem ($id, $row)
     }
 
 
+  // who drops it
+
+  $creature_loot_template = CREATURE_LOOT_TEMPLATE;
+  $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
+  $creature_template = CREATURE_TEMPLATE;
+
+  $results = dbQueryParam ("SELECT $creature_template.entry AS npc,
+                            $creature_loot_template.ChanceOrQuestChance AS chance,
+                            $creature_loot_template.item AS item
+                            FROM $creature_loot_template INNER JOIN $creature_template ON
+                            ($creature_loot_template.entry = IF($creature_template.loot_id > 0, $creature_template.loot_id, $creature_template.entry))
+                            WHERE $creature_loot_template.item = ?
+                            AND $creature_loot_template.mincountOrRef >= 0
+                            AND $creature_template.entry <= " . MAX_CREATURE . "
+                            ORDER BY name", array ('i', &$id));
+
+  // count quest items - they have a negative drop chance
+  $count = 0;
+  foreach ($results as $creatureRow)
+    if ($creatureRow ['chance'] < 0)
+        $count++;
+
+ // who drops it
+  if ($count > 0)
+    {
+    echo "<h2>Quest item dropped by</h2><ul>\n";
+    foreach ($results as $creatureRow)
+      {
+      if ($creatureRow ['chance'] < 0)
+        {
+        listThing ('', $creatures, $creatureRow ['npc'], 'show_creature');
+        echo ' - ' . -$creatureRow ['chance'] . '%';
+        }
+      } // for each quest finisher NPC
+    echo "</ul>\n";
+    }
+
+  // non-quest items
+  $count = 0;
+  foreach ($results as $creatureRow)
+    if ($creatureRow ['chance'] > 0)
+        $count++;
+
+  $running_count = 0;
+  if ($count > 0)
+    {
+    echo "<h2>Item dropped by</h2>";
+
+    // make two columns if there are a lot of them
+    if ($count > TWO_COLUMN_SPLIT)
+      {
+      echo "<div class='one_thing_container'>\n";
+      echo "<div class='one_thing_section'>\n";
+      }
+    echo "<ul>\n";
+
+    foreach ($results as $creatureRow)
+      {
+      if ($creatureRow ['chance'] > 0)
+        {
+        listThing ('', $creatures, $creatureRow ['npc'], 'show_creature');
+        echo ' - ' . $creatureRow ['chance'] . "%\n";
+        $running_count++;
+        // start the second column half-way through
+        if ($count > TWO_COLUMN_SPLIT &&  $running_count == intval ($count / 2))
+          {
+          echo "</ul></div>\n";
+          echo "<div class='one_thing_section'><ul>\n";
+          }
+        }
+      } // for each quest finisher NPC
+    echo "</ul>\n";
+
+    // end of two columns
+    if ($count > TWO_COLUMN_SPLIT)
+      echo "</div></div>\n";
+
+    }
+
+
+  // now the reference items <sigh>
+
+
+  $lootResults = dbQueryParam (
+      "SELECT $creature_template.entry AS npc,
+              $reference_loot_template.item AS refItem,
+              $creature_loot_template.ChanceOrQuestChance AS chance,
+              $reference_loot_template.mincountOrRef as minCount
+     FROM $creature_loot_template
+          INNER JOIN $reference_loot_template
+            ON $reference_loot_template.entry = $creature_loot_template.item
+          INNER JOIN $creature_template ON
+            ($creature_loot_template.entry = IF($creature_template.loot_id > 0, $creature_template.loot_id, $creature_template.entry))
+          WHERE $reference_loot_template.item = ?
+          AND $creature_loot_template.mincountOrRef < 0
+          AND $creature_template.entry <= " . MAX_CREATURE . "
+          ORDER BY $creature_template.name", array ('i', &$id));
+
+  $running_count = 0;
+  $count = count ($lootResults);
+  if ($count > 0)
+    {
+    echo "<h2 title='Table: alpha_world.reference_loot_template'>NPCs that drop this as reference loot</h2>\n";
+
+    // make two columns if there are a lot of them
+    if ($count > TWO_COLUMN_SPLIT)
+      {
+      echo "<div class='one_thing_container'>\n";
+      echo "<div class='one_thing_section'>\n";
+      }
+
+    echo "<ul>\n";
+
+    foreach ($lootResults as $lootRow)
+      {
+      listThing ('', $creatures, $lootRow ['npc'], 'show_creature');
+      echo  ' - ' .  $lootRow ['chance'] . "%\n";
+      $running_count++;
+      // start the second column half-way through
+      if ($count > TWO_COLUMN_SPLIT && $running_count == intval ($count / 2))
+        {
+        echo "</ul></div>\n";
+        echo "<div class='one_thing_section'><ul>\n";
+        }
+      } // for each loot item
+
+    echo "</ul>\n";
+    // end of two columns
+    if ($count > TWO_COLUMN_SPLIT)
+      echo "</div></div>\n";
+    }
+
   } // end of simulateItem
 
 function showOneItem ($id)

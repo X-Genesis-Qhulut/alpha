@@ -9,6 +9,12 @@
 
 */
 
+// configuration
+
+define ('QUERY_LIMIT', 200);
+define ('MAX_CREATURE', 5759);    // creatures > this are not in 0.5.3 alpha
+define ('TWO_COLUMN_SPLIT', 30);  // where we break long columns into two
+
 // table names
 
 function lwr ($s)

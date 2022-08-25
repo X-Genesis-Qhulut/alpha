@@ -85,9 +85,10 @@ function extraCreatureInformation ($id, $row)
     {
     if ($row ["display_id$i"])
       {
-      $icon = $row ["display_id$i"] . '.webp';
+      $display_id = $row ["display_id$i"];
+      $icon = $display_id . '.webp';
       if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
-        echo "<p><img src='creatures/$icon' alt='Creature image'>\n";
+        echo "<p><img src='creatures/$icon' title='Display ID $display_id ' alt='Creature image' class='model'>\n";
       } // end of if non-zero display ID
     } // end of for all 4 possible display IDs
 
@@ -234,17 +235,50 @@ function extraCreatureInformation ($id, $row)
 
   // now do the other drops
 
-  echo "<h2 title='Table: alpha_world.creature_loot_template'>Loot</h2>\n<ul>\n";
-
-  foreach ($results as $lootRow)
+  // count of remaining items
+  $count = count ($results) - $count;
+  if ($count > 0)
     {
-    $count++;
-    $chance = $lootRow ['ChanceOrQuestChance'];
-    if ($chance >= 0)
-      echo "<li>" . lookupItemHelper ($lootRow ['item'], $lootRow ['mincountOrRef']) . ' — ' .
-           $chance . '%';
-    } // for each loot item
+    echo "<h2 title='Table: alpha_world.creature_loot_template'>Loot</h2>\n";
+    $running_count = 0;
 
+
+    // make two columns if there are a lot of them
+    if ($count > TWO_COLUMN_SPLIT)
+      {
+      echo "<div class='one_thing_container'>\n";
+      echo "<div class='one_thing_section' style='max-width:30em;'>\n";
+      }
+
+    echo "<ul>\n";
+
+    foreach ($results as $lootRow)
+      {
+      $chance = $lootRow ['ChanceOrQuestChance'];
+      if ($chance >= 0)
+        {
+        echo "<li>" . lookupItemHelper ($lootRow ['item'], $lootRow ['mincountOrRef']) . ' — ' .
+             $chance . "%\n";
+        $running_count++;
+        // start the second column half-way through
+        if ($count > TWO_COLUMN_SPLIT && $running_count == intval ($count / 2))
+          {
+          echo "</ul></div>\n";
+          echo "<div class='one_thing_section'><ul>\n";
+          }
+
+        }
+      } // for each loot item
+
+    echo "</ul>\n";
+
+    // end of two columns
+    if ($count > TWO_COLUMN_SPLIT)
+      echo "</div></div>\n";
+
+    }   // end of if any loot at all
+  else
+    echo "<p>None.\n";
 
   // reference loot - the creature_loot_template table points to the reference_loot_template table
   // if the mincountOrRef field is negative, which may lead to multiple loot items for one reference
@@ -260,28 +294,48 @@ function extraCreatureInformation ($id, $row)
                                 AND $creature_loot_template.mincountOrRef < 0
                                 ORDER BY $reference_loot_template.item", array ('i', &$loot_id));
 
-  if (count ($lootResults) > 0)
+  $count = count ($lootResults);
+  if ($count > 0)
     {
-    echo "</ul><h2 title='Table: alpha_world.reference_loot_template'>Reference loot</h2>\n<ul>\n";
+    echo "<h2 title='Table: alpha_world.reference_loot_template'>Reference loot</h2>\n";
+    $running_count = 0;
+
+    // make two columns if there are a lot of them
+    if ($count > TWO_COLUMN_SPLIT)
+      {
+      echo "<div class='one_thing_container'>\n";
+      echo "<div class='one_thing_section'>\n";
+      }
+
+    echo "<ul>\n";
+    usort ($lootResults, 'reference_item_compare');
+    foreach ($lootResults as $lootRow)
+      {
+      $chance = $lootRow ['chance'];
+      if ($chance >= 0)
+        $chance .= "%\n";
+      else
+        $chance = -$chance . "% (quest)";
+      echo "<li>" . lookupItemHelper ($lootRow ['refItem'], $lootRow ['minCount']) . ' — ' .
+           $chance;
+      $running_count++;
+      // start the second column half-way through
+      if ($count > TWO_COLUMN_SPLIT && $running_count == intval ($count / 2))
+        {
+        echo "</ul></div>\n";
+        echo "<div class='one_thing_section'><ul>\n";
+        }
+
+      } // for each loot item
+
+    echo "</ul>\n";
+
+    // end of two columns
+    if ($count > TWO_COLUMN_SPLIT)
+      echo "</div></div>\n";
+
     }
 
-  usort ($lootResults, 'reference_item_compare');
-  foreach ($lootResults as $lootRow)
-    {
-    $count++;
-    $chance = $lootRow ['chance'];
-    if ($chance >= 0)
-      $chance .= '%';
-    else
-      $chance = -$chance . "% (quest)";
-    echo "<li>" . lookupItemHelper ($lootRow ['refItem'], $lootRow ['minCount']) . ' — ' .
-         $chance;
-    } // for each loot item
-
-  echo "</ul>\n";
-
-  if ($count == 0)
-    echo "<p>None.\n";
 
   // ---------------- PICK POCKETING LOOT -----------------
 

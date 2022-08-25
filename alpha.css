@@ -202,12 +202,7 @@ img {
 .one_thing_section
   {
   display: inline-block;
-  margin: 1em;
-  }
-
-.one_thing_section img {
-  max-width: initial;
-  max-height: initial;
+  margin: 10px;
   }
 
 .credits {
@@ -230,4 +225,10 @@ img {
 .navigation {
   display: inline-block;
   margin-left: 1em;
+  }
+
+.one_thing_section img
+  {
+  max-height: 350px;
+  max-width: 350px;
   }

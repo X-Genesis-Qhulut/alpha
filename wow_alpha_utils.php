@@ -679,6 +679,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
       echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'>\n";
       echo "<circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
+      echo "<title>$x $y $z $map</title>\n";
       echo "</svg>\n";
 
       } // end of if we have a mapName
