@@ -81,10 +81,15 @@ function extraCreatureInformation ($id, $row)
 
   // ---------------- IMAGE OF CREATURE -----------------
 
-  $icon = $row ['display_id1'] . '.webp';
-  if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
-    echo "<img src='creatures/$icon' alt='Creature image'>\n";
-
+  for ($i = 1; $i <= 4; $i++)
+    {
+    if ($row ["display_id$i"])
+      {
+      $icon = $row ["display_id$i"] . '.webp';
+      if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
+        echo "<p><img src='creatures/$icon' alt='Creature image'>\n";
+      } // end of if non-zero display ID
+    } // end of for all 4 possible display IDs
 
   // ---------------- SPELL LISTS --------------
 
