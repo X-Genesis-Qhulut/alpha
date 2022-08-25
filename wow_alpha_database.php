@@ -202,13 +202,6 @@ function dbQueryParam_helper ($sql, $params, $max_rows = -1)
       break;
     } // end of while each row
 
-/*   if ($max_rows > -1 && $row_count > $max_rows)
-      {
-      ShowWarning ("Too many rows ($row_count) returned for dbQueryOneParam");
-      showSQLerror ($sql);
-      }
-*/
-
   mysqli_stmt_close ($stmt);
   return $results;
 

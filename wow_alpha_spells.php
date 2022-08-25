@@ -15,6 +15,17 @@ function creature_compare ($a, $b)
   return $creatures [$a ['npc']] <=> $creatures [$b ['npc']];
   } // end of item_compare
 
+function fixSpellText ($s, $duration)
+  {
+  // numbered alternatives, eg. loaf/loaves
+  // Example: "$lloaf:loaves;"    becomes "<loaf/loaves>"
+
+  $s = preg_replace ('/\$l ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
+  $s = str_ireplace ('$d',  convertTimeGeneral ($duration), $s);
+
+  $s = fixHTML ($s);
+  return str_ireplace ('$b', "<br>", $s);
+  } // end of fixQuestText
 
 function simulateSpell ($id, $row)
   {
@@ -86,6 +97,7 @@ function simulateSpell ($id, $row)
 
   // look up the duration in yet another table again
   $spellDurationRow = dbQueryOneParam ("SELECT * FROM ".SPELLDURATION." WHERE ID = ?", array ('i', &$row ['DurationIndex']));
+  $duration = $spellDurationRow ['Duration'];
 
   // show what it casts
 
@@ -149,9 +161,15 @@ function simulateSpell ($id, $row)
                              $row ["EffectBasePoints_$i"]),
                     $description);
 
-  $description = str_replace ('$d',  convertTimeGeneral ($spellDurationRow ['Duration']), $description);
+  // calculate aura amounts for all three effect auras
+  for ($i = 1; $i <= 3; $i++)
+    if ($row ["EffectAura_$i"] > 0 && $row ["EffectAuraPeriod_$i"] > 0)
+      $description = str_replace ('$o' . $i,
+                    spellRoll ($row ["EffectDieSides_$i"], $row ["EffectBaseDice_$i"], $row ["EffectDicePerLevel_$i"],
+                               $row ["EffectBasePoints_$i"]) * $duration / $row ["EffectAuraPeriod_$i"],
+                      $description);
 
-  echo "<span style='color:yellow;'>" . fixHTML ($description) . "</span>\n";
+  echo "<span style='color:yellow;'>" . fixSpellText ($description, $duration) . "</span>\n";
 
   echo "</div>\n";    // end of simulation box
 
@@ -172,14 +190,58 @@ function simulateSpell ($id, $row)
     foreach ($results as $trainerRow)
       {
       listThing ('', $creatures, $trainerRow ['entry'], 'show_creature');
-
-// yeah, nah, looks crappy
-//      if ($trainerRow ['subname'])
-//        echo " " . fixHTML ('<' . $trainerRow ['subname'] . '>');
-
       } // for each trainer NPC entry
     echo "</ul>\n";
     }
+
+
+  // ---------------- WHAT ITEMS CAST THIS -----------------
+
+  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE.
+                           " WHERE (spellid_1 = ? OR spellid_2 = ? OR spellid_3 = ? OR spellid_4 = ? OR spellid_5 = ?)
+                           AND ignored = 0 ORDER BY name",
+                            array ('iiiii', &$id, &$id, &$id, &$id, &$id));
+
+  if (count ($results) > 0)
+    {
+    echo "<h2 title='Table: alpha_world.item_template'>Items that cast this spell</h2><ul>\n";
+    foreach ($results as $itemRow)
+      {
+      listThing ('', $items, $itemRow ['entry'], 'show_item');
+      } // for each item
+    echo "</ul>\n";
+    }
+
+  // ---------------- WHAT CREATURES CAST THIS -----------------
+
+  // build a list of all 8 possible spell slots in CREATURE_SPELLS
+  $where = '';
+  $params = array ('');
+  for ($i = 1; $i <= 8; $i++)
+    {
+    $where .= " spellId_$i = ?";
+    if ($i < 8)
+      $where .= ' OR ';
+    $params [0] .= 'i';
+    $params [] = &$id;
+    }
+
+  // find entries in CREATURE_SPELLS which refer to this spell (in one of the 8 spots)
+  $creature_spells = CREATURE_SPELLS;
+  $results = dbQueryParam ("SELECT $creature_template.entry AS npc FROM $creature_spells
+          INNER JOIN $creature_template ON ($creature_template.spell_list_id = $creature_spells.entry)
+          WHERE ($where) AND $creature_template.entry <= " . MAX_CREATURE, $params);
+
+  // show the results
+  if ($results)
+    {
+    echo "<h2 title='Table: alpha_world.creature_spells'>NPCs that cast this spell</h2><ul>\n";
+    foreach ($results as $creatureRow)
+      {
+      listThing ('', $creatures, $creatureRow ['npc'], 'show_creature');
+      } // for each item
+    echo "</ul>\n";
+    } // if we found the spell list
 
 
   } // end of simulateSpell

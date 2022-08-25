@@ -112,8 +112,12 @@ function extraCreatureInformation ($id, $row)
           if ($spellListRow ["castFlags_$i"])
             echo "<li>Flags: "  . expandShiftedMask (SPELL_CAST_FLAGS, $spellListRow ["castFlags_$i"], false);
 
-          echo "<li>Initial delay: "  . $spellListRow ["delayInitialMin_$i"] . ' to ' . $spellListRow ["delayInitialMax_$i"];
-          echo "<li>Repeat delay: "  . $spellListRow ["delayRepeatMin_$i"] . ' to ' . $spellListRow ["delayRepeatMax_$i"];
+          echo "<li>Initial delay: "  . $spellListRow ["delayInitialMin_$i"];
+          if ($spellListRow ["delayInitialMin_$i"] != $spellListRow ["delayInitialMax_$i"])
+            echo ' to ' . $spellListRow ["delayInitialMax_$i"];
+          echo "<li>Repeat delay: "  . $spellListRow ["delayRepeatMin_$i"];
+          if ($spellListRow ["delayRepeatMin_$i"] != $spellListRow ["delayRepeatMax_$i"])
+            echo ' to ' . $spellListRow ["delayRepeatMax_$i"];
           if ($spellListRow ["scriptId_$i"])
             echo "<li>Script ID: "  . $spellListRow ["scriptId_$i"];
           echo "</ul>\n";
@@ -245,15 +249,15 @@ function extraCreatureInformation ($id, $row)
                             $creature_loot_template.ChanceOrQuestChance AS chance,
                             $reference_loot_template.mincountOrRef as minCount
                            FROM $creature_loot_template
-                           INNER JOIN $reference_loot_template
-                              ON $reference_loot_template.entry = $creature_loot_template.item
+                                INNER JOIN $reference_loot_template
+                                  ON $reference_loot_template.entry = $creature_loot_template.item
                            WHERE $creature_loot_template.entry = ?
-                            AND $creature_loot_template.mincountOrRef < 0
-                            ORDER BY $reference_loot_template.item", array ('i', &$loot_id));
+                                AND $creature_loot_template.mincountOrRef < 0
+                                ORDER BY $reference_loot_template.item", array ('i', &$loot_id));
 
   if (count ($lootResults) > 0)
     {
-    echo "</ul><h2 title='Table: alpha_world.creature_loot_template'>Reference loot</h2>\n<ul>\n";
+    echo "</ul><h2 title='Table: alpha_world.reference_loot_template'>Reference loot</h2>\n<ul>\n";
     }
 
   usort ($lootResults, 'reference_item_compare');

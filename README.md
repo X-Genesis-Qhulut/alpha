@@ -171,3 +171,9 @@ git pull
 ```
 
 To update the database contents themselves, if they are changed by The-Alpha-Project, connect to whereever you placed the The-Alpha-Project files and do a "git pull". Then repeat step 6 above to replace the databases with the updated ones.
+
+---
+
+## Disclaimer
+
+The data shown is not the actual data used by Blizzard. It has been deduced by observing the game by many people, over time. People have noted spawn points, loot drops, and other behaviour, and then created a database which is supposedly similar to the one used by Blizzard. However there may well be discrepancies.

@@ -159,6 +159,8 @@ function simulateItem ($id, $row)
   echo "</div>\n";
 
 
+// =============================================================================================================
+
  // who sells it
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE item = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
   if (count ($results) > 0)

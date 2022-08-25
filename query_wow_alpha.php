@@ -369,10 +369,9 @@ echo "<div class='credits'><a href='$PHP_SELF'><img style='width:50px; float:lef
       <br>This browser at GitHub:
       <a href='https://github.com/X-Genesis-Qhulut/alpha' style='white-space: nowrap;'>X-Genesis-Qhulut / alpha</a><br>
       <b>WoW Alpha Project</b> at GitHub: <a href='https://github.com/The-Alpha-Project/alpha-core'  style='white-space: nowrap;'>
-      The-Alpha-Project / alpha-core</a>";
-
-// echo "<br><b>Discord channel</b>: <a href='https://discord.com/channels/628574828038717470/'>Alpha Project</a>.\n";
-echo "<br>Thanks to Grender!\n
+      The-Alpha-Project / alpha-core</a>
+      <br><b>Discord channel</b>: <a href='https://discord.gg/RzBMAKU'>Alpha Project</a>.
+      Thanks to Grender!\n
       <p>Thanks to the original developers of WoW and also John Staats for writing
       <br><i>The WoW Diary: A Journal of Computer Game Development.</i>\n
       <br>Maps courtesy of Entropy and <a href='https://wow.tools/maps/Kalimdor/'>WoW.tools</a>.
