@@ -33,6 +33,7 @@ require ("wow_alpha_zones.php");
 require ("wow_alpha_ports.php");
 require ("wow_alpha_skills.php");
 require ("wow_alpha_tables.php");
+require ("wow_alpha_proximity.php");
 
 $documentRoot = $_SERVER['DOCUMENT_ROOT'];
 
@@ -216,6 +217,10 @@ function showBigMenu ()
   echo "<p>Databases from <a href='https://github.com/The-Alpha-Project/alpha-core/tree/master/etc/databases'>
     GitHub: alpha-core/etc/databases/</a>\n";
 
+  echo "<hr>\n";
+  echo "<h3>Utilities</h3><ul>\n";
+  echo "<li><a href='?action=proximity'>Spawn point proximity search</a>\n";
+  echo "</ul>\n";
   } // end of showBigMenu
 
 
@@ -351,6 +356,8 @@ if ($action)
 
       case 'tables'      : showTables (); break;
       case 'show_table'  : showOneTable ($id); break;
+
+      case 'proximity'   : showProximity (); break;
 
       default: ShowWarning ('Unknown action'); break;
 
