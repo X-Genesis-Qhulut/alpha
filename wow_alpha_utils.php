@@ -474,7 +474,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   $name = fixHTML ($row [$nameField]);
 
 
-  echo "<h1 class='one_item'>" . fixHTML ($description) . " $id - $name</h1>\n";
+  echo "<h1 class='one_item'>" . fixHTML ($description) . " $id — $name</h1>\n";
   echo "<h2 class='one_item_table'>Table: " . fixHTML ($table_display_name) . "</h2>\n";
 
   echo "<div class='one_thing_container'>\n";

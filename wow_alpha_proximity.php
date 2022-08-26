@@ -16,8 +16,8 @@ function showProximity ()
 
   $PHP_SELF = $_SERVER['PHP_SELF'];
 
-  $prox_location    = getP ('prox_location', 30);
-  $prox_distance    = getP ('prox_distance', 5);
+  $prox_location    = getP ('prox_location', 50);
+  $prox_distance    = getP ('prox_distance', 10);
 
   // default to 100 yards
   if (!$prox_distance)
@@ -70,7 +70,8 @@ function showProximity ()
             FROM ".SPAWNS_CREATURES."
             WHERE map = ? AND ignored = 0
             HAVING distance <= ?
-            ORDER BY distance",
+            ORDER BY distance
+            LIMIT " . QUERY_LIMIT * 2,
             array ('dddii', &$x, &$y, &$z, &$map, &$prox_distance));
 
 
@@ -103,6 +104,11 @@ function showProximity ()
     } // end of foreach result
 
   echo "</ul>\n";
+
+  echo "<p>" . count ($results) . " matches.";
+
+  if (count ($results) >= QUERY_LIMIT * 2)
+    echo "<p>Query limited to " . (QUERY_LIMIT * 2) . " matches. There may be more.";
 
   } // end of showProximity
 ?>
