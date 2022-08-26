@@ -1,12 +1,15 @@
 # Database browser for the WoW Alpha Core project
 
-This is intended for browsing the database used in: https://github.com/The-Alpha-Project/alpha-core/
+This is intended for browsing the database used in: <https://github.com/The-Alpha-Project/alpha-core/>
 
-On the main menu click on one of the main parts of the database to browse.
+* On the main menu click on one of the main parts of the database to browse.
+* Then you can enter a filter (search) selection by entering some text. This is treated as a regular expression.
+* Alternatively, you can enter a database ID (number) directly to go to that item. For example, 4949 to view Thrall.
+* You can further filter on numeric fields (eg. items above a certain level)
 
-Then you can enter a filter (search) selection by entering some text. This is treated as a regular expression.
+A public implementation of this code is at: <https://wow-refugee.com/alpha/>
 
-You can enter a database ID (number) directly to go to that item. For example, 4949 to view Thrall. Or just type in "Thrall".
+If that goes down, see below for how to install it yourself.
 
 ---
 
@@ -59,11 +62,24 @@ The number to compare to can be entered in:
 
 To avoid the effect of the secondary filter just leave the "comparison value" box empty.
 
-**Warning**: Comparing floating-point values (eg. map coordinates) for equality may fail due to implementation issues in the SQL server.
+**Warning**: Comparing floating-point values (eg. map coordinates) for equality may fail due to implementation issues in the SQL server. Comparing floating-point numbers to be exactly equal to each other is notoriously difficult.
 
 ---
 
 ## How to install on your own server
+
+
+### TLDR:
+
+* Grab this code
+* Grab the databases from <https://github.com/The-Alpha-Project/alpha-core/tree/master/etc/databases/> and install them
+* Rename the file "wow_alpha_config.php.dist" as "wow_alpha_config.php"
+* In that file, put in your details (database username, password, host address)
+* Make a soft link pointing the web server to "query_wow_alpha.php" (ie. link that to "index.php")
+* Done!
+
+---
+
 
 1. Put all the files into a folder on your server, somewhere inside the document root. Personally I put them in:
 
@@ -112,20 +128,29 @@ To avoid the effect of the secondary filter just leave the "comparison value" bo
     cd alpha-core
     ```
 
-6. Import the databases from the SQL files in the links above into the appropriate databases, eg.
+6. Import the databases from the SQL files in the links above into the appropriate databases, eg. Start MySQL client and then:
+
+    First time, make the databases so you can "use" them:
 
     ```
-    mysql -uUSERNAME -pPASSWORD -h SERVER_ADDRESS alpha_world < etc/databases/world/world.sql
-    mysql -uUSERNAME -pPASSWORD -h SERVER_ADDRESS alpha_world < etc/databases/world/updates/updates.sql
-    mysql -uUSERNAME -pPASSWORD -h SERVER_ADDRESS alpha_dbc   < etc/databases/dbc/dbc.sql
-    mysql -uUSERNAME -pPASSWORD -h SERVER_ADDRESS alpha_dbc   < etc/databases/dbc/updates/updates.sql
+    create database alpha_world;
+    create database alpha_dbc;
+    ```
+
+    Then:
+
+    ```
+    use alpha_world;
+    source etc/databases/world/world.sql
+    source etc/databases/world/updates/updates.sql
+
+    use alpha_dbc;
+    source etc/databases/dbc/dbc.sql
+    source etc/databases/dbc/updates/updates.sql
     ```
 
     These instructions assume that you have downloaded the alpha-core project from GitHub and are in the "alpha-core" directory.
 
-    Of course, use your own username, password and server address. If you are running locally the server could be "localhost" (or just omit the -h option altogether).
-
-    Perhaps turn the above four lines into a shell script and run that when appropriate.
 
 7. Rename the file wow_alpha_config.php.dist to be wow_alpha_config.php, ie.
 
