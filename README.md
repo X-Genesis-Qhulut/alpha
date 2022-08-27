@@ -66,6 +66,20 @@ To avoid the effect of the secondary filter just leave the "comparison value" bo
 
 ---
 
+## Proximity search
+
+From the main menu you can find a link to do "Spawn point proximity search". This lets you enter in (or paste in) any coordinates the game world (including the map number) and it will calculate which NPCs spawn within a certain distance of that location (default is 100 yards).
+
+For example, Mankrik is at "-520.983 -2641.41 95.8708 1". Just copy those coordinates (inside the quotes) and paste as the source location, then click "Search". At present I find 24 matches within 100 yards of Mankrik.
+
+This could be useful for:
+
+* Checking nearby NPCs are where they should be.
+* Finding NPCs that are improperly spawned inside walls, under the ground, etc.
+* Finding NPCs that should not be there (in an otherwise uninhabited zone).
+
+---
+
 ## How to install on your own server
 
 
