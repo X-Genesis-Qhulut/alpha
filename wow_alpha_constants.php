@@ -35,11 +35,13 @@ define ('FACTION',                      '`' . DBC_DBNAME  . '`.' . lwr ('Faction
 define ('GAMEOBJECT_QUESTRELATION',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_questrelation'));
 define ('GAMEOBJECT_INVOLVEDRELATION',  '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_involvedrelation'));
 define ('GAMEOBJECT_TEMPLATE',          '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_template'));
+define ('GAMEOBJECT_LOOT_TEMPLATE',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_loot_template'));
 define ('ITEM_TEMPLATE',                '`' . WORLD_DBNAME. '`.' . lwr ('item_template'));
 define ('ITEMDISPLAYINFO',              '`' . DBC_DBNAME  . '`.' . lwr ('ItemDisplayInfo'));
 define ('MAP',                          '`' . DBC_DBNAME  . '`.' . lwr ('Map'));
 define ('NPC_VENDOR',                   '`' . WORLD_DBNAME. '`.' . lwr ('npc_vendor'));
 define ('PICKPOCKETING_LOOT_TEMPLATE',  '`' . WORLD_DBNAME. '`.' . lwr ('pickpocketing_loot_template'));
+define ('SKINNING_LOOT_TEMPLATE',       '`' . WORLD_DBNAME. '`.' . lwr ('skinning_loot_template'));
 define ('QUEST_TEMPLATE',               '`' . WORLD_DBNAME. '`.' . lwr ('quest_template'));
 define ('REFERENCE_LOOT_TEMPLATE',      '`' . WORLD_DBNAME. '`.' . lwr ('reference_loot_template'));
 define ('SKILLLINE',                    '`' . DBC_DBNAME  . '`.' . lwr ('SkillLine'));
@@ -712,6 +714,8 @@ define ('FLAGS_EXTRA', array (
   0x04000000 => 'No unreachable evade',
 ));
 
+define ('GAMEOBJECT_TYPE_CHEST', 3);
+
 define ('GAMEOBJECT_TYPE', array (
    0x0 => 'Door',
    0x1 => 'Button',
@@ -936,9 +940,6 @@ define ('TRAINER_TYPE', array (
     2 =>'Trade skills',
     3 =>'Pets',
 ));
-
-
-
 
 
 ?>

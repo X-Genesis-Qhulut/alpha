@@ -173,6 +173,8 @@ function simulateSpell ($id, $row)
 
   echo "</div>\n";    // end of simulation box
 
+  // ==========================================================================================================
+
   // ---------------- WHO TRAINS THIS -----------------
 
   // what they train
@@ -184,16 +186,13 @@ function simulateSpell ($id, $row)
                           WHERE $trainer_template.playerspell = ? AND entry <= ".MAX_CREATURE." ORDER BY name, subname",
                             array ('i', &$id));
 
-  if (count ($results) > 0)
-    {
-    echo "<h2 title='Table: alpha_world.trainer_id'>NPCs that train this spell</h2><ul>\n";
-    foreach ($results as $trainerRow)
-      {
-      listThing ('', $creatures, $trainerRow ['entry'], 'show_creature');
-      } // for each trainer NPC entry
-    echo "</ul>\n";
-    }
 
+  listItems ('NPCs that train this spell', 'alpha_world.trainer_id', count ($results), $results,
+    function ($row) use ($creatures)
+      {
+      listThing ('', $creatures, $row ['entry'], 'show_creature');
+      return true;
+      });
 
   // ---------------- WHAT ITEMS CAST THIS -----------------
 
@@ -202,15 +201,14 @@ function simulateSpell ($id, $row)
                            AND ignored = 0 ORDER BY name",
                             array ('iiiii', &$id, &$id, &$id, &$id, &$id));
 
-  if (count ($results) > 0)
-    {
-    echo "<h2 title='Table: alpha_world.item_template'>Items that cast this spell</h2><ul>\n";
-    foreach ($results as $itemRow)
+
+  listItems ('Items that cast this spell', 'alpha_world.item_template', count ($results), $results,
+    function ($row) use ($items)
       {
       listThing ('', $items, $itemRow ['entry'], 'show_item');
-      } // for each item
-    echo "</ul>\n";
-    }
+      return true;
+      });
+
 
   // ---------------- WHAT CREATURES CAST THIS -----------------
 
@@ -232,17 +230,13 @@ function simulateSpell ($id, $row)
           INNER JOIN $creature_template ON ($creature_template.spell_list_id = $creature_spells.entry)
           WHERE ($where) AND $creature_template.entry <= " . MAX_CREATURE, $params);
 
-  // show the results
-  if ($results)
-    {
-    echo "<h2 title='Table: alpha_world.creature_spells'>NPCs that cast this spell</h2><ul>\n";
-    foreach ($results as $creatureRow)
-      {
-      listThing ('', $creatures, $creatureRow ['npc'], 'show_creature');
-      } // for each item
-    echo "</ul>\n";
-    } // if we found the spell list
 
+  listItems ('NPCs that cast this spell', 'alpha_world.creature_spells', count ($results), $results,
+    function ($row) use ($creatures)
+      {
+      listThing ('', $creatures, $row ['npc'], 'show_creature');
+      return true;
+      });
 
   } // end of simulateSpell
 

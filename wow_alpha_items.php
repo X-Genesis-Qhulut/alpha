@@ -199,66 +199,33 @@ function simulateItem ($id, $row)
     if ($creatureRow ['chance'] < 0)
         $count++;
 
- // who drops it
-  if ($count > 0)
-    {
-    echo "<h2>Quest item dropped by</h2><ul>\n";
-    foreach ($results as $creatureRow)
+  listItems ('Quest item dropped by', 'alpha_world.creature_loot_template',
+            $count, $results,
+    function ($row) use ($creatures)
       {
-      if ($creatureRow ['chance'] < 0)
-        {
-        listThing ('', $creatures, $creatureRow ['npc'], 'show_creature');
-        echo ' - ' . -$creatureRow ['chance'] . '%';
-        }
-      } // for each quest finisher NPC
-    echo "</ul>\n";
-    }
+      if ($row ['chance'] >= 0)
+        return false;   // ignore non-quest items
+      listThing ('', $creatures, $row ['npc'], 'show_creature');
+      echo ' - ' . -$row ['chance'] . '%';
+      return true;
+      } // end listing function
+      );
 
-  // non-quest items
-  $count = 0;
-  foreach ($results as $creatureRow)
-    if ($creatureRow ['chance'] > 0)
-        $count++;
+  $count = count($results) - $count;
 
-  $running_count = 0;
-  if ($count > 0)
-    {
-    echo "<h2>Item dropped by</h2>";
-
-    // make two columns if there are a lot of them
-    if ($count > TWO_COLUMN_SPLIT)
+  listItems ('Item dropped by', 'alpha_world.creature_loot_template',
+              $count, $results,
+    function ($row) use ($creatures)
       {
-      echo "<div class='one_thing_container'>\n";
-      echo "<div class='one_thing_section'>\n";
-      }
-    echo "<ul>\n";
-
-    foreach ($results as $creatureRow)
-      {
-      if ($creatureRow ['chance'] > 0)
-        {
-        listThing ('', $creatures, $creatureRow ['npc'], 'show_creature');
-        echo ' - ' . $creatureRow ['chance'] . "%\n";
-        $running_count++;
-        // start the second column half-way through
-        if ($count > TWO_COLUMN_SPLIT &&  $running_count == intval ($count / 2))
-          {
-          echo "</ul></div>\n";
-          echo "<div class='one_thing_section'><ul>\n";
-          }
-        }
-      } // for each quest finisher NPC
-    echo "</ul>\n";
-
-    // end of two columns
-    if ($count > TWO_COLUMN_SPLIT)
-      echo "</div></div>\n";
-
-    }
-
+      if ($row ['chance'] < 0)
+        return false;   // ignore quest items
+      listThing ('', $creatures, $row ['npc'], 'show_creature');
+      echo ' - ' . $row ['chance'] . '%';
+      return true;
+      } // end listing function
+      );
 
   // now the reference items <sigh>
-
 
   $lootResults = dbQueryParam (
       "SELECT $creature_template.entry AS npc,
@@ -275,39 +242,43 @@ function simulateItem ($id, $row)
           AND $creature_template.entry <= " . MAX_CREATURE . "
           ORDER BY $creature_template.name", array ('i', &$id));
 
-  $running_count = 0;
-  $count = count ($lootResults);
-  if ($count > 0)
-    {
-    echo "<h2 title='Table: alpha_world.reference_loot_template'>NPCs that drop this as reference loot</h2>\n";
 
-    // make two columns if there are a lot of them
-    if ($count > TWO_COLUMN_SPLIT)
+  $count = count($results) - $count;
+
+  listItems ('NPCs that drop this as reference loot', 'alpha_world.reference_loot_template',
+             count($lootResults), $lootResults,
+    function ($row) use ($creatures)
       {
-      echo "<div class='one_thing_container'>\n";
-      echo "<div class='one_thing_section'>\n";
-      }
+      listThing ('', $creatures, $row ['npc'], 'show_creature');
+      echo  ' - ' .  $row ['chance'] . "%\n";
+      return true;
+      } // end listing function
+      );
 
-    echo "<ul>\n";
+  // who can be skinned for it
 
-    foreach ($lootResults as $lootRow)
+  $skinning_loot_template = SKINNING_LOOT_TEMPLATE;
+
+  $results = dbQueryParam ("SELECT $creature_template.entry AS npc,
+                            $skinning_loot_template.ChanceOrQuestChance AS chance,
+                            $skinning_loot_template.item AS item
+                            FROM $skinning_loot_template INNER JOIN $creature_template ON
+                            ($skinning_loot_template.entry = IF($creature_template.loot_id > 0, $creature_template.loot_id, $creature_template.entry))
+                            WHERE $skinning_loot_template.item = ?
+                            AND $skinning_loot_template.mincountOrRef >= 0
+                            AND $creature_template.entry <= " . MAX_CREATURE . "
+                            ORDER BY name", array ('i', &$id));
+
+
+   listItems ('Item can be skinned from', 'alpha_world.creature_loot_template',
+            count ($results), $results,
+    function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $lootRow ['npc'], 'show_creature');
-      echo  ' - ' .  $lootRow ['chance'] . "%\n";
-      $running_count++;
-      // start the second column half-way through
-      if ($count > TWO_COLUMN_SPLIT && $running_count == intval ($count / 2))
-        {
-        echo "</ul></div>\n";
-        echo "<div class='one_thing_section'><ul>\n";
-        }
-      } // for each loot item
-
-    echo "</ul>\n";
-    // end of two columns
-    if ($count > TWO_COLUMN_SPLIT)
-      echo "</div></div>\n";
-    }
+      listThing ('', $creatures, $row ['npc'], 'show_creature');
+      echo ' - ' . -$row ['chance'] . '%';
+      return true;
+      } // end listing function
+      );
 
   } // end of simulateItem
 

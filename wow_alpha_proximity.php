@@ -29,7 +29,8 @@ function showProximity ()
   echo "<input Type=hidden Name=action Value=proximity>\n";
   echo "Location: ";
 
-  echo " <input style='margin-right:1em;' placeholder='x y z map' type=text Name='prox_location' size=30 Value='" . fixHTML ($prox_location) . "'>\n";
+  echo " <input style='margin-right:1em;' placeholder='x y z map' type=text autofocus
+         Name='prox_location' size=30 Value='" . fixHTML ($prox_location) . "'>\n";
   echo " Within distance: ";
   echo " <input type=text Name='prox_distance' size=5 placeholder='yards' Value='" . fixHTML ($prox_distance) . "'>\n";
   echo " yards.\n";
@@ -65,20 +66,23 @@ function showProximity ()
   $map  = $matches ['map'];
 
   $results = dbQueryParam ("SELECT *,
-              SQRT(POWER(ABS (? - position_x), 2) + POWER(ABS (? - position_y), 2) + POWER(ABS(? - position_z), 2))
+              SQRT(POWER(? - position_x, 2) + POWER(? - position_y, 2) + POWER(? - position_z, 2))
                AS distance
             FROM ".SPAWNS_CREATURES."
             WHERE map = ? AND ignored = 0
             HAVING distance <= ?
             ORDER BY distance
-            LIMIT " . QUERY_LIMIT * 2,
+            LIMIT " . QUERY_LIMIT * 2,  // more generous query limit for this
             array ('dddii', &$x, &$y, &$z, &$map, &$prox_distance));
 
 
   if (count ($results) > 0)
     echo "<h3>NPCs within $prox_distance yards</h3>\n";
   else
-    echo "<p>No NPCs within $prox_distance yards\n";
+    {
+    echo "<p>No NPCs within $prox_distance yards.\n";
+    return;
+    }
 
   echo "<ul>\n";
   foreach ($results as $row)

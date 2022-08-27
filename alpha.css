@@ -232,3 +232,23 @@ img {
   max-height: 350px;
   max-width: 350px;
   }
+
+.item_list
+  {
+  border:1px solid black;
+  border-radius: 6px;
+	box-shadow: 3px 3px 3px gray;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left:1em;
+  padding-right:1em;
+  width: fit-content;
+  }
+
+.item_list h2
+ {
+  text-align:center;
+  border-bottom: 5px solid lightgrey;
+  padding-bottom: 5px;
+  }
+

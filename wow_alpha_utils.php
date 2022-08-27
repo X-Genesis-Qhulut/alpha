@@ -689,23 +689,22 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
   if ($mapName)   // end of position context
     echo "</div><p>\n";
 
-  echo "<h2 title='Table: $tableName'>$heading</h2>\n";
 
-  echo "<ul>\n";
-  foreach ($results as $spawnRow)
-    {
-    $x = $spawnRow [$xName];
-    $y = $spawnRow [$yName];
-    $z = $spawnRow [$zName];
-    $map = $spawnRow [$mName];
-    if ($map < 2)
-      echo "<li>$x $y $z $map";
-    else
-      echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
+  listItems ($heading, $tableName, count ($results), $results,
+    function ($row) use ($maps, $xName, $yName, $zName, $mName)
+      {
+      $x = $row [$xName];
+      $y = $row [$yName];
+      $z = $row [$zName];
+      $map = $row [$mName];
+      if ($map < 2)
+        echo "<li>$x $y $z $map";
+      else
+        echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
+      return true;
+      } // end of listing function
+      );
 
-    } // for each spawn point
-
-  echo "</ul>\n";
 
 } // end of showSpawnPoints
 
@@ -738,6 +737,53 @@ function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints)
   else
     return $min;
   }
+
+// generic handler for listing things (like items, spells, creatures) wit
+// automatic splitting into two columns if there are a lot of them
+function listItems ($heading, $table, $count, $results, $listItemFunc)
+{
+  // trivial case - nothing to list
+  if ($count <= 0)
+    return;
+
+  echo "<div class='item_list' >\n";
+  echo "<h2 title='Table: $table' >" . fixHTML ($heading) . "</h2>\n";
+  $running_count = 0;
+
+  // make two columns if there are a lot of them
+  if ($count > TWO_COLUMN_SPLIT)
+    {
+    echo "<div class='one_thing_container'>\n";
+    echo "<div class='one_thing_section' style='max-width:30em;'>\n";
+    }
+
+  // we'll make a bulleted list
+  echo "<ul>\n";
+
+  foreach ($results as $row)
+    {
+    if ($listItemFunc ($row))
+      {
+      $running_count++;
+      // start the second column half-way through (+1 so the longer list is on the left)
+      if ($count > TWO_COLUMN_SPLIT && $running_count == intval ($count / 2) + 1)
+        {
+        echo "</ul></div>\n";
+        echo "<div class='one_thing_section'>\n<ul>\n";
+        }
+      } // end of if this row actually got listed
+
+    } // for each row
+
+  echo "</ul>\n";
+
+  // end of two columns
+  if ($count > TWO_COLUMN_SPLIT)
+    echo "</div></div>\n";
+
+  echo "</div>\n";  // end of div holding this listing
+  return $running_count;
+}
 
 /*
 

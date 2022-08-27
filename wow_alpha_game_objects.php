@@ -62,6 +62,25 @@ function extraGameObjectInformation ($id, $row)
     echo "</ul>\n";
     }
 
+  // ---------------- CHEST LOOT -----------------
+
+  // show chest loot, which includes mining and herb nodes
+
+
+  if ($row ['type'] == GAMEOBJECT_TYPE_CHEST)
+    {
+    $lootResults = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$row ['data1']));
+    usort($lootResults, 'item_compare');
+    listItems ('Gameobject loot', 'alpha_world.gameobject_loot_template', count ($lootResults), $lootResults,
+      function ($row)
+        {
+        echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
+             $row ['ChanceOrQuestChance'] . '%';
+        return true;    // listed it
+        } // end listing function
+        );
+    } // end of chest type
+
 
   } // end of extraGameObjectInformation
 

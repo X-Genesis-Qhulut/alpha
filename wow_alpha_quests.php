@@ -29,7 +29,7 @@ function fixQuestText ($s)
 
 function simulateQuest ($id, $row)
   {
-  global $game_objects, $creatures, $zones, $quests, $spells;
+  global $game_objects, $creatures, $zones, $quests, $spells, $items;
 
  // simulate quest
 
@@ -169,48 +169,50 @@ function simulateQuest ($id, $row)
 
 
  // who gives this quest
-  echo "<h2  title='Table: alpha_world.creature_quest_starter'>Quest givers</h2><ul>\n";
+
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $questStarterRow)
-    {
-    listThing ('NPC', $creatures, $questStarterRow ['entry'], 'show_creature');
-    } // for each quest starter NPC
+  listItems ('NPCs that start this quest', 'alpha_world.creature_quest_starter', count ($results) , $results,
+    function ($row) use ($creatures)
+      {
+      listThing ('', $creatures, $row ['entry'], 'show_creature');
+      return true;
+      });
 
   $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE start_quest = ?", array ('i', &$id));
-  foreach ($results as $questStarterRow)
-    {
-    listThing ('Item', $items, $questStarterRow ['entry'], 'show_item');
-    } // for each quest starter item
-
+  listItems ('Items that start this quest', 'alpha_world.item_template', count ($results) , $results,
+    function ($row) use ($items)
+      {
+      listThing ('', $items, $row ['entry'], 'show_item');
+      return true;
+      });
 
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $questStarterRow)
-    {
-    listThing ('Game object', $game_objects, $questStarterRow ['entry'], 'show_go');
-    } // for each quest starter game object
 
-  echo "</ul>\n";
+  listItems ('Game objects that start this quest', 'alpha_world.gameobject_questrelation', count ($results) , $results,
+    function ($row) use ($game_objects)
+      {
+      listThing ('', $game_objects, $row ['entry'], 'show_item');
+      return true;
+      });
 
   // who finishes this quest
-  echo "<h2  title='Table: alpha_world.creature_quest_finisher'>Quest finishers</h2><ul>\n";
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
-  foreach ($results as $questFinisherRow)
-    {
-    listThing ('NPC', $creatures, $questFinisherRow ['entry'], 'show_creature');
-    } // for each quest finisher
 
+  listItems ('NPCs that finish this quest', 'alpha_world.creature_quest_finisher', count ($results) , $results,
+    function ($row) use ($creatures)
+      {
+      listThing ('', $creatures, $row ['entry'], 'show_creature');
+      return true;
+      });
 
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE quest = ?", array ('i', &$id));
-  if (count ($results) > 0)
-    {
-    foreach ($results as $questFinisherRow)
+
+  listItems ('Game objects that finish this quest', 'alpha_world.gameobject_involvedrelation', count ($results) , $results,
+    function ($row) use ($game_objects)
       {
-      listThing ('Game object', $game_objects, $questFinisherRow ['entry'], 'show_go');
-      } // for each quest finisher GO
-    }
-
-  echo "</ul>\n";
-
+      listThing ('', $game_objects, $row ['entry'], 'show_item');
+      return true;
+      });
 
   // find previous quests in the chain
 
@@ -256,15 +258,15 @@ function simulateQuest ($id, $row)
 
   if (count ($foundQuests) > 1)
     {
-    echo "<h2>Quest chain</h2><ul>\n";
-    foreach ($foundQuests as $quest)
-      {
-      echo ("<li>" . lookupThing ($quests,     $quest, 'show_quest'));
-      if ($quest == $id)
-        echo ' <i>(this quest)</i>';
-      } // end of foreach
-    echo "</ul>\n";
-    } // end of previous quests in the chain
+    listItems ('Quest chain', 'alpha_world.quest_template', count ($foundQuests) , $foundQuests,
+      function ($quest) use ($quests, $id)
+        {
+        echo ("<li>" . lookupThing ($quests, $quest, 'show_quest'));
+        if ($quest == $id)
+          echo ' <i>(this quest)</i>';
+        return true;
+        });
+    } // end of other quests in the chain
 
   } // end of simulateQuest
 
