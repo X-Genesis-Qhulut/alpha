@@ -32,6 +32,7 @@ define ('CREATURE_QUEST_STARTER',       '`' . WORLD_DBNAME. '`.' . lwr ('creatur
 define ('CREATURE_SPELLS',              '`' . WORLD_DBNAME. '`.' . lwr ('creature_spells'));
 define ('CREATURE_TEMPLATE',            '`' . WORLD_DBNAME. '`.' . lwr ('creature_template'));
 define ('FACTION',                      '`' . DBC_DBNAME  . '`.' . lwr ('Faction'));
+define ('FACTIONTEMPLATE',              '`' . DBC_DBNAME  . '`.' . lwr ('FactionTemplate'));
 define ('GAMEOBJECT_QUESTRELATION',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_questrelation'));
 define ('GAMEOBJECT_INVOLVEDRELATION',  '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_involvedrelation'));
 define ('GAMEOBJECT_TEMPLATE',          '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_template'));

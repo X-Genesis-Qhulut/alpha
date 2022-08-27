@@ -11,7 +11,9 @@
 
 function showOneMap ($id)
   {
-  showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  array ());
+  showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  array (
+    'MapName_Mask' => 'mask',
+    ));
   } // end of showOneMap
 
 function showMaps ()

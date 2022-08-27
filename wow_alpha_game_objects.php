@@ -115,7 +115,7 @@ function showOneGameObject ($id)
 
   showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry', $id, "Game Object", "name",
     array (
-        'faction' => 'faction',
+        'faction' => 'npc_faction',
         'type' => 'gameobject_type',
 
     ), 'extraGameObjectInformation');
@@ -163,9 +163,7 @@ function showGameObjects ()
     tdhr ("<a href='?action=show_go&id=$id'>$id</a>");
     $tdr ('name');
     $tdr ('faction');
- //   $faction = $row ['faction'];
- //   tdxr ($faction ? "$faction: " .
- //                                 (isset ($factions [$faction]) ? $factions [$faction] : '(not found)' ): $faction);
+    tdxr (getFaction ($row ["faction"]));
     showFilterColumn ($row);
 
     echo "</tr>\n";

@@ -27,6 +27,14 @@ function fixQuestText ($s)
   return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText
 
+// replace some magic numbers with proper defines
+define ('QUEST_REQUIRED_CREATURES', 4);
+define ('QUEST_REQUIRED_ITEMS', 4);
+define ('QUEST_REQUIRED_SPELLS', 4);
+define ('QUEST_REWARD_ITEMS', 4);
+define ('QUEST_REWARD_ITEM_CHOICES', 6);
+define ('QUEST_REWARD_REPUTATION', 5);
+
 function simulateQuest ($id, $row)
   {
   global $game_objects, $creatures, $zones, $quests, $spells, $items;
@@ -42,13 +50,13 @@ function simulateQuest ($id, $row)
 
   echo "<h3>Requirements</h3>\n";
 
-  for ($n = 1; $n <= 4; $n++)
+  for ($n = 1; $n <= QUEST_REQUIRED_ITEMS; $n++)
     if ($row ["ReqItemId$n"])
       echo (lookupItemHelper ($row ["ReqItemId$n"], $row ["ReqItemCount$n"]) . "<br>");
 
   // creatures or game objects
 
-  for ($n = 1; $n <= 4; $n++)
+  for ($n = 1; $n <= QUEST_REQUIRED_CREATURES; $n++)
     {
     $value = $row ["ReqCreatureOrGOId$n"];
     if ($value)
@@ -66,7 +74,7 @@ function simulateQuest ($id, $row)
 
   // spells
 
-  for ($n = 1; $n <= 4; $n++)
+  for ($n = 1; $n <= QUEST_REQUIRED_SPELLS; $n++)
     if ($row ["ReqSpellCast$n"])
       echo ('Cast: ' . lookupThing ($spells, $row ["ReqSpellCast$n"], 'show_spell'). "<br>");
 
@@ -81,23 +89,18 @@ function simulateQuest ($id, $row)
 
   // non-choice item rewards
 
-  for ($n = 1; $n <= 4; $n++)
+  for ($n = 1; $n <= QUEST_REWARD_ITEMS; $n++)
     if ($row ["RewItemId$n"])
       echo (lookupItemHelper ($row ["RewItemId$n"], $row ["RewItemCount$n"]) . "<br>");
 
   // choose an item from these six
 
-  $count = ($row ["RewChoiceItemId1"] ? 1 : 0) +
-           ($row ["RewChoiceItemId2"] ? 1 : 0) +
-           ($row ["RewChoiceItemId3"] ? 1 : 0) +
-           ($row ["RewChoiceItemId4"] ? 1 : 0) +
-           ($row ["RewChoiceItemId5"] ? 1 : 0) +
-           ($row ["RewChoiceItemId6"] ? 1 : 0);
+  $count = getCount ($row, 'RewChoiceItemId', QUEST_REWARD_ITEM_CHOICES);
 
   if ($count > 1)
     echo "<h4>Choice of:</h4><ul>\n";
 
-  for ($n = 1; $n <= 6; $n++)
+  for ($n = 1; $n <= QUEST_REWARD_ITEM_CHOICES; $n++)
     if ($row ["RewChoiceItemId$n"])
       echo ('<li>' . lookupItemHelper ($row ["RewChoiceItemId$n"], $row ["RewChoiceItemCount$n"]) . "<br>");
 
@@ -118,16 +121,12 @@ function simulateQuest ($id, $row)
 
   // reputation
 
- $count = ($row ["RewRepValue1"] ? 1 : 0) +
-          ($row ["RewRepValue2"] ? 1 : 0) +
-          ($row ["RewRepValue3"] ? 1 : 0) +
-          ($row ["RewRepValue4"] ? 1 : 0) +
-          ($row ["RewRepValue5"] ? 1 : 0);
+  $count = getCount ($row, 'RewRepValue', QUEST_REWARD_REPUTATION);
 
   if ($count > 0)
     {
     echo "<h4>Reputation adjustment</h4><ul>\n";
-    for ($n = 1; $n <= 5; $n++)
+    for ($n = 1; $n <= QUEST_REWARD_REPUTATION; $n++)
       if ($row ["RewRepValue$n"])
         echo ('<li>' . addSign ($row ["RewRepValue$n"]) . ' with ' . getFaction ($row ["RewRepFaction$n"], false));
     echo "</ul>\n";
@@ -268,42 +267,14 @@ function showOneQuest ($id)
   {
   global $quests, $creatures, $items, $game_objects, $spells;
 
-  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title",
-    array (
-        'ReqItemId1' => 'item',
-        'ReqItemId2' => 'item',
-        'ReqItemId3' => 'item',
-        'ReqItemId4' => 'item',
-        'RewItemId1' => 'item',
-        'RewItemId2' => 'item',
-        'RewItemId3' => 'item',
-        'RewItemId4' => 'item',
-        'ReqCreatureOrGOId1' => 'creature_or_go',
-        'ReqCreatureOrGOId2' => 'creature_or_go',
-        'ReqCreatureOrGOId3' => 'creature_or_go',
-        'ReqCreatureOrGOId4' => 'creature_or_go',
-        'RewChoiceItemId1' => 'item',
-        'RewChoiceItemId2' => 'item',
-        'RewChoiceItemId3' => 'item',
-        'RewChoiceItemId4' => 'item',
-        'RewChoiceItemId5' => 'item',
-        'RewChoiceItemId6' => 'item',
+  $extras = array (
         'SrcItemId' => 'item',
         'PrevQuestId' => 'quest',
         'NextQuestId' => 'quest',
         'NextQuestInChain' => 'quest',
         'ExclusiveGroup' => 'quest',
-        'ReqSpellCast1' => 'spell',
-        'ReqSpellCast2' => 'spell',
-        'ReqSpellCast3' => 'spell',
-        'ReqSpellCast4' => 'spell',
         'RewSpellCast' => 'spell',
         'RewSpell' => 'spell',
-        'RewRepFaction1' => 'faction',
-        'RewRepFaction2' => 'faction',
-        'RewRepFaction3' => 'faction',
-        'RewRepFaction4' => 'faction',
-        'RewRepFaction5' => 'faction',
         'RequiredRaces' => 'race_mask',
         'RequiredClasses' => 'class_mask',
         'RequiredSkill' => 'skill',
@@ -312,9 +283,22 @@ function showOneQuest ($id)
         'QuestFlags' => 'quest_flags',
         'SpecialFlags' => 'quest_special_flags',
         'Type' => 'quest_type',
+    );
 
-    ),
-    'simulateQuest');
+  for ($i = 1; $i <= QUEST_REQUIRED_ITEMS; $i++)
+    $extras ["ReqItemId$i"] = 'item';
+  for ($i = 1; $i <= QUEST_REWARD_ITEMS; $i++)
+    $extras ["RewItemId$i"] = 'item';
+  for ($i = 1; $i <= QUEST_REWARD_ITEM_CHOICES; $i++)
+    $extras ["RewChoiceItemId$i"] = 'item';
+  for ($i = 1; $i <= QUEST_REQUIRED_CREATURES; $i++)
+    $extras ["ReqCreatureOrGOId$i"] = 'creature_or_go';
+  for ($i = 1; $i <= QUEST_REQUIRED_SPELLS; $i++)
+    $extras ["ReqSpellCast$i"] = 'spell';
+  for ($i = 1; $i <= QUEST_REWARD_REPUTATION; $i++)
+    $extras ["RewRepFaction$i"] = 'faction';
+
+  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title", $extras, 'simulateQuest');
 
   } // end of showOneQuest
 

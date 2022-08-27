@@ -187,7 +187,7 @@ function simulateSpell ($id, $row)
                             array ('i', &$id));
 
 
-  listItems ('NPCs that train this spell', 'alpha_world.trainer_id', count ($results), $results,
+  listItems ('NPCs that train this spell', 'alpha_world.trainer_template', count ($results), $results,
     function ($row) use ($creatures)
       {
       listThing ($creatures, $row ['entry'], 'show_creature');
@@ -275,6 +275,9 @@ function showOneSpell ($id)
                   'ImplicitTargetB_2' => 'spell_implicit_target',
                   'ImplicitTargetB_3' => 'spell_implicit_target',
                   'InterruptFlags' => 'spell_interrupt_flags',
+                  'Name_Mask' => 'mask',
+                  'NameSubtext_Mask' => 'mask',
+                  'Description_Mask' => 'mask',
 
                 ), 'simulateSpell');
   } // end of showOneSpell

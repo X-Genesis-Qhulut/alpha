@@ -16,6 +16,7 @@ function showOneSkill ($id)
         'RaceMask'  => 'race_mask',
         'ClassMask' => 'class_mask',
         'SkillType' => 'skill_type',
+        'DisplayName_Mask' => 'mask',
       ));
   } // end of showOneSkill
 

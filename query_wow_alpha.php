@@ -66,7 +66,7 @@ define ('MENU', array (
 
 function expandField ($value, $expandType)
   {
-  global $skills, $spells, $factions, $creatures, $quests, $game_objects, $maps;
+  global $skills, $spells, $factions, $npc_factions, $creatures, $quests, $game_objects, $maps;
 
   global $lastItemClass;
 
@@ -77,6 +77,7 @@ function expandField ($value, $expandType)
       case 'time':          tdxr (convertTimeGeneral ($value)); break;
       case 'time_secs':     tdxr (convertTimeGeneral ($value * 1000)); break;
       case 'gold':          tdxr (convertGold ($value)); break;
+      case 'mask':          tdxr (getMask ($value)); break;
 
       // these things give hyperlinks
       case 'spell':         tdhr (lookupThing ($spells,     $value, 'show_spell'));  break;
@@ -111,6 +112,8 @@ function expandField ($value, $expandType)
       case 'map':             tdxr (expandSimple ($maps,           $value)); break;
       case 'skill':           tdxr (expandSimple ($skills,         $value)); break;
       case 'quest_type':      tdxr (expandSimple (QUEST_TYPE,      $value)); break;
+      case 'faction':         tdxr (getFaction ($value));                    break;
+      case 'npc_faction':     tdxr (expandSimple ($npc_factions,   $value)); break;
 
       case 'item_class'   :   tdxr (getItemClass ($value));
                               $lastItemClass = $value;    // remember for when the subclass comes along
@@ -120,7 +123,6 @@ function expandField ($value, $expandType)
 
       // masks (ie. possible multiple results depending on the bits matching)
       case 'item_subclass_mask'   :    tdxr (expandItemSubclassMask ($lastItemClass, $value)); break;
-      case 'faction':                  tdxr (getFaction ($value));                  break;
       case 'race_mask':                tdxr (expandRaceMask ($value));              break;
       case 'class_mask':               tdxr (expandClassMask ($value));             break;
       case 'school_mask':              tdxr (expandMask (SPELL_SCHOOLS, $value));   break;
@@ -145,12 +147,12 @@ function expandField ($value, $expandType)
 // look up items for cross-referencing (eg. in spells)
 function getThings (&$theArray, $table, $key, $description, $condition = '')
 {
-  $result = dbQuery ("SELECT $key, $description FROM $table $condition");
-  while ($row = dbFetch ($result))
+  $results = dbQuery ("SELECT $key, $description FROM $table $condition");
+  while ($row = dbFetch ($results))
     {
     $theArray [$row [$key]] = $row [$description];
     }
-  dbFree ($result);
+  dbFree ($results);
 } // end of getThings
 
 define ('MONTHS', array (
@@ -251,7 +253,7 @@ $filter_column = getGP ('filter_column', 30, $VALID_SQL_ID);
 // secondary filter comparison
 $filter_compare = getGP ('filter_compare', 30, $VALID_ACTION);
 // secondary filter value - a number, a hex number or a float
-$filter_value = getGP ('filter_value', 12);
+$filter_value = getGP ('filter_value');
 // convert from hex or binary to decimal for the SQL query
 if (preg_match ('/^0[xX]([0-9A-Fa-f]+)$/', $filter_value, $matches))
   $fixed_filter_value = hexdec ($matches [1]);
@@ -320,6 +322,18 @@ if ($action)
   getThings ($quests,       QUEST_TEMPLATE,      'entry', 'Title', 'WHERE ignored = 0'); // quests
   getThings ($maps,         MAP,                 'ID',    'Directory');         // maps
   getThings ($zones,        WORLDMAPAREA,        'AreaID',    'AreaName');          // zones
+
+  $skills [0] = 'None';
+  $factions [0] = 'None';
+
+  // NPC factions are more indirect
+  $faction = FACTION;
+  $factiontemplate = FACTIONTEMPLATE;
+  $results = dbQuery ("SELECT $factiontemplate.ID AS template_key, Name_enUS FROM $faction
+                       LEFT JOIN $factiontemplate ON ($faction.ID = $factiontemplate.Faction)");
+  while ($row = dbFetch ($results))
+    $npc_factions [$row ['template_key']] = $row ['Name_enUS'];
+  dbFree ($results);
   }
 
 if ($action)
