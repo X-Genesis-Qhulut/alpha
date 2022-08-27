@@ -28,6 +28,11 @@ define ('SECONDARY_FILTER', array (
         'not masked by any bit' => ' & ? = 0 ',
         'masked by all bits' => ' & ? = ? ',
         'not masked by all bits' => ' & ? <> ? ',
+        'in set' => ' IN ',
+        'not in set' => ' NOT IN',
+        'in range' => ' ',            // field >= a AND field <= b
+        'not in range' => ' NOT ',    // NOT (field >= a AND field <= b)
+
 ));
 
 function nl2br_http ($text)
@@ -244,35 +249,29 @@ function showSearchForm ($sortFields, $results, $table, $where)
 
   // secondary filter - value to compare to
 
-  echo " <input type=text Name='filter_value' size=10 Value='" . fixHTML ($filter_value) .
-        "' placeholder='Number/hex/bin' title='Leave empty for no secondary filtering.\nHex numbers: 0x0123ABCD\nBinary numbers: 0b01010'>\n";
+  echo " <input type=text Name='filter_value' size=15 Value='" . fixHTML ($filter_value) .
+        "' placeholder='Number/hex/bin'
+        title='Leave empty for no secondary filtering.\nHex numbers: 0x0123ABCD\nBinary numbers: 0b01010\nSet: 1,7,9,15\nRange: 20 to 30'>\n";
 
-  echo "<details style='margin-top:3px;'><summary>Regular expression tips</summary>\n";
-  echo "<ul>\n";
-  echo "<li><i>A number on its own</i>: the item database ID (key)\n";
-  echo "<li>Ordinary text: itself\n";
-  echo "<li>At beginning: ^\n";
-  echo "<li>At end: $\n";
-  echo "<li>Word boundaries: [[:&lt;:]]word[[:&gt;:]]\n";
-  echo "<li>Choice: this|that\n";
-  echo "<li>Letters: [A-Z]+\n";
-  echo "<li>Numbers: [0-9]+\n";
-  echo "<li>Zero or one: x?\n";
-  echo "<li>One or more: x+\n";
-  echo "<li>Zero or more: x*\n";
-  echo "<li>Any character: .\n";
-  echo "<li>Groups: (this is a group)\n";
-  echo "</ul>\n";
-  echo "</details>\n";
-  echo "</form>\n";
-
-  // next page button
-  $nextPage = $page + 1;
-  echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
-  echo "<input Type=hidden Name=action Value=$action>\n";
-  echo "<input Type=hidden Name=filter Value=$action>\n";
-  echo "<input Type=hidden Name=page Value=$nextPage>\n";
-  echo "</form>\n";
+  echo
+  "<details style='margin-top:3px;'><summary>Regular expression tips</summary>
+  <ul>
+  <li><i>A number on its own</i>: the item database ID (key)
+  <li>Ordinary text: itself
+  <li>At beginning: ^
+  <li>At end: $
+  <li>Word boundaries: [[:&lt;:]]word[[:&gt;:]]
+  <li>Choice: this|that
+  <li>Letters: [A-Z]+
+  <li>Numbers: [0-9]+
+  <li>Zero or one: x?
+  <li>One or more: x+
+  <li>Zero or more: x*
+  <li>Any character: .
+  <li>Groups: (this is a group)
+  </ul>
+  </details>
+  </form>";
 
   if (count ($results) == 0)
     {
@@ -435,26 +434,56 @@ function setUpSearch ($keyname, $fieldsToSearch)
   // secondary comparison
   if (strlen ($filter_value) > 0 && strlen ($filter_column) > 0)
     {
-    if (!preg_match ('/(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)|^[+\-]?(\d*\.)?(\d+)$/', $filter_value))
+    // IN SET
+    if ($filter_compare == 'in set' || $filter_compare == 'not in set')
       {
-      ShowWarningH ("Filter comparison value not decimal, float, hex or binary number: " . fixHTML ($filter_value) .
-                   "<br><br><b>Secondary</b> filter ignored.");
-      return;
-      }
-    $paramType = 'i';
-    if (strpos ($fixed_filter_value, '.') !== false)
-      $paramType = 'd';   // turn to a double since it has a decimal place
-    $where .= " AND ($filter_column ";
-    $where .= SECONDARY_FILTER [$filter_compare];
-    $params [0] .= $paramType;
-    $params [] = &$fixed_filter_value;
-    // [not] masked by all bits needs the value again
-    if (strstr ($filter_compare, 'all'))
+      if (!preg_match ('/\s*([+\-]?\d+)(\s*,([+\-]?\d+))*\s*$/', $filter_value))
+        {
+        ShowWarningH ('Filter comparison value "' . fixHTML ($filter_value)  . '" not a series of comma-separated numbers: ' .
+                     "<br><br><b>Secondary</b> filter ignored.");
+        return;
+        }
+      $where .= " AND ($filter_column " . SECONDARY_FILTER [$filter_compare];  // ie. IN or NOT IN
+      $where .= '(' . $filter_value . ')';
+      $where .= ')';
+      } // end of in or not in
+   // IN RANGE
+   elseif ($filter_compare == 'in range' || $filter_compare == 'not in range')
       {
+      if (!preg_match ('/\s*([+\-]?\d+)\s+to\s+([+\-]?\d+)\s*$/i', $filter_value, $matches))
+        {
+        ShowWarningH ('Filter comparison value "' . fixHTML ($filter_value) . '" not in format: (number) TO (number) '  .
+                     "<br><br><b>Secondary</b> filter ignored.");
+        return;
+        }
+      $where .= " AND (" . SECONDARY_FILTER [$filter_compare];  // ie. NOT or space
+      $where .= ' (' . $filter_column . ' >= ' . $matches [1] . ' AND ' .
+                       $filter_column . ' <= ' . $matches [2] . ')';
+      $where .= ')';
+      } // end of in range or not in range
+    // JUST A NUMBER
+    else
+      {
+      if (!preg_match ('/(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)|^[+\-]?(\d*\.)?(\d+)$/', $filter_value))
+        {
+        ShowWarningH ('Filter comparison value "'. fixHTML ($filter_value)  . '" not decimal, float, hex or binary number: ' .
+                     "<br><br><b>Secondary</b> filter ignored.");
+        return;
+        }
+      $where .= " AND ($filter_column " . SECONDARY_FILTER [$filter_compare];
+      $paramType = 'i';
+      if (strpos ($fixed_filter_value, '.') !== false)
+        $paramType = 'd';   // turn to a double since it has a decimal place
       $params [0] .= $paramType;
       $params [] = &$fixed_filter_value;
-      }
-    $where .= ')';
+      // [not] masked by all bits needs the value again
+      if (strstr ($filter_compare, 'all'))
+        {
+        $params [0] .= $paramType;
+        $params [] = &$fixed_filter_value;
+        }
+      $where .= ')';
+      } // end of NOT (in or not in)
     } // end of secondary comparison
 
   } // end of setUpSearch
@@ -891,6 +920,13 @@ function getFaction ($which, $showID = true)
   global $factions;
   return expandSimple ($factions, $which, $showID);
   } // end of getFaction
+
+function getMask ($which)
+  {
+  if ($which > 0)
+    return '0x' . dechex ($which);
+  return $which;
+  } // end of getMask
 
 function getItemClass ($which)
 {

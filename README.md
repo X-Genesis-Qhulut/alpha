@@ -43,6 +43,8 @@ The field you choose is added as a right-hand column to the columns displayed, s
 
 In fact, you could choose to use this to simply view some column, like "min_level" to simply see what it is. To do this just enter a comparison that will always be true. One such comparison is "masked by all bits: 0".
 
+### Comparing for masks
+
 The "masked by" comparisons need a bit of explanation.
 
 * Masked by any bit: This matches if any bit in the selected field matches **one** of the mask bits. That is: `(field & mask) != 0`. So, for example for spells "Targets" "masked by any bit" 0x4010 would return any spells that target "Game Object Item" (0x4000) **or** "Item" (0x10).
@@ -63,6 +65,14 @@ The number to compare to can be entered in:
 To avoid the effect of the secondary filter just leave the "comparison value" box empty.
 
 **Warning**: Comparing floating-point values (eg. map coordinates) for equality may fail due to implementation issues in the SQL server. Comparing floating-point numbers to be exactly equal to each other is notoriously difficult.
+
+#### Comparing for "in set" or "not in set"
+
+Another comparison is "in set" or "not in set". This allows you to supply a comma-separated list of values you want to compare to. For example, you could compare faction to "in set: 21,87" which would return rows which have faction either as 21 or 87. "Not in set" would return the inverse result.
+
+#### Comparing for a range
+
+You can also compare for a range. For example "10 to 20". In this case you must supply two numbers with the word "to" inbetween them, including a space on each side of the word "to". The range is inclusive. The comparison "not in range" would return the inverse result.
 
 ---
 
