@@ -56,7 +56,7 @@ function simulateItem ($id, $row)
 
  // simulate item
 
-  echo "<p><div class='item'>\n";
+  echo "<p><div class='simulate_box item'>\n";
   $color = ITEM_QUALITY_COLOR [$row ['quality']];
 
   echo "<h3 style='color:$color;'>" . fixHTML ($row ['name']) . "</h3>\n";
@@ -163,19 +163,16 @@ function simulateItem ($id, $row)
 
  // who sells it
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE item = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
-  if (count ($results) > 0)
-    {
-    echo "<h2>Sold by</h2><ul>\n";
-    foreach ($results as $vendorRow)
+
+  listItems ('Sold by', 'alpha_world.npc_vendor', count ($results), $results,
+    function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $vendorRow ['entry'], 'show_creature');
-      $maxcount = $vendorRow ['maxcount'];
+      listThing ($creatures, $row ['entry'], 'show_creature');
+      $maxcount = $row ['maxcount'];
       if ($maxcount  > 0)
         echo (" (limit $maxcount)");
-      } // for each quest finisher NPC
-    echo "</ul>\n";
-    }
-
+      } // end listing function
+      );
 
   // who drops it
 
@@ -204,10 +201,9 @@ function simulateItem ($id, $row)
     function ($row) use ($creatures)
       {
       if ($row ['chance'] >= 0)
-        return false;   // ignore non-quest items
-      listThing ('', $creatures, $row ['npc'], 'show_creature');
+        return true;   // ignore non-quest items
+      listThing ($creatures, $row ['npc'], 'show_creature');
       echo ' - ' . -$row ['chance'] . '%';
-      return true;
       } // end listing function
       );
 
@@ -218,10 +214,9 @@ function simulateItem ($id, $row)
     function ($row) use ($creatures)
       {
       if ($row ['chance'] < 0)
-        return false;   // ignore quest items
-      listThing ('', $creatures, $row ['npc'], 'show_creature');
+        return true;   // ignore quest items
+      listThing ($creatures, $row ['npc'], 'show_creature');
       echo ' - ' . $row ['chance'] . '%';
-      return true;
       } // end listing function
       );
 
@@ -242,16 +237,12 @@ function simulateItem ($id, $row)
           AND $creature_template.entry <= " . MAX_CREATURE . "
           ORDER BY $creature_template.name", array ('i', &$id));
 
-
-  $count = count($results) - $count;
-
   listItems ('NPCs that drop this as reference loot', 'alpha_world.reference_loot_template',
              count($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $row ['npc'], 'show_creature');
+      listThing ($creatures, $row ['npc'], 'show_creature');
       echo  ' - ' .  $row ['chance'] . "%\n";
-      return true;
       } // end listing function
       );
 
@@ -259,7 +250,7 @@ function simulateItem ($id, $row)
 
   $skinning_loot_template = SKINNING_LOOT_TEMPLATE;
 
-  $results = dbQueryParam ("SELECT $creature_template.entry AS npc,
+  $lootResults = dbQueryParam ("SELECT $creature_template.entry AS npc,
                             $skinning_loot_template.ChanceOrQuestChance AS chance,
                             $skinning_loot_template.item AS item
                             FROM $skinning_loot_template INNER JOIN $creature_template ON
@@ -270,13 +261,12 @@ function simulateItem ($id, $row)
                             ORDER BY name", array ('i', &$id));
 
 
-   listItems ('Item can be skinned from', 'alpha_world.creature_loot_template',
-            count ($results), $results,
+   listItems ('Item can be skinned from', 'alpha_world.skinning_loot_template',
+            count ($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $row ['npc'], 'show_creature');
+      listThing ($creatures, $row ['npc'], 'show_creature');
       echo ' - ' . -$row ['chance'] . '%';
-      return true;
       } // end listing function
       );
 

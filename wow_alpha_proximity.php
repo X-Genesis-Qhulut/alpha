@@ -93,7 +93,7 @@ function showProximity ()
       echo "<li>Distance: " . round ($distance, 1) . " yards:<ul>\n";
       for ($i = 1; $i <= 4; $i++)
         if ($row ["spawn_entry$i"])
-          listThing ('', $creatures, $row ["spawn_entry$i"], 'show_creature');
+          listThing ($creatures, $row ["spawn_entry$i"], 'show_creature');
       echo "</ul>\n";
       }
     else
@@ -101,7 +101,7 @@ function showProximity ()
       // single item
       for ($i = 1; $i <= 4; $i++)
         if ($row ["spawn_entry$i"])
-          listThing ('', $creatures, $row ["spawn_entry$i"], 'show_creature');
+          listThing ($creatures, $row ["spawn_entry$i"], 'show_creature');
       echo ' - ' . round ($distance, 1) . " yards.\n";
       } // end of one NPC
 

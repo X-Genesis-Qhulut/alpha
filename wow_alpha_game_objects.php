@@ -9,9 +9,36 @@
 
 // GAME OBJECTS
 
+// See: https://github.com/cmangos/issues/wiki/gameobject_template
+
 function extraGameObjectInformation ($id, $row)
   {
   global $maps, $quests;
+
+
+  echo "<p><div class='simulate_box gameobject'>\n";
+  echo "<h3 style='color:yellow;'>" . fixHTML ($row ['name'] ) . "</h3>\n";
+  echo expandSimple (GAMEOBJECT_TYPE, $row ['type'], false);
+  if ($row ['mingold'])
+    echo "<p>Money: " . convertGold ($row ['mingold']) . ' to ' . convertGold ($row ['maxgold']);
+
+  if ($row ['type'] == GAMEOBJECT_TYPE_CHEST)
+    {
+    if ($row ['data2'])
+      echo "<p>Restock time: " . convertTimeGeneral ($row ['data2'] * 1000);
+    if ($row ['data3'])
+      echo "<br>Consumable\n";
+    if ($row ['data4'])
+      {
+      echo "<br>Loot attempts allowed: " . $row ['data4'];
+      if ($row ['data5'] != $row ['data4'])
+        echo ' to ' . $row ['data5']. "\n";
+      }
+    } // end of chest
+
+  echo "</div>\n";    // end of simulation box
+
+ // ==========================================================================================================
 
  // show spawn points - Eastern Kingdoms'
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
@@ -45,7 +72,7 @@ function extraGameObjectInformation ($id, $row)
     echo "<h2 title='Table: alpha_world.gameobject_questrelation'>Game object starts these quests</h2><ul>\n";
     foreach ($results as $questRow)
       {
-      listThing ('', $quests, $questRow ['quest'], 'show_quest');
+      listThing ($quests, $questRow ['quest'], 'show_quest');
       } // for each quest starter GO
     echo "</ul>\n";
     }
@@ -57,7 +84,7 @@ function extraGameObjectInformation ($id, $row)
     echo "<h2 title='Table: alpha_world.gameobject_involvedrelation'>Game object finishes these quests</h2><ul>\n";
     foreach ($results as $questRow)
       {
-      listThing ('', $quests, $questRow ['quest'], 'show_quest');
+      listThing ($quests, $questRow ['quest'], 'show_quest');
       } // for each quest starter GO
     echo "</ul>\n";
     }
@@ -76,7 +103,6 @@ function extraGameObjectInformation ($id, $row)
         {
         echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
              $row ['ChanceOrQuestChance'] . '%';
-        return true;    // listed it
         } // end listing function
         );
     } // end of chest type

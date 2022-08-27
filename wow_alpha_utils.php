@@ -572,11 +572,9 @@ function convertTimeGeneral ($time)
   } // end of convertTimeGeneral
 
 
-function listThing ($what, $array, $id, $action)
+function listThing ($array, $id, $action)
   {
   echo "<li>";
-  if ($what)
-    echo "$what: ";
   $link = "<a href='?action=$action&id=$id'>$id</a>";
   if (! isset ($array [$id]))
     echo ("$id (not found)");
@@ -701,7 +699,6 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
         echo "<li>$x $y $z $map";
       else
         echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
-      return true;
       } // end of listing function
       );
 
@@ -740,10 +737,12 @@ function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints)
 
 // generic handler for listing things (like items, spells, creatures) wit
 // automatic splitting into two columns if there are a lot of them
-function listItems ($heading, $table, $count, $results, $listItemFunc)
+// the function $listItemFunc does the actual listing. It returns false (or null)
+// if the item was listed, and true if it was skipped for some reason.
+function listItems ($heading, $table, $totalCount, $results, $listItemFunc)
 {
   // trivial case - nothing to list
-  if ($count <= 0)
+  if ($totalCount <= 0)
     return;
 
   echo "<div class='item_list' >\n";
@@ -751,7 +750,7 @@ function listItems ($heading, $table, $count, $results, $listItemFunc)
   $running_count = 0;
 
   // make two columns if there are a lot of them
-  if ($count > TWO_COLUMN_SPLIT)
+  if ($totalCount > TWO_COLUMN_SPLIT)
     {
     echo "<div class='one_thing_container'>\n";
     echo "<div class='one_thing_section' style='max-width:30em;'>\n";
@@ -762,11 +761,11 @@ function listItems ($heading, $table, $count, $results, $listItemFunc)
 
   foreach ($results as $row)
     {
-    if ($listItemFunc ($row))
+    if (!$listItemFunc ($row))
       {
       $running_count++;
       // start the second column half-way through (+1 so the longer list is on the left)
-      if ($count > TWO_COLUMN_SPLIT && $running_count == intval ($count / 2) + 1)
+      if ($totalCount > TWO_COLUMN_SPLIT && $running_count == intval ($totalCount / 2) + 1)
         {
         echo "</ul></div>\n";
         echo "<div class='one_thing_section'>\n<ul>\n";
@@ -778,7 +777,7 @@ function listItems ($heading, $table, $count, $results, $listItemFunc)
   echo "</ul>\n";
 
   // end of two columns
-  if ($count > TWO_COLUMN_SPLIT)
+  if ($totalCount > TWO_COLUMN_SPLIT)
     echo "</div></div>\n";
 
   echo "</div>\n";  // end of div holding this listing

@@ -147,8 +147,7 @@ function extraCreatureInformation ($id, $row)
   listItems ('NPC starts these quests', 'alpha_world.creature_quest_starter', count ($results), $results,
     function ($row) use ($quests)
       {
-      listThing ('', $quests, $row ['quest'], 'show_quest');
-      return true;    // listed it
+      listThing ($quests, $row ['quest'], 'show_quest');
       } // end listing function
       );
 
@@ -158,8 +157,7 @@ function extraCreatureInformation ($id, $row)
   listItems ('NPC finishes these quests', 'alpha_world.creature_quest_finisher', count ($results), $results,
     function ($row) use ($quests)
       {
-      listThing ('', $quests, $row ['quest'], 'show_quest');
-      return true;    // listed it
+      listThing ($quests, $row ['quest'], 'show_quest');
       } // end listing function
       );
 
@@ -173,11 +171,10 @@ function extraCreatureInformation ($id, $row)
   listItems ('NPC sells', 'alpha_world.npc_vendor', count ($results), $results,
     function ($row) use ($items)
       {
-      listThing ('', $items, $row ['item'], 'show_item');
+      listThing ($items, $row ['item'], 'show_item');
       $maxcount = $row ['maxcount'];
       if ($maxcount  > 0)
         echo (" (limit $maxcount)");
-      return true;    // listed it
       } // end listing function
       );
 
@@ -193,8 +190,7 @@ function extraCreatureInformation ($id, $row)
   listItems ('NPC trains', 'alpha_world.trainer_id', count ($results), $results,
     function ($row) use ($spells)
       {
-      listThing ('', $spells, $row ['playerspell'], 'show_spell');
-      return true;    // listed it
+      listThing ($spells, $row ['playerspell'], 'show_spell');
       } // end listing function
       );
 
@@ -226,10 +222,9 @@ function extraCreatureInformation ($id, $row)
       {
       $chance = $row ['ChanceOrQuestChance'];
       if ($chance >= 0)
-        return false; // didn't list it
+        return true; // didn't list it
       echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
            -$chance . "%\n";
-      return true;    // listed it
       } // end listing function
       );
 
@@ -241,10 +236,9 @@ function extraCreatureInformation ($id, $row)
       {
       $chance = $row ['ChanceOrQuestChance'];
       if ($chance < 0)
-        return false; // didn't list it
+        return true; // didn't list it
       echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
            $chance . "%\n";
-      return true;    // listed it
       } // end listing function
       );
 
@@ -276,7 +270,6 @@ function extraCreatureInformation ($id, $row)
         $chance = -$chance . "% (quest)";
       echo "<li>" . lookupItemHelper ($row ['refItem'], $row ['minCount']) . ' — ' .
            $chance;
-      return true;    // listed it
       } // end listing function
       );
 
@@ -296,7 +289,6 @@ function extraCreatureInformation ($id, $row)
       {
       echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
            $row ['ChanceOrQuestChance'] . '%';
-      return true;    // listed it
       } // end listing function
       );
 
@@ -312,12 +304,11 @@ function extraCreatureInformation ($id, $row)
 
   $lootResults = dbQueryParam ("SELECT * FROM ".SKINNING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
   usort($lootResults, 'item_compare');
-  listItems ('', 'alpha_world.skinning_loot_template', count ($lootResults), $lootResults,
+  listItems ('Skinning loot', 'alpha_world.skinning_loot_template', count ($lootResults), $lootResults,
     function ($row)
       {
       echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
            $row ['ChanceOrQuestChance'] . '%';
-      return true;    // listed it
       } // end listing function
       );
 

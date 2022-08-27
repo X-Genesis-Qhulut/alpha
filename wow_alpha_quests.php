@@ -33,7 +33,7 @@ function simulateQuest ($id, $row)
 
  // simulate quest
 
-  echo "<p><div class='quest'>\n";
+  echo "<p><div class='simulate_box quest'>\n";
   echo "<h2>" . fixHTML ($row ['Title']) . "</h2>\n";
   echo "<p>" . fixQuestText ($row ['Details'] ). "</h2>\n";
 
@@ -174,16 +174,14 @@ function simulateQuest ($id, $row)
   listItems ('NPCs that start this quest', 'alpha_world.creature_quest_starter', count ($results) , $results,
     function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $row ['entry'], 'show_creature');
-      return true;
+      listThing ($creatures, $row ['entry'], 'show_creature');
       });
 
   $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE start_quest = ?", array ('i', &$id));
   listItems ('Items that start this quest', 'alpha_world.item_template', count ($results) , $results,
     function ($row) use ($items)
       {
-      listThing ('', $items, $row ['entry'], 'show_item');
-      return true;
+      listThing ($items, $row ['entry'], 'show_item');
       });
 
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE quest = ?", array ('i', &$id));
@@ -191,8 +189,7 @@ function simulateQuest ($id, $row)
   listItems ('Game objects that start this quest', 'alpha_world.gameobject_questrelation', count ($results) , $results,
     function ($row) use ($game_objects)
       {
-      listThing ('', $game_objects, $row ['entry'], 'show_item');
-      return true;
+      listThing ($game_objects, $row ['entry'], 'show_go');
       });
 
   // who finishes this quest
@@ -201,8 +198,7 @@ function simulateQuest ($id, $row)
   listItems ('NPCs that finish this quest', 'alpha_world.creature_quest_finisher', count ($results) , $results,
     function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $row ['entry'], 'show_creature');
-      return true;
+      listThing ($creatures, $row ['entry'], 'show_creature');
       });
 
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE quest = ?", array ('i', &$id));
@@ -210,8 +206,7 @@ function simulateQuest ($id, $row)
   listItems ('Game objects that finish this quest', 'alpha_world.gameobject_involvedrelation', count ($results) , $results,
     function ($row) use ($game_objects)
       {
-      listThing ('', $game_objects, $row ['entry'], 'show_item');
-      return true;
+      listThing ($game_objects, $row ['entry'], 'show_item');
       });
 
   // find previous quests in the chain
@@ -264,7 +259,6 @@ function simulateQuest ($id, $row)
         echo ("<li>" . lookupThing ($quests, $quest, 'show_quest'));
         if ($quest == $id)
           echo ' <i>(this quest)</i>';
-        return true;
         });
     } // end of other quests in the chain
 

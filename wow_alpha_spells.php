@@ -32,7 +32,7 @@ function simulateSpell ($id, $row)
   global $spells, $items, $creatures;
   global $documentRoot, $executionDir;
 
-  echo "<p><div class='spell'>\n";
+  echo "<p><div class='simulate_box spell'>\n";
   echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
   if ($row ['NameSubtext_enUS'])
     echo " - " . fixHTML ($row ['NameSubtext_enUS']);
@@ -190,8 +190,7 @@ function simulateSpell ($id, $row)
   listItems ('NPCs that train this spell', 'alpha_world.trainer_id', count ($results), $results,
     function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $row ['entry'], 'show_creature');
-      return true;
+      listThing ($creatures, $row ['entry'], 'show_creature');
       });
 
   // ---------------- WHAT ITEMS CAST THIS -----------------
@@ -205,8 +204,7 @@ function simulateSpell ($id, $row)
   listItems ('Items that cast this spell', 'alpha_world.item_template', count ($results), $results,
     function ($row) use ($items)
       {
-      listThing ('', $items, $itemRow ['entry'], 'show_item');
-      return true;
+      listThing ($items, $row ['entry'], 'show_item');
       });
 
 
@@ -234,8 +232,7 @@ function simulateSpell ($id, $row)
   listItems ('NPCs that cast this spell', 'alpha_world.creature_spells', count ($results), $results,
     function ($row) use ($creatures)
       {
-      listThing ('', $creatures, $row ['npc'], 'show_creature');
-      return true;
+      listThing ($creatures, $row ['npc'], 'show_creature');
       });
 
   } // end of simulateSpell
