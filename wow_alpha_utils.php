@@ -506,6 +506,16 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   echo "<h1 class='one_item'>" . fixHTML ($description) . " $id — $name</h1>\n";
   echo "<h2 class='one_item_table'>Table: " . fixHTML ($table_display_name) . "</h2>\n";
 
+  if  (preg_match ('|\.(.+)$|', $table, $matches))
+    {
+    $tableOnly = $matches [1];
+    // add a box for displaying SQL update information for copy/paste into an update line
+    echo "<div id='editing_sql' class='sql'>UPDATE `$tableOnly` SET `<span id='sql_field_name'>field</span>`
+        = xxxx WHERE (`$key` = " .
+         $row [$key] . ");\n
+         </div>\n";
+    }
+
   echo "<div class='one_thing_container'>\n";
   echo "<div class='one_thing_section'>\n";
 
@@ -518,8 +528,9 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
 
   foreach ($info as $col)
     {
-    echo "<tr>\n";
     $fieldName = $col ['Field'];
+    // the row will generate an SQL update if you Ctrl+click it
+    echo "<tr onclick='onClick(event,this.id)' id='field_$fieldName'>\n";
     tdx ($fieldName);
     // check if we can be more informative, like show an item name
     if (isset ($expand [$fieldName]))
