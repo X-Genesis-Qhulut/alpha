@@ -102,7 +102,7 @@ function showProximity ()
       for ($i = 1; $i <= 4; $i++)
         if ($row ["spawn_entry$i"])
           listThing ($creatures, $row ["spawn_entry$i"], 'show_creature');
-      echo ' - ' . round ($distance, 1) . " yards.\n";
+      echo ' — ' . round ($distance, 1) . " yards.\n";
       } // end of one NPC
 
     } // end of foreach result

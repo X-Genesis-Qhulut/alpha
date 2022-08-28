@@ -62,6 +62,15 @@ define ('MAP_DOT_SIZE', 8); // pixels
 define ('MAP_DOT_FILL', 'yellow');
 define ('MAP_DOT_STROKE', 'black');
 
+
+// replace some magic numbers with proper defines
+define ('QUEST_REQUIRED_CREATURES', 4);
+define ('QUEST_REQUIRED_ITEMS', 4);
+define ('QUEST_REQUIRED_SPELLS', 4);
+define ('QUEST_REWARD_ITEMS', 4);
+define ('QUEST_REWARD_ITEM_CHOICES', 6);
+define ('QUEST_REWARD_REPUTATION', 5);
+
 define ('SPELL_SCHOOLS', array (
    0 => 'Normal',
    1 => 'Holy',

@@ -96,7 +96,7 @@ function simulateItem ($id, $row)
   echo "<div>\n";
   for ($i = 1; $i <= 5; $i++)
     if ($row ["dmg_min$i"])
-      echo "<p class='item_lh'>" . $row ["dmg_min$i"] . ' - ' . $row ["dmg_max$i"]  . " Damage</p>\n";
+      echo "<p class='item_lh'>" . $row ["dmg_min$i"] . ' — ' . $row ["dmg_max$i"]  . " Damage</p>\n";
 
   if ($row ['delay'])
     echo "<p class='item_rh'>Speed: " . $row ['delay'] / 1000 . "</p>\n";
@@ -203,7 +203,7 @@ function simulateItem ($id, $row)
       if ($row ['chance'] >= 0)
         return true;   // ignore non-quest items
       listThing ($creatures, $row ['npc'], 'show_creature');
-      echo ' - ' . -$row ['chance'] . '%';
+      echo ' — ' . -$row ['chance'] . '%';
       } // end listing function
       );
 
@@ -216,7 +216,7 @@ function simulateItem ($id, $row)
       if ($row ['chance'] < 0)
         return true;   // ignore quest items
       listThing ($creatures, $row ['npc'], 'show_creature');
-      echo ' - ' . $row ['chance'] . '%';
+      echo ' — ' . $row ['chance'] . '%';
       } // end listing function
       );
 
@@ -242,7 +242,7 @@ function simulateItem ($id, $row)
     function ($row) use ($creatures)
       {
       listThing ($creatures, $row ['npc'], 'show_creature');
-      echo  ' - ' .  $row ['chance'] . "%\n";
+      echo  ' — ' .  $row ['chance'] . "%\n";
       } // end listing function
       );
 
@@ -266,7 +266,7 @@ function simulateItem ($id, $row)
     function ($row) use ($creatures)
       {
       listThing ($creatures, $row ['npc'], 'show_creature');
-      echo ' - ' . -$row ['chance'] . '%';
+      echo ' — ' . -$row ['chance'] . '%';
       } // end listing function
       );
 

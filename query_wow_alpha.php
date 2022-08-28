@@ -224,6 +224,9 @@ function showBigMenu ()
   echo "<h3>Utilities</h3><ul>\n";
   echo "<li><a href='?action=proximity'>Spawn point proximity search</a>\n";
   echo "<li><a href='?action=unknown_faction'>Creatures with unknown faction</a>\n";
+  echo "<li><a href='?action=quest_missing_item' >Quests with missing items</a>\n";
+  echo "<li><a href='?action=quest_missing_spell'>Quests with missing spells</a>\n";
+  echo "<li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a>\n";
   echo "</ul>\n";
   } // end of showBigMenu
 
@@ -374,7 +377,10 @@ if ($action)
       case 'show_table'  : showOneTable ($id); break;
 
       case 'proximity'   : showProximity (); break;
-      case 'unknown_faction'   : showUnknownFaction (); break;
+      case 'unknown_faction'      : showUnknownFaction (); break;
+      case 'quest_missing_item'   : showMissingQuestItems (); break;
+      case 'quest_missing_spell'   : showMissingQuestSpells (); break;
+      case 'quest_missing_quest'   : showMissingQuestQuests (); break;
 
       default: ShowWarning ('Unknown action'); break;
 

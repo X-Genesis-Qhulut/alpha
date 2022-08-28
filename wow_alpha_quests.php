@@ -27,14 +27,6 @@ function fixQuestText ($s)
   return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText
 
-// replace some magic numbers with proper defines
-define ('QUEST_REQUIRED_CREATURES', 4);
-define ('QUEST_REQUIRED_ITEMS', 4);
-define ('QUEST_REQUIRED_SPELLS', 4);
-define ('QUEST_REWARD_ITEMS', 4);
-define ('QUEST_REWARD_ITEM_CHOICES', 6);
-define ('QUEST_REWARD_REPUTATION', 5);
-
 function simulateQuest ($id, $row)
   {
   global $game_objects, $creatures, $zones, $quests, $spells, $items;

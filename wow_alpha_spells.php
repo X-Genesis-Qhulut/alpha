@@ -35,7 +35,7 @@ function simulateSpell ($id, $row)
   echo "<p><div class='simulate_box spell'>\n";
   echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
   if ($row ['NameSubtext_enUS'])
-    echo " - " . fixHTML ($row ['NameSubtext_enUS']);
+    echo " — " . fixHTML ($row ['NameSubtext_enUS']);
   echo "</h3>\n";
 
   // spell icon
