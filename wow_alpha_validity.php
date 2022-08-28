@@ -11,14 +11,82 @@
 
 // See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/creature-loot-template.html
 
-function showUnknownFaction ()
+function showBadNPCs ($heading, $results, $label, $field)
   {
   global $creatures;
+
+  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+
+  $count = dbRows ($results);
+
+  echo "<ul>\n";
+  while ($row = dbFetch ($results))
+    echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature') .
+          " ($label " . $row [$field] . ")\n";
+  dbFree ($results);
+  echo "</ul>\n";
+
+  $s = 's';
+  if ($count == 1)
+    $s = '';
+
+  echo "$count row$s returned.\n";
+
+  } // end of showBadNPCs
+
+function showBadGOs ($heading, $results, $label, $field)
+  {
+  global $game_objects;
+
+  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+
+  $count = dbRows ($results);
+
+  echo "<ul>\n";
+  while ($row = dbFetch ($results))
+    echo "<li>" . lookupThing ($game_objects,  $row ['go_key'], 'show_go') .
+          " ($label " . $row [$field] . ")\n";
+  dbFree ($results);
+  echo "</ul>\n";
+
+  $s = 's';
+  if ($count == 1)
+    $s = '';
+
+  echo "$count row$s returned.\n";
+
+  } // end of showBadGOs
+
+function showBadQuests ($heading, $results, $label, $field)
+  {
+  global $quests;
+
+  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+
+  $count = dbRows ($results);
+
+  echo "<ul>\n";
+  while ($row = dbFetch ($results))
+    echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_go') .
+          " ($label " . $row [$field] . ")\n";
+  dbFree ($results);
+  echo "</ul>\n";
+
+  $s = 's';
+  if ($count == 1)
+    $s = '';
+
+  echo "$count row$s returned.\n";
+
+  } // end of showBadQuests
+
+function showUnknownFaction ()
+  {
 
   $factiontemplate = FACTIONTEMPLATE;
   $creature_template = CREATURE_TEMPLATE;
 
-  $results = dbQuery ("SELECT $creature_template.entry AS creature_key,
+  $results = dbQuery ("SELECT $creature_template.entry AS npc_key,
                               $creature_template.faction AS creature_faction
                       FROM $creature_template
                         LEFT JOIN $factiontemplate ON $factiontemplate.ID =  $creature_template.faction
@@ -27,20 +95,10 @@ function showUnknownFaction ()
                         AND $creature_template.entry <= " . MAX_CREATURE .
                         " ORDER BY name");
 
-  echo "<h2>Creatures with unknown faction</h2>\n";
+  showBadNPCs ('Creatures with unknown faction', $results, 'Faction', 'creature_faction');
+
 
   echo "<p>(Excludes faction: 0)\n";
-
-  $count = dbRows ($results);
-
-  echo "<ul>\n";
-  while ($row = dbFetch ($results))
-    echo "<li>" . lookupThing ($creatures,  $row ['creature_key'], 'show_creature') .
-          " — Faction: " . $row ['creature_faction'] . "\n";
-  dbFree ($results);
-  echo "</ul>\n";
-
-  echo "$count row(s) returned.\n";
 
   } // end of showUnknownFaction
 
@@ -77,20 +135,11 @@ function showMissingQuestItems ()
                         ORDER BY $quest_template.entry");
 
     $count = dbRows ($results);
+    $totalCount += $count;
 
     if ($count)
-      {
-      echo "<h3>" . fixHTML ("Quests where <$field> item is not on file") . "</h3>\n";
-      echo "<ul>\n";
-      while ($row = dbFetch ($results))
-        echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_quest') .
-              " — Item: " . $row ['quest_item'] . "\n";
-      dbFree ($results);
-      echo "</ul>\n";
+      showBadQuests ("Quests where <$field> item is not on file", $results, 'Item', 'quest_item');
 
-      echo "$count row(s) returned.\n";
-      }
-    $totalCount += $count;
     } // end of foreach
 
   if ($totalCount == 0)
@@ -126,20 +175,11 @@ function showMissingQuestSpells ()
                         ORDER BY $quest_template.entry");
 
     $count = dbRows ($results);
+    $totalCount += $count;
 
     if ($count)
-      {
-      echo "<h3>" . fixHTML ("Quests where <$field> spell is not on file") . "</h3>\n";
-      echo "<ul>\n";
-      while ($row = dbFetch ($results))
-        echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_quest') .
-              " — Spell: " . $row ['quest_spell'] . "\n";
-      dbFree ($results);
-      echo "</ul>\n";
+       showBadQuests ("Quests where <$field> spell is not on file", $results, 'Spell', 'quest_spell');
 
-      echo "$count row(s) returned.\n";
-      }
-    $totalCount += $count;
     } // end of foreach
 
   if ($totalCount == 0)
@@ -176,20 +216,10 @@ function showMissingQuestQuests ()
                         ORDER BY T1.entry");
 
     $count = dbRows ($results);
+    $totalCount += $count;
 
     if ($count)
-      {
-      echo "<h3>" . fixHTML ("Quests where <$field> quest is not on file") . "</h3>\n";
-      echo "<ul>\n";
-      while ($row = dbFetch ($results))
-        echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_quest') .
-              " — Quest: " . $row ['quest_quest'] . "\n";
-      dbFree ($results);
-      echo "</ul>\n";
-
-      echo "$count row(s) returned.\n";
-      }
-    $totalCount += $count;
+      showBadQuests ("Quests where <$field> quest is not on file", $results, 'Spell', 'quest_quest');
 
     } // end of foreach
 
@@ -198,4 +228,96 @@ function showMissingQuestQuests ()
 
 } // end of showMissingQuestQuests
 
+
+// analyse creatures to see if they start a missing quest
+function showMissingCreatureQuests ()
+{
+  $totalCount = 0;
+
+  $quest_template = QUEST_TEMPLATE;
+  $creature_template = CREATURE_TEMPLATE;
+
+  $tables = array (
+   CREATURE_QUEST_STARTER,
+   CREATURE_QUEST_FINISHER
+  );
+
+  foreach ($tables as $table)
+    {
+    $results = dbQuery ("SELECT T1.entry AS npc_key,
+                                T2.quest AS npc_quest
+                        FROM $creature_template AS T1
+                            INNER JOIN $table AS T2 USING (entry)
+                            LEFT JOIN $quest_template AS T3 ON (T2.quest = T3.entry)
+                        WHERE T3.entry IS NULL AND T1.entry <= " . MAX_CREATURE .
+                        " ORDER BY T1.entry");
+
+    $count = dbRows ($results);
+    $totalCount += $count;
+
+    if ($count)
+      {
+
+      if ($table == CREATURE_QUEST_STARTER)
+        $label = 'start';
+      else
+        $label = 'finish';
+
+      showBadNPCs ("NPCs which $label a quest which is not on file", $results, 'Quest', 'npc_quest');
+
+      } // end of if any rows
+
+    } // end of foreach
+
+  if ($totalCount == 0)
+    echo "<p>No problems found.\n";
+
+} // end of showMissingCreatureQuests
+
+// analyse game objects to see if they start a missing quest
+function showMissingGameobjectQuests ()
+{
+  $totalCount = 0;
+
+  $quest_template = QUEST_TEMPLATE;
+  $gameobject_template = GAMEOBJECT_TEMPLATE;
+
+  $tables = array (
+   GAMEOBJECT_QUESTRELATION,
+   GAMEOBJECT_INVOLVEDRELATION
+  );
+
+  foreach ($tables as $table)
+    {
+    $results = dbQuery ("SELECT T1.entry AS go_key,
+                                T2.quest AS go_quest
+                        FROM $gameobject_template AS T1
+                            INNER JOIN $table AS T2 USING (entry)
+                            LEFT JOIN $quest_template AS T3 ON (T2.quest = T3.entry)
+                        WHERE T3.entry IS NULL
+                        ORDER BY T1.entry");
+
+    $count = dbRows ($results);
+    $totalCount += $count;
+
+    if ($count)
+      {
+
+      if ($table == GAMEOBJECT_QUESTRELATION)
+        $label = 'start';
+      else
+        $label = 'finish';
+
+      showBadGOs ("Game objects which $label a quest which is not on file", $results, 'Quest', 'go_quest');
+
+      } // end of if any rows
+
+    } // end of foreach
+
+  if ($totalCount == 0)
+    echo "<p>No problems found.\n";
+
+} // end of showMissingGameobjectQuests
+
 ?>
+

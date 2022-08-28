@@ -39,14 +39,13 @@ function extraCreatureInformation ($id, $row)
 
   // ---------------- SPAWN POINTS -----------------
 
+  $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
+           ' AND ignored = 0 ';
+  $param = array ('iiii', &$id, &$id, &$id, &$id);
+
   // show spawn points - Eastern Kingdoms
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-            WHERE (spawn_entry1 = ?
-            OR spawn_entry2 = ?
-            OR spawn_entry3 = ?
-            OR spawn_entry4 = ?)
-            AND ignored = 0
-            AND map = 0", array ('iiii', &$id, &$id, &$id, &$id,));
+            WHERE $where AND map = 0", $param) ;
 
   if (count ($results) > 0)
     showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
@@ -54,12 +53,7 @@ function extraCreatureInformation ($id, $row)
 
   // show spawn points - Kalimdor
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-            WHERE (spawn_entry1 = ?
-            OR spawn_entry2 = ?
-            OR spawn_entry3 = ?
-            OR spawn_entry4 = ?)
-            AND ignored = 0
-            AND map = 1", array ('iiii', &$id, &$id, &$id, &$id,));
+            WHERE $where AND map = 1", $param);
 
   if (count ($results) > 0)
     showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
@@ -67,12 +61,7 @@ function extraCreatureInformation ($id, $row)
 
   // show spawn points - other
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-            WHERE (spawn_entry1 = ?
-            OR spawn_entry2 = ?
-            OR spawn_entry3 = ?
-            OR spawn_entry4 = ?)
-            AND ignored = 0
-            AND map > 1", array ('iiii', &$id, &$id, &$id, &$id,));
+            WHERE $where AND map > 1", $param);
 
   if (count ($results) > 0)
     showSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_creatures',

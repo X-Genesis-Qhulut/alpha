@@ -44,6 +44,7 @@ $dblink = false;
 $executionDir = EXECUTIONDIR;
 $time = filemtime ("$documentRoot$executionDir/alpha.css");
 echo "<link rel='stylesheet' href='$executionDir/alpha.css?v=$time'>\n";
+echo "<script src='editing.js' defer></script>\n";
 echo "</head>\n";
 echo "<body>\n";
 
@@ -221,13 +222,30 @@ function showBigMenu ()
     GitHub: alpha-core/etc/databases/</a>\n";
 
   echo "<hr>\n";
-  echo "<h3>Utilities</h3><ul>\n";
-  echo "<li><a href='?action=proximity'>Spawn point proximity search</a>\n";
-  echo "<li><a href='?action=unknown_faction'>Creatures with unknown faction</a>\n";
-  echo "<li><a href='?action=quest_missing_item' >Quests with missing items</a>\n";
-  echo "<li><a href='?action=quest_missing_spell'>Quests with missing spells</a>\n";
-  echo "<li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a>\n";
-  echo "</ul>\n";
+  echo "<h3>Utilities</h3>
+  <ul>
+    <li><a href='?action=proximity'>Spawn point proximity search</a>
+  </ul>
+  <h3>Database validation</h3>
+  <h4>NPCs</h4>
+  <ul>
+    <li><a href='?action=unknown_faction'>NPCs with unknown faction</a>
+    <li><a href='?action=npc_missing_quest'>NPCs which start/finish a missing quest</a>
+  </ul>
+
+  <h4>Game objects</h4>
+  <ul>
+    <li><a href='?action=go_missing_quest'>Game objects which start/finish a missing quest</a>
+  </ul>
+
+
+  <h4>Quests</h4>
+  <ul>
+  <li><a href='?action=quest_missing_item' >Quests with missing items</a>
+  <li><a href='?action=quest_missing_spell'>Quests with missing spells</a>
+  <li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a>
+  </ul>
+  ";
   } // end of showBigMenu
 
 
@@ -330,6 +348,7 @@ if ($action)
 
   $skills [0] = 'None';
   $factions [0] = 'None';
+  $npc_factions [0] = 'None';
 
   // NPC factions are more indirect
   $faction = FACTION;
@@ -381,6 +400,8 @@ if ($action)
       case 'quest_missing_item'   : showMissingQuestItems (); break;
       case 'quest_missing_spell'   : showMissingQuestSpells (); break;
       case 'quest_missing_quest'   : showMissingQuestQuests (); break;
+      case 'npc_missing_quest'   : showMissingCreatureQuests (); break;
+      case 'go_missing_quest'   : showMissingGameobjectQuests (); break;
 
       default: ShowWarning ('Unknown action'); break;
 

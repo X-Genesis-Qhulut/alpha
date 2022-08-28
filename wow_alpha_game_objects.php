@@ -126,7 +126,7 @@ function showOneGameObject ($id)
 
 function showGameObjects ()
   {
-  global $where, $params, $factions, $sort_order;
+  global $where, $params, $npc_factions, $sort_order;
 
 
   $sortFields = array (
@@ -162,8 +162,7 @@ function showGameObjects ()
     $id = $row ['entry'];
     tdhr ("<a href='?action=show_go&id=$id'>$id</a>");
     $tdr ('name');
-    $tdr ('faction');
-    tdxr (getFaction ($row ["faction"]));
+    tdxr (expandSimple ($npc_factions, $row ["faction"]));;
     showFilterColumn ($row);
 
     echo "</tr>\n";

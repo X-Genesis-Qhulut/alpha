@@ -9,6 +9,9 @@
 
 // MAPS
 
+// https://wowdev.wiki/DB/WorldMapArea
+
+
 function showOneMap ($id)
   {
   showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  array (
