@@ -34,6 +34,7 @@ require ("wow_alpha_ports.php");
 require ("wow_alpha_skills.php");
 require ("wow_alpha_tables.php");
 require ("wow_alpha_proximity.php");
+require ("wow_alpha_validity.php");
 
 $documentRoot = $_SERVER['DOCUMENT_ROOT'];
 
@@ -222,6 +223,7 @@ function showBigMenu ()
   echo "<hr>\n";
   echo "<h3>Utilities</h3><ul>\n";
   echo "<li><a href='?action=proximity'>Spawn point proximity search</a>\n";
+  echo "<li><a href='?action=unknown_faction'>Creatures with unknown faction</a>\n";
   echo "</ul>\n";
   } // end of showBigMenu
 
@@ -372,6 +374,7 @@ if ($action)
       case 'show_table'  : showOneTable ($id); break;
 
       case 'proximity'   : showProximity (); break;
+      case 'unknown_faction'   : showUnknownFaction (); break;
 
       default: ShowWarning ('Unknown action'); break;
 
