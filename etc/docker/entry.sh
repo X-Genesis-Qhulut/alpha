@@ -17,7 +17,7 @@ define ('DBC_DBNAME',   'alpha_dbc');
 define ('WORLD_DBNAME', 'alpha_world');
 
 // where this code is relative to the server document root
-define ('EXECUTIONDIR', './');
+define ('EXECUTIONDIR', '');
 
 // make this true if you are using MySQL database server which
 //  forces table names to lower-case
