@@ -101,29 +101,29 @@ function simulateSpell ($id, $row)
 
   // show what it casts
 
-  if (getCount ($row, 'EffectTriggerSpell_', 3))
+  if (getCount ($row, 'EffectTriggerSpell_', SPELL_EFFECT_TRIGGER_SPELLS))
     {
     echo "<p><b>Effect trigger spells:</b><br>\n";
-    for ($i = 1; $i <= 3; $i++)
+    for ($i = 1; $i <= SPELL_EFFECT_TRIGGER_SPELLS; $i++)
       if ($row ["EffectTriggerSpell_$i"])
          echo '<br>' . lookupThing ($spells, $row ["EffectTriggerSpell_$i"], 'show_spell');
     }
 
   // show effects
 
-  if (getCount ($row, 'Effect_', 3))
+  if (getCount ($row, 'Effect_', SPELL_EFFECTS_COUNT))
     {
     echo "<p><b>Effects:</b>\n";
-    for ($i = 1; $i <= 3; $i++)
+    for ($i = 1; $i <= SPELL_EFFECTS_COUNT; $i++)
       if ($row ["Effect_$i"])
          echo '<br>' . expandSimple (SPELL_EFFECTS, $row ["Effect_$i"], false);
     }
 
   // show effect auras
-  if (getCount ($row, 'EffectAura_', 3))
+  if (getCount ($row, 'EffectAura_', SPELL_EFFECT_AURAS))
     {
     echo "<p><b>Auras:</b>\n";
-    for ($i = 1; $i <= 3; $i++)
+    for ($i = 1; $i <= SPELL_EFFECT_AURAS; $i++)
       if ($row ["EffectAura_$i"])
          echo '<br>' . expandSimple (SPELL_AURAS, $row ["EffectAura_$i"]);
     } // end if any auras
@@ -131,45 +131,58 @@ function simulateSpell ($id, $row)
 
   // reagents
 
-  if (getCount ($row, 'Reagent_', 8))
+  if (getCount ($row, 'Reagent_', SPELL_REAGENTS))
     {
     echo "<p><b>Reagents:</b><br>\n";
-    echo (lookupItems ($row,
-                 array ('Reagent_1', 'Reagent_2', 'Reagent_3', 'Reagent_4', 'Reagent_5', 'Reagent_6', 'Reagent_7', 'Reagent_8'),
-                 array ('ReagentCount_1', 'ReagentCount_2', 'ReagentCount_3', 'ReagentCount_4', 'ReagentCount_5', 'ReagentCount_6', 'ReagentCount_7', 'ReagentCount_8')));
+    for ($i = 1; $i <= SPELL_REAGENTS; $i++)
+      {
+      $reagents [] = "Reagent_$i";
+      $reagentCounts [] = "ReagentCount_$i";
+      }
+    echo (lookupItems ($row,$reagents, $reagentCounts));
     }
 
   // show effect items
 
-  if (getCount ($row, 'EffectItemType_', 3))
+  if (getCount ($row, 'EffectItemType_', SPELL_EFFECT_ITEM_TYPES))
     {
     echo "<p><b>Effect items:</b><br>\n";
-    tdh (lookupItems ($row,
-                 array ('EffectItemType_1',   'EffectItemType_2',   'EffectItemType_3'),
-                 array ('EffectMiscValue_1',  'EffectMiscValue_2',  'EffectMiscValue_3')));
+
+    $effectTypes = array ();
+    $effectMiscValues = array ();
+    for ($i = 1; $i <= SPELL_EFFECT_ITEM_TYPES; $i++)
+      {
+      $effectTypes [] = "EffectItemType_$i";
+      $effectMiscValues [] = "EffectMiscValue_$i";
+      }
+
+    tdh (lookupItems ($row, $effectTypes, $effectMiscValues));
     }
 
 
-  echo "<hr>\n";
-
   $description = $row ['Description_enUS'];
 
-  // calculate spell roll ranges for all three effect die
-  for ($i = 1; $i <= 3; $i++)
-    $description = str_replace ('$s' . $i,
-                  spellRoll ($row ["EffectDieSides_$i"], $row ["EffectBaseDice_$i"], $row ["EffectDicePerLevel_$i"],
-                             $row ["EffectBasePoints_$i"]),
-                    $description);
+  if ($description)
+    {
+    echo "<hr>\n";
 
-  // calculate aura amounts for all three effect auras
-  for ($i = 1; $i <= 3; $i++)
-    if ($row ["EffectAura_$i"] > 0 && $row ["EffectAuraPeriod_$i"] > 0)
-      $description = str_replace ('$o' . $i,
+    // calculate spell roll ranges for all three effect die
+    for ($i = 1; $i <= SPELL_EFFECT_DICE; $i++)
+      $description = str_replace ('$s' . $i,
                     spellRoll ($row ["EffectDieSides_$i"], $row ["EffectBaseDice_$i"], $row ["EffectDicePerLevel_$i"],
-                               $row ["EffectBasePoints_$i"]) * $duration / $row ["EffectAuraPeriod_$i"],
+                               $row ["EffectBasePoints_$i"]),
                       $description);
 
-  echo "<span style='color:yellow;'>" . fixSpellText ($description, $duration) . "</span>\n";
+    // calculate aura amounts for all three effect auras
+    for ($i = 1; $i <= SPELL_EFFECT_AURAS; $i++)
+      if ($row ["EffectAura_$i"] > 0 && $row ["EffectAuraPeriod_$i"] > 0)
+        $description = str_replace ('$o' . $i,
+                      spellRoll ($row ["EffectDieSides_$i"], $row ["EffectBaseDice_$i"], $row ["EffectDicePerLevel_$i"],
+                                 $row ["EffectBasePoints_$i"]) * $duration / $row ["EffectAuraPeriod_$i"],
+                        $description);
+
+    echo "<span style='color:yellow;'>" . fixSpellText ($description, $duration) . "</span>\n";
+    } // end of having a description
 
   echo "</div>\n";    // end of simulation box
 
@@ -213,21 +226,20 @@ function simulateSpell ($id, $row)
   // build a list of all 8 possible spell slots in CREATURE_SPELLS
   $where = '';
   $params = array ('');
-  for ($i = 1; $i <= 8; $i++)
+  for ($i = 1; $i <= CREATURE_SPELLS_COUNT; $i++)
     {
     $where .= " spellId_$i = ?";
-    if ($i < 8)
+    if ($i < CREATURE_SPELLS_COUNT)
       $where .= ' OR ';
     $params [0] .= 'i';
     $params [] = &$id;
     }
 
-  // find entries in CREATURE_SPELLS which refer to this spell (in one of the 8 spots)
+  // find entries in CREATURE_SPELLS which refer to this spell (in one of the CREATURE_SPELLS_COUNT (8) spots)
   $creature_spells = CREATURE_SPELLS;
   $results = dbQueryParam ("SELECT $creature_template.entry AS npc FROM $creature_spells
           INNER JOIN $creature_template ON ($creature_template.spell_list_id = $creature_spells.entry)
           WHERE ($where) AND $creature_template.entry <= " . MAX_CREATURE, $params);
-
 
   listItems ('NPCs that cast this spell', 'alpha_world.creature_spells', count ($results), $results,
     function ($row) use ($creatures)
@@ -239,47 +251,38 @@ function simulateSpell ($id, $row)
 
 function showOneSpell ($id)
   {
-  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell", "Name_enUS",
-                array (
-                  'Reagent_1' => 'item',
-                  'Reagent_2' => 'item',
-                  'Reagent_3' => 'item',
-                  'Reagent_4' => 'item',
-                  'Reagent_5' => 'item',
-                  'Reagent_6' => 'item',
-                  'Reagent_7' => 'item',
-                  'Reagent_8' => 'item',
-                  'EffectItemType_1' => 'item',
-                  'EffectItemType_2' => 'item',
-                  'EffectItemType_3' => 'item',
-                  'PowerType' => 'power_type',
-                  'School' => 'spell_school',
-                  'EffectTriggerSpell_1' => 'spell',
-                  'EffectTriggerSpell_2' => 'spell',
-                  'EffectTriggerSpell_3' => 'spell',
-                  'Effect_1' => 'spell_effect',
-                  'Effect_2' => 'spell_effect',
-                  'Effect_3' => 'spell_effect',
-                  'Targets' => 'spell_target_type_mask',
-                  'Attributes' => 'spell_attributes_mask',
-                  'AttributesEx' => 'spell_attributes_ex_mask',
-                  'EquippedItemClass' => 'item_class',
-                  'EquippedItemSubclass' => 'item_subclass_mask',
-                  'EffectAura_1' => 'spell_aura',
-                  'EffectAura_2' => 'spell_aura',
-                  'EffectAura_3' => 'spell_aura',
-                  'ImplicitTargetA_1' => 'spell_implicit_target',
-                  'ImplicitTargetA_2' => 'spell_implicit_target',
-                  'ImplicitTargetA_3' => 'spell_implicit_target',
-                  'ImplicitTargetB_1' => 'spell_implicit_target',
-                  'ImplicitTargetB_2' => 'spell_implicit_target',
-                  'ImplicitTargetB_3' => 'spell_implicit_target',
-                  'InterruptFlags' => 'spell_interrupt_flags',
-                  'Name_Mask' => 'mask',
-                  'NameSubtext_Mask' => 'mask',
-                  'Description_Mask' => 'mask',
 
-                ), 'simulateSpell');
+  $extras = array (
+                  'PowerType'             => 'power_type',
+                  'School'                => 'spell_school',
+                  'Targets'               => 'spell_target_type_mask',
+                  'Attributes'            => 'spell_attributes_mask',
+                  'AttributesEx'          => 'spell_attributes_ex_mask',
+                  'EquippedItemClass'     => 'item_class',
+                  'EquippedItemSubclass'  => 'item_subclass_mask',
+                  'InterruptFlags'        => 'spell_interrupt_flags',
+                  'Name_Mask'             => 'mask',
+                  'NameSubtext_Mask'      => 'mask',
+                  'Description_Mask'      => 'mask',
+                );
+
+  for ($i = 1; $i <= SPELL_REAGENTS; $i++)
+    $extras ["Reagent_$i"] = 'item';
+  for ($i = 1; $i <= SPELL_EFFECT_ITEM_TYPES; $i++)
+    $extras ["EffectItemType_$i"] = 'item';
+  for ($i = 1; $i <= SPELL_EFFECT_TRIGGER_SPELLS; $i++)
+    $extras ["EffectTriggerSpell_$i"] = 'spell';
+  for ($i = 1; $i <= SPELL_EFFECTS_COUNT; $i++)
+    $extras ["Effect_$i"] = 'spell_effect';
+  for ($i = 1; $i <= SPELL_EFFECT_AURAS; $i++)
+    $extras ["EffectAura_$i"] = 'spell_aura';
+  for ($i = 1; $i <= SPELL_IMPLICIT_TARGETS; $i++)
+    {
+    $extras ["ImplicitTargetA_$i"] = 'spell_implicit_target';
+    $extras ["ImplicitTargetB_$i"] = 'spell_implicit_target';
+    }
+
+  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell", "Name_enUS", $extras, 'simulateSpell');
   } // end of showOneSpell
 
 function showSpells ()
@@ -298,8 +301,6 @@ function showSpells ()
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'Name_enUS';
-
-
 
   echo "<h2>Spells</h2>\n";
 
@@ -331,12 +332,22 @@ function showSpells ()
     $tdr ('Category');
     $powerType = $row ['PowerType'];
     tdx ("$powerType: " . POWER_TYPES [$powerType]);
-    tdh (lookupItems ($row,
-                 array ('Reagent_1', 'Reagent_2', 'Reagent_3', 'Reagent_4', 'Reagent_5', 'Reagent_6', 'Reagent_7', 'Reagent_8'),
-                 array ('ReagentCount_1', 'ReagentCount_2', 'ReagentCount_3', 'ReagentCount_4', 'ReagentCount_5', 'ReagentCount_6', 'ReagentCount_7', 'ReagentCount_8')));
-    tdh (lookupItems ($row,
-                 array ('EffectItemType_1',   'EffectItemType_2',   'EffectItemType_3'),
-                 array ('EffectMiscValue_1',  'EffectMiscValue_2',  'EffectMiscValue_3')));
+    $reagents = array ();
+    $reagentCounts = array ();
+    for ($i = 1; $i <= SPELL_REAGENTS; $i++)
+      {
+      $reagents [] = "Reagent_$i";
+      $reagentCounts [] = "ReagentCount_$i";
+      }
+    tdh (lookupItems ($row, $reagents, $reagentCounts));
+    $effectTypes = array ();
+    $effectMiscValues = array ();
+    for ($i = 1; $i <= SPELL_EFFECT_ITEM_TYPES; $i++)
+      {
+      $effectTypes [] = "EffectItemType_$i";
+      $effectMiscValues [] = "EffectMiscValue_$i";
+      }
+    tdh (lookupItems ($row, $effectTypes, $effectMiscValues));
     $td ('Description_enUS');
     showFilterColumn ($row);
     echo "</tr>\n";

@@ -44,8 +44,12 @@ function showBadGOs ($heading, $results, $label, $field)
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
-    echo "<li>" . lookupThing ($game_objects,  $row ['go_key'], 'show_go') .
-          " ($label " . $row [$field] . ")\n";
+    {
+    echo "<li>" . lookupThing ($game_objects,  $row ['go_key'], 'show_go');
+    if ($label)
+      echo " ($label " . $row [$field] . ")";
+    echo "\n";
+    }
   dbFree ($results);
   echo "</ul>\n";
 
@@ -67,7 +71,7 @@ function showBadQuests ($heading, $results, $label, $field)
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
-    echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_go') .
+    echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_quest') .
           " ($label " . $row [$field] . ")\n";
   dbFree ($results);
   echo "</ul>\n";
@@ -86,17 +90,17 @@ function showUnknownFaction ()
   $factiontemplate = FACTIONTEMPLATE;
   $creature_template = CREATURE_TEMPLATE;
 
-  $results = dbQuery ("SELECT $creature_template.entry AS npc_key,
-                              $creature_template.faction AS creature_faction
-                      FROM $creature_template
-                        LEFT JOIN $factiontemplate ON $factiontemplate.ID =  $creature_template.faction
-                        WHERE $factiontemplate.FactionGroup IS NULL
-                        AND $creature_template.faction <> 0
-                        AND $creature_template.entry <= " . MAX_CREATURE .
+  $results = dbQuery ("SELECT T1.entry   AS npc_key,
+                              T1.faction AS creature_faction
+                      FROM $creature_template AS T1
+                        LEFT JOIN $factiontemplate AS T2
+                         ON T2.ID = T1.faction
+                        WHERE T2.FactionGroup IS NULL
+                        AND T1.faction <> 0
+                        AND T1.entry <= " . MAX_CREATURE .
                         " ORDER BY name");
 
   showBadNPCs ('Creatures with unknown faction', $results, 'Faction', 'creature_faction');
-
 
   echo "<p>(Excludes faction: 0)\n";
 
@@ -123,16 +127,15 @@ function showMissingQuestItems ()
 
   foreach ($fields as $field)
     {
-    $results = dbQuery ("SELECT $quest_template.entry AS quest_key,
-                                $quest_template.$field AS quest_item
-                        FROM $quest_template
-                            LEFT JOIN $item_template
-                            ON ($quest_template.$field = $item_template.entry
-                                AND $item_template.ignored = 0)
-                        WHERE $item_template.entry IS NULL
-                        AND $quest_template.$field <> 0
-                        AND $quest_template.ignored = 0
-                        ORDER BY $quest_template.entry");
+    $results = dbQuery ("SELECT T1.entry AS quest_key,
+                                T1.$field AS quest_item
+                        FROM $quest_template AS T1
+                            LEFT JOIN $item_template AS T2
+                            ON (T1.$field = T2.entry AND T2.ignored = 0)
+                        WHERE T2.entry IS NULL
+                        AND T1.$field <> 0
+                        AND T1.ignored = 0
+                        ORDER BY T1.entry");
 
     $count = dbRows ($results);
     $totalCount += $count;
@@ -164,15 +167,15 @@ function showMissingQuestSpells ()
 
   foreach ($fields as $field)
     {
-    $results = dbQuery ("SELECT $quest_template.entry AS quest_key,
-                                $quest_template.$field AS quest_spell
-                        FROM $quest_template
-                            LEFT JOIN $spell
-                            ON $quest_template.$field = $spell.ID
-                        WHERE $spell.ID IS NULL
-                        AND $quest_template.$field <> 0
-                        AND $quest_template.ignored = 0
-                        ORDER BY $quest_template.entry");
+    $results = dbQuery ("SELECT T1.entry AS quest_key,
+                                T1.$field AS quest_spell
+                        FROM $quest_template AS T1
+                            LEFT JOIN $spell AS T2
+                            ON T1.$field = T2.ID
+                        WHERE T2.ID IS NULL
+                        AND T1.$field <> 0
+                        AND T1.ignored = 0
+                        ORDER BY T1.entry");
 
     $count = dbRows ($results);
     $totalCount += $count;
@@ -219,7 +222,7 @@ function showMissingQuestQuests ()
     $totalCount += $count;
 
     if ($count)
-      showBadQuests ("Quests where <$field> quest is not on file", $results, 'Spell', 'quest_quest');
+      showBadQuests ("Quests where <$field> quest is not on file", $results, 'Quest', 'quest_quest');
 
     } // end of foreach
 
@@ -293,7 +296,7 @@ function showMissingGameobjectQuests ()
                                 T2.quest AS go_quest
                         FROM $gameobject_template AS T1
                             INNER JOIN $table AS T2 USING (entry)
-                            LEFT JOIN $quest_template AS T3 ON (T2.quest = T3.entry)
+                            LEFT JOIN $quest_template AS T3 ON (T2.quest = T3.entry AND T3.ignored = 0)
                         WHERE T3.entry IS NULL
                         ORDER BY T1.entry");
 
@@ -318,6 +321,22 @@ function showMissingGameobjectQuests ()
     echo "<p>No problems found.\n";
 
 } // end of showMissingGameobjectQuests
+
+function showGameObjectsNotSpawned ()
+  {
+  $gameobject_template = GAMEOBJECT_TEMPLATE;
+  $spawns_gameobjects = SPAWNS_GAMEOBJECTS;
+
+  $results = dbQuery ("SELECT T1.entry AS go_key
+                      FROM $gameobject_template AS T1
+                          LEFT JOIN $spawns_gameobjects AS T2
+                      ON (T1.entry = T2.spawn_entry)
+                      WHERE T2.spawn_entry IS NULL
+                      ORDER BY T1.name");
+
+  showBadGOs ("Game objects which are not spawned", $results, '', '');
+
+  } // end of showGameObjectsNotSpawned
 
 ?>
 

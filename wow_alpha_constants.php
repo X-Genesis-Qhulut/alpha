@@ -71,6 +71,17 @@ define ('QUEST_REWARD_ITEMS', 4);
 define ('QUEST_REWARD_ITEM_CHOICES', 6);
 define ('QUEST_REWARD_REPUTATION', 5);
 
+define ('SPELL_REAGENTS', 8);               // Reagent_(n) and ReagentCount_(n)
+define ('SPELL_EFFECT_ITEM_TYPES', 3);      // EffectItemType_(n)
+define ('SPELL_EFFECTS_COUNT', 3);          // Effect_(n)
+define ('SPELL_EFFECT_TRIGGER_SPELLS', 3);  // EffectTriggerSpell_(n)
+define ('SPELL_EFFECT_AURAS', 3);           // EffectAura_(n)
+define ('SPELL_IMPLICIT_TARGETS', 3);       // ImplicitTargetA_(n) and ImplicitTargetB_(n)
+define ('SPELL_EFFECT_DICE', 3);            // EffectDieSides_(n) and EffectBaseDice_(n) and EffectDicePerLevel_(n)
+
+define ('CREATURE_SPELLS_COUNT', 8); // spellId_(n), probability_(n), castTarget_(n), targetParam(n)_(n), targetParam2_(n), castFlags_(n)
+                                     // delayInitialMin_(n), delayInitialMax_(n), delayRepeatMin_(n), delayRepeatMax_(n), scriptId_(n)
+
 define ('SPELL_SCHOOLS', array (
    0 => 'Normal',
    1 => 'Holy',

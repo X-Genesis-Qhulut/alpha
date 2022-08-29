@@ -67,27 +67,48 @@ function extraGameObjectInformation ($id, $row)
 
   // what quests they give
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE entry = ?", array ('i', &$id));
+
+/*  I'm not so sure about this now ... The quest should exist, right?
+
+  $results = dbQueryParam ("SELECT T1.* FROM ".GAMEOBJECT_QUESTRELATION." AS T1
+                            INNER JOIN ".QUEST_TEMPLATE." AS T2 ON (T1.quest = T2.entry)
+                            WHERE T1.entry = ? AND T2.ignored = 0", array ('i', &$id));
+*/
+
   if (count ($results) > 0)
     {
+    echo "<div class='item_list' >\n";
     echo "<h2 title='Table: alpha_world.gameobject_questrelation'>Game object starts these quests</h2><ul>\n";
     foreach ($results as $questRow)
       {
       listThing ($quests, $questRow ['quest'], 'show_quest');
       } // for each quest starter GO
     echo "</ul>\n";
+    echo "</div>\n";
     }
 
  // what quests they finish
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE entry = ?", array ('i', &$id));
+
+/*  I'm not so sure about this now ... The quest should exist, right?
+
+  $results = dbQueryParam ("SELECT T1.* FROM ".GAMEOBJECT_INVOLVEDRELATION." AS T1
+                            INNER JOIN ".QUEST_TEMPLATE." AS T2 ON (T1.quest = T2.entry)
+                            WHERE T1.entry = ? AND T2.ignored = 0", array ('i', &$id));
+*/
+
   if (count ($results) > 0)
     {
+    echo "<div class='item_list' >\n";
     echo "<h2 title='Table: alpha_world.gameobject_involvedrelation'>Game object finishes these quests</h2><ul>\n";
     foreach ($results as $questRow)
       {
       listThing ($quests, $questRow ['quest'], 'show_quest');
       } // for each quest starter GO
     echo "</ul>\n";
+    echo "</div>\n";
     }
+
 
   // ---------------- CHEST LOOT -----------------
 

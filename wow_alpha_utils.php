@@ -530,7 +530,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     {
     $fieldName = $col ['Field'];
     // the row will generate an SQL update if you Ctrl+click it
-    echo "<tr onclick='onClick(event,this.id)' id='field_$fieldName'>\n";
+    echo "<tr onclick='onRowClick(event,this.id)' id='field_$fieldName'>\n";
     tdx ($fieldName);
     // check if we can be more informative, like show an item name
     if (isset ($expand [$fieldName]))

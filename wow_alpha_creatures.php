@@ -314,7 +314,6 @@ function showOneCreature ($id)
         'spell_id2' => 'spell',
         'spell_id3' => 'spell',
         'spell_id4' => 'spell',
-        'spell_id5' => 'spell',
         'faction'   => 'npc_faction',
         'mechanic_immune_mask' => 'mechanic_mask',
         'school_immune_mask' => 'school_mask',    // I think this might be out by one

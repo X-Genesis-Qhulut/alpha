@@ -9,7 +9,21 @@
 */
 
 
-function onClick(event, id)
+// See: https://stackoverflow.com/a/22480938/
+
+function isScrolledIntoView(el) {
+  var rect = el.getBoundingClientRect();
+  var elemTop = rect.top;
+  var elemBottom = rect.bottom;
+
+  // Only completely visible elements return true:
+  var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+  // Partially visible elements return true:
+  //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+  return isVisible;
+} // end of isScrolledIntoView
+
+function onRowClick(event, id)
 {
   // Ctrl+Click to show an editing box
   if (!event.ctrlKey)
@@ -30,5 +44,7 @@ function onClick(event, id)
   // make the editing box visible
   editingDiv.style.display = 'block'
   // scroll it into view
-  editingDiv.scrollIntoView()
-}
+
+  if (!isScrolledIntoView (editingDiv))
+    editingDiv.scrollIntoView()
+} // end of onRowClick

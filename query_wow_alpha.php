@@ -236,6 +236,7 @@ function showBigMenu ()
   <h4>Game objects</h4>
   <ul>
     <li><a href='?action=go_missing_quest'>Game objects which start/finish a missing quest</a>
+    <li><a href='?action=go_not_spawned'>Game objects which are not spawned</a>
   </ul>
 
 
@@ -402,6 +403,7 @@ if ($action)
       case 'quest_missing_quest'   : showMissingQuestQuests (); break;
       case 'npc_missing_quest'   : showMissingCreatureQuests (); break;
       case 'go_missing_quest'   : showMissingGameobjectQuests (); break;
+      case 'go_not_spawned'   : showGameObjectsNotSpawned (); break;
 
       default: ShowWarning ('Unknown action'); break;
 
