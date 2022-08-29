@@ -25,8 +25,8 @@ function isScrolledIntoView(el) {
 
 function onRowClick(event, id)
 {
-  // Ctrl+Click to show an editing box
-  if (!event.ctrlKey)
+  // Alt+Click to show an editing box
+  if (!event.altKey)
     return
 
   // extract out the field name, which will start with "field_"
