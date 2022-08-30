@@ -25,6 +25,7 @@ require ("wow_alpha_constants.php");
 // table handling for various tables
 require ("wow_alpha_creatures.php");
 require ("wow_alpha_quests.php");
+require ("wow_alpha_books.php");
 require ("wow_alpha_items.php");
 require ("wow_alpha_spells.php");
 require ("wow_alpha_game_objects.php");
@@ -51,6 +52,7 @@ echo "<body>\n";
 // menu at top of page
 
 define ('MENU', array (
+  'Books'         => 'books',
   'Creatures'     => 'creatures',
   'Game Objects'  => 'game_objects',
   'Items'         => 'items',
@@ -246,6 +248,12 @@ function showBigMenu ()
   <li><a href='?action=quest_missing_spell'>Quests with missing spells</a>
   <li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a>
   </ul>
+
+  <h4>Items</h4>
+  <ul>
+  <li><a href='?action=no_item_text'>Items with no text</a>
+  </ul>
+
   ";
   } // end of showBigMenu
 
@@ -300,6 +308,9 @@ $database  = getG ('database', 15, $VALID_SQL_ID);
 $rightArrow = getP ('RightArrow_x',    8, $VALID_NUMBER);
 // see if they used the left arrow
 $leftArrow = getP ('LeftArrow_x',      8, $VALID_NUMBER);
+
+// for page text, the item which leads to the text
+$item      = getGP ('item',      8, $VALID_NUMBER);
 
 if (!$page || $page < 1)
   $page = 1;
@@ -366,44 +377,52 @@ if ($action)
   showMenu ();
   switch ($action)
     {
-      case 'spells'     : showSpells (); break;
-      case 'show_spell' : showOneSpell ($id); break;
+      case 'spells'        : showSpells (); break;
+      case 'show_spell'    : showOneSpell ($id); break;
 
-      case 'items'      : showItems (); break;
-      case 'show_item'  : showOneItem ($id); break;
+      case 'items'         : showItems (); break;
+      case 'show_item'     : showOneItem ($id); break;
+      case 'read_text'     : showText ($id, $item); break;
 
-      case 'creatures'  : showCreatures (); break;
-      case 'show_creature'  : showOneCreature ($id); break;
+      case 'creatures'     : showCreatures (); break;
+      case 'show_creature' : showOneCreature ($id); break;
 
-      case 'quests'      : showQuests (); break;
-      case 'show_quest'  : showOneQuest ($id); break;
+      case 'quests'        : showQuests (); break;
+      case 'show_quest'    : showOneQuest ($id); break;
 
-      case 'game_objects' : showGameObjects (); break;
-      case 'show_go'      : showOneGameObject ($id); break;
+      case 'game_objects'  : showGameObjects (); break;
+      case 'show_go'       : showOneGameObject ($id); break;
 
-      case 'maps'         : showMaps (); break;
-      case 'show_map'     : showOneMap ($id); break;
+      case 'maps'          : showMaps (); break;
+      case 'show_map'      : showOneMap ($id); break;
 
-      case 'zones'        : showZones (); break;
-      case 'show_zone'    : showOneZone ($id); break;
+      case 'zones'         : showZones (); break;
+      case 'show_zone'     : showOneZone ($id); break;
 
-      case 'ports'       : showPorts (); break;
-      case 'show_port'   : showOnePort ($id); break;
+      case 'ports'         : showPorts (); break;
+      case 'show_port'     : showOnePort ($id); break;
 
-      case 'skills'      : showSkills (); break;
-      case 'show_skill'  : showOneSkill ($id); break;
+      case 'skills'        : showSkills (); break;
+      case 'show_skill'    : showOneSkill ($id); break;
 
-      case 'tables'      : showTables (); break;
-      case 'show_table'  : showOneTable ($id); break;
+      case 'tables'        : showTables (); break;
+      case 'show_table'    : showOneTable ($id); break;
 
-      case 'proximity'   : showProximity (); break;
-      case 'unknown_faction'      : showUnknownFaction (); break;
-      case 'quest_missing_item'   : showMissingQuestItems (); break;
-      case 'quest_missing_spell'   : showMissingQuestSpells (); break;
-      case 'quest_missing_quest'   : showMissingQuestQuests (); break;
+      case 'books'         : showBooks (); break;
+      case 'show_book'     : showOneBook ($id); break;
+
+      // Utilities
+      case 'proximity'     : showProximity (); break;
+
+      // Validation
+      case 'unknown_faction'     : showUnknownFaction (); break;
+      case 'quest_missing_item'  : showMissingQuestItems (); break;
+      case 'quest_missing_spell' : showMissingQuestSpells (); break;
+      case 'quest_missing_quest' : showMissingQuestQuests (); break;
       case 'npc_missing_quest'   : showMissingCreatureQuests (); break;
-      case 'go_missing_quest'   : showMissingGameobjectQuests (); break;
-      case 'go_not_spawned'   : showGameObjectsNotSpawned (); break;
+      case 'go_missing_quest'    : showMissingGameobjectQuests (); break;
+      case 'go_not_spawned'      : showGameObjectsNotSpawned (); break;
+      case 'no_item_text'        : showNoItemText (); break;
 
       default: ShowWarning ('Unknown action'); break;
 

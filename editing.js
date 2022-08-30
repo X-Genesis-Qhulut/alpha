@@ -29,6 +29,8 @@ function onRowClick(event, id)
   if (!event.altKey)
     return
 
+  event.preventDefault()
+
   // extract out the field name, which will start with "field_"
   var field = id.match (/^field_(.+)$/)
   if (!field)
@@ -41,10 +43,11 @@ function onRowClick(event, id)
 
   // alter the field name
   document.getElementById('sql_field_name').innerHTML = field [1]
+
   // make the editing box visible
   editingDiv.style.display = 'block'
-  // scroll it into view
 
+  // scroll it into view if necessary
   if (!isScrolledIntoView (editingDiv))
     editingDiv.scrollIntoView()
 } // end of onRowClick

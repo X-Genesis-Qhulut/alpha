@@ -90,6 +90,24 @@ This could be useful for:
 
 ---
 
+## Generating SQL
+
+If you are planning to submit an update to the database via the Alpha Core GitHub site, you can easily generate a change to a single value like this:
+
+* Find a specific database entry (eg. a single spell, creature, quest). This will list all of the columns from the database in two columns: field-name / value.
+* Alt+LH-Click on a particular entry (eg. "min_money_loot")
+* At the head of the fields listing, an SQL "update" statement will appear, like this:
+
+    ```
+    UPDATE `item_template` SET `min_money_loot` = xxxx WHERE (`entry` = 2462);
+    ```
+
+* Triple-click to copy that line to the clipboard and paste into whatever editor you are using for submitting updates.
+* Change the "xxxx" part to whatever new value you want.
+* Submit the SQL to the Alpha Project.
+
+---
+
 ## How to install on your own server
 
 

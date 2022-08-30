@@ -500,10 +500,13 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     return;
     }
 
-  $name = fixHTML ($row [$nameField]);
+  if ($nameField)
+    $name = " — " . fixHTML ($row [$nameField]);
+  else
+    $name = '';
 
 
-  echo "<h1 class='one_item'>" . fixHTML ($description) . " $id — $name</h1>\n";
+  echo "<h1 class='one_item'>" . fixHTML ($description) . " $id$name</h1>\n";
   echo "<h2 class='one_item_table'>Table: " . fixHTML ($table_display_name) . "</h2>\n";
 
   if  (preg_match ('|\.(.+)$|', $table, $matches))
@@ -536,7 +539,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     if (isset ($expand [$fieldName]))
       expandField ($row [$fieldName], $expand [$fieldName]);
     else
-      tdx ($row [$fieldName], $col ['Type'] == 'text' ? 'tdl' : 'tdr');
+      tdx ($row [$fieldName], preg_match ('/text/', $col ['Type']) ? 'tdl' : 'tdr');
     echo "</tr>\n";
     } // end of foreach
   echo "</table>\n";

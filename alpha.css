@@ -108,6 +108,7 @@ tr:nth-child(odd)
   color:deepskyblue;
 }
 
+
 /* Extra stuff for simulated quests */
 
 .quest {
@@ -119,6 +120,20 @@ tr:nth-child(odd)
 .quest a {
   color:blue;
   }
+
+.page_text {
+  color:black;
+  background-color: lightyellow;
+  border:4px solid black;
+  font-family: serif;
+  font-size: larger;
+  max-width: 30em;
+
+}
+
+.read_page a {
+  color:lightgreen;
+}
 
 
 /* Extra stuff for simulated items */

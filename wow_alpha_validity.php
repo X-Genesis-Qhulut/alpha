@@ -84,6 +84,29 @@ function showBadQuests ($heading, $results, $label, $field)
 
   } // end of showBadQuests
 
+function showBadItems ($heading, $results, $label, $field)
+  {
+  global $items;
+
+  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+
+  $count = dbRows ($results);
+
+  echo "<ul>\n";
+  while ($row = dbFetch ($results))
+    echo "<li>" . lookupThing ($items,  $row ['item_key'], 'show_item') .
+          " ($label " . $row [$field] . ")\n";
+  dbFree ($results);
+  echo "</ul>\n";
+
+  $s = 's';
+  if ($count == 1)
+    $s = '';
+
+  echo "$count row$s returned.\n";
+
+  } // end of showBadItems
+
 function showUnknownFaction ()
   {
 
@@ -337,6 +360,22 @@ function showGameObjectsNotSpawned ()
   showBadGOs ("Game objects which are not spawned", $results, '', '');
 
   } // end of showGameObjectsNotSpawned
+
+function showNoItemText ()
+  {
+  $item_template = ITEM_TEMPLATE;
+  $page_text = PAGE_TEXT;
+
+  $results = dbQuery ("SELECT T1.entry AS item_key,
+                              T1.page_text AS page_text
+                      FROM $item_template AS T1
+                          LEFT JOIN $page_text AS T2
+                      ON (T1.page_text = T2.entry)
+                      WHERE T2.entry IS NULL AND T1.page_text > 0
+                      ORDER BY T1.name");
+
+  showBadItems ("Items which should have text to be read", $results, 'Item', 'page_text');
+  } // end of showNoItemText
 
 ?>
 

@@ -96,7 +96,7 @@ function simulateItem ($id, $row)
   echo "<div>\n";
   for ($i = 1; $i <= 5; $i++)
     if ($row ["dmg_min$i"])
-      echo "<p class='item_lh'>" . $row ["dmg_min$i"] . ' — ' . $row ["dmg_max$i"]  . " Damage</p>\n";
+      echo "<p class='item_lh'>" . $row ["dmg_min$i"] . ' – ' . $row ["dmg_max$i"]  . " Damage</p>\n";
 
   if ($row ['delay'])
     echo "<p class='item_rh'>Speed: " . $row ['delay'] / 1000 . "</p>\n";
@@ -154,6 +154,21 @@ function simulateItem ($id, $row)
 
   if ($row ['bonding'])
     echo BONDING [$row ['bonding']];
+
+  $description = $row ['description'];
+
+  if ($description)
+    {
+    echo "<hr>\n";
+    echo fixHTML ('“' . $description .'”');
+    }
+
+  // if there is page text (eg. a book) offer to show it
+  $page_text = $row ['page_text'];
+  if ($row ['page_text'])
+    {
+    echo "<p class='read_page'><a href='?action=read_text&id=$page_text&item=$id' >Click to read</a></p>\n";
+    }
 
   // end of item box
   echo "</div>\n";
@@ -314,7 +329,6 @@ function showOneItem ($id)
   showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item", "name", $extras, 'simulateItem');
 
   } // end of showOneItem
-
 
 function showItems ()
   {

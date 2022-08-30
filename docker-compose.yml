@@ -6,7 +6,6 @@ services:
     container_name: alpha
     build: .
     hostname: alpha
-    tty: true
     volumes:
       - ./:/opt/alpha
     ports:

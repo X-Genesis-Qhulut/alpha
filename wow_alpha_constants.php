@@ -41,6 +41,7 @@ define ('ITEM_TEMPLATE',                '`' . WORLD_DBNAME. '`.' . lwr ('item_te
 define ('ITEMDISPLAYINFO',              '`' . DBC_DBNAME  . '`.' . lwr ('ItemDisplayInfo'));
 define ('MAP',                          '`' . DBC_DBNAME  . '`.' . lwr ('Map'));
 define ('NPC_VENDOR',                   '`' . WORLD_DBNAME. '`.' . lwr ('npc_vendor'));
+define ('PAGE_TEXT',                    '`' . WORLD_DBNAME. '`.' . lwr ('page_text'));
 define ('PICKPOCKETING_LOOT_TEMPLATE',  '`' . WORLD_DBNAME. '`.' . lwr ('pickpocketing_loot_template'));
 define ('SKINNING_LOOT_TEMPLATE',       '`' . WORLD_DBNAME. '`.' . lwr ('skinning_loot_template'));
 define ('QUEST_TEMPLATE',               '`' . WORLD_DBNAME. '`.' . lwr ('quest_template'));
