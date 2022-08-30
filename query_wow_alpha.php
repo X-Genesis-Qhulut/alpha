@@ -52,12 +52,12 @@ echo "<body>\n";
 // menu at top of page
 
 define ('MENU', array (
-  'Books'         => 'books',
   'Creatures'     => 'creatures',
   'Game Objects'  => 'game_objects',
   'Items'         => 'items',
   'Spells'        => 'spells',
   'Maps'          => 'maps',
+  'Pages'         => 'books',
   'Ports'         => 'ports',
   'Quests'        => 'quests',
   'Skills'        => 'skills',
