@@ -4,7 +4,7 @@ services:
   alpha:
     image: alpha:latest
     container_name: alpha
-    build: .
+    build: etc/docker
     hostname: alpha
     volumes:
       - ./:/opt/alpha
