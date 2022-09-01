@@ -9,6 +9,8 @@
 
 // SPELLS
 
+// Interesting info: https://tswow.github.io/tswow-wiki/introduction/05-custom-spell/
+
 function creature_compare ($a, $b)
   {
   global $creatures;
@@ -159,6 +161,7 @@ function simulateSpell ($id, $row)
     tdh (lookupItems ($row, $effectTypes, $effectMiscValues));
     }
 
+  // description
 
   $description = $row ['Description_enUS'];
 
@@ -183,6 +186,51 @@ function simulateSpell ($id, $row)
 
     echo "<span style='color:yellow;'>" . fixSpellText ($description, $duration) . "</span>\n";
     } // end of having a description
+
+  // spell visuals
+
+  $SpellVisualID = $row ['SpellVisualID'];
+  if ($SpellVisualID)
+    {
+    echo "<hr><b style='color:deepskyblue;'>Visual effects</b>\n";
+    $visualRow = dbQueryOneParam ("SELECT * FROM ".SPELLVISUAL." WHERE ID = ?", array ('i', &$SpellVisualID ));
+    if (!$visualRow)
+      echo "Visual ID $SpellVisualID not on file\n";
+    else
+      {
+      $kits = array ('PrecastKit', 'CastKit', 'ImpactKit', 'StateKit', 'ChannelKit', 'AreaKit');
+      foreach ($kits as $kit)
+        {
+        $kitID = $visualRow [$kit];
+        if ($kitID)
+          {
+          echo "<br><b>" . fixHTML (str_replace ('Kit', ' Kit', $kit)) . "</b>: $kitID\n";
+          // now look up the animation for this kit
+          $animRow = dbQueryOneParam ("SELECT T1.Anim, T1.KitType, T2.Name FROM ".SPELLVISUALKIT." AS T1
+                                      LEFT JOIN ".SPELLVISUALANIMNAME." AS T2
+                                      ON (T2.AnimID = T1.Anim)
+                                      WHERE T1.ID = ?", array ('i', &$kitID ));
+          $animID = $animRow ['Anim'] . " (" . $animRow ['KitType'] . ") " . $animRow ['Name'];
+          echo " - animation: $animID";
+          }  // end of this kit in use
+        } // end of each possible kit
+
+      $AreaModel = $visualRow ['AreaModel'];
+
+      if ($AreaModel)
+        {
+        echo "<br><b>Area model:</b>\n";
+        $areaRow = dbQueryOneParam ("SELECT * FROM ".SPELLVISUALEFFECTNAME." WHERE ID = ?", array ('i', &$AreaModel ));
+        if ($areaRow)
+          echo fixHTML ($areaRow ['FileName']);
+        else
+          echo "Not found.";
+        }
+
+      } // end of spell visual on file
+
+    } // end of having a visual ID
+
 
   echo "</div>\n";    // end of simulation box
 
@@ -249,8 +297,9 @@ function simulateSpell ($id, $row)
 
   } // end of simulateSpell
 
-function showOneSpell ($id)
+function showOneSpell ()
   {
+  global $id;
 
   $extras = array (
                   'PowerType'             => 'power_type',
@@ -264,6 +313,7 @@ function showOneSpell ($id)
                   'Name_Mask'             => 'mask',
                   'NameSubtext_Mask'      => 'mask',
                   'Description_Mask'      => 'mask',
+                  'SpellVisualID'         => 'spell_visual',
                 );
 
   for ($i = 1; $i <= SPELL_REAGENTS; $i++)

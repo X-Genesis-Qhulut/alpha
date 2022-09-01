@@ -16,9 +16,9 @@ function simulateBookPage ($id, $row)
   echo "</div>\n";
   }
 
-function showText ($id, $item)
+function showText ()
 {
-  global $items;
+  global $id, $item, $items;
 
   $page = 0;
 
@@ -48,9 +48,9 @@ function showText ($id, $item)
 } // end of showText
 
 
-function showOneBook ($id)
+function showOneBook ()
   {
-  global $items;
+  global $id, $items;
 
   showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "Book", "", array (), 'simulateBookPage');
 

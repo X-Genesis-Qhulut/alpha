@@ -12,8 +12,10 @@
 // https://wowdev.wiki/DB/WorldMapArea
 
 
-function showOneMap ($id)
+function showOneMap ()
   {
+  global $id;
+
   showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  array (
     'MapName_Mask' => 'mask',
     ));

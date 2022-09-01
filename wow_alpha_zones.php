@@ -9,8 +9,9 @@
 
 // ZONES
 
-function showOneZone ($id)
+function showOneZone ()
   {
+  global $id;
   showOneThing (WORLDMAPAREA, 'alpha_dbc.worldmaparea', 'ID', $id, "Zone", "AreaName",
       array (
         'MapID' => 'map',

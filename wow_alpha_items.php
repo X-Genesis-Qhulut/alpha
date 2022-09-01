@@ -94,7 +94,7 @@ function simulateItem ($id, $row)
   // damage
 
   echo "<div>\n";
-  for ($i = 1; $i <= 5; $i++)
+  for ($i = 1; $i <= ITEM_DAMAGES; $i++)
     if ($row ["dmg_min$i"])
       echo "<p class='item_lh'>" . $row ["dmg_min$i"] . ' – ' . $row ["dmg_max$i"]  . " Damage</p>\n";
 
@@ -106,7 +106,7 @@ function simulateItem ($id, $row)
 
   // stats
   echo "<p>\n";
-  for ($i = 1; $i <= 10; $i++)
+  for ($i = 1; $i <= ITEM_STATS_COUNT; $i++)
     if ($row ["stat_value$i"])
       echo addSign ($row ["stat_value$i"]) . ' ' . ITEM_STATS [$row ["stat_type$i"]] . "<br>\n";
 
@@ -130,15 +130,13 @@ function simulateItem ($id, $row)
   if ($row ['block'])
     echo $row ['block'] . " Block<br>\n";
 
-  $count = 0;
-  for ($i = 1; $i <= 5; $i++)
-    if ($row ["spellid_$i"])
-      $count++;
+
+  $count = getCount ($row, 'spellid_', ITEM_SPELLS);
 
   if ($count)
     echo "<b>Casts:</b><br>\n";
 
-  for ($i = 1; $i <= 5; $i++)
+  for ($i = 1; $i <= ITEM_SPELLS; $i++)
     if ($row ["spellid_$i"])
       echo lookupThing ($spells, $row ["spellid_$i"], 'show_spell') . "\n";
 
@@ -287,38 +285,38 @@ function simulateItem ($id, $row)
 
   } // end of simulateItem
 
-function showOneItem ($id)
+function showOneItem ()
   {
-  global $quests, $creatures;
+  global $id, $quests, $creatures;
 
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
   $extras =  array (
-        'required_skill' => 'skill',
-        'spellid_1' => 'spell',
-        'spellid_2' => 'spell',
-        'spellid_3' => 'spell',
-        'spellid_4' => 'spell',
-        'spellid_5' => 'spell',
-        'class'     => 'item_class',
-        'subclass'     => 'item_subclass',
-        'start_quest' => 'quest',
-        'inventory_type' => 'inventory_type',
-        'flags' => 'item_flags_mask',
-        'buy_price' => 'gold',
-        'sell_price' => 'gold',
-        'min_money_loot' => 'gold',
-        'max_money_loot' => 'gold',
-        'bonding' => 'bonding',
+        'required_skill'  => 'skill',
+        'class'           => 'item_class',
+        'subclass'        => 'item_subclass',
+        'start_quest'     => 'quest',
+        'inventory_type'  => 'inventory_type',
+        'flags'           => 'item_flags_mask',
+        'buy_price'       => 'gold',
+        'sell_price'      => 'gold',
+        'min_money_loot'  => 'gold',
+        'max_money_loot'  => 'gold',
+        'bonding'         => 'bonding',
+        'extra_flags'     => 'mask',
 
     );
 
-  for ($i = 1; $i <= 10; $i++)
+  for ($i = 1; $i <= ITEM_STATS_COUNT; $i++)
     if ($row ["stat_value$i"])
       $extras ["stat_type$i"] = 'item_stats';
 
-  for ($i = 1; $i <= 5; $i++)
+  for ($i = 1; $i <= ITEM_SPELLS; $i++)
+    if ($row ["spellid_$i"])
+      $extras ["spellid_$i"] = 'spell';
+
+  for ($i = 1; $i <= ITEM_SPELL_COOLDOWNS; $i++)
     {
     if ($row ["spellcooldown_$i"])
       $extras ["spellcooldown_$i"] = 'time';

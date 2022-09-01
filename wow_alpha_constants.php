@@ -17,6 +17,7 @@ define ('TWO_COLUMN_SPLIT', 30);  // where we break long columns into two
 
 // table names
 
+// for possibly making the database table name lower-case
 function lwr ($s)
   {
   if (LOWER_CASE_SQL_TABLES)
@@ -54,24 +55,30 @@ define ('SPELLICON',                    '`' . DBC_DBNAME  . '`.' . lwr ('SpellIc
 define ('SPELLCASTTIMES',               '`' . DBC_DBNAME  . '`.' . lwr ('SpellCastTimes'));
 define ('SPELLDURATION',                '`' . DBC_DBNAME  . '`.' . lwr ('SpellDuration'));
 define ('SPELLRANGE',                   '`' . DBC_DBNAME  . '`.' . lwr ('SpellRange'));
+define ('SPELLVISUAL',                  '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisual'));
+define ('SPELLVISUALKIT',               '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisualKit'));
+define ('SPELLVISUALANIMNAME',          '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisualAnimName'));
+define ('SPELLVISUALEFFECTNAME',        '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisualEffectName'));
 define ('TRAINER_TEMPLATE',             '`' . WORLD_DBNAME. '`.' . lwr ('trainer_template'));
 define ('WORLDMAPAREA',                 '`' . DBC_DBNAME  . '`.' . lwr ('WorldMapArea'));
 define ('WORLDPORTS',                   '`' . WORLD_DBNAME. '`.' . lwr ('worldports'));
 
-
+// for drawing spawn points on the map
 define ('MAP_DOT_SIZE', 8); // pixels
 define ('MAP_DOT_FILL', 'yellow');
 define ('MAP_DOT_STROKE', 'black');
 
-
 // replace some magic numbers with proper defines
-define ('QUEST_REQUIRED_CREATURES', 4);
-define ('QUEST_REQUIRED_ITEMS', 4);
-define ('QUEST_REQUIRED_SPELLS', 4);
-define ('QUEST_REWARD_ITEMS', 4);
-define ('QUEST_REWARD_ITEM_CHOICES', 6);
-define ('QUEST_REWARD_REPUTATION', 5);
 
+// quests
+define ('QUEST_REQUIRED_CREATURES', 4);     // ReqCreatureOrGOId(n)
+define ('QUEST_REQUIRED_ITEMS', 4);         // ReqItemId(n)
+define ('QUEST_REQUIRED_SPELLS', 4);        // ReqSpellCast(n)
+define ('QUEST_REWARD_ITEMS', 4);           // RewItemId(n)
+define ('QUEST_REWARD_ITEM_CHOICES', 6);    // RewChoiceItemId(n) and RewChoiceItemCount(n)
+define ('QUEST_REWARD_REPUTATION', 5);      // RewRepValue(n) and RewRepFaction(n)
+
+// spells
 define ('SPELL_REAGENTS', 8);               // Reagent_(n) and ReagentCount_(n)
 define ('SPELL_EFFECT_ITEM_TYPES', 3);      // EffectItemType_(n)
 define ('SPELL_EFFECTS_COUNT', 3);          // Effect_(n)
@@ -80,8 +87,20 @@ define ('SPELL_EFFECT_AURAS', 3);           // EffectAura_(n)
 define ('SPELL_IMPLICIT_TARGETS', 3);       // ImplicitTargetA_(n) and ImplicitTargetB_(n)
 define ('SPELL_EFFECT_DICE', 3);            // EffectDieSides_(n) and EffectBaseDice_(n) and EffectDicePerLevel_(n)
 
+// items
+define ('ITEM_STATS_COUNT', 10);            // stat_value(n) and stat_type(n)
+define ('ITEM_SPELL_COOLDOWNS', 5);         // spellcooldown_(n) and spellcategorycooldown_(n)
+define ('ITEM_SPELLS', 5);                  // spellid_(n)
+define ('ITEM_DAMAGES', 5);                 // dmg_min(n) and dmg_max(n)
+
 define ('CREATURE_SPELLS_COUNT', 8); // spellId_(n), probability_(n), castTarget_(n), targetParam(n)_(n), targetParam2_(n), castFlags_(n)
                                      // delayInitialMin_(n), delayInitialMax_(n), delayRepeatMin_(n), delayRepeatMax_(n), scriptId_(n)
+
+
+define ('MONTHS', array (
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+  ));
 
 define ('SPELL_SCHOOLS', array (
    0 => 'Normal',
@@ -162,7 +181,7 @@ define ('QUEST_SPECIAL_FLAGS', array (
   2 => 'Script',
 ));
 
-
+// These appear to be from: alpha_dbc.SpellEffectNames
 
 define ('SPELL_EFFECTS', array (
   0x0 => 'None',
@@ -241,6 +260,8 @@ define ('SPELL_EFFECTS', array (
   0x55 => 'Summon player',
   0x56 => 'Activate object',
 ));
+
+// these appear to be from: alpha_dbc.SpellAuraNames
 
 define ('SPELL_AURAS', array (
    0 => 'None',

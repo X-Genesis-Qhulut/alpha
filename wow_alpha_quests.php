@@ -255,8 +255,9 @@ function simulateQuest ($id, $row)
 
   } // end of simulateQuest
 
-function showOneQuest ($id)
+function showOneQuest ()
   {
+  global $id;
   global $quests, $creatures, $items, $game_objects, $spells;
 
   $extras = array (

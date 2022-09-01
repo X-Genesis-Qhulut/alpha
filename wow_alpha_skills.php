@@ -9,8 +9,10 @@
 
 // SKILLS
 
-function showOneSkill ($id)
+function showOneSkill ()
   {
+  global $id;
+
   showOneThing (SKILLLINE, 'alpha_dbc.skillline', 'ID', $id, "Skill", "DisplayName_enUS",
       array (
         'RaceMask'  => 'race_mask',

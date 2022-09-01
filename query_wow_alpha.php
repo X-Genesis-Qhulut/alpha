@@ -18,6 +18,10 @@
 require ("wow_alpha_config.php");
 // database management
 require ("wow_alpha_database.php");
+// main menu
+require ("wow_alpha_menu.php");
+// what functions we support and what handles them
+require ("wow_alpha_handlers.php");
 // useful stuff
 require ("wow_alpha_utils.php");
 // tables of constants
@@ -36,9 +40,16 @@ require ("wow_alpha_skills.php");
 require ("wow_alpha_tables.php");
 require ("wow_alpha_proximity.php");
 require ("wow_alpha_validity.php");
+require ("wow_alpha_spell_visual.php");
+// field expansions
+require ("wow_alpha_fields.php");
+
+
+//-----------------------------------------------------------------------------
+// START HERE
+//-----------------------------------------------------------------------------
 
 $documentRoot = $_SERVER['DOCUMENT_ROOT'];
-
 $dblink = false;
 
 // incorporate our stylesheet
@@ -49,230 +60,7 @@ echo "<script src='editing.js' defer></script>\n";
 echo "</head>\n";
 echo "<body>\n";
 
-// menu at top of page
-
-define ('MENU', array (
-  'Creatures'     => 'creatures',
-  'Game Objects'  => 'game_objects',
-  'Items'         => 'items',
-  'Spells'        => 'spells',
-  'Maps'          => 'maps',
-  'Pages'         => 'books',
-  'Ports'         => 'ports',
-  'Quests'        => 'quests',
-  'Skills'        => 'skills',
-  'Tables'        => 'tables',
-  'Zones'         => 'zones',
-
-// more here
-));
-
-
-function expandField ($value, $expandType)
-  {
-  global $skills, $spells, $factions, $npc_factions, $creatures, $quests, $game_objects, $maps;
-
-  global $lastItemClass;
-
-    switch ($expandType)
-      {
-
-      // not table lookups, just formatting
-      case 'time':          tdxr (convertTimeGeneral ($value)); break;
-      case 'time_secs':     tdxr (convertTimeGeneral ($value * 1000)); break;
-      case 'gold':          tdxr (convertGold ($value)); break;
-      case 'mask':          tdxr (getMask ($value)); break;
-
-      // these things give hyperlinks
-      case 'spell':         tdhr (lookupThing ($spells,     $value, 'show_spell'));  break;
-      case 'creature':      tdhr (lookupThing ($creatures,  $value, 'show_creature'));  break;
-      case 'quest':         tdhr (lookupThing ($quests,     abs($value), 'show_quest'));  break;
-      case 'item':          lookupItem ($value, 1); break;
-
-      case 'creature_or_go':
-                            if ($value < 0)
-                              tdhr (lookupThing ($game_objects, -$value, 'show_go'));
-                            else
-                              tdhr (lookupThing ($creatures, $value, 'show_creature'));
-                            break;
-
-      // table lookups
-      case 'spell_school':    tdxr (expandSimple (SPELL_SCHOOLS,   $value)); break;
-      case 'spell_effect':    tdxr (expandSimple (SPELL_EFFECTS,   $value)); break;
-      case 'spell_aura':      tdxr (expandSimple (SPELL_AURAS,     $value)); break;
-      case 'spell_implicit_target':  tdxr (expandSimple (SPELL_IMPLICIT_TARGET, $value)); break;
-      case 'power_type':      tdxr (expandSimple (POWER_TYPES,     $value)); break;
-      case 'movement_type':   tdxr (expandSimple (MOVEMENT_TYPE,   $value)); break;
-      case 'trainer_type':    tdxr (expandSimple (TRAINER_TYPE,    $value)); break;
-      case 'bonding':         tdxr (expandSimple (BONDING,         $value)); break;
-      case 'skill_type':      tdxr (expandSimple (SKILL_TYPES,     $value)); break;
-      case 'rank':            tdxr (expandSimple (CREATURE_RANK,   $value)); break;
-      case 'creature_type':   tdxr (expandSimple (CREATURE_TYPES,   $value)); break;
-      case 'item_stats':      tdxr (expandSimple (ITEM_STATS,      $value)); break;
-      case 'gameobject_type': tdxr (expandSimple (GAMEOBJECT_TYPE, $value)); break;
-      case 'inventory_type':  tdxr (expandSimple (INVENTORY_TYPE,  $value)); break;
-      case 'class'       :    tdxr (expandSimple (CLASSES,         $value)); break;
-      case 'race'       :     tdxr (expandSimple (RACES,           $value)); break;
-      case 'map':             tdxr (expandSimple ($maps,           $value)); break;
-      case 'skill':           tdxr (expandSimple ($skills,         $value)); break;
-      case 'quest_type':      tdxr (expandSimple (QUEST_TYPE,      $value)); break;
-      case 'faction':         tdxr (getFaction ($value));                    break;
-      case 'npc_faction':     tdxr (expandSimple ($npc_factions,   $value)); break;
-
-      case 'item_class'   :   tdxr (getItemClass ($value));
-                              $lastItemClass = $value;    // remember for when the subclass comes along
-                              break;
-
-      case 'item_subclass'   :      tdxr (getItemSubClass ($value)); break;
-
-      // masks (ie. possible multiple results depending on the bits matching)
-      case 'item_subclass_mask'   :    tdxr (expandItemSubclassMask ($lastItemClass, $value)); break;
-      case 'race_mask':                tdxr (expandRaceMask ($value));              break;
-      case 'class_mask':               tdxr (expandClassMask ($value));             break;
-      case 'school_mask':              tdxr (expandMask (SPELL_SCHOOLS, $value));   break;
-      case 'inhabit_type_mask':        tdxr (inhabitTypeMask ($value));             break;
-      case 'mechanic_mask':            tdxr (expandMechanicMask ($value));          break;
-      case 'flags_extra_mask':         tdxr (expandFlagsExtraMask ($value));        break;
-      case 'npc_flags_mask':           tdxr (expandNpcFlagsMask ($value));          break;
-      case 'item_flags_mask':          tdxr (expandItemFlagsMask ($value));         break;
-      case 'spell_target_type_mask':   tdxr (expandSpellTargetTypeMask ($value));   break;
-      case 'spell_attributes_mask':    tdxr (expandSpellAttributesMask ($value));   break;
-      case 'spell_attributes_ex_mask': tdxr (expandSpellAttributesExMask ($value)); break;
-      case 'creature_static_flags'   : tdxr (expandShiftedMask (CREATURE_STATIC_FLAGS, $value)); break;
-      case 'quest_flags'   :           tdxr (expandShiftedMask (QUEST_FLAGS, $value)); break;
-      case 'quest_special_flags'   :   tdxr (expandShiftedMask (QUEST_SPECIAL_FLAGS, $value)); break;
-      case 'spell_interrupt_flags'   : tdxr (expandShiftedMask (SPELL_INTERRUPT_FLAGS, $value)); break;
-      default:                         tdxr ("$expandType not known, id = $value"); break;
-
-      } // end of switch
-
-  } // end of expandField
-
-// look up items for cross-referencing (eg. in spells)
-function getThings (&$theArray, $table, $key, $description, $condition = '')
-{
-  $results = dbQuery ("SELECT $key, $description FROM $table $condition");
-  while ($row = dbFetch ($results))
-    {
-    $theArray [$row [$key]] = $row [$description];
-    }
-  dbFree ($results);
-} // end of getThings
-
-define ('MONTHS', array (
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ));
-
-// The applied updates dates are in the format: DDMMYYYYs where s is a sequence number
-// To get the latest we need to get them into YYYYMMDDs sequence, then find the highest
-function checkAppliedUpdates ($table)
-  {
-
-  $latest = 0;
-
-  $result = dbQuery ("SELECT * FROM $table");
-  while ($row = dbFetch ($result))
-    {
-    $s = strval ($row ['id']);
-    $year = substr ($s, 4, 4);
-    $month = substr ($s, 2, 2);
-    $day = substr ($s, 0, 2);
-    $seq = substr ($s, 8, 1);
-    // ignore bad dates, <sigh>
-    if (intval ($day) < 1 || intval ($day) > 31)
-      continue;
-    if (intval ($month) < 1 || intval ($month) > 12)
-      continue;
-    $revDate = $year . $month . $day . $seq;
-    if ($revDate > $latest)
-      $latest = $revDate;
-    }
-  dbFree ($result);
-
-  return $latest;
-  } // end of checkAppliedUpdates
-
-function convertDate ($date)
-{
-  echo substr ($date, 6, 2) . ' ' .
-       MONTHS [intval (substr ($date, 4, 2)) - 1] . ' ' .
-       substr ($date, 0, 4);
-  if (strlen ($date) > 8)
-        echo " - sequence: " . substr ($date, 8, 1);
-} // end of convertDate
-
-function showBigMenu ()
-  {
-  foreach (MENU as $desc => $newAction)
-    {
-    echo "<div class='menu_item'><a href='?action=$newAction'>$desc</a></div>\n";
-    }
-
-  // find last database updates
-
-  echo "<h3>Database updates</h3>\n";
-  $latest_dbc   = checkAppliedUpdates (APPLIED_UPDATES_DBC);
-  echo "<p>Latest DBC table update: ";
-  convertDate ($latest_dbc) . "\n";
-
-  $latest_world = checkAppliedUpdates (APPLIED_UPDATES_WORLD);
-  echo "<br>Latest World table update: ";
-  convertDate ($latest_world) . "\n";
-
-  echo "<p>Databases from <a href='https://github.com/The-Alpha-Project/alpha-core/tree/master/etc/databases'>
-    GitHub: alpha-core/etc/databases/</a>\n";
-
-  echo "<hr>\n";
-  echo "<h3>Utilities</h3>
-  <ul>
-    <li><a href='?action=proximity'>Spawn point proximity search</a>
-  </ul>
-  <h3>Database validation</h3>
-  <h4>NPCs</h4>
-  <ul>
-    <li><a href='?action=unknown_faction'>NPCs with unknown faction</a>
-    <li><a href='?action=npc_missing_quest'>NPCs which start/finish a missing quest</a>
-  </ul>
-
-  <h4>Game objects</h4>
-  <ul>
-    <li><a href='?action=go_missing_quest'>Game objects which start/finish a missing quest</a>
-    <li><a href='?action=go_not_spawned'>Game objects which are not spawned</a>
-  </ul>
-
-
-  <h4>Quests</h4>
-  <ul>
-  <li><a href='?action=quest_missing_item' >Quests with missing items</a>
-  <li><a href='?action=quest_missing_spell'>Quests with missing spells</a>
-  <li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a>
-  </ul>
-
-  <h4>Items</h4>
-  <ul>
-  <li><a href='?action=no_item_text'>Items with no text</a>
-  </ul>
-
-  ";
-  } // end of showBigMenu
-
-
-function showMenu ()
-  {
-  echo "<div class='links_at_top'>\n";
-  foreach (MENU as $desc => $newAction)
-    {
-    echo "<a href='?action=$newAction'>$desc</a>\n";
-    }
-  echo "</div>\n";
-
-  } // end of showMenu
-
-
-//-----------------------------------------------------------------------------
-// START HERE
-//-----------------------------------------------------------------------------
+// GET PARAMETERS FROM POST OR GET
 
 // get action
 $action  = getGP ('action', 40, $VALID_ACTION);
@@ -312,6 +100,8 @@ $leftArrow = getP ('LeftArrow_x',      8, $VALID_NUMBER);
 // for page text, the item which leads to the text
 $item      = getGP ('item',      8, $VALID_NUMBER);
 
+// work out page number
+
 if (!$page || $page < 1)
   $page = 1;
 if ($rightArrow)
@@ -348,15 +138,15 @@ document.getElementById('noscript_warning_id').style.display = 'none';
 // grab things we are likely to cross-reference a lot
 if ($action)
   {
-  getThings ($items,        ITEM_TEMPLATE,       'entry', 'name', 'WHERE ignored = 0');     // items
-  getThings ($skills,       SKILLLINE,           'ID',    'DisplayName_enUS');  // skills
-  getThings ($spells,       SPELL,               'ID',    'Name_enUS');         // spells
-  getThings ($factions,     FACTION,             'ID',    'Name_enUS');         // factions
-  getThings ($creatures,    CREATURE_TEMPLATE,   'entry', 'name', 'WHERE entry <= ' . MAX_CREATURE); // creatures
-  getThings ($game_objects, GAMEOBJECT_TEMPLATE, 'entry', 'name');              // game objects
-  getThings ($quests,       QUEST_TEMPLATE,      'entry', 'Title', 'WHERE ignored = 0'); // quests
-  getThings ($maps,         MAP,                 'ID',    'Directory');         // maps
-  getThings ($zones,        WORLDMAPAREA,        'AreaID',    'AreaName');          // zones
+  getThings ($items,        ITEM_TEMPLATE,       'entry',  'name', 'WHERE ignored = 0');     // items
+  getThings ($skills,       SKILLLINE,           'ID',     'DisplayName_enUS');  // skills
+  getThings ($spells,       SPELL,               'ID',     'Name_enUS');         // spells
+  getThings ($factions,     FACTION,             'ID',     'Name_enUS');         // factions
+  getThings ($creatures,    CREATURE_TEMPLATE,   'entry',  'name', 'WHERE entry <= ' . MAX_CREATURE); // creatures
+  getThings ($game_objects, GAMEOBJECT_TEMPLATE, 'entry',  'name');              // game objects
+  getThings ($quests,       QUEST_TEMPLATE,      'entry',  'Title', 'WHERE ignored = 0'); // quests
+  getThings ($maps,         MAP,                 'ID',     'Directory');         // maps
+  getThings ($zones,        WORLDMAPAREA,        'AreaID', 'AreaName');          // zones
 
   $skills [0] = 'None';
   $factions [0] = 'None';
@@ -370,87 +160,25 @@ if ($action)
   while ($row = dbFetch ($results))
     $npc_factions [$row ['template_key']] = $row ['Name_enUS'];
   dbFree ($results);
-  }
+  } // end of having an action
 
+// if there was an action, show a smaller menu, find its handler and call it
 if ($action)
   {
   showMenu ();
-  switch ($action)
-    {
-      case 'spells'        : showSpells (); break;
-      case 'show_spell'    : showOneSpell ($id); break;
-
-      case 'items'         : showItems (); break;
-      case 'show_item'     : showOneItem ($id); break;
-      case 'read_text'     : showText ($id, $item); break;
-
-      case 'creatures'     : showCreatures (); break;
-      case 'show_creature' : showOneCreature ($id); break;
-
-      case 'quests'        : showQuests (); break;
-      case 'show_quest'    : showOneQuest ($id); break;
-
-      case 'game_objects'  : showGameObjects (); break;
-      case 'show_go'       : showOneGameObject ($id); break;
-
-      case 'maps'          : showMaps (); break;
-      case 'show_map'      : showOneMap ($id); break;
-
-      case 'zones'         : showZones (); break;
-      case 'show_zone'     : showOneZone ($id); break;
-
-      case 'ports'         : showPorts (); break;
-      case 'show_port'     : showOnePort ($id); break;
-
-      case 'skills'        : showSkills (); break;
-      case 'show_skill'    : showOneSkill ($id); break;
-
-      case 'tables'        : showTables (); break;
-      case 'show_table'    : showOneTable ($id); break;
-
-      case 'books'         : showBooks (); break;
-      case 'show_book'     : showOneBook ($id); break;
-
-      // Utilities
-      case 'proximity'     : showProximity (); break;
-
-      // Validation
-      case 'unknown_faction'     : showUnknownFaction (); break;
-      case 'quest_missing_item'  : showMissingQuestItems (); break;
-      case 'quest_missing_spell' : showMissingQuestSpells (); break;
-      case 'quest_missing_quest' : showMissingQuestQuests (); break;
-      case 'npc_missing_quest'   : showMissingCreatureQuests (); break;
-      case 'go_missing_quest'    : showMissingGameobjectQuests (); break;
-      case 'go_not_spawned'      : showGameObjectsNotSpawned (); break;
-      case 'no_item_text'        : showNoItemText (); break;
-
-      default: ShowWarning ('Unknown action'); break;
-
-    } // end of switch on action
+  $handler = $handlers [$action];
+  if ($handler)
+    $handler ();
+  else
+    ShowWarning ('Unknown action');
   echo "<hr><a href='$PHP_SELF'>Main Menu</a>\n";
   }
-else
+else  // otherwise show a bigger menu
   showBigMenu ();
 
-
-echo "<div class='credits'><a href='$PHP_SELF'><img style='width:50px; float:left; margin-left: 0px; margin-right:5px;' src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a>
-      Designed and coded in August 2022 by X’Genesis Qhulut.
-      <br>This browser at GitHub:
-      <a href='https://github.com/X-Genesis-Qhulut/alpha' style='white-space: nowrap;'>X-Genesis-Qhulut / alpha</a><br>
-      <b>WoW Alpha Project</b> at GitHub: <a href='https://github.com/The-Alpha-Project/alpha-core'  style='white-space: nowrap;'>
-      The-Alpha-Project / alpha-core</a>
-      <br><b>Discord channel</b>: <a href='https://discord.gg/RzBMAKU'>Alpha Project</a>.
-      Thanks to Grender!\n
-      <p>Thanks to the original developers of WoW and also John Staats for writing
-      <br><i>The WoW Diary: A Journal of Computer Game Development.</i>\n
-      <br>Maps courtesy of Entropy and <a href='https://wow.tools/maps/Kalimdor/'>WoW.tools</a>.
-      Creature screenshots by Daribon.\n
-      <details><summary>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</summary>\n
-      <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
-      “for home, noncommercial and personal use only”.
-      <p><b>Blizzard Entertainment®</b>
-      <br>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</details>\n
-      </div>\n";
+// now the credits
+showCredits ();
 
 // wrap up web page
 echo "\n</body>\n</html>\n";
+?>

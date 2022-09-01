@@ -131,8 +131,9 @@ function extraGameObjectInformation ($id, $row)
 
   } // end of extraGameObjectInformation
 
-function showOneGameObject ($id)
+function showOneGameObject ()
   {
+  global $id;
 
   showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry', $id, "Game Object", "name",
     array (

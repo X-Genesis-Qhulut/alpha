@@ -315,7 +315,7 @@ function showCount ($results)
 
 // This for stuff like EffectTriggerSpell_1, EffectTriggerSpell_2, EffectTriggerSpell_3
 // We want to know if any of them are non-zero, because then we display a heading
-// eg.  $count = getCount ('EffectTriggerSpell_', 3);
+// eg.  $count = getCount ($row, 'EffectTriggerSpell_', 3);
 
 function getCount ($row, $field, $n)
   {
@@ -558,7 +558,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   } // end of showOneThing
 
 
-
+// for hyperlinks to things with a name we can show (like a quest name)
 function lookupThing ($array, $id, $action)
   {
   $link = "<a href='?action=$action&id=$id'>$id</a>";
@@ -569,6 +569,13 @@ function lookupThing ($array, $id, $action)
   else return ("$link: " . $array  [$id] );
   } // end of lookupThing
 
+// for hyperlinks to things with no name to be shown
+function makeLink ($id, $action)
+  {
+  if (!$id)
+    return ('-');
+  return "<a href='?action=$action&id=$id'>$id</a>";
+  } // end of makeLink
 
 function convertTimeMinutes ($time, $ms = true)
   {
@@ -827,6 +834,19 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc)
   return $running_count;
 }
 
+// look up items for cross-referencing (eg. in spells)
+function getThings (&$theArray, $table, $key, $description, $condition = '')
+{
+  $results = dbQuery ("SELECT $key, $description FROM $table $condition");
+  while ($row = dbFetch ($results))
+    {
+    $theArray [$row [$key]] = $row [$description];
+    }
+  dbFree ($results);
+} // end of getThings
+
+
+
 /*
 
 There are three types of expansions of numbers/bitmasks. Take for example the RACES array:
@@ -908,7 +928,7 @@ function expandMask ($table, $mask, $showMask = true)
       }   // end of this bit is set
     } // end of for each bit
 
-  return ($showMask ? ($mask . ': ') : '') . implode (", ", $s);
+  return ($showMask ? (getMask ($mask) . ': ') : '') . implode (", ", $s);
 } // end of expandMask
 
 // Case 3: The table has mask values (eg. 0x01, 0x02, 0x04, 0x08)
@@ -922,7 +942,7 @@ function expandShiftedMask ($table, $mask, $showMask = true)
     if ($mask & (1 << $i))
       $s [] = array_key_exists (1 << $i, $table) ? $table [1 << $i] : "$i: (unknown)";
 
-  return ($showMask ? ($mask . ': ') : '') . implode (", ", $s);
+  return ($showMask ? (getMask ($mask) . ': ') : '') . implode (", ", $s);
 } // end of expandShiftedMask
 
 // ------------------------------------------------------------

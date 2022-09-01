@@ -305,9 +305,9 @@ function extraCreatureInformation ($id, $row)
 
   } // end of extraCreatureInformation
 
-function showOneCreature ($id)
+function showOneCreature ()
   {
-
+  global $id;
 
   $extras = array (
         'spell_id1' => 'spell',
@@ -330,6 +330,7 @@ function showOneCreature ($id)
         'type'    => 'creature_type',
 
          'static_flags'   => 'creature_static_flags',
+         'school_immune_mask' => 'mask',
 
  //       'trainer_spell' => 'spell',   // Hmmm, must have the wrong end of the stick here
 
