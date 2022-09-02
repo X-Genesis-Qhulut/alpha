@@ -1,8 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-<title>WoW Alpha database query</title>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="title" content="WoW 0.5.3 Database" />
+    <meta name="description" content="Database browser for Alpha core 0.5.3" />
+    <title>WoW 0.5.3 Database</title>
+    <link rel="stylesheet" href="./css/style/normalize.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="extra.css" />
+    <link rel="icon" href="./assets/img/favicon.png" />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+      integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+      crossorigin="anonymous"
+    ></script>
+  <script src='editing.js' defer></script>
+  </head>
+  <body>
+    <!-- MAIN -->
+    <main class="main-container">
+
+
 <?php
 
 /*
@@ -51,14 +71,9 @@ require ("wow_alpha_fields.php");
 
 $documentRoot = $_SERVER['DOCUMENT_ROOT'];
 $dblink = false;
+$executionDir = EXECUTIONDIR;
 
 // incorporate our stylesheet
-$executionDir = EXECUTIONDIR;
-$time = filemtime ("$documentRoot$executionDir/alpha.css");
-echo "<link rel='stylesheet' href='$executionDir/alpha.css?v=$time'>\n";
-echo "<script src='editing.js' defer></script>\n";
-echo "</head>\n";
-echo "<body>\n";
 
 // GET PARAMETERS FROM POST OR GET
 
@@ -118,7 +133,7 @@ if (mysqli_connect_errno())
 
 $PHP_SELF = $_SERVER['PHP_SELF'];
 
-echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0.5.3 database browser</a></div>\n";
+// echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0.5.3 database browser</a></div>\n";
 
 /*
 // The <noscript> tag doesn't detect if NoScript is in use - so put up a message and use scripting to hide it
@@ -162,23 +177,32 @@ if ($action)
   dbFree ($results);
   } // end of having an action
 
+showBigMenu ();
+
 // if there was an action, show a smaller menu, find its handler and call it
 if ($action)
   {
-  showMenu ();
+//  showMenu ();
   $handler = $handlers [$action];
   if ($handler)
     $handler ();
   else
     ShowWarning ('Unknown action');
-  echo "<hr><a href='$PHP_SELF'>Main Menu</a>\n";
+ // echo "<hr><a href='$PHP_SELF'>Main Menu</a>\n";
   }
-else  // otherwise show a bigger menu
-  showBigMenu ();
+//else  // otherwise show a bigger menu
+//  showBigMenu ();
 
 // now the credits
 showCredits ();
-
 // wrap up web page
-echo "\n</body>\n</html>\n";
+
 ?>
+  </main>
+    <!-- END MAIN -->
+
+    <!-- FOOTER -->
+    <footer class="footer"></footer>
+    <!-- END FOOTER -->
+  </body>
+</html>

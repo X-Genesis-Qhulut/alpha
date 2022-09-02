@@ -50,10 +50,47 @@ function convertDate ($date)
 
 function showBigMenu ()
   {
-  foreach (MENU as $desc => $newAction)
+?>
+      <!-- MENU NAV -->
+      <header>
+        <div class="menu-bar-main-container">
+          <div class="menu-bar-header-container">
+            <a href="">
+              <img
+                class="menu-bar-logo"
+                src="logo-small.png"
+                alt="Alpha Core"
+              />
+            </a>
+            <div class="menu-bar-title">
+              <p>Database</p>
+              <p>Alpha 0.5.3</p>
+            </div>
+          </div>
+          <nav class="menu-bar-nav-container">
+<?php
+  foreach (MENU as $desc => $menuInfo)
     {
-    echo "<div class='menu_item'><a href='?action=$newAction'>$desc</a></div>\n";
+    $newAction = $menuInfo ['action'];
+    $icon      = $menuInfo ['icon'];
+    echo "<a href='?action=$newAction' class='menu-bar-button'>";
+    echo "<i class='fas $icon'></i>";
+    echo "<span>$desc</span>";
+    echo "</a>\n";
     }
+?>
+          </nav>
+          <div class="menu-bar-social-container">
+            <a href=""><i class="menu-bar-social fab fa-github"></i></a>
+            <a href=""><i class="menu-bar-social fab fa-discord"></i></a>
+          </div>
+        </div>
+        <nav class="header__nav"></nav>
+      </header>
+      <!-- END MENU NAV -->
+<?php
+
+  /*
 
   // find last database updates
 
@@ -113,6 +150,9 @@ function showBigMenu ()
   </ul>
 
   ";
+
+*/
+
   } // end of showBigMenu
 
 
@@ -131,6 +171,7 @@ function showCredits ()
 {
 global $PHP_SELF;
 
+/*
 echo "<div class='credits'><a href='$PHP_SELF'><img style='width:50px; float:left; margin-left: 0px; margin-right:5px;'
       src='avatar.jpg' alt='Avatar' title='Click for main menu'/></a>
       Designed and coded in August 2022 by X’Genesis Qhulut.
@@ -150,6 +191,8 @@ echo "<div class='credits'><a href='$PHP_SELF'><img style='width:50px; float:lef
       <p><b>Blizzard Entertainment®</b>
       <br>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</details>\n
       </div>\n";
+
+*/
 
 } // end of showCredits
 ?>

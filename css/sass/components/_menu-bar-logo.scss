@@ -1,0 +1,11 @@
+.menu-bar-logo {
+  width: 60px;
+  height: 60px;
+  transform: scale(1);
+  transition: all 500ms;
+
+  &:hover {
+    transition: all 500ms;
+    transform: scale(1.1);
+  }
+}

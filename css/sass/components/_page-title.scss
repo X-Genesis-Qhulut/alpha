@@ -1,0 +1,63 @@
+.page-title {
+  color: $color6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  height: 118px;
+  width: 100%;
+  padding-left: 30px;
+  padding-right: 50px;
+  border-bottom: 1px solid $color4;
+
+  & div {
+    display: flex;
+    align-items: center;
+  }
+
+  & h1 {
+    font-size: 2em;
+  }
+
+  &__goback {
+    background-color: transparent;
+    margin-right: 30px;
+    border: 0px;
+    cursor: pointer;
+    color: $color7;
+
+    &:hover {
+      & svg {
+        color: $color6;
+      }
+    }
+
+    & svg {
+      font-size: 3em;
+    }
+  }
+
+  &__database {
+    font-size: 1.5em;
+  }
+
+  &__angle {
+    font-size: 1.5em;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  &__table {
+    font-size: 1.3em;
+  }
+
+  @include tablet-design {
+    h1 {
+      font-size: 1.5em;
+    }
+
+    &__table {
+      font-size: 1.2em;
+    }
+  }
+}

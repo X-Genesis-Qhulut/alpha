@@ -12,17 +12,17 @@
 // menu at top of page
 
 define ('MENU', array (
-  'Creatures'     => 'creatures',
-  'Game Objects'  => 'game_objects',
-  'Items'         => 'items',
-  'Spells'        => 'spells',
-  'Maps'          => 'maps',
-  'Pages'         => 'books',
-  'Ports'         => 'ports',
-  'Quests'        => 'quests',
-  'Skills'        => 'skills',
-  'Tables'        => 'tables',
-  'Zones'         => 'zones',
+  'Creatures'     => array ('action' => 'creatures',       'icon' => 'fa-user'),
+  'Game Objects'  => array ('action' => 'game_objects',    'icon' => 'fa-cube'),
+  'Items'         => array ('action' => 'items',           'icon' => 'fa-gavel'),
+  'Spells'        => array ('action' => 'spells',          'icon' => 'fa-book'),
+  'Maps'          => array ('action' => 'maps',            'icon' => 'fa-map'),
+  'Pages'         => array ('action' => 'books',           'icon' => 'fa-file'),
+  'Ports'         => array ('action' => 'ports',           'icon' => 'fa-globe'),
+  'Quests'        => array ('action' => 'quests',          'icon' => 'fa-list'),
+  'Skills'        => array ('action' => 'skills',          'icon' => 'fa-graduation-cap'),
+  'Tables'        => array ('action' => 'tables',          'icon' => 'fa-table'),
+  'Zones'         => array ('action' => 'zones',           'icon' => 'fa-map-pin'),
 
 // more here
 ));

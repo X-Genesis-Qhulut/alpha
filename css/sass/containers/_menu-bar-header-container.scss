@@ -1,0 +1,12 @@
+.menu-bar-header-container {
+  display: flex;
+  justify-content: space-between;
+  background-color: $color1;
+  padding: 5px;
+  padding-right: 10px;
+  text-align: right;
+  border-radius: 20px 0px 0px 0px;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 20px;
+}

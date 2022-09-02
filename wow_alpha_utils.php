@@ -489,7 +489,8 @@ function setUpSearch ($keyname, $fieldsToSearch)
   } // end of setUpSearch
 
 // shows all fields from any table
-function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand, $func = false)
+// $limit is a table of the only keys we are interested in
+function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand, $limit = false)
   {
   $info = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
 
@@ -500,6 +501,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     return;
     }
 
+/*
   if ($nameField)
     $name = " — " . fixHTML ($row [$nameField]);
   else
@@ -508,6 +510,11 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
 
   echo "<h1 class='one_item'>" . fixHTML ($description) . " $id$name</h1>\n";
   echo "<h2 class='one_item_table'>Table: " . fixHTML ($table_display_name) . "</h2>\n";
+
+
+  echo "<div class='one_thing_container'>\n";
+  echo "<div class='one_thing_section'>\n";
+*/
 
   if  (preg_match ('|\.(.+)$|', $table, $matches))
     {
@@ -519,10 +526,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
          </div>\n";
     }
 
-  echo "<div class='one_thing_container'>\n";
-  echo "<div class='one_thing_section'>\n";
-
-  echo "<table class='one_row'>\n";
+  echo "<table class='table-fields'>\n";
   echo "<tr>\n";
 
   th ('Field');
@@ -532,6 +536,8 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   foreach ($info as $col)
     {
     $fieldName = $col ['Field'];
+    if ($limit && !in_array ($fieldName, $limit))
+      continue;
     // the row will generate an SQL update if you Ctrl+click it
     echo "<tr onclick='onRowClick(event,this.id)' id='field_$fieldName'>\n";
     tdx ($fieldName);
@@ -543,8 +549,8 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     echo "</tr>\n";
     } // end of foreach
   echo "</table>\n";
-  echo "</div>\n";  // end of database details
 
+/*
   // extra stuff
   if ($func)
     {
@@ -554,6 +560,8 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     }
 
   echo "</div>\n";  // end of flex container
+
+*/
 
   } // end of showOneThing
 
@@ -658,6 +666,9 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 {
   global $maps;
 
+  if (count ($results) == 0)
+    return;
+
   $map0 = 0;
   $map1 = 0;
 
@@ -685,18 +696,18 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
     $mapHeight = 21050;
     }
 
-  if ($mapName)
-    {
-      // get width and height
-    $imageSize = getimagesize ("maps/$mapName.jpg");
-    $imageWidth  = $imageSize [0];
-    $imageHeight = $imageSize [1];
+  if (!$mapName)
+    return;
 
-    echo "<div style='position:relative;'>\n";    // make a position context
-    echo "<img src='maps/{$mapName}.jpg' style='display:block;
-          max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
-          alt='{$mapName} map' title='{$mapName} map' >\n";
-    } // if we are showing a map
+  // get width and height
+  $imageSize = getimagesize ("maps/$mapName.jpg");
+  $imageWidth  = $imageSize [0];
+  $imageHeight = $imageSize [1];
+
+  echo "<div style='position:relative;'>\n";    // make a position context
+  echo "<img src='maps/{$mapName}.jpg' style='display:block;
+        max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
+        alt='{$mapName} map' title='{$mapName} map' >\n";
 
   // draw an SVG circle for each spawn point
   foreach ($results as $spawnRow)
@@ -734,26 +745,46 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
     } // for each spawn point
 
-  if ($mapName)   // end of position context
-    echo "</div><p>\n";
-
-
-  listItems ($heading, $tableName, count ($results), $results,
-    function ($row) use ($maps, $xName, $yName, $zName, $mName)
-      {
-      $x = $row [$xName];
-      $y = $row [$yName];
-      $z = $row [$zName];
-      $map = $row [$mName];
-      if ($map < 2)
-        echo "<li>$x $y $z $map";
-      else
-        echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
-      } // end of listing function
-      );
-
+  echo "</div><p>\n";
 
 } // end of showSpawnPoints
+
+function startElementInformation ($heading, $table)
+  {
+  echo "<div class='element-information'>\n";
+  echo "<h2 title='" . fixHTML ($table) . "' class='element-information__title'>" . fixHTML ($heading) . "</h2>\n";
+  echo "<div class='element-information__bar'></div>\n";
+  echo "<div class='element-information__content'>\n";
+  echo "<ul>\n";
+  } // end of startElementInformation
+
+function endElementInformation ()
+  {
+  echo "</ul>\n";
+  echo "</div>\n";    // end of element-information__content
+  echo "</div>\n";    // end of element-information
+  } // end of endElementInformation
+
+function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName)
+  {
+  global $maps;
+  if (count ($results) == 0)
+    return;
+
+  startElementInformation ($heading, $table);
+  foreach ($results as $row)
+    {
+    $x = $row [$xName];
+    $y = $row [$yName];
+    $z = $row [$zName];
+    $map = $row [$mName];
+    if ($map < 2)
+      echo "<li>$x $y $z $map";
+    else
+      echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
+    } // end of foreach
+  endElementInformation ();
+  } // end of listSpawnPoints
 
 function showItemCount ($n)
   {
@@ -795,42 +826,20 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc)
   if ($totalCount <= 0)
     return;
 
-  echo "<div class='item_list' >\n";
-  echo "<h2 title='Table: $table' >" . fixHTML ($heading) . "</h2>\n";
   $running_count = 0;
 
-  // make two columns if there are a lot of them
-  if ($totalCount > TWO_COLUMN_SPLIT)
-    {
-    echo "<div class='one_thing_container'>\n";
-    echo "<div class='one_thing_section' style='max-width:30em;'>\n";
-    }
-
-  // we'll make a bulleted list
-  echo "<ul>\n";
-
+  startElementInformation ($heading, $table);
   foreach ($results as $row)
     {
     if (!$listItemFunc ($row))
       {
       $running_count++;
-      // start the second column half-way through (+1 so the longer list is on the left)
-      if ($totalCount > TWO_COLUMN_SPLIT && $running_count == intval ($totalCount / 2) + 1)
-        {
-        echo "</ul></div>\n";
-        echo "<div class='one_thing_section'>\n<ul>\n";
-        }
       } // end of if this row actually got listed
-
     } // for each row
 
   echo "</ul>\n";
 
-  // end of two columns
-  if ($totalCount > TWO_COLUMN_SPLIT)
-    echo "</div></div>\n";
-
-  echo "</div>\n";  // end of div holding this listing
+  endElementInformation ();
   return $running_count;
 }
 

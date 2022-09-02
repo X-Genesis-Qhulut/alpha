@@ -1,0 +1,29 @@
+.menu-bar-title {
+  p {
+    margin: 5px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+  }
+
+  & p:first-child {
+    font-size: 1.3em;
+    // margin-bottom: 10px;
+  }
+
+  & p:last-child {
+    font-size: 0.85em;
+  }
+
+  @include tablet-design {
+    justify-content: center;
+    align-items: center;
+    & p:first-child {
+      font-size: 1.3em;
+      // margin-bottom: 10px;
+    }
+
+    & p:last-child {
+      font-size: 0.85em;
+    }
+  }
+}

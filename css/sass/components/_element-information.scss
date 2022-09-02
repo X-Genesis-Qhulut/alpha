@@ -1,0 +1,33 @@
+.element-information {
+  flex-basis: 33%;
+  border-bottom: 1px solid $color8;
+
+  &__title {
+    color: $color6;
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  &__bar {
+    background-color: $color7;
+    width: 45px;
+    height: 3px;
+    margin: 0;
+    margin-left: 10px;
+    padding: 0;
+  }
+
+  &__content {
+    overflow-y: scroll;
+    max-height: 150px;
+    padding-top: 5px;
+
+    & ul {
+      & li {
+        color: $color6;
+        line-height: 25px;
+        list-style: none;
+      }
+    }
+  }
+}

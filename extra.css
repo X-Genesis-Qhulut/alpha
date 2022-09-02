@@ -1,0 +1,13 @@
+.sql
+  {
+  margin-left:2em;
+  margin-bottom:1em;
+  display:none;
+  border:1px solid black;
+  border-radius: 3px;
+	box-shadow: 3px 3px 3px gray;
+  width: fit-content;
+  padding: 1em;
+  font-family: monospace;
+  background-color:white;
+  }

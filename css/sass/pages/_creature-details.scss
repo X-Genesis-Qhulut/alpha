@@ -1,0 +1,128 @@
+.creature-details {
+  // padding: 30px;
+
+  &__informations {
+    display: flex;
+    padding: 20px;
+    padding-top: 30px;
+    justify-content: space-between;
+    max-height: 650px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    &__details1 {
+      flex-basis: 25%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: $color4;
+      border: 1px solid $color3;
+      padding: 0px 20px 0px 20px;
+      border-radius: 0px 20px 20px 0px;
+      position: relative;
+
+      & div:first-child {
+        position: absolute;
+        top: 0;
+        left: 20px;
+
+        & div {
+          position: absolute;
+          left: 0px;
+          top: 40px;
+        }
+      }
+    }
+
+    &__details2 {
+      // margin-left: 30px;
+      flex-basis: 40%;
+      padding: 0px 20px 0px 20px;
+      background-color: $color4;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-radius: 20px 20px 20px 20px;
+    }
+
+    & aside {
+      & img {
+        border-radius: 20px 0px 0px 20px;
+      }
+    }
+
+    &__items {
+    }
+  }
+
+  @include laptop-design {
+    &__informations {
+      &__details1 {
+        flex-basis: 25%;
+      }
+
+      &__details2 {
+        flex-basis: 30%;
+      }
+    }
+    &__items {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  @include tiny-laptop-design {
+    &__informations {
+      max-height: none;
+      flex-wrap: wrap;
+      padding: 10px;
+
+      &__details1 {
+        flex-basis: 17%;
+      }
+
+      &__details2 {
+        flex-basis: 25%;
+      }
+    }
+    & aside {
+      & img {
+        border-radius: 0px 20px 0px 20px;
+      }
+    }
+  }
+
+  @include tablet-design {
+    &__informations {
+      max-height: none;
+      flex-wrap: wrap;
+      padding: 10px;
+      justify-content: center;
+
+      &__details1 {
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin-top: 15px;
+        flex-basis: 90%;
+        margin-bottom: 10px;
+        border-radius: 0px 20px 0px 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      &__details2 {
+        flex-basis: 90%;
+        border-radius: 0px 20px 0px 20px;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+        margin-top: 15px;
+
+        & div:last-of-type {
+          border: none;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+.table-rows {
+  border: 1px solid $color3;
+  background-color: $color1;
+  color: $color6;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  & th {
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+    background-color: $color1;
+  }
+  & td {
+    padding: 5px 20px 5px 20px;
+    text-align: right;
+  }
+
+  & tr:nth-child(odd) {
+    background-color: $color4;
+  }
+  & tr:nth-child(even) {
+    background-color: $color8;
+  }
+}

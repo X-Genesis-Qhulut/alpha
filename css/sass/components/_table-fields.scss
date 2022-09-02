@@ -1,0 +1,24 @@
+.table-fields {
+  border: 1px solid $color3;
+  // border-radius: 20px;
+  background-color: $color1;
+  color: $color6;
+
+  & th {
+    padding: 5px 10px 5px 10px;
+    // width: 150px;
+    text-align: left;
+    background-color: $color1;
+  }
+
+  & td {
+    padding: 5px 10px 5px 10px;
+  }
+
+  & tr:nth-child(odd) {
+    background-color: $color4;
+  }
+  & tr:nth-child(even) {
+    background-color: $color8;
+  }
+}
