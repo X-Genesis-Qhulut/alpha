@@ -297,9 +297,10 @@ echo "  <!-- MAP -->
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
       echo "</ul>\n";
+      endElementInformation ();
+
       } // if we found the spell list
 
-    endElementInformation ();
 
     } // end of if they had a spell_list_id
 
