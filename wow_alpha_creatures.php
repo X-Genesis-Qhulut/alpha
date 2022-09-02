@@ -465,15 +465,10 @@ echo "  <!-- MAP -->
       );
 
 
- echo "<div class='creature-details__items'>\n";
-
-  echo "
-  <div class='tiny-title'>
-  <h2 class='tiny-title__heading'>Database values</h2>
-  </div>";
+  echo "<div class='creature-details__items'>\n";
 
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
-              $id, "Creature", "name", $extras);
+              $id, "Database entry for NPC", "name", $extras);
   echo "</div>\n";  // end of creature-details__items
 
 

@@ -516,11 +516,20 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   echo "<div class='one_thing_section'>\n";
 */
 
+echo "
+<div class='table-container'>
+              <div class='tiny-title'>
+                <h2 class='tiny-title__heading'>" . fixHTML ($description) . "</h2>
+                <div class='tiny-title__bar'></div>
+              </div>
+";
+
+
   if  (!$limit && preg_match ('|\.(.+)$|', $table, $matches))
     {
     $tableOnly = $matches [1];
     // add a box for displaying SQL update information for copy/paste into an update line
-    echo "<div id='editing_sql' class='sql'>UPDATE `$tableOnly` SET `<span id='sql_field_name'>field</span>`
+    echo "<div id='editing_sql' class='sql-statement'>UPDATE `$tableOnly` SET `<span id='sql_field_name'>field</span>`
         = xxxx WHERE (`$key` = " .
          $row [$key] . ");\n
          </div>\n";
@@ -559,6 +568,8 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     } // end of foreach
   echo "</tbody>\n";
   echo "</table>\n";
+
+  echo "</div>\n";  // end of table-container
 
 /*
   // extra stuff
@@ -714,7 +725,6 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
   $imageWidth  = $imageSize [0];
   $imageHeight = $imageSize [1];
 
-  echo "<div style='position:relative;'>\n";    // make a position context
   echo "<img src='maps/{$mapName}.jpg' style='display:block;
         max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
         alt='{$mapName} map' title='{$mapName} map' >\n";
@@ -755,7 +765,6 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
     } // for each spawn point
 
-  echo "</div><p>\n";
 
 } // end of showSpawnPoints
 
