@@ -6,13 +6,12 @@
     padding: 20px;
     padding-top: 30px;
     justify-content: space-between;
-    max-height: 650px;
     flex-wrap: wrap;
     max-width: 1200px;
     margin: 0 auto;
 
     &__details1 {
-      flex-basis: 25%;
+      flex-basis: 20%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -48,6 +47,7 @@
     }
 
     & aside {
+      position: relative;
       & img {
         border-radius: 20px 0px 0px 20px;
       }
@@ -60,11 +60,11 @@
   @include laptop-design {
     &__informations {
       &__details1 {
-        flex-basis: 25%;
+        flex-basis: 13%;
       }
 
       &__details2 {
-        flex-basis: 30%;
+        flex-basis: 27%;
       }
     }
     &__items {
@@ -80,11 +80,11 @@
       padding: 10px;
 
       &__details1 {
-        flex-basis: 17%;
+        flex-basis: 10%;
       }
 
       &__details2 {
-        flex-basis: 25%;
+        flex-basis: 20%;
       }
     }
     & aside {

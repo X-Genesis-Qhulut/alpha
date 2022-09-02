@@ -19,7 +19,7 @@
 @import "components/model-display";
 @import "components/element-information";
 @import "components/tiny-title";
-
+@import "components/sql-statement";
 // Containers
 @import "containers/main-container";
 @import "containers/menu-bar-main-container";
@@ -28,6 +28,7 @@
 @import "containers/menu-bar-social-container";
 @import "containers/main-page-container";
 @import "containers/page-content";
+@import "containers/table-container";
 
 // Pages:
 @import "pages/creature-details";

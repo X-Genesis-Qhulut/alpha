@@ -38,84 +38,7 @@ function extraCreatureInformation ($id, $row)
   global $documentRoot, $executionDir;
 
 
-  // ---------------- SPELL LISTS --------------
 
-
-  if ($row ['spell_list_id'])
-    {
-    $spellListRow = dbQueryOneParam ("SELECT * FROM ".CREATURE_SPELLS." WHERE entry = ?", array ('i', &$row ['spell_list_id']));
-    if ($spellListRow)
-      {
-      echo "<div class='item_list' >\n";
-
-      echo "<h2 title='Table: alpha_world.creature_spells'>Spells this NPC casts</h2><ul>\n";
-      for ($i = 1; $i <= 8; $i++)
-        {
-        if ($spellListRow ["spellId_$i"])
-          {
-          echo "<li>";
-          echo (lookupThing ($spells,   $spellListRow ["spellId_$i"], 'show_spell'));
-          echo "<ul>\n";
-          echo "<li>Probability: " . $spellListRow ["probability_$i"] . "%";
-          echo "<li>Target type: " . expandSimple (TARGET_TYPE, $spellListRow ["castTarget_$i"]);
-          if ($spellListRow ["targetParam1_$i"] || $spellListRow ["targetParam2_$i"])
-            {
-            echo " (param1: " . $spellListRow ["targetParam1_$i"];
-            echo ", param2: " . $spellListRow ["targetParam2_$i"] . ")";
-            }
-          if ($spellListRow ["castFlags_$i"])
-            echo "<li>Flags: "  . expandShiftedMask (SPELL_CAST_FLAGS, $spellListRow ["castFlags_$i"], false);
-
-          echo "<li>Initial delay: "  . $spellListRow ["delayInitialMin_$i"];
-          if ($spellListRow ["delayInitialMin_$i"] != $spellListRow ["delayInitialMax_$i"])
-            echo ' to ' . $spellListRow ["delayInitialMax_$i"];
-          echo "<li>Repeat delay: "  . $spellListRow ["delayRepeatMin_$i"];
-          if ($spellListRow ["delayRepeatMin_$i"] != $spellListRow ["delayRepeatMax_$i"])
-            echo ' to ' . $spellListRow ["delayRepeatMax_$i"];
-          if ($spellListRow ["scriptId_$i"])
-            echo "<li>Script ID: "  . $spellListRow ["scriptId_$i"];
-          echo "</ul>\n";
-          }   // end of if this spell entry is there (non-zero)
-        } // end of for each of the 8 possible spells
-      echo "</ul>\n";
-      echo "</div>\n"; // end of item list div
-      } // if we found the spell list
-
-    } // end of if they had a spell_list_id
-
-
-  // ---------------- VENDOR ITEMS -----------------
-
-
- // what they sell
-  $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE entry = ?", array ('i', &$id));
-  usort($results, 'item_compare');
-
-  listItems ('NPC sells', 'alpha_world.npc_vendor', count ($results), $results,
-    function ($row) use ($items)
-      {
-      listThing ($items, $row ['item'], 'show_item');
-      $maxcount = $row ['maxcount'];
-      if ($maxcount  > 0)
-        echo (" (limit $maxcount)");
-      } // end listing function
-      );
-
-
-  // ---------------- TRAINER ITEMS -----------------
-
-  // what they train
-
-  $results = dbQueryParam ("SELECT * FROM ".TRAINER_TEMPLATE." WHERE template_entry = ?",
-                            array ('i', &$row ['trainer_id']));
-
-  usort($results, 'trainer_spell_compare');
-  listItems ('NPC trains', 'alpha_world.trainer_id', count ($results), $results,
-    function ($row) use ($spells)
-      {
-      listThing ($spells, $row ['playerspell'], 'show_spell');
-      } // end listing function
-      );
 
   // ---------------- LOOT-----------------
 
@@ -243,7 +166,7 @@ function showOneCreature ()
   {
   global $id;
   global $documentRoot, $executionDir;
-  global $quests;
+  global $quests, $spells, $items;
 
   $extras = array (
         'spell_id1' => 'spell',
@@ -344,6 +267,8 @@ echo "
     'level_min',
     'mana_min',
     'armor',
+    'faction',
+    'npc_flags',
 
   );
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
@@ -450,13 +375,109 @@ echo "  <!-- MAP -->
 
   echo "</div>\n";  // end of creature-details__informations (stuff at top)
 
-  echo "<div class='creature-details__items'>\n";
 
-  echo "<h2>Database values</h2>\n";
+
+  // ---------------- SPELL LISTS --------------
+
+
+  if ($row ['spell_list_id'])
+    {
+    $spellListRow = dbQueryOneParam ("SELECT * FROM ".CREATURE_SPELLS." WHERE entry = ?", array ('i', &$row ['spell_list_id']));
+    if ($spellListRow)
+      {
+
+      echo "
+      <div class='creature-details__items'>
+      <div class='tiny-title'>
+      <h2 class='tiny-title__heading' title='Table: alpha_world.creature_spells'>Spells this NPC casts</h2>
+      </div>";
+      echo "<ul>\n";
+
+      for ($i = 1; $i <= 8; $i++)
+        {
+        if ($spellListRow ["spellId_$i"])
+          {
+          echo "<li>";
+          echo (lookupThing ($spells,   $spellListRow ["spellId_$i"], 'show_spell'));
+          echo "<ul>\n";
+          echo "<li>Probability: " . $spellListRow ["probability_$i"] . "%";
+          echo "<li>Target type: " . expandSimple (TARGET_TYPE, $spellListRow ["castTarget_$i"]);
+          if ($spellListRow ["targetParam1_$i"] || $spellListRow ["targetParam2_$i"])
+            {
+            echo " (param1: " . $spellListRow ["targetParam1_$i"];
+            echo ", param2: " . $spellListRow ["targetParam2_$i"] . ")";
+            }
+          if ($spellListRow ["castFlags_$i"])
+            echo "<li>Flags: "  . expandShiftedMask (SPELL_CAST_FLAGS, $spellListRow ["castFlags_$i"], false);
+
+          echo "<li>Initial delay: "  . $spellListRow ["delayInitialMin_$i"];
+          if ($spellListRow ["delayInitialMin_$i"] != $spellListRow ["delayInitialMax_$i"])
+            echo ' to ' . $spellListRow ["delayInitialMax_$i"];
+          echo "<li>Repeat delay: "  . $spellListRow ["delayRepeatMin_$i"];
+          if ($spellListRow ["delayRepeatMin_$i"] != $spellListRow ["delayRepeatMax_$i"])
+            echo ' to ' . $spellListRow ["delayRepeatMax_$i"];
+          if ($spellListRow ["scriptId_$i"])
+            echo "<li>Script ID: "  . $spellListRow ["scriptId_$i"];
+          echo "</ul>\n";
+          }   // end of if this spell entry is there (non-zero)
+        } // end of for each of the 8 possible spells
+      echo "</ul>\n";
+      } // if we found the spell list
+
+    echo "</div>\n";  // end of creature-details__items
+
+    } // end of if they had a spell_list_id
+
+
+ // ---------------- VENDOR ITEMS -----------------
+
+
+ // what they sell
+  $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE entry = ?", array ('i', &$id));
+  usort($results, 'item_compare');
+
+  listItems ('NPC sells', 'alpha_world.npc_vendor', count ($results), $results,
+    function ($row) use ($items)
+      {
+      listThing ($items, $row ['item'], 'show_item');
+      $maxcount = $row ['maxcount'];
+      if ($maxcount  > 0)
+        echo (" (limit $maxcount)");
+      } // end listing function
+      );
+
+
+
+
+  // ---------------- TRAINER ITEMS -----------------
+
+  // what they train
+
+  $results = dbQueryParam ("SELECT * FROM ".TRAINER_TEMPLATE." WHERE template_entry = ?",
+                            array ('i', &$row ['trainer_id']));
+
+  usort($results, 'trainer_spell_compare');
+  listItems ('NPC trains', 'alpha_world.trainer_id', count ($results), $results,
+    function ($row) use ($spells)
+      {
+      listThing ($spells, $row ['playerspell'], 'show_spell');
+      } // end listing function
+      );
+
+
+ echo "<div class='creature-details__items'>\n";
+
+  echo "
+  <div class='tiny-title'>
+  <h2 class='tiny-title__heading'>Database values</h2>
+  </div>";
 
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
               $id, "Creature", "name", $extras);
   echo "</div>\n";  // end of creature-details__items
+
+
+
 
   echo "</div>  <!-- END PAGE CONTENT -->\n";  // end of creature-details page-content
 

@@ -16,3 +16,11 @@
   {
   position:absolute;
   }
+
+.tdl {
+  text-align: left;
+  }
+
+.tdr {
+  text-align: right;
+  }
