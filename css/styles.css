@@ -228,7 +228,7 @@ a {
 }
 .element-information__content {
   overflow-y: scroll;
-  max-height: 150px;
+  max-height: 260px;
   padding-top: 5px;
 }
 .element-information__content ul {
@@ -407,7 +407,7 @@ a {
 .details-container {
   max-width: 1200px;
   margin: 0 auto;
-  display: none;
+  display: flex;
   margin-top: 10px;
   margin-bottom: 20px;
   flex-wrap: wrap;

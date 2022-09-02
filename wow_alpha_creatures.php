@@ -40,126 +40,6 @@ function extraCreatureInformation ($id, $row)
 
 
 
-  // ---------------- LOOT-----------------
-
-  // show loot
-
-  $loot_id = $row ['loot_id'];
-  if (!$loot_id)
-    $loot_id = $id;
-
-
-  $creature_loot_template = CREATURE_LOOT_TEMPLATE;
-  $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
-
-  $results = dbQueryParam ("SELECT * FROM $creature_loot_template
-                            WHERE entry = ? AND mincountOrRef > 0",
-                            array ('i', &$loot_id));
-
-  // count quest items - they have a negative drop chance
-  $count = 0;
-  usort($results, 'item_compare');
-  foreach ($results as $lootRow)
-    if ($lootRow ['ChanceOrQuestChance'] < 0)
-        $count++;
-
-  listItems ('Quest item loot', 'alpha_world.creature_loot_template', $count, $results,
-    function ($row)
-      {
-      $chance = $row ['ChanceOrQuestChance'];
-      if ($chance >= 0)
-        return true; // didn't list it
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           -$chance . "%\n";
-      } // end listing function
-      );
-
-  // now do the other drops
-  // count of remaining items
-  $count = count ($results) - $count; // all items minus quest items
-  listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
-    function ($row)
-      {
-      $chance = $row ['ChanceOrQuestChance'];
-      if ($chance < 0)
-        return true; // didn't list it
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           $chance . "%\n";
-      } // end listing function
-      );
-
-
-
-  // reference loot - the creature_loot_template table points to the reference_loot_template table
-  // if the mincountOrRef field is negative, which may lead to multiple loot items for one reference
-  // item - I presume to allow batches of loot to be attached to one creature_loot_template entry
-
-  $lootResults = dbQueryParam ("SELECT $reference_loot_template.item AS refItem,
-                            $creature_loot_template.ChanceOrQuestChance AS chance,
-                            $reference_loot_template.mincountOrRef as minCount
-                           FROM $creature_loot_template
-                                INNER JOIN $reference_loot_template
-                                  ON ($reference_loot_template.entry = $creature_loot_template.item)
-                           WHERE $creature_loot_template.entry = ?
-                                AND $creature_loot_template.mincountOrRef < 0",
-                           array ('i', &$loot_id));
-
-
-  usort ($lootResults, 'reference_item_compare');
-  listItems ('Reference loot', 'alpha_world.reference_loot_template', count ($lootResults), $lootResults,
-    function ($row)
-      {
-      $chance = $row ['chance'];
-      if ($chance >= 0)
-        $chance .= "%\n";
-      else
-        $chance = -$chance . "% (quest)";
-      echo "<li>" . lookupItemHelper ($row ['refItem'], $row ['minCount']) . ' — ' .
-           $chance;
-      } // end listing function
-      );
-
-
-  // ---------------- PICK POCKETING LOOT -----------------
-
-  // show pickpocketing loot
-
-  $loot_id = $row ['pickpocket_loot_id'];
-  if (!$loot_id)
-    $loot_id = $id;
-
-  $lootResults = dbQueryParam ("SELECT * FROM ".PICKPOCKETING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
-  usort($lootResults, 'item_compare');
-  listItems ('Pickpocketing loot', 'alpha_world.pickpocketing_loot_template', count ($lootResults), $lootResults,
-    function ($row)
-      {
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           $row ['ChanceOrQuestChance'] . '%';
-      } // end listing function
-      );
-
-
-
-  // ---------------- SKINNING LOOT -----------------
-
-  // show skinning loot
-
-  $loot_id = $row ['skinning_loot_id'];
-  if (!$loot_id)
-    $loot_id = $id;
-
-  $lootResults = dbQueryParam ("SELECT * FROM ".SKINNING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
-  usort($lootResults, 'item_compare');
-  listItems ('Skinning loot', 'alpha_world.skinning_loot_template', count ($lootResults), $lootResults,
-    function ($row)
-      {
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           $row ['ChanceOrQuestChance'] . '%';
-      } // end listing function
-      );
-
-
-
   } // end of extraCreatureInformation
 
 function showOneCreature ()
@@ -375,7 +255,7 @@ echo "  <!-- MAP -->
 
   echo "</div>\n";  // end of creature-details__informations (stuff at top)
 
-  echo "<div class='details-container'>\n";
+  echo "<div class='details-container' style='display:flex;'>\n";
 
   // ---------------- SPELL LISTS --------------
 
@@ -386,13 +266,7 @@ echo "  <!-- MAP -->
     if ($spellListRow)
       {
 
-      echo "
-      <div class='element-information element-information--independant'>
-              <h2 class='element-information__title'>Train these spells</h2>
-              <div class='element-information__bar'></div>
-              <div class='element-information__content'>
-       <ul>";
-
+      startElementInformation ('Casts these spells', CREATURE_SPELLS);
 
       for ($i = 1; $i <= 8; $i++)
         {
@@ -425,7 +299,7 @@ echo "  <!-- MAP -->
       echo "</ul>\n";
       } // if we found the spell list
 
-    echo "</div>\n";  // end of creature-details__items
+    endElementInformation ();
 
     } // end of if they had a spell_list_id
 
@@ -447,9 +321,6 @@ echo "  <!-- MAP -->
       } // end listing function
       );
 
-
-
-
   // ---------------- TRAINER ITEMS -----------------
 
   // what they train
@@ -464,6 +335,127 @@ echo "  <!-- MAP -->
       listThing ($spells, $row ['playerspell'], 'show_spell');
       } // end listing function
       );
+
+
+
+  // ---------------- LOOT-----------------
+
+  // show loot
+
+  $loot_id = $row ['loot_id'];
+  if (!$loot_id)
+    $loot_id = $id;
+
+
+  $creature_loot_template = CREATURE_LOOT_TEMPLATE;
+  $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
+
+  $results = dbQueryParam ("SELECT * FROM $creature_loot_template
+                            WHERE entry = ? AND mincountOrRef > 0",
+                            array ('i', &$loot_id));
+
+  // count quest items - they have a negative drop chance
+  $count = 0;
+  usort($results, 'item_compare');
+  foreach ($results as $lootRow)
+    if ($lootRow ['ChanceOrQuestChance'] < 0)
+        $count++;
+
+  listItems ('Quest item loot', 'alpha_world.creature_loot_template', $count, $results,
+    function ($row)
+      {
+      $chance = $row ['ChanceOrQuestChance'];
+      if ($chance >= 0)
+        return true; // didn't list it
+      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
+           -$chance . "%\n";
+      } // end listing function
+      );
+
+  // now do the other drops
+  // count of remaining items
+  $count = count ($results) - $count; // all items minus quest items
+  listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
+    function ($row)
+      {
+      $chance = $row ['ChanceOrQuestChance'];
+      if ($chance < 0)
+        return true; // didn't list it
+      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
+           $chance . "%\n";
+      } // end listing function
+      );
+
+
+  // reference loot - the creature_loot_template table points to the reference_loot_template table
+  // if the mincountOrRef field is negative, which may lead to multiple loot items for one reference
+  // item - I presume to allow batches of loot to be attached to one creature_loot_template entry
+
+  $lootResults = dbQueryParam ("SELECT $reference_loot_template.item AS refItem,
+                            $creature_loot_template.ChanceOrQuestChance AS chance,
+                            $reference_loot_template.mincountOrRef as minCount
+                           FROM $creature_loot_template
+                                INNER JOIN $reference_loot_template
+                                  ON ($reference_loot_template.entry = $creature_loot_template.item)
+                           WHERE $creature_loot_template.entry = ?
+                                AND $creature_loot_template.mincountOrRef < 0",
+                           array ('i', &$loot_id));
+
+
+  usort ($lootResults, 'reference_item_compare');
+  listItems ('Reference loot', 'alpha_world.reference_loot_template', count ($lootResults), $lootResults,
+    function ($row)
+      {
+      $chance = $row ['chance'];
+      if ($chance >= 0)
+        $chance .= "%\n";
+      else
+        $chance = -$chance . "% (quest)";
+      echo "<li>" . lookupItemHelper ($row ['refItem'], $row ['minCount']) . ' — ' .
+           $chance;
+      } // end listing function
+      );
+
+
+  // ---------------- PICK POCKETING LOOT -----------------
+
+  // show pickpocketing loot
+
+  $loot_id = $row ['pickpocket_loot_id'];
+  if (!$loot_id)
+    $loot_id = $id;
+
+  $lootResults = dbQueryParam ("SELECT * FROM ".PICKPOCKETING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
+  usort($lootResults, 'item_compare');
+  listItems ('Pickpocketing loot', 'alpha_world.pickpocketing_loot_template', count ($lootResults), $lootResults,
+    function ($row)
+      {
+      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
+           $row ['ChanceOrQuestChance'] . '%';
+      } // end listing function
+      );
+
+
+
+
+  // ---------------- SKINNING LOOT -----------------
+
+  // show skinning loot
+
+  $loot_id = $row ['skinning_loot_id'];
+  if (!$loot_id)
+    $loot_id = $id;
+
+  $lootResults = dbQueryParam ("SELECT * FROM ".SKINNING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
+  usort($lootResults, 'item_compare');
+  listItems ('Skinning loot', 'alpha_world.skinning_loot_template', count ($lootResults), $lootResults,
+    function ($row)
+      {
+      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
+           $row ['ChanceOrQuestChance'] . '%';
+      } // end listing function
+      );
+
 
 
   echo "</div>\n"; // details-container
