@@ -50,12 +50,8 @@ function convertDate ($date)
 
 function showBigMenu ()
   {
-?>
-      <!-- MENU NAV -->
-      <header>
-        <div class="menu-bar-main-container">
-          <div class="menu-bar-header-container">
 
+/*
 <div id='noscript_warning_id'>
 <p><i>(Enable Javascript to see nice icons on the menus.)</i></p>
 </div>
@@ -63,21 +59,29 @@ function showBigMenu ()
 <script>
 document.getElementById('noscript_warning_id').style.display = 'none';
 </script>
+*/
 
-            <a href="">
-              <img
-                class="menu-bar-logo"
-                src="logo-small.png"
-                alt="Alpha Core"
-              />
-            </a>
-            <div class="menu-bar-title">
-              <p>Database</p>
-              <p>Alpha 0.5.3</p>
-            </div>
-          </div>
-          <nav class="menu-bar-nav-container">
+?>
+<!-- MENU NAV -->
+<header>
+  <div class="menu-bar-main-container">
+    <div class="menu-bar-header-container">
+
+<a href="">
+  <img
+    class="menu-bar-logo"
+    src="logo-small.png"
+    alt="Alpha Core"
+  />
+</a>
+<div class="menu-bar-title">
+  <p>Database</p>
+  <p>Alpha 0.5.3</p>
+</div>
+</div>
+<nav class="menu-bar-nav-container">
 <?php
+  comment ("MENU ITEMS");
   foreach (MENU as $desc => $menuInfo)
     {
     $newAction = $menuInfo ['action'];
@@ -88,14 +92,14 @@ document.getElementById('noscript_warning_id').style.display = 'none';
     echo "</a>\n";
     }
 ?>
-          </nav>
-          <div class="menu-bar-social-container">
-            <a href=""><i class="menu-bar-social fab fa-github"></i></a>
-            <a href=""><i class="menu-bar-social fab fa-discord"></i></a>
-          </div>
-        </div>
-        <nav class="header__nav"></nav>
-      </header>
+    </nav>
+    <div class="menu-bar-social-container">
+      <a href=""><i class="menu-bar-social fab fa-github"></i></a>
+      <a href=""><i class="menu-bar-social fab fa-discord"></i></a>
+    </div>
+  </div>
+  <nav class="header__nav"></nav>
+</header>
       <!-- END MENU NAV -->
 <?php
 

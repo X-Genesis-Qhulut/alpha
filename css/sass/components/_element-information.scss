@@ -1,6 +1,5 @@
 .element-information {
   flex-basis: 33%;
-  border-bottom: 1px solid $color8;
 
   &__title {
     color: $color6;
@@ -15,15 +14,19 @@
     margin: 0;
     margin-left: 10px;
     padding: 0;
+    margin-bottom: 5px;
   }
 
   &__content {
     overflow-y: scroll;
-    max-height: 260px;
-    padding-top: 5px;
+    max-height: 150px;
+    // padding-top: 5px;
+    padding-top: 0px;
+    margin-top: 0px;
 
     & ul {
       padding-left: 20px;
+      margin-top: 5px;
       & li {
         color: $color6;
         line-height: 25px;
@@ -42,13 +45,10 @@
     margin-right: 10px;
     margin-left: 10px;
 
-    &__title {
-      margin-bottom: 0px;
+    & div:last-child {
+      max-height: 260px;
     }
 
-    &__content {
-      padding-top: 0px;
-    }
     & ul {
       padding-left: 10px;
 

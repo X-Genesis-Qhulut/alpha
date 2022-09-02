@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 118px;
+  height: 116px;
   width: 100%;
   padding-left: 30px;
   padding-right: 50px;
@@ -25,6 +25,7 @@
     border: 0px;
     cursor: pointer;
     color: $color7;
+    font-size: 2.2em;
 
     &:hover {
       & svg {
@@ -49,6 +50,10 @@
 
   &__table {
     font-size: 1.3em;
+  }
+
+  &--search {
+    padding-right: 20px;
   }
 
   @include tablet-design {

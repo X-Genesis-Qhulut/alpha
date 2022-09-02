@@ -122,14 +122,15 @@ echo "
 
   // ---------------- IMAGE OF CREATURE -----------------
 
-  for ($i = 1; $i <= 4; $i++)
+  for ($i = 1; $i <= 1; $i++)   // should be 4 lol  TODO
     {
     if ($row ["display_id$i"])
       {
       $display_id = $row ["display_id$i"];
       $icon = $display_id . '.webp';
-      if (file_exists ("$documentRoot$executionDir/creatures/$icon"))
-        echo "
+      if (!file_exists ("$documentRoot$executionDir/creatures/$icon"))
+        $icon = 'missing_creature.png';
+      echo "
         <!-- MODEL DISPLAY ID -->
         <img
           class='model-display'
@@ -145,12 +146,16 @@ echo "
     'entry',
     'display_id1',
     'level_min',
+    'health_min',
     'mana_min',
     'armor',
     'faction',
     'npc_flags',
 
   );
+
+  comment ('SHORT LISTING OF FIELDS');
+
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
               $id, "", "name", $extras, $limit);
 
@@ -160,44 +165,57 @@ echo "
   echo "<div class='creature-details__informations__details2'>\n";
 
 
-    echo " <!-- SPAWN POINTS - EASTERN KINGDOMS --> \n";
+  comment ('SPAWN POINTS - EASTERN KINGDOMS');
 
-    $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
-             ' AND ignored = 0 ';
-    $param = array ('iiii', &$id, &$id, &$id, &$id);
+  $count = 0;
 
-    // show spawn points - Eastern Kingdoms
-    $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-          WHERE $where AND map = 0", $param) ;
+  $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
+           ' AND ignored = 0 ';
+  $param = array ('iiii', &$id, &$id, &$id, &$id);
 
-    listSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
-                  'position_x', 'position_y', 'position_z', 'map');
+  // show spawn points - Eastern Kingdoms
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+        WHERE $where AND map = 0", $param) ;
 
-    echo " <!-- SPAWN POINTS - KALIMDOR --> \n";
+  $count += listSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
+                'position_x', 'position_y', 'position_z', 'map');
 
-    // show spawn points - Kalimdor
-    $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-          WHERE $where AND map = 1", $param);
+  comment ('SPAWN POINTS - KALIMDOR');
 
-    listSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
-                  'position_x', 'position_y', 'position_z', 'map');
+  // show spawn points - Kalimdor
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+        WHERE $where AND map = 1", $param);
 
-
-    echo " <!-- SPAWN POINTS - OTHER --> \n";
-
-    // show spawn points - other
-    $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-          WHERE $where AND map > 1", $param);
-
-    listSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_creatures',
-                  'position_x', 'position_y', 'position_z', 'map');
+  $count += listSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
+                'position_x', 'position_y', 'position_z', 'map');
 
 
-     echo "  <!-- END SPAWN POINTS -->\n";
+  comment ('SPAWN POINTS - OTHER');
+
+  // show spawn points - other
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+        WHERE $where AND map > 1", $param);
+
+  $count += listSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_creatures',
+                'position_x', 'position_y', 'position_z', 'map');
+
+
+  if (!$count)
+    echo "
+    <div class='element-information__content'>
+        <ul>
+          <li>No spawn points</li>
+        </ul>
+      </div>
+    ";
+
+  comment ('END SPAWN POINTS');
 
  // ---------------- QUESTS -----------------
 
   // show quests they start
+
+  comment ('QUESTS GIVEN');
 
   // what quests they give
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE entry = ?", array ('i', &$id));
@@ -207,7 +225,10 @@ echo "
       {
       listThing ($quests, $row ['quest'], 'show_quest');
       } // end listing function
+      , true  // goes up top, slightly different CSS
       );
+
+  comment ('QUESTS FINISHED');
 
   // what quests they finish
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE entry = ?", array ('i', &$id));
@@ -217,16 +238,18 @@ echo "
       {
       listThing ($quests, $row ['quest'], 'show_quest');
       } // end listing function
+      , true  // goes up top, slightly different CSS
       );
 
 
   echo "</div>\n";  // end of creature-details__informations__details1  (spawn points, quests, etc.)
 
 
-echo "  <!-- MAP -->
-     <aside class='creatures-details__map'>\n";
+  comment ('SPAWN POINTS ON MAP');
 
-    echo " <!-- SPAWN POINTS ON MAP - EASTERN KINGDOMS --> \n";
+  echo "<aside class='creatures-details__map'>\n";
+
+    comment ('EASTERN KINGDOMS');
 
     $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
              ' AND ignored = 0 ';
@@ -239,7 +262,7 @@ echo "  <!-- MAP -->
     showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
                   'position_x', 'position_y', 'position_z', 'map');
 
-    echo " <!-- SPAWN POINTS ON MAP - KALIMDOR --> \n";
+    comment ('KALIMDOR');
 
     // show spawn points - Kalimdor
     $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
@@ -249,9 +272,9 @@ echo "  <!-- MAP -->
                   'position_x', 'position_y', 'position_z', 'map');
 
 
-     echo "  <!-- END MAP SPAWN POINTS -->\n";
+  comment ('END MAP SPAWN POINTS');
 
-  echo "  </aside>  <!-- END MAP -->\n";
+  echo "  </aside>\n";
 
   echo "</div>\n";  // end of creature-details__informations (stuff at top)
 
@@ -259,6 +282,8 @@ echo "  <!-- MAP -->
 
   // ---------------- SPELL LISTS --------------
 
+
+  comment ('SPELLS THEY CAST');
 
   if ($row ['spell_list_id'])
     {
@@ -307,6 +332,7 @@ echo "  <!-- MAP -->
 
  // ---------------- VENDOR ITEMS -----------------
 
+  comment ('VENDOR ITEMS');
 
  // what they sell
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE entry = ?", array ('i', &$id));
@@ -324,6 +350,8 @@ echo "  <!-- MAP -->
 
   // ---------------- TRAINER ITEMS -----------------
 
+  comment ('WHAT THEY TRAIN');
+
   // what they train
 
   $results = dbQueryParam ("SELECT * FROM ".TRAINER_TEMPLATE." WHERE template_entry = ?",
@@ -340,6 +368,8 @@ echo "  <!-- MAP -->
 
 
   // ---------------- LOOT-----------------
+
+  comment ('LOOT');
 
   // show loot
 
@@ -387,6 +417,7 @@ echo "  <!-- MAP -->
       } // end listing function
       );
 
+  comment ('REFERENCE LOOT');
 
   // reference loot - the creature_loot_template table points to the reference_loot_template table
   // if the mincountOrRef field is negative, which may lead to multiple loot items for one reference
@@ -422,6 +453,8 @@ echo "  <!-- MAP -->
 
   // show pickpocketing loot
 
+  comment ('PICKPOCKETING LOOT');
+
   $loot_id = $row ['pickpocket_loot_id'];
   if (!$loot_id)
     $loot_id = $id;
@@ -437,11 +470,11 @@ echo "  <!-- MAP -->
       );
 
 
-
-
   // ---------------- SKINNING LOOT -----------------
 
   // show skinning loot
+
+  comment ('SKINNING LOOT');
 
   $loot_id = $row ['skinning_loot_id'];
   if (!$loot_id)
@@ -461,14 +494,13 @@ echo "  <!-- MAP -->
 
   echo "</div>\n"; // details-container
 
+  comment ('NPC DETAILS');
+
   echo "<div class='creature-details__items'>\n";
 
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
               $id, "Database entry for NPC", "name", $extras);
   echo "</div>\n";  // end of creature-details__items
-
-
-
 
   echo "</div>  <!-- END PAGE CONTENT -->\n";  // end of creature-details page-content
 

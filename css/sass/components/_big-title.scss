@@ -1,0 +1,16 @@
+.big-title {
+  position: relative;
+  &__heading {
+  }
+
+  &__bar {
+    position: absolute;
+    background-color: $color7;
+    bottom: 10px;
+    width: 150px;
+    height: 3px;
+    margin: 0;
+    margin-left: 40px;
+    padding: 0;
+  }
+}

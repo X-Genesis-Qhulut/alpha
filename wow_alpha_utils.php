@@ -517,14 +517,15 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
 */
 
 
-echo "<div class='table-container'>";
+  if (!$limit)
+    echo "<div class='table-container'>";
 
-if ($description)
-  echo "
-    <div class='tiny-title'>
-      <h2 class='tiny-title__heading'>" . fixHTML ($description) . "</h2>
-      <div class='tiny-title__bar'></div>
-    </div>";
+  if ($description)
+    echo "
+      <div class='tiny-title'>
+        <h2 class='tiny-title__heading'>" . fixHTML ($description) . "</h2>
+        <div class='tiny-title__bar'></div>
+      </div>";
 
 
 
@@ -573,7 +574,8 @@ if ($description)
   echo "</tbody>\n";
   echo "</table>\n";
 
-  echo "</div>\n";  // end of table-container
+  if (!$limit)
+    echo "</div>\n";  // end of table-container
 
 /*
   // extra stuff
@@ -772,25 +774,26 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
 } // end of showSpawnPoints
 
-function startElementInformation ($heading, $table)
+function startElementInformation ($heading, $table, $uptop)
   {
+  if (!$uptop)
+    echo "<div class='element-information element-information--independant'>\n";
+
   echo "
-  <div class='element-information element-information--independant'>
   <h2 class='element-information__title' title='" . fixHTML ($table) . "'>" . fixHTML ($heading) . "</h2>
   <div class='element-information__bar'></div>
   <div class='element-information__content'>
-    <ul>
+  <ul>
   ";
 
   } // end of startElementInformation
 
-function endElementInformation ()
+function endElementInformation ($uptop)
   {
-echo "
-    </ul>
-  </div>
-</div>
-";
+  echo "</ul>
+    </div>";
+  if (!$uptop)
+    echo "</div>\n";
 
   } // end of endElementInformation
 
@@ -798,7 +801,7 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
   {
   global $maps;
   if (count ($results) == 0)
-    return;
+    return 0;
 
   echo "<div class='element-information'>\n";
   echo "<h2 title='" . fixHTML ($table) . "' class='element-information__title'>" . fixHTML ($heading) . "</h2>\n";
@@ -821,7 +824,14 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
   echo "</ul>\n";
   echo "</div>\n";    // end of element-information__content
   echo "</div>\n";    // end of element-information
+
+  return count($results);
   } // end of listSpawnPoints
+
+function comment ($what)
+  {
+  echo "\n  <!-- " . str_replace ('--', '- -', $what) . " -->\n\n";
+  } // end of comment
 
 function showItemCount ($n)
   {
@@ -857,7 +867,7 @@ function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints)
 // automatic splitting into two columns if there are a lot of them
 // the function $listItemFunc does the actual listing. It returns false (or null)
 // if the item was listed, and true if it was skipped for some reason.
-function listItems ($heading, $table, $totalCount, $results, $listItemFunc)
+function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
 {
   // trivial case - nothing to list
   if ($totalCount <= 0)
@@ -865,7 +875,7 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc)
 
   $running_count = 0;
 
-  startElementInformation ($heading, $table);
+  startElementInformation ($heading, $table, $uptop);
   foreach ($results as $row)
     {
     if (!$listItemFunc ($row))
@@ -874,7 +884,7 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc)
       } // end of if this row actually got listed
     } // for each row
 
-  endElementInformation ();
+  endElementInformation ($uptop);
   return $running_count;
 }
 

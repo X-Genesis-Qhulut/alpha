@@ -1,0 +1,20 @@
+.medium-title {
+  position: relative;
+
+  &__heading {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.3em;
+  }
+
+  &__bar {
+    background-color: $color7;
+    bottom: 10px;
+    width: 70px;
+    height: 3px;
+    margin: 0;
+    margin-left: 10px;
+    margin-bottom: 10px;
+    padding: 0;
+  }
+}

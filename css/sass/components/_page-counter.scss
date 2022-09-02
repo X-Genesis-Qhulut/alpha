@@ -1,0 +1,31 @@
+.page-counter {
+  margin-top: 30px;
+  font-size: 1.2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & svg {
+    font-size: 1.5em;
+  }
+
+  &__left {
+    margin-right: 10px;
+  }
+
+  & span {
+    color: $color6;
+  }
+
+  &__right {
+    margin-left: 10px;
+  }
+
+  &__results-count {
+    background-color: $color3;
+    padding: 10px;
+    border-radius: 10px;
+    // margin-right: 10px;
+    border: 1px solid $color4;
+  }
+}

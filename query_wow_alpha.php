@@ -10,13 +10,10 @@
     <link rel="stylesheet" href="./css/styles.css" />
     <link rel="stylesheet" href="extra.css" />
     <link rel="icon" href="favicon.png" />
-    <script
-      defer
-      src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
-      integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
-      crossorigin="anonymous"
-    ></script>
-  <script src='editing.js' defer></script>
+    <link href="./css/fontawesome/fontawesome.css" rel="stylesheet" />
+    <link href="./css/fontawesome/brands.css" rel="stylesheet" />
+    <link href="./css/fontawesome/solid.css" rel="stylesheet" />
+    <script src='editing.js' defer></script>
   </head>
   <body>
     <!-- MAIN -->
@@ -31,6 +28,8 @@
   Date:   August 2022
 
   See LICENSE for license details.
+
+  CSS Stuff: https://github.com/geo-tp/053-Database-Frontend
 
 */
 

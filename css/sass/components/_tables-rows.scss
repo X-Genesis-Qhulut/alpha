@@ -3,18 +3,17 @@
   background-color: $color1;
   color: $color6;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 20px;
   margin-top: 20px;
   & th {
     padding: 5px 10px 5px 10px;
-    text-align: left;
+    text-align: center;
     background-color: $color1;
   }
   & td {
     padding: 5px 20px 5px 20px;
-    text-align: right;
+    text-align: center;
   }
 
   & tr:nth-child(odd) {
