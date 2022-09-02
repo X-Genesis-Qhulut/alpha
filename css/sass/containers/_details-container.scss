@@ -1,0 +1,17 @@
+.details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: none;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  border: 1px solid $color4;
+  padding: 20px;
+  padding-bottom: 0px;
+  box-sizing: border-box;
+
+  @include tiny-laptop-design {
+    width: 90%;
+    margin-top: 10px;
+  }
+}

@@ -23,11 +23,53 @@
     padding-top: 5px;
 
     & ul {
+      padding-left: 20px;
       & li {
         color: $color6;
         line-height: 25px;
         list-style: none;
       }
+    }
+  }
+
+  &--independant {
+    border-radius: 20px 0px 20px 0px;
+    background-color: $color4;
+    padding: 20px;
+    flex-basis: 28%;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    margin-left: 10px;
+
+    &__title {
+      margin-bottom: 0px;
+    }
+
+    &__content {
+      padding-top: 0px;
+    }
+    & ul {
+      padding-left: 10px;
+
+      & li {
+        margin: 0;
+        color: $color6;
+        line-height: 25px;
+        list-style: none;
+      }
+    }
+
+    @include laptop-design {
+      margin-right: 1%;
+      margin-left: 1%;
+      flex-basis: 43%;
+    }
+
+    @include tiny-laptop-design {
+      margin-right: 20px;
+      margin-left: 20px;
+      flex-basis: 90%;
+      border-radius: 20px;
     }
   }
 }

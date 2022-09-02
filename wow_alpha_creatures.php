@@ -207,7 +207,7 @@ function showOneCreature ()
 
 $name = fixHTML ($row ['name']);
 if ($row ['subname'])
-  $name .= ' <' . $row ['subname'] . '>';
+  $name .= fixHTML (' <' . $row ['subname'] . '>');
 $pageType = 'Creature';
 
 echo "
@@ -272,7 +272,7 @@ echo "
 
   );
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
-              $id, "Creature", "name", $extras, $limit);
+              $id, "", "name", $extras, $limit);
 
 
   echo "</div>\n";  // end of details__informations__details1
@@ -375,7 +375,7 @@ echo "  <!-- MAP -->
 
   echo "</div>\n";  // end of creature-details__informations (stuff at top)
 
-
+  echo "<div class='details-container'>\n";
 
   // ---------------- SPELL LISTS --------------
 
@@ -387,11 +387,12 @@ echo "  <!-- MAP -->
       {
 
       echo "
-      <div class='creature-details__items'>
-      <div class='tiny-title'>
-      <h2 class='tiny-title__heading' title='Table: alpha_world.creature_spells'>Spells this NPC casts</h2>
-      </div>";
-      echo "<ul>\n";
+      <div class='element-information element-information--independant'>
+              <h2 class='element-information__title'>Train these spells</h2>
+              <div class='element-information__bar'></div>
+              <div class='element-information__content'>
+       <ul>";
+
 
       for ($i = 1; $i <= 8; $i++)
         {
@@ -464,6 +465,8 @@ echo "  <!-- MAP -->
       } // end listing function
       );
 
+
+  echo "</div>\n"; // details-container
 
   echo "<div class='creature-details__items'>\n";
 

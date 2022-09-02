@@ -516,13 +516,17 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   echo "<div class='one_thing_section'>\n";
 */
 
-echo "
-<div class='table-container'>
-              <div class='tiny-title'>
-                <h2 class='tiny-title__heading'>" . fixHTML ($description) . "</h2>
-                <div class='tiny-title__bar'></div>
-              </div>
-";
+
+echo "<div class='table-container'>";
+
+if ($description)
+  echo "
+    <div class='tiny-title'>
+      <h2 class='tiny-title__heading'>" . fixHTML ($description) . "</h2>
+      <div class='tiny-title__bar'></div>
+    </div>";
+
+
 
 
   if  (!$limit && preg_match ('|\.(.+)$|', $table, $matches))
@@ -553,7 +557,7 @@ echo "
     $fieldName = $col ['Field'];
     if ($limit && !in_array ($fieldName, $limit))
       continue;
-    // the row will generate an SQL update if you Ctrl+click it
+    // the row will generate an SQL update if you Alt+click it
     if ($limit)
       echo "<tr>\n";
     else
@@ -770,18 +774,24 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
 function startElementInformation ($heading, $table)
   {
-  echo "<div class='element-information'>\n";
-  echo "<h2 title='" . fixHTML ($table) . "' class='element-information__title'>" . fixHTML ($heading) . "</h2>\n";
-  echo "<div class='element-information__bar'></div>\n";
-  echo "<div class='element-information__content'>\n";
-  echo "<ul>\n";
+  echo "
+  <div class='element-information element-information--independant'>
+  <h2 class='element-information__title' title='" . fixHTML ($table) . "'>" . fixHTML ($heading) . "</h2>
+  <div class='element-information__bar'></div>
+  <div class='element-information__content'>
+    <ul>
+  ";
+
   } // end of startElementInformation
 
 function endElementInformation ()
   {
-  echo "</ul>\n";
-  echo "</div>\n";    // end of element-information__content
-  echo "</div>\n";    // end of element-information
+echo "
+    </ul>
+  </div>
+</div>
+";
+
   } // end of endElementInformation
 
 function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName)
@@ -790,7 +800,12 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
   if (count ($results) == 0)
     return;
 
-  startElementInformation ($heading, $table);
+  echo "<div class='element-information'>\n";
+  echo "<h2 title='" . fixHTML ($table) . "' class='element-information__title'>" . fixHTML ($heading) . "</h2>\n";
+  echo "<div class='element-information__bar'></div>\n";
+  echo "<div class='element-information__content'>\n";
+  echo "<ul>\n";
+
   foreach ($results as $row)
     {
     $x = $row [$xName];
@@ -802,7 +817,10 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     else
       echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
     } // end of foreach
-  endElementInformation ();
+
+  echo "</ul>\n";
+  echo "</div>\n";    // end of element-information__content
+  echo "</div>\n";    // end of element-information
   } // end of listSpawnPoints
 
 function showItemCount ($n)
