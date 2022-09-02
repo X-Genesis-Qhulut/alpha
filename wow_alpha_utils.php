@@ -516,7 +516,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   echo "<div class='one_thing_section'>\n";
 */
 
-  if  (preg_match ('|\.(.+)$|', $table, $matches))
+  if  (!$limit && preg_match ('|\.(.+)$|', $table, $matches))
     {
     $tableOnly = $matches [1];
     // add a box for displaying SQL update information for copy/paste into an update line
@@ -526,12 +526,18 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
          </div>\n";
     }
 
-  echo "<table class='table-fields'>\n";
-  echo "<tr>\n";
+  if ($limit)
+    echo "<table class='table-fields'>\n";
+  else
+    echo "<table class='table-rows'>\n";
 
+  echo "<thead>\n";
+  echo "<tr>\n";
   th ('Field');
   th ('Value');
   echo "</tr>\n";
+  echo "</thead>\n";
+  echo "<tbody>\n";
 
   foreach ($info as $col)
     {
@@ -539,7 +545,10 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     if ($limit && !in_array ($fieldName, $limit))
       continue;
     // the row will generate an SQL update if you Ctrl+click it
-    echo "<tr onclick='onRowClick(event,this.id)' id='field_$fieldName'>\n";
+    if ($limit)
+      echo "<tr>\n";
+    else
+      echo "<tr onclick='onRowClick(event,this.id)' id='field_$fieldName'>\n";
     tdx ($fieldName);
     // check if we can be more informative, like show an item name
     if (isset ($expand [$fieldName]))
@@ -548,6 +557,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
       tdx ($row [$fieldName], preg_match ('/text/', $col ['Type']) ? 'tdl' : 'tdr');
     echo "</tr>\n";
     } // end of foreach
+  echo "</tbody>\n";
   echo "</table>\n";
 
 /*
@@ -836,8 +846,6 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc)
       $running_count++;
       } // end of if this row actually got listed
     } // for each row
-
-  echo "</ul>\n";
 
   endElementInformation ();
   return $running_count;

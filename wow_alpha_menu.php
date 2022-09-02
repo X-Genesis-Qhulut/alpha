@@ -55,6 +55,15 @@ function showBigMenu ()
       <header>
         <div class="menu-bar-main-container">
           <div class="menu-bar-header-container">
+
+<div id='noscript_warning_id'>
+<p><i>(Enable Javascript to see nice icons on the menus.)</i></p>
+</div>
+
+<script>
+document.getElementById('noscript_warning_id').style.display = 'none';
+</script>
+
             <a href="">
               <img
                 class="menu-bar-logo"

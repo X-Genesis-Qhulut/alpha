@@ -282,7 +282,9 @@ function showOneCreature ()
     $extras  ['trainer_race'] = 'race';
     }
 
-$name = fixHTML ("Creature $id — " . $row ['name']);
+$name = fixHTML ($row ['name']);
+if ($row ['subname'])
+  $name .= ' <' . $row ['subname'] . '>';
 $pageType = 'Creature';
 
 echo "
@@ -338,10 +340,10 @@ echo "
 
   $limit = array (
     'entry',
-    'name',
-    'subname',
+    'display_id1',
     'level_min',
-    'level_max',
+    'mana_min',
+    'armor',
 
   );
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
@@ -447,6 +449,14 @@ echo "  <!-- MAP -->
   echo "  </aside>  <!-- END MAP -->\n";
 
   echo "</div>\n";  // end of creature-details__informations (stuff at top)
+
+  echo "<div class='creature-details__items'>\n";
+
+  echo "<h2>Database values</h2>\n";
+
+  showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
+              $id, "Creature", "name", $extras);
+  echo "</div>\n";  // end of creature-details__items
 
   echo "</div>  <!-- END PAGE CONTENT -->\n";  // end of creature-details page-content
 

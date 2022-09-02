@@ -11,3 +11,8 @@
   font-family: monospace;
   background-color:white;
   }
+
+.spawn_point
+  {
+  position:absolute;
+  }

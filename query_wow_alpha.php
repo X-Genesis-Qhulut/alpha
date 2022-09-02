@@ -6,10 +6,10 @@
     <meta name="title" content="WoW 0.5.3 Database" />
     <meta name="description" content="Database browser for Alpha core 0.5.3" />
     <title>WoW 0.5.3 Database</title>
-    <link rel="stylesheet" href="./css/style/normalize.css" />
+    <link rel="stylesheet" href="./css/normalize.css" />
     <link rel="stylesheet" href="./css/styles.css" />
     <link rel="stylesheet" href="extra.css" />
-    <link rel="icon" href="./assets/img/favicon.png" />
+    <link rel="icon" href="favicon.png" />
     <script
       defer
       src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
@@ -135,20 +135,6 @@ $PHP_SELF = $_SERVER['PHP_SELF'];
 
 // echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0.5.3 database browser</a></div>\n";
 
-/*
-// The <noscript> tag doesn't detect if NoScript is in use - so put up a message and use scripting to hide it
-    echo "
-<div id='noscript_warning_id'>
-<noscript>
-<p><i>(Enable Javascript to view spawn points on the map.)</i></p>
-</noscript>
-</div>
-<script>
-document.getElementById('noscript_warning_id').style.display = 'none';
-</script>
-";
-
-*/
 
 // grab things we are likely to cross-reference a lot
 if ($action)
