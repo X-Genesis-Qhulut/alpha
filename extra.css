@@ -30,11 +30,13 @@
   background-color: #222222;
   padding: 10px;
   max-width: 40em;
-  border:2px solid white;
+  border:2px solid gray;
   border-radius: 10px;
-	box-shadow: 3px 3px 5px gray;
+	box-shadow: 4px 4px 5px #666666;
   width: fit-content;
   margin-bottom:1em;
+  padding-left: 2em;
+  padding-right: 2em;
 }
 
 .simulate_box a {

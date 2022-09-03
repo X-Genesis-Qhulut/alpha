@@ -52,8 +52,8 @@
       & .simulate_box {
         margin: 0 auto;
         margin-top: 50px;
-        border: unset;
-        box-shadow: unset;
+        // border: unset;
+        // box-shadow: unset;
 
         @include tablet-design {
           margin-top: 20px;
