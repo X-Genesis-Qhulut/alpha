@@ -58,11 +58,14 @@ function simulateItem ($id, $row)
   echo "
   <div class='object-container__informations__details2'>
     <!-- SIMULATED ITEM CONTAINER -->
+    ";
+    /*
     <div class='tiny-title'>
       <h2 class='tiny-title__heading'>Simulated in-game view</h2>
       <div class='tiny-title__bar'></div>
     </div>
-    <div class='item-display'>
+    */
+    echo"
     <div class='simulate_box item'>
     ";
 
@@ -204,7 +207,6 @@ function simulateItem ($id, $row)
 
 
 echo "
-  </div>
   </div>
   <!-- END SIMULATED ITEM CONTAINER -->
 </div>
