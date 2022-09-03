@@ -368,19 +368,7 @@ echo "
           <button class='search-button'>
             <i class='fas fa-search'></i>
           </button>
-        </form>
-        <!-- END SEARCH FORM -->
-      </div>
-      <!-- END SEARCH CONTAINER -->
-    </div>
-    <!-- END PAGE TITLE -->
-
-
-    <!-- PAGE CONTENT -->
-    <div class='creature-details page-content'>
-      <!-- TABLE CONTAINER -->
-      <div class='table-container table-container--full'>
-        <!-- PAGE COUNT -->
+      <!-- PAGE COUNT -->
         <div class='page-counter'>
           <div>
             <a href=''
@@ -396,6 +384,19 @@ echo "
           </div>
         </div>
         <!-- END PAGE COUNT -->
+
+        </form>
+        <!-- END SEARCH FORM -->
+      </div>
+      <!-- END SEARCH CONTAINER -->
+    </div>
+    <!-- END PAGE TITLE -->
+
+
+    <!-- PAGE CONTENT -->
+    <div class='creature-details page-content'>
+      <!-- TABLE CONTAINER -->
+      <div class='table-container table-container--full'>
 
         <!-- TABLE -->
         <table class='table-rows'>

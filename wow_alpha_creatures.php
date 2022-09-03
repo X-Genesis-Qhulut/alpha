@@ -527,7 +527,9 @@ function showCreatures ()
 
     echo "</tr>\n";
     }
-  echo "</table>\n";
+
+
+  wrapUpSearch ();
 
   showCount ($results);
 
