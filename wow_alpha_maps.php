@@ -35,12 +35,12 @@ function showMaps ()
     $sort_order = 'Directory';
 
 
-  echo "<h2>Maps</h2>\n";
+ // echo "<h2>Maps</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('id', array ('directory'));
+  setUpSearch ('Maps', 'id', array ('directory'));
 
   $offset = getQueryOffset(); // based on the requested page number
 

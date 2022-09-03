@@ -312,12 +312,12 @@ function showQuests ()
     $sort_order = 'Title';
 
 
-  echo "<h2>Quests</h2>\n";
+//  echo "<h2>Quests</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('entry', array ('Title', 'Details', 'Objectives', 'OfferRewardText',
+  setUpSearch ('Quests', 'entry', array ('Title', 'Details', 'Objectives', 'OfferRewardText',
                                 'RequestItemsText', 'EndText', 'ObjectiveText1', 'ObjectiveText2',
                                 'ObjectiveText3', 'ObjectiveText4' ));
 

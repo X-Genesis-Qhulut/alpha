@@ -112,12 +112,12 @@ function showBooks ()
     $sort_order = 'entry';
 
 
-  echo "<h2>Books</h2>\n";
+ // echo "<h2>Books</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('entry', array ('text'));
+  setUpSearch ('Books', 'entry', array ('text'));
 
   $offset = getQueryOffset(); // based on the requested page number
 

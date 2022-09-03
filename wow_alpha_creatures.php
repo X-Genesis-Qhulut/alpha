@@ -481,31 +481,37 @@ function showCreatures ()
     'entry',
     'name',
     'subname',
-    'name',
     'level_min',
   );
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
-  echo "<h2>Creatures (NPCs)</h2>\n";
+//  echo "<h2>Creatures (NPCs)</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('entry', array ('name', 'subname'));
+  $headings = array ('Entry', 'Name', 'Subname', 'Level');
 
+  $results = setUpSearch ('Creatures', $sortFields, $headings, 'entry', array ('name', 'subname'),
+                          CREATURE_TEMPLATE, 'AND entry <= ' . MAX_CREATURE);
+
+  if (!$results)
+    return;
+
+/*
   $offset = getQueryOffset(); // based on the requested page number
 
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_TEMPLATE." $where AND entry <= " . MAX_CREATURE .
                             " ORDER BY $sort_order LIMIT $offset, " . QUERY_LIMIT,
                             $params);
 
+
   if (!showSearchForm ($sortFields, $results, CREATURE_TEMPLATE, "$where AND entry <= " . MAX_CREATURE))
     return;
+*/
 
-  echo "<table class='search_results'>\n";
-  headings (array ('Entry', 'Name', 'Subname', 'Level'));
   foreach ($results as $row)
     {
     echo "<tr>\n";

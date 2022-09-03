@@ -29,12 +29,12 @@ function showSpellVisuals ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'ID';
 
-  echo "<h2>Spell Visuals</h2>\n";
+//  echo "<h2>Spell Visuals</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('ID', array ());
+  setUpSearch ('Spell Visuals', 'ID', array ());
 
   $offset = getQueryOffset(); // based on the requested page number
 
@@ -87,12 +87,12 @@ function showSpellVisualAnimNames ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'AnimID';
 
-  echo "<h2>Spell Visual Animation names</h2>\n";
+//  echo "<h2>Spell Visual Animation names</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('ID', array ());
+  setUpSearch ('Spell Visual Animation names', 'ID', array ());
 
   $offset = getQueryOffset(); // based on the requested page number
 
@@ -141,12 +141,12 @@ function showSpellVisualEffectNames ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'FileName';
 
-  echo "<h2>Spell Visual Effect names</h2>\n";
+ // echo "<h2>Spell Visual Effect names</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('ID', array ());
+  setUpSearch ('Spell Visual Effect names', 'ID', array ());
 
   $offset = getQueryOffset(); // based on the requested page number
 

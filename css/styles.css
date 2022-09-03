@@ -197,12 +197,12 @@ a {
 }
 .table-rows th {
   padding: 5px 10px 5px 10px;
-  text-align: center;
+  text-align: left;
   background-color: #303030;
 }
 .table-rows td {
   padding: 5px 20px 5px 20px;
-  text-align: center;
+  text-align: left;
 }
 .table-rows tr:nth-child(odd) {
   background-color: #535353;

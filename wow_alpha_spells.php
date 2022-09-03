@@ -352,12 +352,12 @@ function showSpells ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'Name_enUS';
 
-  echo "<h2>Spells</h2>\n";
+//  echo "<h2>Spells</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('ID', array ('Name_enUS', 'Description_enUS'));
+  setUpSearch ('Spells', 'ID', array ('Name_enUS', 'Description_enUS'));
 
   $offset = getQueryOffset(); // based on the requested page number
 

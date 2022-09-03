@@ -170,7 +170,7 @@ function columns_compare ($a, $b)
   return $a ['Field'] <=> $b ['Field'];
   } // end of columns_compare
 
-function showSearchForm ($sortFields, $results, $table, $where)
+function showSearchForm ($description, $sortFields, $headings, $results, $table, $where)
   {
   global $filter, $action, $sort_order, $params, $page, $matches;
   global $filter_column, $filter_compare, $filter_value;
@@ -184,6 +184,46 @@ function showSearchForm ($sortFields, $results, $table, $where)
 
   $PHP_SELF = $_SERVER['PHP_SELF'];
 
+  $sortOptions = array ();
+  foreach ($sortFields as $field)
+    {
+    if ($field == $sort_order)
+      $selected = "selected = 'selected'";
+    else
+      $selected = '';
+    $sortOptions [] =  "<option value='" . fixHTML ($field) . "' $selected>" .
+                        fixHTML (($field)) . "</option>";
+    } // end of foreach sort field
+
+  $tableFields = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
+
+  $filterOptions = array ();
+  foreach ($tableFields as $field)
+    {
+    if (preg_match ('`int|float`', $field ['Type']))
+      {
+      if ($field ['Field'] == $filter_column)
+        $selected = "selected = 'selected'";
+      else
+        $selected = '';
+      $filterOptions [] = "<option value='" . fixHTML ($field ['Field']) . "' $selected>" .
+                          fixHTML ($field ['Field']) . "</option>";
+      } // end of being a number
+    }   // end of foreach field
+
+  $comparisonOptions = array ();
+  foreach (SECONDARY_FILTER as $compare => $operator)
+    {
+    if ($compare == $filter_compare)
+      $selected = "selected = 'selected'";
+    else
+      $selected = '';
+    $comparisonOptions [] =  "<option value='" . fixHTML ($compare) . "' $selected>" .
+                            fixHTML ($compare) . "</option>";
+    } // end of foreach comparison
+
+
+/*
   echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
   echo "<input Type=hidden Name=action Value=$action>\n";
   echo "<input Type=hidden Name=page Value=$page>\n";
@@ -193,15 +233,6 @@ function showSearchForm ($sortFields, $results, $table, $where)
 
   echo " Sort by: ";
   echo "<select name='sort_order' size='1' title='Which column to sort on'>\n";
-  foreach ($sortFields as $field)
-    {
-    if ($field == $sort_order)
-      $selected = "selected = 'selected'";
-    else
-      $selected = '';
-    echo "<option value='" . fixHTML ($field) . "' $selected>" .
-          fixHTML (($field)) . "</option>\n";
-    }
   echo "</select>\n";
   echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Filter' title='Click to search'>\n";
   echo "<div class='navigation'>\n";
@@ -216,35 +247,14 @@ function showSearchForm ($sortFields, $results, $table, $where)
   // secondary filter - field name
 
   echo "<p>Also match: ";
-  $tableFields = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
   usort ($tableFields, 'columns_compare');
   echo "<select name='filter_column' size='1' title='Which database column to filter on'>\n";
-  foreach ($tableFields as $field)
-    {
-    if (preg_match ('`int|float`', $field ['Type']))
-      {
-      if ($field ['Field'] == $filter_column)
-        $selected = "selected = 'selected'";
-      else
-        $selected = '';
-      echo "<option value='" . fixHTML ($field ['Field']) . "' $selected>" .
-            fixHTML ($field ['Field']) . "</option>\n";
-      } // end of being a number
-    }   // end of foreach field
+
   echo "</select>\n";
 
   // secondary filter - comparison
 
   echo "<select name='filter_compare' size='1' title='What comparison to do'>\n";
-  foreach (SECONDARY_FILTER as $compare => $operator)
-    {
-    if ($compare == $filter_compare)
-      $selected = "selected = 'selected'";
-    else
-      $selected = '';
-    echo "<option value='" . fixHTML ($compare) . "' $selected>" .
-          fixHTML ($compare) . "</option>\n";
-    } // end of foreach comparison
   echo "</select>\n";
 
   // secondary filter - value to compare to
@@ -253,6 +263,9 @@ function showSearchForm ($sortFields, $results, $table, $where)
         "' placeholder='Number/hex/bin'
         title='Leave empty for no secondary filtering.\nHex numbers: 0x0123ABCD\nBinary numbers: 0b01010\nSet: 1,7,9,15\nRange: 20 to 30'>\n";
 
+*/
+
+/*
   echo
   "<details style='margin-top:3px;'><summary>Regular expression tips</summary>
   <ul>
@@ -273,14 +286,160 @@ function showSearchForm ($sortFields, $results, $table, $where)
   </details>
   </form>";
 
+*/
+
+$resultsCount = count ($results);
+
+echo "
+ <!-- PAGE CONTAINER-->
+  <section class='main-page-container'>
+    <!-- PAGE TITLE -->
+    <div class='page-title page-title--search'>
+      <div class='big-title'>
+        <i class='page-title__database fas fa-database'></i>
+        <i class='page-title__angle fas fa-angle-right'></i>
+        <h1 class='big-title__heading'>" . fixHTML ($description) . "</h1>
+      </div>
+      <!-- SEARCH CONTAINER -->
+      <div class='search-container'>
+        <!-- SEARCH FORM -->
+        <form method='post' action='$PHP_SELF'>
+            <input Type=hidden Name=action Value='$action'>
+            <input Type=hidden Name=page Value='$page'>
+            <div class='search-bar'>
+            <div class='search-bar__main'>
+              <input
+                class='custom-input'
+                style='margin-right: 1em'
+                type='text'
+                name='filter'
+                size='40'
+                value='" . fixHTML ($filter) . "'
+                placeholder='ID or regular expression'
+                autofocus=''
+                title='Enter a number, text, or a regular expression'
+              />
+              <label for='sort_order'>Sort by</label>
+              <select
+                class='custom-selector'
+                id='sort_order'
+                name='sort_order'
+                size='1'
+                title='Which column to sort on'
+              >"
+              . implode("\n", $sortOptions) . "
+              </select>
+            </div>
+            <div class='search-bar__filters'>
+              <label for='filter_column'>Also match</label>
+              <select
+                class='custom-selector'
+                id='filter_column'
+                name='filter_column'
+                size='1'
+                title='Which database column to filter on'
+              >"
+              . implode ("\n", $filterOptions) . "
+              </select>
+              <select
+                class='custom-selector'
+                id='filter_compare'
+                name='filter_compare'
+                size='1'
+                title='What comparison to do'
+              >"
+              . implode ("\n", $comparisonOptions) . "
+              </select>
+              <input
+                class='custom-input'
+                type='text'
+                name='filter_value'
+                size='15'
+                value='" . fixHTML ($filter_value)  . "'
+                placeholder='Number/hex/bin'
+                title='Leave empty for no secondary filtering.
+                          Hex numbers: 0x0123ABCD
+                          Binary numbers: 0b01010
+                          Set: 1,7,9,15
+                          Range: 20 to 30'
+              />
+            </div>
+          </div>
+          <button class='search-button'>
+            <i class='fas fa-search'></i>
+          </button>
+        </form>
+        <!-- END SEARCH FORM -->
+      </div>
+      <!-- END SEARCH CONTAINER -->
+    </div>
+    <!-- END PAGE TITLE -->
+
+
+    <!-- PAGE CONTENT -->
+    <div class='creature-details page-content'>
+      <!-- TABLE CONTAINER -->
+      <div class='table-container table-container--full'>
+        <!-- PAGE COUNT -->
+        <div class='page-counter'>
+          <div>
+            <a href=''
+              ><i class='page-counter__left fas fa-angle-double-left'></i
+            ></a>
+            <span>Page $page of $pages</span>
+            <a href=''
+              ><i class='page-counter__right fas fa-angle-double-right'></i
+            ></a>
+          </div>
+          <div>
+            <span class='page-counter__results-count'>$resultsCount results</span>
+          </div>
+        </div>
+        <!-- END PAGE COUNT -->
+
+        <!-- TABLE -->
+        <table class='table-rows'>
+         <thead>";
+
+    headings ($headings);
+
+    echo "</thead>
+        <tbody>";
+
+
   if (count ($results) == 0)
     {
-    echo "No matches.";
     return false;
     } // end of nothing
 
+/*
+  if ($page > 1)
+    echo "<input type='image' class='arrow' name='LeftArrow' title='Previous page' alt='Previous page' src='left-arrow.png'>\n";
+  if ($pages > 0)
+    echo " Page $page of $pages ";
+  if ($page < $pages)
+    echo "<input type='image' class='arrow' name='RightArrow' title='Next page' alt='Next page' src='right-arrow.png'>\n";
+
+*/
+
   return true;
   } // end of showSearchForm
+
+function wrapUpSearch ()
+  {
+echo "
+          </tbody>
+        </table>
+        <!-- END TABLE -->
+      </div>
+      <!-- END TABLE CONTAINER -->
+    </div>
+    <!-- END PAGE CONTENT -->
+  </section>
+  <!-- END PAGE CONTAINER-->
+  ";
+
+  } // end of wrapUpSearch
 
 // work out what our query offset should be
 function getQueryOffset ()
@@ -386,9 +545,9 @@ function showFilterColumn ($row)
 
 //
 
-function setUpSearch ($keyname, $fieldsToSearch)
+function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToSearch, $table, $extraWhere)
   {
-  global $filter, $where, $params;
+  global $filter, $where, $params, $sort_order;
   global $filter_column, $filter_compare, $filter_value, $fixed_filter_value;
 
   $where = 'WHERE TRUE ';
@@ -486,6 +645,23 @@ function setUpSearch ($keyname, $fieldsToSearch)
       $where .= ')';
       } // end of NOT (in or not in)
     } // end of secondary comparison
+
+  $offset = getQueryOffset(); // based on the requested page number
+
+  // do the search
+  $results = dbQueryParam ("SELECT * FROM $table $where $extraWhere
+                            ORDER BY $sort_order LIMIT $offset, " . QUERY_LIMIT,
+                            $params);
+
+  // now show the search form
+  if (!showSearchForm ($description, $sortFields, $headings, $results, $table, $where . $extraWhere))
+    {
+    comment ("SETTING UP SEARCH FORM FAILED");
+    return false;
+    }
+
+  // let them display the results
+  return $results;
 
   } // end of setUpSearch
 

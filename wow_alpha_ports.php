@@ -43,14 +43,14 @@ function showPorts ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
-  echo "<h2>World Ports</h2>\n";
+//  echo "<h2>World Ports</h2>\n";
 
-  echo "<p>For use with <b>.tel</b> command. Only map 0 and 1 shown.\n";
+//  echo "<p>For use with <b>.tel</b> command. Only map 0 and 1 shown.\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('id', array ('name'));
+  setUpSearch ('World Ports', 'id', array ('name'));
 
   $offset = getQueryOffset(); // based on the requested page number
 

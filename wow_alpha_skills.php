@@ -38,12 +38,12 @@ function showSkills ()
     $sort_order = 'DisplayName_enUS';
 
 
-  echo "<h2>Skills</h2>\n";
+ // echo "<h2>Skills</h2>\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('ID', array ('DisplayName_enUS'));
+  setUpSearch ('Skills', 'ID', array ('DisplayName_enUS'));
 
   $offset = getQueryOffset(); // based on the requested page number
 
