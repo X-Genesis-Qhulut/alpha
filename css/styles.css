@@ -526,7 +526,9 @@ a {
   justify-content: center;
   align-items: center;
   width: 500px;
+  height: 400px;
   border-radius: 20px;
+  border: 1px solid black;
 }
 .item-display img {
   border-radius: 20px;
@@ -701,11 +703,21 @@ a {
   margin-right: 2%;
   box-sizing: border-box;
   flex-grow: 1;
-  padding: 20px 20px 20px 20px;
+  padding: 0px 20px 0px 20px;
   background-color: #535353;
-  display: flex;
   flex-direction: column;
   border-radius: 20px 0px 0px 20px;
+}
+.object-container__informations__details2 .simulate_box {
+  margin: 0 auto;
+  margin-top: 50px;
+  border: unset;
+  box-shadow: unset;
+}
+@media screen and (max-width: 1200px) {
+  .object-container__informations__details2 .simulate_box {
+    margin-top: 20px;
+  }
 }
 .object-container__informations aside {
   position: relative;

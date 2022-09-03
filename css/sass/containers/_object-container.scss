@@ -40,14 +40,25 @@
       margin-right: 2%;
       box-sizing: border-box;
       flex-grow: 1;
-      padding: 20px 20px 20px 20px;
+      padding: 0px 20px 0px 20px;
       background-color: $color4;
-      display: flex;
+      // display: flex;
       // justify-content: center;
       // align-items: center;
       flex-direction: column;
       // justify-content: space-evenly;
       border-radius: 20px 0px 0px 20px;
+
+      & .simulate_box {
+        margin: 0 auto;
+        margin-top: 50px;
+        border: unset;
+        box-shadow: unset;
+
+        @include tablet-design {
+          margin-top: 20px;
+        }
+      }
     }
 
     & aside {
