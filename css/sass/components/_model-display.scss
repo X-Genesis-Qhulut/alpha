@@ -1,8 +1,10 @@
 .model-display {
-  width: 150px;
+  width: 200px;
+  height: 250px;
   margin-bottom: 20px;
   min-height: 150px;
   margin-top: 50px;
+  object-fit: contain;
 
   @include tablet-design {
     margin-top: 20px;

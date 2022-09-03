@@ -56,7 +56,6 @@ function simulateItem ($id, $row)
 
  // simulate item
 
-  echo "<p><div class='simulate_box item'>\n";
   $color = ITEM_QUALITY_COLOR [$row ['quality']];
 
   echo "<h3 style='color:$color;'>" . fixHTML ($row ['name']) . "</h3>\n";
@@ -64,6 +63,8 @@ function simulateItem ($id, $row)
   // image
 
   // fallback icon: INV_Misc_QuestionMark.png
+
+  comment ('ICON');
 
   $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
 
@@ -78,6 +79,8 @@ function simulateItem ($id, $row)
   else
     echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
 
+  comment ('CLASS, SUBCLASS, LEVEL, TYPE');
+
   echo '<p><b>' . ITEM_CLASS [$row ['class']] . "</b><br>\n";
   if ($row ['subclass'])
     echo ITEM_SUBCLASSES  [$row ['class']]  [$row ['subclass']] . "<br>\n";
@@ -90,6 +93,8 @@ function simulateItem ($id, $row)
   if ($row ['required_skill'])
     echo 'Requires ' . expandSimple ($skills, $row ['required_skill'], false) .
          ' (' . $row ['required_skill_rank'] . ")\n";
+
+  comment ('DAMAGE');
 
   // damage
 
@@ -104,11 +109,15 @@ function simulateItem ($id, $row)
   // clear float
   echo "<div style='clear: both;'></div>\n";
 
+  comment ('STATS');
+
   // stats
   echo "<p>\n";
   for ($i = 1; $i <= ITEM_STATS_COUNT; $i++)
     if ($row ["stat_value$i"])
       echo addSign ($row ["stat_value$i"]) . ' ' . ITEM_STATS [$row ["stat_type$i"]] . "<br>\n";
+
+  comment ('RESISTANCES');
 
   // resistances
   if ($row ['holy_res'])
@@ -124,12 +133,17 @@ function simulateItem ($id, $row)
   if ($row ['arcane_res'])
     echo addSign ($row ['arcane_res']) . " arcane resistance<br>\n";
 
+
+  comment ('ARMOR');
+
   echo "<p>\n";
   if ($row ['armor'])
     echo $row ['armor'] . " Armor<br>\n";
   if ($row ['block'])
     echo $row ['block'] . " Block<br>\n";
 
+
+  comment ('SPELLS');
 
   $count = getCount ($row, 'spellid_', ITEM_SPELLS);
 
@@ -139,6 +153,8 @@ function simulateItem ($id, $row)
   for ($i = 1; $i <= ITEM_SPELLS; $i++)
     if ($row ["spellid_$i"])
       echo lookupThing ($spells, $row ["spellid_$i"], 'show_spell') . "\n";
+
+  comment ('BUY PRICE');
 
 
   echo "<div>\n";
@@ -150,8 +166,12 @@ function simulateItem ($id, $row)
   // clear float
   echo "<div style='clear: both;'></div>\n";
 
+  comment ('BONDING');
+
   if ($row ['bonding'])
     echo BONDING [$row ['bonding']];
+
+  comment ('DESCRIPTION');
 
   $description = $row ['description'];
 
@@ -161,6 +181,8 @@ function simulateItem ($id, $row)
     echo fixHTML ('“' . $description .'”');
     }
 
+  comment ('PAGE TEXT');
+
   // if there is page text (eg. a book) offer to show it
   $page_text = $row ['page_text'];
   if ($row ['page_text'])
@@ -168,11 +190,105 @@ function simulateItem ($id, $row)
     echo "<p class='read_page'><a href='?action=read_text&id=$page_text&item=$id' >Click to read</a></p>\n";
     }
 
-  // end of item box
-  echo "</div>\n";
 
-
+/*
 // =============================================================================================================
+
+
+
+*/
+
+  } // end of simulateItem
+
+function showOneItem ()
+  {
+  global $id, $quests, $creatures;
+
+ // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+
+  $extras =  array (
+        'required_skill'  => 'skill',
+        'class'           => 'item_class',
+        'subclass'        => 'item_subclass',
+        'start_quest'     => 'quest',
+        'inventory_type'  => 'inventory_type',
+        'flags'           => 'item_flags_mask',
+        'buy_price'       => 'gold',
+        'sell_price'      => 'gold',
+        'min_money_loot'  => 'gold',
+        'max_money_loot'  => 'gold',
+        'bonding'         => 'bonding',
+        'extra_flags'     => 'mask',
+
+    );
+
+  for ($i = 1; $i <= ITEM_STATS_COUNT; $i++)
+    if ($row ["stat_value$i"])
+      $extras ["stat_type$i"] = 'item_stats';
+
+  for ($i = 1; $i <= ITEM_SPELLS; $i++)
+    if ($row ["spellid_$i"])
+      $extras ["spellid_$i"] = 'spell';
+
+  for ($i = 1; $i <= ITEM_SPELL_COOLDOWNS; $i++)
+    {
+    if ($row ["spellcooldown_$i"])
+      $extras ["spellcooldown_$i"] = 'time';
+    if ($row ["spellcategorycooldown_$i"])
+      $extras ["spellcategorycooldown_$i"] = 'time';
+    }
+
+  $name = $row ['name'];
+
+  startOfPageCSS ('Item', $name, 'items');
+
+  echo "
+    <!-- MODEL DISPLAY ID -->
+    <img
+      class='model-display'
+      src='no-image.png'
+      alt='Item model'
+    />
+    <!-- END MODEL DISPLAY ID -->
+    ";
+
+
+  $limit = array (
+    'entry',
+    'class',
+    'display_id',
+    'buy_price',
+    'inventory_type',
+    'stackable',
+
+  );
+
+  comment ('SHORT LISTING OF FIELDS');
+
+  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "", "name", $extras, $limit);
+
+  echo "</div>\n";  // end of details__informations__details1
+
+  echo "<div class='object-container__informations__details2'>
+              <!-- SIMULATED ITEM CONTAINER -->
+              <div class='item-display'>";
+
+  simulateItem ($id, $row);
+
+  echo "
+       </div>
+              <!-- END SIMULATED ITEM CONTAINER -->
+            </div>
+  ";
+
+
+  comment ('OTHER DETAILS');
+
+  echo "<div class='details-container' style='display:flex;'>\n";
+
+
+  comment ('WHO SELLS IT');
 
  // who sells it
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE item = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
@@ -186,6 +302,9 @@ function simulateItem ($id, $row)
         echo (" (limit $maxcount)");
       } // end listing function
       );
+
+  comment ('WHO DROPS IT');
+
 
   // who drops it
 
@@ -259,6 +378,8 @@ function simulateItem ($id, $row)
       } // end listing function
       );
 
+  comment ('WHO CAN WE SKIN FOR IT');
+
   // who can be skinned for it
 
   $skinning_loot_template = SKINNING_LOOT_TEMPLATE;
@@ -283,48 +404,21 @@ function simulateItem ($id, $row)
       } // end listing function
       );
 
-  } // end of simulateItem
+  echo "</div>\n"; // details-container
 
-function showOneItem ()
-  {
-  global $id, $quests, $creatures;
 
- // we need the item info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+  comment ('ITEM DETAILS');
 
-  $extras =  array (
-        'required_skill'  => 'skill',
-        'class'           => 'item_class',
-        'subclass'        => 'item_subclass',
-        'start_quest'     => 'quest',
-        'inventory_type'  => 'inventory_type',
-        'flags'           => 'item_flags_mask',
-        'buy_price'       => 'gold',
-        'sell_price'      => 'gold',
-        'min_money_loot'  => 'gold',
-        'max_money_loot'  => 'gold',
-        'bonding'         => 'bonding',
-        'extra_flags'     => 'mask',
 
-    );
+  echo "<div class='object-container__items'>\n";
 
-  for ($i = 1; $i <= ITEM_STATS_COUNT; $i++)
-    if ($row ["stat_value$i"])
-      $extras ["stat_type$i"] = 'item_stats';
+    showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "", "name", $extras);
 
-  for ($i = 1; $i <= ITEM_SPELLS; $i++)
-    if ($row ["spellid_$i"])
-      $extras ["spellid_$i"] = 'spell';
+  echo "</div>\n";  // end of object-container__items
 
-  for ($i = 1; $i <= ITEM_SPELL_COOLDOWNS; $i++)
-    {
-    if ($row ["spellcooldown_$i"])
-      $extras ["spellcooldown_$i"] = 'time';
-    if ($row ["spellcategorycooldown_$i"])
-      $extras ["spellcategorycooldown_$i"] = 'time';
-    }
 
-  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item", "name", $extras, 'simulateItem');
+  endOfPageCSS ();
+
 
   } // end of showOneItem
 

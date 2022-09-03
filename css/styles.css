@@ -212,10 +212,12 @@ a {
 }
 
 .model-display {
-  width: 150px;
+  width: 200px;
+  height: 250px;
   margin-bottom: 20px;
   min-height: 150px;
   margin-top: 50px;
+  object-fit: contain;
 }
 @media screen and (max-width: 1200px) {
   .model-display {
@@ -702,8 +704,6 @@ a {
   padding: 20px 20px 20px 20px;
   background-color: #535353;
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
   border-radius: 20px 0px 0px 20px;
 }
