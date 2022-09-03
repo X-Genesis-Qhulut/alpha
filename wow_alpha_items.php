@@ -438,23 +438,22 @@ function showItems ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
- // echo "<h2>Items</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Items', 'entry', array ('name', 'description'));
+  $headings = array ('Entry', 'Class', 'Subclass', 'Name', 'Description');
 
-  $offset = getQueryOffset(); // based on the requested page number
+  $results = setUpSearch ('Items',
+                          $sortFields,  // fields we can sort on
+                          array ('Entry', 'Class', 'Subclass', 'Name', 'Description'),    // headings
+                          'entry',      // key
+                          array ('name', 'description'),  // searchable fields
+                          ITEM_TEMPLATE,          // table
+                          'AND ignored = 0');     // extra conditions
 
-  $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order LIMIT $offset, " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, ITEM_TEMPLATE, "$where AND ignored = 0"))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('Entry', 'Class', 'Subclass', 'Name', 'Description'));
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -468,10 +467,9 @@ function showItems ()
     $td  ('description');
     showFilterColumn ($row);
     echo "</tr>\n";
-    }
-  echo "</table>\n";
+    } // end of foreach
 
-  showCount ($results);
+  wrapUpSearch ();
 
   } // end of showItems
   ?>

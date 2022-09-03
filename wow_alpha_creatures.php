@@ -487,8 +487,6 @@ function showCreatures ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
-//  echo "<h2>Creatures (NPCs)</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
@@ -499,18 +497,6 @@ function showCreatures ()
 
   if (!$results)
     return;
-
-/*
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".CREATURE_TEMPLATE." $where AND entry <= " . MAX_CREATURE .
-                            " ORDER BY $sort_order LIMIT $offset, " . QUERY_LIMIT,
-                            $params);
-
-
-  if (!showSearchForm ($sortFields, $results, CREATURE_TEMPLATE, "$where AND entry <= " . MAX_CREATURE))
-    return;
-*/
 
   foreach ($results as $row)
     {
@@ -526,12 +512,11 @@ function showCreatures ()
     showFilterColumn ($row);
 
     echo "</tr>\n";
-    }
-
+    } // end of foreach
 
   wrapUpSearch ();
 
-  showCount ($results);
+//  showCount ($results);
 
   } // end of showCreatures
 ?>

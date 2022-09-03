@@ -182,6 +182,9 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
 
   $pages = ceil ($matches / QUERY_LIMIT);
 
+  if ($page > $pages)
+    $page = $pages;
+
   $PHP_SELF = $_SERVER['PHP_SELF'];
 
   $sortOptions = array ();
@@ -290,6 +293,15 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
 
 $resultsCount = count ($results);
 
+$searchURI = '&filter=' . urlencode ($filter) .
+             '&sort_order=' . urlencode ($sort_order) .
+             '&filter_column=' . urlencode ($filter_column) .
+             '&filter_compare=' . urlencode ($filter_compare) .
+             '&filter_value=' . urlencode ($filter_value);
+
+$nextPage = $page + 1;
+$prevPage = $page - 1;
+
 echo "
  <!-- PAGE CONTAINER-->
   <section class='main-page-container'>
@@ -368,23 +380,6 @@ echo "
           <button class='search-button'>
             <i class='fas fa-search'></i>
           </button>
-      <!-- PAGE COUNT -->
-        <div class='page-counter'>
-          <div>
-            <a href=''
-              ><i class='page-counter__left fas fa-angle-double-left'></i
-            ></a>
-            <span>Page $page of $pages</span>
-            <a href=''
-              ><i class='page-counter__right fas fa-angle-double-right'></i
-            ></a>
-          </div>
-          <div>
-            <span class='page-counter__results-count'>$resultsCount results</span>
-          </div>
-        </div>
-        <!-- END PAGE COUNT -->
-
         </form>
         <!-- END SEARCH FORM -->
       </div>
@@ -397,31 +392,41 @@ echo "
     <div class='creature-details page-content'>
       <!-- TABLE CONTAINER -->
       <div class='table-container table-container--full'>
+        <!-- PAGE COUNT -->
+        <div class='page-counter'>
+          <div>";
+    if ($page > 1)
+      echo "<a href='" . fixHTML ("$PHP_SELF?action=$action$searchURI&page=$prevPage") ."'
+              ><i class='page-counter__left fas fa-angle-double-left'></i
+            ></a>";
+    if ($pages > 0)
+      echo "<span>Page $page of $pages</span>";
+    if ($page < $pages)
+      echo "<a href='" . fixHTML ("$PHP_SELF?action=$action$searchURI&page=$nextPage") ."'
+              ><i class='page-counter__right fas fa-angle-double-right'></i
+            ></a>";
+    echo "
+          </div>
+          <div>
+            <span class='page-counter__results-count'>$resultsCount results</span>
+          </div>
+        </div>
+        <!-- END PAGE COUNT -->
 
         <!-- TABLE -->
         <table class='table-rows'>
          <thead>";
 
-    headings ($headings);
+    if (count ($results) > 0)
+      headings ($headings);
 
     echo "</thead>
         <tbody>";
 
+  comment ("THE SEARCH RESULTS");
 
   if (count ($results) == 0)
-    {
     return false;
-    } // end of nothing
-
-/*
-  if ($page > 1)
-    echo "<input type='image' class='arrow' name='LeftArrow' title='Previous page' alt='Previous page' src='left-arrow.png'>\n";
-  if ($pages > 0)
-    echo " Page $page of $pages ";
-  if ($page < $pages)
-    echo "<input type='image' class='arrow' name='RightArrow' title='Next page' alt='Next page' src='right-arrow.png'>\n";
-
-*/
 
   return true;
   } // end of showSearchForm

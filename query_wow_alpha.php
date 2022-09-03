@@ -97,7 +97,7 @@ else
   $fixed_filter_value = $filter_value;
 
 // get sorting order
-$sort_order = getP ('sort_order', 30, $VALID_SQL_ID);
+$sort_order = getGP ('sort_order', 30, $VALID_SQL_ID);
 // get page number
 $page = getGP ('page',      8, $VALID_NUMBER);
 
@@ -106,11 +106,6 @@ $table  = getG ('table', 30, $VALID_SQL_ID);
 // database name
 $database  = getG ('database', 15, $VALID_SQL_ID);
 
-// see if they used the right arrow
-$rightArrow = getP ('RightArrow_x',    8, $VALID_NUMBER);
-// see if they used the left arrow
-$leftArrow = getP ('LeftArrow_x',      8, $VALID_NUMBER);
-
 // for page text, the item which leads to the text
 $item      = getGP ('item',      8, $VALID_NUMBER);
 
@@ -118,12 +113,6 @@ $item      = getGP ('item',      8, $VALID_NUMBER);
 
 if (!$page || $page < 1)
   $page = 1;
-if ($rightArrow)
-  $page++;
-elseif ($leftArrow)
-  $page--;
-else
-  $page = 1;  // if no arrow pressed, show page 1
 
 // open database, die on error
 $dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
