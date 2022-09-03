@@ -91,32 +91,32 @@ if ($row ['subname'])
 $pageType = 'Creature';
 
 echo "
-      <!-- PAGE CONTAINER-->
-      <section class='main-page-container'>
-        <!-- PAGE TITLE -->
-        <div class='page-title'>
-          <div>
-            <button class='page-title__goback'>
-              <i class='fas fa-angle-left'></i>
-            </button>
-            <h1>$name</h1>
-          </div>
-          <div>
-            <i class='page-title__database fas fa-database'></i>
-            <i class='page-title__angle fas fa-angle-right'></i>
-            <p class='page-title__table'>$pageType</p>
-          </div>
-        </div>
-        <!-- END PAGE TITLE -->
+  <!-- PAGE CONTAINER-->
+  <section class='main-page-container'>
+    <!-- PAGE TITLE -->
+    <div class='page-title'>
+      <div>
+        <a href='?action=creatures' class='page-title__goback'>
+          <i class='fas fa-angle-left'></i>
+        </a>
+        <h1>$name</h1>
+      </div>
+      <div>
+        <i class='page-title__database fas fa-database'></i>
+        <i class='page-title__angle fas fa-angle-right'></i>
+        <p class='page-title__table'>$pageType</p>
+      </div>
+    </div>
+    <!-- END PAGE TITLE -->
 
-        <!-- PAGE CONTENT -->
-        <div class='creature-details page-content'>
-          <div class='creature-details__informations'>
-            <div class='creature-details__informations__details1'>
-              <div class='tiny-title'>
-                <h2 class='tiny-title__heading'>General</h2>
-                <div class='tiny-title__bar'></div>
-              </div>
+    <!-- PAGE CONTENT -->
+    <div class='creature-details page-content'>
+      <div class='creature-details__informations'>
+        <div class='creature-details__informations__details1'>
+          <div class='tiny-title'>
+            <h2 class='tiny-title__heading'>General</h2>
+            <div class='tiny-title__bar'></div>
+          </div>
 ";
 
 
@@ -129,13 +129,17 @@ echo "
       $display_id = $row ["display_id$i"];
       $icon = $display_id . '.webp';
       if (!file_exists ("$documentRoot$executionDir/creatures/$icon"))
+        {
+        comment ("$documentRoot$executionDir/creatures/$icon   NOT ON FILE");
         $icon = 'missing_creature.png';
+        }
+
       echo "
         <!-- MODEL DISPLAY ID -->
         <img
           class='model-display'
           src='creatures/$icon'
-          alt='Creature model'
+          alt='Creature model for display ID $display_id'
         />
         <!-- END MODEL DISPLAY ID -->
         ";
@@ -297,9 +301,9 @@ echo "
         {
         if ($spellListRow ["spellId_$i"])
           {
-          echo "<li>";
+          echo "<li><details><summary>";
           echo (lookupThing ($spells,   $spellListRow ["spellId_$i"], 'show_spell'));
-          echo "<ul>\n";
+          echo "</summary><ul>\n";
           echo "<li>Probability: " . $spellListRow ["probability_$i"] . "%";
           echo "<li>Target type: " . expandSimple (TARGET_TYPE, $spellListRow ["castTarget_$i"]);
           if ($spellListRow ["targetParam1_$i"] || $spellListRow ["targetParam2_$i"])
@@ -318,7 +322,7 @@ echo "
             echo ' to ' . $spellListRow ["delayRepeatMax_$i"];
           if ($spellListRow ["scriptId_$i"])
             echo "<li>Script ID: "  . $spellListRow ["scriptId_$i"];
-          echo "</ul>\n";
+          echo "</ul></details>\n";
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
       echo "</ul>\n";

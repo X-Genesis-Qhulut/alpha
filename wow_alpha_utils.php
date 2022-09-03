@@ -335,7 +335,8 @@ function addSign ($value)
 
 function tdx ($s, $c='tdl')
   {
-  echo "<td class='$c'>";
+ // echo "<td class='$c'>";
+  echo "<td>";
   echo (fixHTML ($s));
   echo "</td>\n";
   } // end of tdx
@@ -774,7 +775,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
 } // end of showSpawnPoints
 
-function startElementInformation ($heading, $table, $uptop)
+function startElementInformation ($heading, $table, $uptop = false)
   {
   if (!$uptop)
     echo "<div class='element-information element-information--independant'>\n";
@@ -788,13 +789,13 @@ function startElementInformation ($heading, $table, $uptop)
 
   } // end of startElementInformation
 
-function endElementInformation ($uptop)
+function endElementInformation ($uptop = false)
   {
   echo "</ul>
     </div>";
+
   if (!$uptop)
     echo "</div>\n";
-
   } // end of endElementInformation
 
 function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName)
