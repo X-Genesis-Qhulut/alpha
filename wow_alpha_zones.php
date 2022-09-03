@@ -31,23 +31,21 @@ function showZones ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'AreaName';
 
- // echo "<h2>Zones</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Zones', 'id', array ('directory'));
+  $results = setUpSearch ('Zones',
+                          $sortFields,            // fields we can sort on
+                          array ('ID', 'Name', 'Area ID'),    // headings
+                          'id',                // key
+                          array ('directory'),  // searchable fields
+                          WORLDMAPAREA,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".WORLDMAPAREA." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, WORLDMAPAREA, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('ID', 'Name', 'Area ID'));
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -58,9 +56,7 @@ function showZones ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
-
-  showCount ($results);
+   wrapUpSearch ();
 
   } // end of showZones
 ?>

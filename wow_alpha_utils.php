@@ -408,7 +408,7 @@ echo "
     echo "
           </div>
           <div>
-            <span class='page-counter__results-count'>$resultsCount results</span>
+            <span class='page-counter__results-count'>Showing $resultsCount on this page ($matches total matches)</span>
           </div>
         </div>
         <!-- END PAGE COUNT -->
@@ -660,7 +660,7 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
                             $params);
 
   // now show the search form
-  if (!showSearchForm ($description, $sortFields, $headings, $results, $table, $where . $extraWhere))
+  if (!showSearchForm ($description, $sortFields, $headings, $results, $table, $where . ' ' . $extraWhere))
     {
     comment ("SETTING UP SEARCH FORM FAILED");
     return false;

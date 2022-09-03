@@ -43,18 +43,18 @@ function showSkills ()
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Skills', 'ID', array ('DisplayName_enUS'));
+  $results = setUpSearch ('Skills',
+                          $sortFields,            // fields we can sort on
+                          array ('ID', 'Name', 'Race', 'Class', 'Max Rank'),    // headings
+                          'entry',                // key
+                          array ('DisplayName_enUS'),  // searchable fields
+                          SKILLLINE,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".SKILLLINE." $where ORDER BY $sort_order, ID LIMIT $offset , " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, SKILLLINE, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('ID', 'Name', 'Race', 'Class', 'Max Rank'));
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -67,9 +67,9 @@ function showSkills ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
 
-  showCount ($results);
+   wrapUpSearch ();
+
 
   } // end of showSkills
 ?>

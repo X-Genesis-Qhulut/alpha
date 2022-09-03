@@ -34,24 +34,20 @@ function showMaps ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'Directory';
 
-
- // echo "<h2>Maps</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Maps', 'id', array ('directory'));
+  $results = setUpSearch ('Maps',
+                          $sortFields,            // fields we can sort on
+                          array ('ID', 'Name'),    // headings
+                          'id',                // key
+                          array ('directory'),  // searchable fields
+                          MAP,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".MAP." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, MAP, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('ID', 'Name'));
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -61,9 +57,9 @@ function showMaps ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
 
-  showCount ($results);
+  wrapUpSearch ();
+
 
   } // end of showMaps
 ?>

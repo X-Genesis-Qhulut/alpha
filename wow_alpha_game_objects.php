@@ -160,24 +160,20 @@ function showGameObjects ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
-//  echo "<h2>Game Objects</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Game Objects', 'entry', array ('name'));
+  $results = setUpSearch ('Game Objects',
+                          $sortFields,          // fields we can sort on
+                          array ('Entry', 'Name', 'Faction'),    // headings
+                          'entry',              // key
+                          array ('name'),       // searchable fields
+                          GAMEOBJECT_TEMPLATE,  // table
+                          '');                  // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." $where ORDER BY $sort_order LIMIT $offset , " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, GAMEOBJECT_TEMPLATE, $where))
+  if (!$results)
     return;
 
-
-  echo "<table class='search_results'>\n";
-  headings (array ('Entry', 'Name', 'Faction'));
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -189,9 +185,8 @@ function showGameObjects ()
 
     echo "</tr>\n";
     }
-  echo "</table>\n";
 
-  showCount ($results);
+  wrapUpSearch ();
 
   } // end of showGameObjects
   ?>

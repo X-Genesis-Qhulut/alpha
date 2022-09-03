@@ -111,24 +111,20 @@ function showBooks ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'entry';
 
-
- // echo "<h2>Books</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Books', 'entry', array ('text'));
+  $results = setUpSearch ('Pages',
+                          $sortFields,            // fields we can sort on
+                          array ('Entry', 'Text', 'Next Page'),    // headings
+                          'entry',                // key
+                          array ('text'),  // searchable fields
+                          PAGE_TEXT,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".PAGE_TEXT." $where ORDER BY $sort_order, entry LIMIT $offset , " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, PAGE_TEXT, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('Entry', 'Text', 'Next Page'));
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -140,9 +136,9 @@ function showBooks ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
 
-  showCount ($results);
+  wrapUpSearch ();
+
 
   } // end of showBooks
 ?>

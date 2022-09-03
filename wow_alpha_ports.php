@@ -43,26 +43,22 @@ function showPorts ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
-//  echo "<h2>World Ports</h2>\n";
-
 //  echo "<p>For use with <b>.tel</b> command. Only map 0 and 1 shown.\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('World Ports', 'id', array ('name'));
+  $results = setUpSearch ('World Ports',
+                          $sortFields,            // fields we can sort on
+                          array ('Entry', 'Name', 'x', 'y', 'z', 'Map'),    // headings
+                          'entry',                // key
+                          array ('name'),  // searchable fields
+                          WORLDPORTS,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".WORLDPORTS." $where AND (map = 0 or map = 1) ORDER BY $sort_order
-                          LIMIT $offset, " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, WORLDPORTS, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('Entry', 'Name', 'x', 'y', 'z', 'Map'));
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -77,9 +73,9 @@ function showPorts ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
 
-  showCount ($results);
+  wrapUpSearch ();
+
 
   } // end of showPorts
 ?>

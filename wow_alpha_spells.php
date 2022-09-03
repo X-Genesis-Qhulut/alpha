@@ -352,24 +352,21 @@ function showSpells ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'Name_enUS';
 
-//  echo "<h2>Spells</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Spells', 'ID', array ('Name_enUS', 'Description_enUS'));
+  $results = setUpSearch ('Spells',
+                          $sortFields,            // fields we can sort on
+                          array ('ID', 'Name', 'Subtext', 'School', 'Category',
+                                 'Power Type', 'Reagents', 'Effect Item', 'Description'),    // headings
+                          'ID',                // key
+                          array ('Name_enUS', 'Description_enUS'),  // searchable fields
+                          SPELL,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".SPELL." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
-            $params);
-
-  if (!showSearchForm ($sortFields, $results, SPELL, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('ID', 'Name', 'Subtext', 'School', 'Category',
-                   'Power Type', 'Reagents', 'Effect Item', 'Description'));
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -402,9 +399,8 @@ function showSpells ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
 
-  showCount ($results);
+  wrapUpSearch ();
 
   } // end of showSpells
 

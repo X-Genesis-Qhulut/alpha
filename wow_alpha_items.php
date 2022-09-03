@@ -441,12 +441,10 @@ function showItems ()
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  $headings = array ('Entry', 'Class', 'Subclass', 'Name', 'Description');
-
   $results = setUpSearch ('Items',
-                          $sortFields,  // fields we can sort on
+                          $sortFields,            // fields we can sort on
                           array ('Entry', 'Class', 'Subclass', 'Name', 'Description'),    // headings
-                          'entry',      // key
+                          'entry',                // key
                           array ('name', 'description'),  // searchable fields
                           ITEM_TEMPLATE,          // table
                           'AND ignored = 0');     // extra conditions

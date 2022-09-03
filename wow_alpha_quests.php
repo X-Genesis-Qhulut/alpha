@@ -312,25 +312,23 @@ function showQuests ()
     $sort_order = 'Title';
 
 
-//  echo "<h2>Quests</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Quests', 'entry', array ('Title', 'Details', 'Objectives', 'OfferRewardText',
+  $results = setUpSearch ('Quests',
+                          $sortFields,            // fields we can sort on
+                          array ('Entry', 'Title' ,'Level'),    // headings
+                          'entry',                // key
+                          array ('Title', 'Details', 'Objectives', 'OfferRewardText',
                                 'RequestItemsText', 'EndText', 'ObjectiveText1', 'ObjectiveText2',
-                                'ObjectiveText3', 'ObjectiveText4' ));
+                                'ObjectiveText3', 'ObjectiveText4'),  // searchable fields
+                          QUEST_TEMPLATE,          // table
+                          'AND ignored = 0');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".QUEST_TEMPLATE." $where AND ignored = 0 ORDER BY $sort_order LIMIT $offset, " .
-                            QUERY_LIMIT,  $params);
-
-  if (!showSearchForm ($sortFields, $results, QUEST_TEMPLATE, "$where AND ignored = 0"))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('Entry', 'Title' ,'Level'));
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
@@ -344,9 +342,9 @@ function showQuests ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
 
-  showCount ($results);
+  wrapUpSearch ();
+
 
   } // end of showQuests
 ?>
