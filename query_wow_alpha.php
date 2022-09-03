@@ -8,6 +8,7 @@
     <title>WoW 0.5.3 Database</title>
     <link rel="stylesheet" href="./css/normalize.css" />
     <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="alpha.css" />
     <link rel="stylesheet" href="extra.css" />
     <link rel="icon" href="favicon.png" />
     <link href="./css/fontawesome/fontawesome.css" rel="stylesheet" />

@@ -63,6 +63,7 @@ function simulateItem ($id, $row)
       <div class='tiny-title__bar'></div>
     </div>
     <div class='item-display'>
+    <div class='simulate_box item'>
     ";
 
  // simulate item
@@ -203,6 +204,7 @@ function simulateItem ($id, $row)
 
 
 echo "
+  </div>
   </div>
   <!-- END SIMULATED ITEM CONTAINER -->
 </div>
