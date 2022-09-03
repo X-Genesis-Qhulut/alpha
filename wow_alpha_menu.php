@@ -51,6 +51,7 @@ function convertDate ($date)
 function showBigMenu ()
   {
 
+
 /*
 <div id='noscript_warning_id'>
 <p><i>(Enable Javascript to see nice icons on the menus.)</i></p>
@@ -61,26 +62,27 @@ document.getElementById('noscript_warning_id').style.display = 'none';
 </script>
 */
 
-?>
+echo "
 <!-- MENU NAV -->
 <header>
-  <div class="menu-bar-main-container">
-    <div class="menu-bar-header-container">
+  <div class='menu-bar-main-container'>
+    <div class='menu-bar-header-container'>
 
-<a href="">
+<a href='".EXECUTIONDIR."'>
   <img
-    class="menu-bar-logo"
-    src="logo-small.png"
-    alt="Alpha Core"
+    class='menu-bar-logo'
+    src='logo-small.png'
+    alt='Alpha Core'
   />
 </a>
-<div class="menu-bar-title">
+<div class='menu-bar-title'>
   <p>Database</p>
   <p>Alpha 0.5.3</p>
 </div>
 </div>
-<nav class="menu-bar-nav-container">
-<?php
+<nav class='menu-bar-nav-container'>
+";
+
   comment ("MENU ITEMS");
   foreach (MENU as $desc => $menuInfo)
     {

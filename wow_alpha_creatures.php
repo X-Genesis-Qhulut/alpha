@@ -167,11 +167,15 @@ function showOneCreature ()
 
   if (!$count)
     echo "
+   <div class='element-information'>
+   <h2  class='element-information__title'>Spawn points</h2>
+   <div class='element-information__bar'></div>
     <div class='element-information__content'>
         <ul>
-          <li>No spawn points</li>
+          <li>None</li>
         </ul>
       </div>
+    </div>
     ";
 
   comment ('END SPAWN POINTS');

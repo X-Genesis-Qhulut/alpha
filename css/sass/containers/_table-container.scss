@@ -1,9 +1,40 @@
 .table-container {
-  max-width: 600px;
+  max-width: 1200px;
   margin: 0 auto;
+  border: 1px solid $color4;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+
+  border-radius: 0px 0px 20px 20px;
+  & table {
+    max-width: 600px;
+  }
+
+  & .tiny-title {
+    margin-left: 40px;
+  }
+
+  @include tablet-design {
+    margin: 0px;
+    margin-bottom: 20px;
+    & .tiny-title {
+      margin-left: 20px;
+    }
+  }
 
   &--full {
+    margin-bottom: 20px;
+    border-radius: unset;
+    border: unset;
+    padding: unset;
     max-width: unset;
+    background-color: unset;
+
+    & table {
+      max-width: unset;
+    }
     margin-left: 20px;
     margin-right: 20px;
   }

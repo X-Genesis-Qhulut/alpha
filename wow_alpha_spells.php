@@ -357,7 +357,7 @@ function showSpells ()
 
   $results = setUpSearch ('Spells',
                           $sortFields,            // fields we can sort on
-                          array ('ID', 'Name', 'Subtext', 'School', 'Category',
+                          array ('ID', 'Name', 'Subtext', 'School',
                                  'Power Type', 'Reagents', 'Effect Item', 'Description'),    // headings
                           'ID',                // key
                           array ('Name_enUS', 'Description_enUS'),  // searchable fields
@@ -374,11 +374,9 @@ function showSpells ()
     tdhr ("<a href='?action=show_spell&id=$id'>$id</a>");
     $td ('Name_enUS');
     $td ('NameSubtext_enUS');
-    $school = $row ['School'];
-    tdx ("$school: " . SPELL_SCHOOLS [$school]);
-    $tdr ('Category');
-    $powerType = $row ['PowerType'];
-    tdx ("$powerType: " . POWER_TYPES [$powerType]);
+    tdx (expandSimple (SPELL_SCHOOLS, $row ['School'], false));
+//    $tdr ('Category');
+    tdx (expandSimple (POWER_TYPES, $row ['PowerType'], false));
     $reagents = array ();
     $reagentCounts = array ();
     for ($i = 1; $i <= SPELL_REAGENTS; $i++)

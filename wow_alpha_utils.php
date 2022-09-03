@@ -225,49 +225,6 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
                             fixHTML ($compare) . "</option>";
     } // end of foreach comparison
 
-
-/*
-  echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
-  echo "<input Type=hidden Name=action Value=$action>\n";
-  echo "<input Type=hidden Name=page Value=$page>\n";
-  echo "Filter: ";
-  echo " <input style='margin-right:1em;' type=text Name='filter' size=40 Value='" . fixHTML ($filter) .
-        "' placeholder='ID or regular expression' autofocus title='Enter a number, text, or a regular expression'>\n";
-
-  echo " Sort by: ";
-  echo "<select name='sort_order' size='1' title='Which column to sort on'>\n";
-  echo "</select>\n";
-  echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Filter' title='Click to search'>\n";
-  echo "<div class='navigation'>\n";
-  if ($page > 1)
-    echo "<input type='image' class='arrow' name='LeftArrow' title='Previous page' alt='Previous page' src='left-arrow.png'>\n";
-  if ($pages > 0)
-    echo " Page $page of $pages ";
-  if ($page < $pages)
-    echo "<input type='image' class='arrow' name='RightArrow' title='Next page' alt='Next page' src='right-arrow.png'>\n";
-  echo "</div>\n";  // end of navigation
-
-  // secondary filter - field name
-
-  echo "<p>Also match: ";
-  usort ($tableFields, 'columns_compare');
-  echo "<select name='filter_column' size='1' title='Which database column to filter on'>\n";
-
-  echo "</select>\n";
-
-  // secondary filter - comparison
-
-  echo "<select name='filter_compare' size='1' title='What comparison to do'>\n";
-  echo "</select>\n";
-
-  // secondary filter - value to compare to
-
-  echo " <input type=text Name='filter_value' size=15 Value='" . fixHTML ($filter_value) .
-        "' placeholder='Number/hex/bin'
-        title='Leave empty for no secondary filtering.\nHex numbers: 0x0123ABCD\nBinary numbers: 0b01010\nSet: 1,7,9,15\nRange: 20 to 30'>\n";
-
-*/
-
 /*
   echo
   "<details style='margin-top:3px;'><summary>Regular expression tips</summary>

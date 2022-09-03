@@ -3,6 +3,14 @@
   overflow-y: scroll;
   height: 100%;
 
+  @include laptop-design {
+    padding: 20px;
+  }
+
+  @include tablet-design {
+    max-height: 81vh;
+  }
+
   @include medium-height {
     max-height: 680px;
   }

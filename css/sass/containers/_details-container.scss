@@ -3,15 +3,22 @@
   margin: 0 auto;
   display: flex;
   margin-top: 10px;
-  margin-bottom: 30px;
   flex-wrap: wrap;
   border: 1px solid $color4;
   padding: 20px;
   padding-bottom: 0px;
   box-sizing: border-box;
 
+  @include laptop-design {
+    // margin-left: 20px;
+    // margin-right: 20px;
+  }
+
   @include tiny-laptop-design {
-    width: 90%;
     margin-top: 10px;
+  }
+
+  @include tablet-design {
+    margin-bottom: 30px;
   }
 }

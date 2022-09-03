@@ -268,7 +268,7 @@ function showOneItem ()
     'entry',
     'class',
     'display_id',
-    'buy_price',
+    'sell_price',
     'inventory_type',
     'stackable',
 
