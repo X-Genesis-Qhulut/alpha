@@ -54,6 +54,17 @@ function simulateItem ($id, $row)
   global $game_objects, $creatures, $zones, $quests, $spells, $skills;
   global $documentRoot, $executionDir;
 
+
+  echo "
+  <div class='object-container__informations__details2'>
+    <!-- SIMULATED ITEM CONTAINER -->
+    <div class='tiny-title'>
+      <h2 class='tiny-title__heading'>Simulated in-game view</h2>
+      <div class='tiny-title__bar'></div>
+    </div>
+    <div class='item-display'>
+    ";
+
  // simulate item
 
   $color = ITEM_QUALITY_COLOR [$row ['quality']];
@@ -191,12 +202,11 @@ function simulateItem ($id, $row)
     }
 
 
-/*
-// =============================================================================================================
-
-
-
-*/
+echo "
+  </div>
+  <!-- END SIMULATED ITEM CONTAINER -->
+</div>
+";
 
   } // end of simulateItem
 
@@ -270,18 +280,9 @@ function showOneItem ()
 
   echo "</div>\n";  // end of details__informations__details1
 
-  echo "<div class='object-container__informations__details2'>
-              <!-- SIMULATED ITEM CONTAINER -->
-              <div class='item-display'>";
-
   simulateItem ($id, $row);
 
-  echo "
-       </div>
-              <!-- END SIMULATED ITEM CONTAINER -->
-            </div>
-  ";
-
+  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
 
   comment ('OTHER DETAILS');
 
