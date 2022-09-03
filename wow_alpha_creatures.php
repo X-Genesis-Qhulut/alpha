@@ -32,16 +32,6 @@ function reference_item_compare ($a, $b)
   return $items [$a ['refItem']] <=> $items [$b ['refItem']];
   } // end of reference_item_compare
 
-function extraCreatureInformation ($id, $row)
-  {
-  global $quests, $items, $maps, $spells;
-  global $documentRoot, $executionDir;
-
-
-
-
-  } // end of extraCreatureInformation
-
 function showOneCreature ()
   {
   global $id;
@@ -85,40 +75,11 @@ function showOneCreature ()
     $extras  ['trainer_race'] = 'race';
     }
 
-$name = fixHTML ($row ['name']);
-if ($row ['subname'])
-  $name .= fixHTML (' <' . $row ['subname'] . '>');
-$pageType = 'Creature';
+  $name = fixHTML ($row ['name']);
+  if ($row ['subname'])
+    $name .= fixHTML (' <' . $row ['subname'] . '>');
 
-echo "
-  <!-- PAGE CONTAINER-->
-  <section class='main-page-container'>
-    <!-- PAGE TITLE -->
-    <div class='page-title'>
-      <div>
-        <a href='?action=creatures' class='page-title__goback'>
-          <i class='fas fa-angle-left'></i>
-        </a>
-        <h1>$name</h1>
-      </div>
-      <div>
-        <i class='page-title__database fas fa-database'></i>
-        <i class='page-title__angle fas fa-angle-right'></i>
-        <p class='page-title__table'>$pageType</p>
-      </div>
-    </div>
-    <!-- END PAGE TITLE -->
-
-    <!-- PAGE CONTENT -->
-    <div class='creature-details page-content'>
-      <div class='creature-details__informations'>
-        <div class='creature-details__informations__details1'>
-          <div class='tiny-title'>
-            <h2 class='tiny-title__heading'>General</h2>
-            <div class='tiny-title__bar'></div>
-          </div>
-";
-
+  startOfPageCSS ('Creature', $name, 'creatures');
 
   // ---------------- IMAGE OF CREATURE -----------------
 
@@ -166,7 +127,7 @@ echo "
 
   echo "</div>\n";  // end of details__informations__details1
 
-  echo "<div class='creature-details__informations__details2'>\n";
+  echo "<div class='object-container__informations__details2'>\n";
 
 
   comment ('SPAWN POINTS - EASTERN KINGDOMS');
@@ -246,7 +207,7 @@ echo "
       );
 
 
-  echo "</div>\n";  // end of creature-details__informations__details1  (spawn points, quests, etc.)
+  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
 
 
   comment ('SPAWN POINTS ON MAP');
@@ -280,7 +241,7 @@ echo "
 
   echo "  </aside>\n";
 
-  echo "</div>\n";  // end of creature-details__informations (stuff at top)
+  echo "</div>\n";  // end of object-container__informations (stuff at top)
 
   echo "<div class='details-container' style='display:flex;'>\n";
 
@@ -500,15 +461,14 @@ echo "
 
   comment ('NPC DETAILS');
 
-  echo "<div class='creature-details__items'>\n";
+  echo "<div class='object-container__items'>\n";
 
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
               $id, "Database entry for NPC", "name", $extras);
-  echo "</div>\n";  // end of creature-details__items
+  echo "</div>\n";  // end of object-container__items
 
-  echo "</div>  <!-- END PAGE CONTENT -->\n";  // end of creature-details page-content
+  endOfPageCSS ();
 
-  echo "</section>  <!-- END PAGE CONTAINER-->";
 
   } // end of showOneCreature
 

@@ -169,6 +169,7 @@ a {
   border: 1px solid #383838;
   background-color: #303030;
   color: #d9d9d9;
+  margin-bottom: 20px;
 }
 .table-fields th {
   padding: 5px 10px 5px 10px;
@@ -213,8 +214,13 @@ a {
 .model-display {
   width: 150px;
   margin-bottom: 20px;
-  margin-top: 20px;
   min-height: 150px;
+  margin-top: 50px;
+}
+@media screen and (max-width: 1200px) {
+  .model-display {
+    margin-top: 20px;
+  }
 }
 
 .element-information {
@@ -513,6 +519,17 @@ a {
   border: 1px solid #535353;
 }
 
+.item-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+  border-radius: 20px;
+}
+.item-display img {
+  border-radius: 20px;
+}
+
 .main-container {
   background-color: #404040;
   width: 98%;
@@ -646,7 +663,7 @@ a {
   display: flex;
 }
 
-.creature-details__informations {
+.object-container__informations {
   display: flex;
   padding: 20px;
   padding-top: 30px;
@@ -655,7 +672,7 @@ a {
   max-width: 1200px;
   margin: 0 auto;
 }
-.creature-details__informations__details1 {
+.object-container__informations__details1 {
   flex-basis: 20%;
   display: flex;
   flex-direction: column;
@@ -667,65 +684,67 @@ a {
   border-radius: 0px 20px 20px 0px;
   position: relative;
 }
-.creature-details__informations__details1 div:first-child {
+.object-container__informations__details1 div:first-child {
   position: absolute;
   top: 0;
   left: 20px;
 }
-.creature-details__informations__details1 div:first-child div {
+.object-container__informations__details1 div:first-child div {
   position: absolute;
   left: 0px;
   top: 40px;
 }
-.creature-details__informations__details2 {
-  margin-right: 2%;
+.object-container__informations__details2 {
   margin-left: 2%;
+  margin-right: 2%;
   box-sizing: border-box;
   flex-grow: 1;
-  padding: 0px 20px 0px 20px;
+  padding: 20px 20px 20px 20px;
   background-color: #535353;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
-  border-radius: 20px 20px 20px 20px;
+  border-radius: 20px 0px 0px 20px;
 }
-.creature-details__informations aside {
+.object-container__informations aside {
   position: relative;
 }
-.creature-details__informations aside img {
+.object-container__informations aside img {
   border-radius: 20px 0px 0px 20px;
 }
 @media screen and (max-width: 1600px) {
-  .creature-details__informations__details1 {
+  .object-container__informations__details1 {
     flex-basis: 13%;
   }
-  .creature-details__items {
+  .object-container__items {
     padding-left: 20px;
     padding-right: 20px;
   }
 }
 @media screen and (max-width: 1250px) {
-  .creature-details__informations {
+  .object-container__informations {
     max-height: none;
     flex-wrap: wrap;
     padding: 10px;
   }
-  .creature-details__informations__details1 {
+  .object-container__informations__details1 {
     flex-basis: 8%;
   }
-  .creature-details__informations__details2 {
+  .object-container__informations__details2 {
     margin-right: 1%;
     margin-left: 1%;
   }
-  .creature-details aside img {
+  .object-container aside img {
     border-radius: 0px 20px 0px 20px;
   }
 }
 @media screen and (max-width: 1200px) {
-  .creature-details__informations {
+  .object-container__informations {
     padding: 10px;
     justify-content: center;
   }
-  .creature-details__informations__details1 {
+  .object-container__informations__details1 {
     flex-direction: row;
     justify-content: space-evenly;
     margin-top: 15px;
@@ -735,7 +754,7 @@ a {
     padding-top: 20px;
     padding-bottom: 20px;
   }
-  .creature-details__informations__details2 {
+  .object-container__informations__details2 {
     flex-basis: 90%;
     border-radius: 0px 20px 0px 20px;
     padding-bottom: 20px;

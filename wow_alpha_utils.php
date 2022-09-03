@@ -1092,4 +1092,51 @@ function expandSpellAttributesExMask ($mask)
 } // end of expandSpellAttributesExMask
 
 
+function startOfPageCSS ($pageType, $name, $goback)
+  {
+  echo "
+  <!-- PAGE CONTAINER-->
+  <section class='main-page-container'>
+
+    <!-- PAGE TITLE -->
+    <div class='page-title'>
+      <div>
+        <a href='?action=$goback' class='page-title__goback'>
+          <i class='fas fa-angle-left'></i>
+        </a>
+        <h1>$name</h1>
+      </div>
+      <div>
+        <i class='page-title__database fas fa-database'></i>
+        <i class='page-title__angle fas fa-angle-right'></i>
+        <p class='page-title__table'>$pageType</p>
+      </div>
+    </div>
+    <!-- END PAGE TITLE -->
+
+    <!-- PAGE CONTENT -->
+    <div class='object-container page-content'>
+      <div class='object-container__informations'>
+        <div class='object-container__informations__details1'>
+          <div class='tiny-title'>
+            <h2 class='tiny-title__heading'>General</h2>
+            <div class='tiny-title__bar'></div>
+          </div>
+
+    <!-- CONTENT STARTS NOW ... -->
+
+  ";
+  } // end of startOfPageCSS
+
+function endOfPageCSS ()
+  {
+  echo "
+  <!-- CONTENT ENDS NOW ... -->
+
+  </div>  <!-- END PAGE CONTENT -->
+  </section>  <!-- END PAGE CONTAINER-->
+  ";
+
+  } // end of endOfPageCSS
+
 ?>

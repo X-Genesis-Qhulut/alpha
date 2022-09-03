@@ -28,6 +28,7 @@
 @import "components/custom-input";
 @import "components/search-button";
 @import "components/page-counter";
+@import "components/item-display.scss";
 
 // Containers
 @import "containers/main-container";
@@ -41,6 +42,7 @@
 @import "containers/details-container";
 @import "containers/cards-containers";
 @import "containers/search-container";
+@import "containers/object-container";
 
 // Pages:
-@import "pages/creature-details";
+// @import "pages/creature-details";
