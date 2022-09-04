@@ -248,6 +248,7 @@ function showOneItem ()
 
   startOfPageCSS ('Item', $name, 'items');
   echo "<div class='object-container__informations__details1'>\n";
+  boxTitle ('General');
 
 
   echo "

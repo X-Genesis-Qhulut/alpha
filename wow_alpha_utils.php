@@ -905,7 +905,6 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
     } // for each spawn point
     echo "</div>\n";  // end of relative div
-    echo "<p>\n";
 } // end of showSpawnPoints
 
 function startElementInformation ($heading, $table, $uptop = false)
@@ -917,15 +916,13 @@ function startElementInformation ($heading, $table, $uptop = false)
   <h2 class='element-information__title' title='" . fixHTML ($table) . "'>" . fixHTML ($heading) . "</h2>
   <div class='element-information__bar'></div>
   <div class='element-information__content'>
-  <ul>
   ";
 
   } // end of startElementInformation
 
 function endElementInformation ($uptop = false)
   {
-  echo "</ul>
-    </div>";
+  echo "</div>";
 
   if (!$uptop)
     echo "</div>\n";
@@ -1010,6 +1007,8 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $upt
   $running_count = 0;
 
   startElementInformation ($heading, $table, $uptop);
+  echo "<ul>\n";
+
   foreach ($results as $row)
     {
     if (!$listItemFunc ($row))
@@ -1018,6 +1017,7 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $upt
       } // end of if this row actually got listed
     } // for each row
 
+  echo "</ul>\n";
   endElementInformation ($uptop);
   return $running_count;
 }
@@ -1250,10 +1250,8 @@ function startOfPageCSS ($pageType, $name, $goback)
     <!-- PAGE CONTENT -->
     <div class='object-container page-content'>
       <div class='object-container__informations'>
-        <div class='object-container__informations__details1'>
 
   ";
-  boxTitle ('General');
   comment ('CONTENT STARTS NOW ...');
 
   } // end of startOfPageCSS

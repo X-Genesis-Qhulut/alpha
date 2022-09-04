@@ -21,7 +21,7 @@ function simulateGameObject ($id, $row)
 
   // SIMULATE GAME OBJECT
 
- echo "<p><div class='simulate_box gameobject'>\n";
+  echo "<div class='simulate_box gameobject'>\n";
   echo "<h3 style='color:yellow;'>" . fixHTML ($row ['name'] ) . "</h3>\n";
   echo expandSimple (GAMEOBJECT_TYPE, $row ['type'], false);
   if ($row ['mingold'])
@@ -126,16 +126,7 @@ function showGameObjectSpawnPoints ($id)
 
 
   comment ('END MAP SPAWN POINTS');
-
-  echo "  </aside>
-    <a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
-    ><i class='fas fa-angle-left'></i
-    ></a>
-    <a class='caroussel__right-arrow' href='#Kalimdor_map'
-    ><i class='fas fa-angle-right'></i
-    ></a>
-    ";
-
+  echo "  </aside>\n";
 
 
 } // end of showGameObjectSpawnPoints
@@ -202,6 +193,7 @@ function showGameObjectLoot ($row)
   if ($row ['type'] == GAMEOBJECT_TYPE_CHEST)
     {
     startElementInformation ('Loot', GAMEOBJECT_LOOT_TEMPLATE);
+    echo "<ul>\n";
 
     $lootResults = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$row ['data1']));
     usort($lootResults, 'item_compare');
@@ -212,6 +204,7 @@ function showGameObjectLoot ($row)
              $row ['ChanceOrQuestChance'] . '%';
         } // end listing function
         );
+    echo "</ul>\n";
    endElementInformation ();
 
     } // end of chest type
@@ -268,6 +261,8 @@ function showOneGameObject ()
   $name = fixHTML ($row ['name']);
 
   startOfPageCSS ('Game object', $name, 'game_objects');
+  echo "<div class='object-container__informations__details1'>\n";
+  boxTitle ('General');
 
   showGameObjectModel ($row);
 

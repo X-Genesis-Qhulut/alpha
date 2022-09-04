@@ -208,7 +208,16 @@ function showOneCreature ()
 
   comment ('SPAWN POINTS ON MAP');
 
-  echo "<aside class='creatures-details__map'>\n";
+  echo "
+  <!-- CAROUSSEL -->
+  <aside class='caroussel'>
+      <a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
+      ><i class='fas fa-angle-left'></i
+      ></a>
+      <a class='caroussel__right-arrow' href='#Kalimdor_map'
+      ><i class='fas fa-angle-right'></i
+      ></a>
+";
 
     comment ('EASTERN KINGDOMS');
 
@@ -253,7 +262,7 @@ function showOneCreature ()
       {
 
       startElementInformation ('Casts these spells', CREATURE_SPELLS);
-
+      echo "<ul>\n";
       for ($i = 1; $i <= 8; $i++)
         {
         if ($spellListRow ["spellId_$i"])
