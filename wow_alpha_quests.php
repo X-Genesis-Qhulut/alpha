@@ -237,7 +237,7 @@ function showQuestChain ()
   global $id, $quests;
 
  // we need the item info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+  $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
   // find previous quests in the chain
 
@@ -305,8 +305,6 @@ function showOneQuest ()
   $name = $row ['Title'];
 
   startOfPageCSS ('Quest', $name, 'quests');
-  echo "<div class='object-container__informations__details1'>\n";
-  boxTitle ('General');
 
   $extras = array (
         'SrcItemId' => 'item',
@@ -339,25 +337,13 @@ function showOneQuest ()
   for ($i = 1; $i <= QUEST_REWARD_REPUTATION; $i++)
     $extras ["RewRepFaction$i"] = 'faction';
 
-  $limit = array (
-    'entry',
-    'PrevQuestId',
-    'NextQuestId',
-  );
-
-
-  comment ('SHORT LISTING OF FIELDS');
-  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "", "Title", $extras, $limit);
-
-  echo "</div>\n";  // end of details__informations__details1
-
   echo "<div class='object-container__informations__details2'>\n";
   boxTitle ("Quest simulation");
   simulateQuest ($row);
   echo "</div>\n";  // end of object-container__informations__details2
 
 
-  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
+  echo "</div>\n";  // end of object-container__informations__details2  (spawn points, quests, etc.)
 
   comment ('OTHER DETAILS');
 
@@ -372,7 +358,6 @@ function showOneQuest ()
 
 
   echo "<div class='object-container__items'>\n";
-
   showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title", $extras);
   echo "</div>\n";  // end of object-container__items
 
