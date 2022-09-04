@@ -28,53 +28,57 @@
 
   &__content {
     overflow-y: scroll;
-  }
 
-  & h3 {
-    font-size: 1em;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    margin-left: 10px;
-  }
-
-  & ul {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    // list-style: none;
-
-    & li {
-      line-height: 25px;
+    &__cover {
+      width: 97%;
+      max-height: 150px;
+      object-fit: cover;
+      margin-top: 10px;
+      margin-right: 10px;
     }
-  }
 
-  &--utilities {
-  }
-
-  &--validation {
-  }
-
-  &--about {
-    padding-bottom: 20px;
-    font-size: 1em;
-    text-align: justify;
-    p {
-      padding: 0px 10px;
-      margin-top: 0px;
-    }
-    &__top {
+    &__thumbnail {
+      float: left;
+      width: 50px;
       margin-top: 20px;
-      & img {
-        float: left;
-        width: 50px;
+
+      // & + p {
+      //   padding-top: 0px;
+      //   margin-top: 0px;
+      // }
+    }
+    & p {
+      padding-left: 10px;
+      padding-right: 10px;
+      text-align: justify;
+      // font-size: 0.9em;
+    }
+
+    & h3 {
+      font-size: 1em;
+      margin-top: 15px;
+      margin-bottom: 10px;
+      margin-left: 10px;
+    }
+
+    & ul {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      // list-style: none;
+
+      & li {
+        line-height: 25px;
+        font-size: 0.9em;
       }
     }
   }
 
   @include laptop-design {
-    flex-basis: 43%;
+    flex-basis: 46%;
   }
 
   @include tablet-design {
-    flex-basis: 90%;
+    flex-basis: 95%;
+    margin-bottom: 30px;
   }
 }

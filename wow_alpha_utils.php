@@ -250,11 +250,7 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
 
 $resultsCount = count ($results);
 
-$searchURI = '&filter=' . urlencode ($filter) .
-             '&sort_order=' . urlencode ($sort_order) .
-             '&filter_column=' . urlencode ($filter_column) .
-             '&filter_compare=' . urlencode ($filter_compare) .
-             '&filter_value=' . urlencode ($filter_value);
+$searchURI = makeSearchURI ();
 
 $nextPage = $page + 1;
 $prevPage = $page - 1;
@@ -1233,9 +1229,39 @@ function expandSpellAttributesExMask ($mask)
   return expandShiftedMask (SPELL_ATTRIBUTES_EX, $mask, true);
 } // end of expandSpellAttributesExMask
 
+function makeSearchURI ($withPage = false)
+  {
+  global $filter, $action, $sort_order, $params, $page, $matches;
+  global $filter_column, $filter_compare, $filter_value;
+
+  $searchURI = '';
+
+  if ($filter)
+    $searchURI .= '&filter=' . urlencode ($filter);
+
+  if ($sort_order)
+    $searchURI .= '&sort_order=' . urlencode ($sort_order);
+
+  if ($filter_value)
+    {
+    if ($filter_column)
+      $searchURI .= '&filter_column=' . urlencode ($filter_column);
+    if ($filter_compare)
+      $searchURI .= '&filter_compare=' . urlencode ($filter_compare);
+    $searchURI .= '&filter_value=' . urlencode ($filter_value);
+    }
+
+  if ($page && $withPage && $page > 1)
+    $searchURI .= '&page=' . urlencode ($page);
+
+  return $searchURI;
+  }
 
 function startOfPageCSS ($pageType, $name, $goback)
   {
+
+  $searchURI = makeSearchURI (true);
+
   echo "
   <!-- PAGE CONTAINER-->
   <section class='main-page-container'>
@@ -1243,7 +1269,7 @@ function startOfPageCSS ($pageType, $name, $goback)
     <!-- PAGE TITLE -->
     <div class='page-title'>
       <div>
-        <a href='?action=$goback' class='page-title__goback'>
+        <a href='?action=$goback$searchURI' class='page-title__goback'>
           <i class='fas fa-angle-left'></i>
         </a>
         <h1>$name</h1>

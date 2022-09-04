@@ -384,6 +384,9 @@ function showOneSpell ()
     'ID',
     'School',
     'ImplicitTargetA_1',
+    'StartRecoveryTime',
+    'SpellPriority',
+    'SpellIconId',
     );
 
   comment ('SHORT LISTING OF FIELDS');
@@ -453,11 +456,13 @@ function showSpells ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_spell&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_spell&id=$id$searchURI'>$id</a>");
     $td ('Name_enUS');
     $td ('NameSubtext_enUS');
     tdx (expandSimple (SPELL_SCHOOLS, $row ['School'], false));

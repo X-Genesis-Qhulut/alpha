@@ -153,11 +153,13 @@ function showBooks ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_book&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_book&id=$id$searchURI'>$id</a>");
     echo "<td>" . nl2br_http (fixQuestText ($row ['text'])) . "</td>\n";
 
     $tdr ('next_page');

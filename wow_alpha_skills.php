@@ -66,12 +66,13 @@ function showSkills ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
 
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_skill&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_skill&id=$id$searchURI'>$id</a>");
     $td ('DisplayName_enUS');
     tdx (expandRaceMask ($row ['RaceMask']));
     tdx (expandClassMask ($row ['ClassMask']));

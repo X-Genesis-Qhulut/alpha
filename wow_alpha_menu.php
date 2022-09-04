@@ -51,7 +51,6 @@ function convertDate ($date)
 function showBigMenu ()
   {
 
-
 /*
 <div id='noscript_warning_id'>
 <p><i>(Enable Javascript to see nice icons on the menus.)</i></p>

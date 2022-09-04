@@ -405,7 +405,7 @@ function showOneItem ()
     'display_id',
     'sell_price',
     'inventory_type',
-    'stackable',
+    'disenchant_id',
 
   );
 
@@ -471,11 +471,13 @@ function showItems ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_item&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_item&id=$id$searchURI'>$id</a>");
     $item_class = $row ['class'];
     tdx ("$item_class: " . ITEM_CLASS [$item_class]);
     $item_subclass = $row ['subclass'];

@@ -192,8 +192,6 @@ function showGameObjectLoot ($row)
 
   if ($row ['type'] == GAMEOBJECT_TYPE_CHEST)
     {
-    startElementInformation ('Loot', GAMEOBJECT_LOOT_TEMPLATE);
-    echo "<ul>\n";
 
     $lootResults = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$row ['data1']));
     usort($lootResults, 'item_compare');
@@ -204,8 +202,6 @@ function showGameObjectLoot ($row)
              $row ['ChanceOrQuestChance'] . '%';
         } // end listing function
         );
-    echo "</ul>\n";
-   endElementInformation ();
 
     } // end of chest type
 } // end of showGameObjectLoot
@@ -270,8 +266,9 @@ function showOneGameObject ()
   $limit = array (
     'entry',
     'type',
-    'display_id',
     'faction',
+    'displayId',
+    'size',
   );
 
   // stuff to be displayed differently
@@ -336,11 +333,13 @@ function showGameObjects ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_go&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_go&id=$id$searchURI'>$id</a>");
     $tdr ('name');
     tdxr (expandSimple ($npc_factions, $row ["faction"]));;
     showFilterColumn ($row);

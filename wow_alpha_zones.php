@@ -57,12 +57,13 @@ function showZones ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
 
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_zone&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_zone&id=$id$searchURI'>$id</a>");
     $td ('AreaName');
     $tdr ('AreaID');
     showFilterColumn ($row);

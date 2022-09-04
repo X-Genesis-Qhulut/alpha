@@ -60,11 +60,13 @@ function showMaps ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_map&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_map&id=$id$searchURI'>$id</a>");
     $td ('Directory');
     showFilterColumn ($row);
     echo "</tr>\n";

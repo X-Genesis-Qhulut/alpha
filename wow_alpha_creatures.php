@@ -82,6 +82,7 @@ function showOneCreature ()
   startOfPageCSS ('Creature', $name, 'creatures');
 
   echo "<div class='object-container__informations__details1'>\n";
+  boxTitle ('General');
 
   // ---------------- IMAGE OF CREATURE -----------------
 
@@ -501,11 +502,13 @@ function showCreatures ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_creature&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_creature&id=$id$searchURI'>$id</a>");
     $tdr ('name');
     $tdr ('subname');
     if ($row ['level_min'] != $row ['level_max'])

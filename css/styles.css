@@ -427,43 +427,46 @@ a {
 .card__content {
   overflow-y: scroll;
 }
-.card h3 {
+.card__content__cover {
+  width: 97%;
+  max-height: 150px;
+  object-fit: cover;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+.card__content__thumbnail {
+  float: left;
+  width: 50px;
+  margin-top: 20px;
+}
+.card__content p {
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: justify;
+}
+.card__content h3 {
   font-size: 1em;
   margin-top: 15px;
   margin-bottom: 10px;
   margin-left: 10px;
 }
-.card ul {
+.card__content ul {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.card ul li {
+.card__content ul li {
   line-height: 25px;
-}
-.card--about {
-  padding-bottom: 20px;
-  font-size: 1em;
-  text-align: justify;
-}
-.card--about p {
-  padding: 0px 10px;
-  margin-top: 0px;
-}
-.card--about__top {
-  margin-top: 20px;
-}
-.card--about__top img {
-  float: left;
-  width: 50px;
+  font-size: 0.9em;
 }
 @media screen and (max-width: 1600px) {
   .card {
-    flex-basis: 43%;
+    flex-basis: 46%;
   }
 }
 @media screen and (max-width: 1200px) {
   .card {
-    flex-basis: 90%;
+    flex-basis: 95%;
+    margin-bottom: 30px;
   }
 }
 
@@ -876,7 +879,7 @@ a {
   padding: 0px 20px 0px 20px;
   background-color: #535353;
   flex-direction: column;
-  border-radius: 20px 0px 0px 20px;
+  border-radius: 20px;
 }
 .object-container__informations__details2 .simulate_box {
   margin: 0 auto;

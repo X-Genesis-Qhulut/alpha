@@ -358,7 +358,7 @@ function showOneQuest ()
 
 
   echo "<div class='object-container__items'>\n";
-  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title", $extras);
+  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest details", "Title", $extras);
   echo "</div>\n";  // end of object-container__items
 
 
@@ -399,12 +399,13 @@ function showQuests ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
 
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_quest&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_quest&id=$id$searchURI'>$id</a>");
     $td ('Title');
     if ($row ['MinLevel'] != $row ['MaxLevel'] && $row ['MaxLevel']  > 0)
       tdxr  ($row ['MinLevel'] . '-' . $row ['MaxLevel'] );

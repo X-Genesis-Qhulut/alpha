@@ -71,11 +71,13 @@ function showPorts ()
   if (!$results)
     return;
 
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_port&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_port&id=$id$searchURI'>$id</a>");
     $td ('name');
     $tdr ('x');
     $tdr ('y');
