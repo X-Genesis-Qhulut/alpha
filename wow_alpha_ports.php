@@ -20,11 +20,23 @@ function showOnePort ()
   {
   global $id;
 
+// we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".WORLDPORTS." WHERE entry = ?", array ('i', &$id));
+
+  $name = $row ['name'];
+
+  startOfPageCSS ('World ports', $name, 'ports');
+  echo "<div class='object-container__items'>\n";
+
   showOneThing (WORLDPORTS, 'alpha_world.worldports', 'entry', $id, "World Port", "name",
       array (
         'map' => 'map',
-      ),
-      'extraPortInformation');
+      ));
+
+  echo "</div>\n";  // end of object-container__items
+  endOfPageCSS ();
+
+
   } // end of showOnePort
 
 function showPorts ()
@@ -33,7 +45,7 @@ function showPorts ()
 
   $sortFields = array (
     'entry',
-    'Name_enUS',
+    'name',
     'x',
     'y',
     'z',

@@ -62,7 +62,7 @@ function simulateSpell ($row)
   {
   global $id, $spells, $items, $creatures;
 
-  echo "<p><div class='simulate_box spell'>\n";
+  echo "<div class='simulate_box spell'>\n";
   echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
   if ($row ['NameSubtext_enUS'])
     echo " — " . fixHTML ($row ['NameSubtext_enUS']);
@@ -369,7 +369,11 @@ function showOneSpell ()
 
   echo "</div>\n";  // end of details__informations__details1
 
+  echo "<div class='object-container__informations__details2'>\n";
+
   simulateSpell ($row);
+
+  echo "</div>\n";
 
   comment ('SPELL DETAILS');
 
