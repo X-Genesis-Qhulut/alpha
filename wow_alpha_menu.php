@@ -73,6 +73,7 @@ echo "
     class='menu-bar-logo'
     src='logo-small.png'
     alt='Alpha Core'
+    title='Main menu'
   />
 </a>
 <div class='menu-bar-title'>

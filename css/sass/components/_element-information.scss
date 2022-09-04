@@ -42,7 +42,7 @@
     background-color: $color4;
     padding: 20px;
     padding-top: 0;
-    flex-basis: 28%;
+    flex-basis: 31.5%;
     margin-bottom: 20px;
     margin-right: 10px;
     margin-left: 10px;
@@ -65,13 +65,13 @@
     @include laptop-design {
       margin-right: 1%;
       margin-left: 1%;
-      flex-basis: 43%;
+      flex-basis: 48%;
     }
 
     @include tiny-laptop-design {
       margin-right: 20px;
       margin-left: 20px;
-      flex-basis: 90%;
+      flex-basis: 95%;
       border-radius: 20px;
     }
   }

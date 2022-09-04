@@ -49,9 +49,9 @@ function lookupItems ($row, $items, $counts)
   return $s;
   } // end of lookupItems
 
-function simulateItem ($id, $row)
+function simulateItem ($row)
   {
-  global $game_objects, $creatures, $zones, $quests, $spells, $skills;
+  global $id, $game_objects, $creatures, $zones, $quests, $spells, $skills;
   global $documentRoot, $executionDir;
 
   comment ('SIMULATED ITEM CONTAINER');
@@ -196,96 +196,16 @@ function simulateItem ($id, $row)
     echo "<p class='read_page'><a href='?action=read_text&id=$page_text&item=$id' >Click to read</a></p>\n";
     }
 
+  echo "</div>\n";  // end of simulate_box item
+  echo "</div>\n";  // end of object-container__informations__details2
 
-echo "
-  </div>
-  <!-- END SIMULATED ITEM CONTAINER -->
-</div>
-";
+  comment ('END SIMULATED ITEM CONTAINER');
 
   } // end of simulateItem
 
-function showOneItem ()
-  {
-  global $id, $quests, $creatures;
-
- // we need the item info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
-
-  $extras =  array (
-        'required_skill'  => 'skill',
-        'class'           => 'item_class',
-        'subclass'        => 'item_subclass',
-        'start_quest'     => 'quest',
-        'inventory_type'  => 'inventory_type',
-        'flags'           => 'item_flags_mask',
-        'buy_price'       => 'gold',
-        'sell_price'      => 'gold',
-        'min_money_loot'  => 'gold',
-        'max_money_loot'  => 'gold',
-        'bonding'         => 'bonding',
-        'extra_flags'     => 'mask',
-
-    );
-
-  for ($i = 1; $i <= ITEM_STATS_COUNT; $i++)
-    if ($row ["stat_value$i"])
-      $extras ["stat_type$i"] = 'item_stats';
-
-  for ($i = 1; $i <= ITEM_SPELLS; $i++)
-    if ($row ["spellid_$i"])
-      $extras ["spellid_$i"] = 'spell';
-
-  for ($i = 1; $i <= ITEM_SPELL_COOLDOWNS; $i++)
-    {
-    if ($row ["spellcooldown_$i"])
-      $extras ["spellcooldown_$i"] = 'time';
-    if ($row ["spellcategorycooldown_$i"])
-      $extras ["spellcategorycooldown_$i"] = 'time';
-    }
-
-  $name = $row ['name'];
-
-  startOfPageCSS ('Item', $name, 'items');
-  echo "<div class='object-container__informations__details1'>\n";
-  boxTitle ('General');
-
-
-  echo "
-    <!-- MODEL DISPLAY ID -->
-    <img
-      class='model-display'
-      src='no-image.png'
-      alt='Item model'
-    />
-    <!-- END MODEL DISPLAY ID -->
-    ";
-
-
-  $limit = array (
-    'entry',
-    'class',
-    'display_id',
-    'sell_price',
-    'inventory_type',
-    'stackable',
-
-  );
-
-  comment ('SHORT LISTING OF FIELDS');
-
-  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "", "name", $extras, $limit);
-
-  echo "</div>\n";  // end of details__informations__details1
-
-  simulateItem ($id, $row);
-
-  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
-
-  comment ('OTHER DETAILS');
-
-  echo "<div class='details-container' style='display:flex;'>\n";
-
+function showItemVendors ()
+{
+  global $id, $creatures;
 
   comment ('WHO SELLS IT');
 
@@ -301,9 +221,13 @@ function showOneItem ()
         echo (" (limit $maxcount)");
       } // end listing function
       );
+}  // end of showItemVendorsshowItemVendors
+
+function showItemDrops ()
+{
+  global $id, $creatures;
 
   comment ('WHO DROPS IT');
-
 
   // who drops it
 
@@ -377,9 +301,17 @@ function showOneItem ()
       } // end listing function
       );
 
+} // end of showItemDrops
+
+function showItemSkinningLoot ()
+{
+  global $id, $creatures;
+
+  $creature_template = CREATURE_TEMPLATE;
+
   comment ('WHO CAN WE SKIN FOR IT');
 
-  // who can be skinned for it
+    // who can be skinned for it
 
   $skinning_loot_template = SKINNING_LOOT_TEMPLATE;
 
@@ -402,6 +334,97 @@ function showOneItem ()
       echo ' — ' . -$row ['chance'] . '%';
       } // end listing function
       );
+} // end of showItemSkinningLoot
+
+function showItemModel ($row)
+{
+  echo "
+  <!-- MODEL DISPLAY ID -->
+  <img
+    class='model-display'
+    src='no-image.png'
+    alt='Item model'
+  />
+  <!-- END MODEL DISPLAY ID -->
+  ";
+} // end of showItemModel
+
+
+function showOneItem ()
+  {
+  global $id;
+
+ // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+
+  $extras =  array (
+        'required_skill'  => 'skill',
+        'class'           => 'item_class',
+        'subclass'        => 'item_subclass',
+        'start_quest'     => 'quest',
+        'inventory_type'  => 'inventory_type',
+        'flags'           => 'item_flags_mask',
+        'buy_price'       => 'gold',
+        'sell_price'      => 'gold',
+        'min_money_loot'  => 'gold',
+        'max_money_loot'  => 'gold',
+        'bonding'         => 'bonding',
+        'extra_flags'     => 'mask',
+
+    );
+
+  for ($i = 1; $i <= ITEM_STATS_COUNT; $i++)
+    if ($row ["stat_value$i"])
+      $extras ["stat_type$i"] = 'item_stats';
+
+  for ($i = 1; $i <= ITEM_SPELLS; $i++)
+    if ($row ["spellid_$i"])
+      $extras ["spellid_$i"] = 'spell';
+
+  for ($i = 1; $i <= ITEM_SPELL_COOLDOWNS; $i++)
+    {
+    if ($row ["spellcooldown_$i"])
+      $extras ["spellcooldown_$i"] = 'time';
+    if ($row ["spellcategorycooldown_$i"])
+      $extras ["spellcategorycooldown_$i"] = 'time';
+    }
+
+  $name = $row ['name'];
+
+  startOfPageCSS ('Item', $name, 'items');
+  echo "<div class='object-container__informations__details1'>\n";
+  boxTitle ('General');
+
+  showItemModel ($row);
+
+
+  // fields to show in short summary
+  $limit = array (
+    'entry',
+    'class',
+    'display_id',
+    'sell_price',
+    'inventory_type',
+    'stackable',
+
+  );
+
+  comment ('SHORT LISTING OF FIELDS');
+  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "", "name", $extras, $limit);
+
+  echo "</div>\n";  // end of details__informations__details1
+
+  simulateItem ($row);
+
+  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
+
+  comment ('OTHER DETAILS');
+
+  echo "<div class='details-container' style='display:flex;'>\n";
+
+  showItemVendors ();
+  showItemDrops ();
+  showItemSkinningLoot ();
 
   echo "</div>\n"; // details-container
 

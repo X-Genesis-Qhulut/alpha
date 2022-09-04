@@ -268,7 +268,7 @@ a {
   background-color: #535353;
   padding: 20px;
   padding-top: 0;
-  flex-basis: 28%;
+  flex-basis: 31.5%;
   margin-bottom: 20px;
   margin-right: 10px;
   margin-left: 10px;
@@ -289,14 +289,14 @@ a {
   .element-information--independant {
     margin-right: 1%;
     margin-left: 1%;
-    flex-basis: 43%;
+    flex-basis: 48%;
   }
 }
 @media screen and (max-width: 1250px) {
   .element-information--independant {
     margin-right: 20px;
     margin-left: 20px;
-    flex-basis: 90%;
+    flex-basis: 95%;
     border-radius: 20px;
   }
 }
@@ -573,6 +573,10 @@ a {
   overflow-x: scroll;
   margin-left: 2%;
   scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  /* for Internet Explorer, Edge */
+  scrollbar-width: none;
+  /* for Firefox */
   position: relative;
 }
 .caroussel img {
@@ -692,7 +696,7 @@ a {
 }
 @media screen and (max-width: 1200px) {
   .page-content {
-    max-height: 81vh;
+    max-height: 80vh;
   }
 }
 @media screen and (max-height: 950px) {
@@ -831,25 +835,6 @@ a {
     margin-top: 20px;
   }
 }
-.object-container__informations aside {
-  display: flex;
-  max-width: 272px;
-  overflow-x: scroll;
-  margin-left: 2%;
-  position: relative;
-}
-.object-container__informations aside img {
-  border-radius: 20px 0px 0px 20px;
-}
-.object-container__informations aside a:last-child {
-  position: absolute;
-  left: 0px;
-  top: 50%;
-  z-index: 1000;
-}
-.object-container__informations aside a:last-child i {
-  font-size: 3em;
-}
 @media screen and (max-width: 1600px) {
   .object-container__informations__details1 {
     flex-basis: 13%;
@@ -862,9 +847,6 @@ a {
   }
   .object-container__informations__details1 {
     flex-basis: 8%;
-  }
-  .object-container aside img {
-    border-radius: 0px 20px 0px 20px;
   }
 }
 @media screen and (max-width: 1200px) {

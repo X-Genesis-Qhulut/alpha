@@ -29,18 +29,11 @@ function fixSpellText ($s, $duration)
   return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText
 
-function simulateSpell ($id, $row)
-  {
-  global $spells, $items, $creatures;
+function showSpellIcon ($row)
+{
   global $documentRoot, $executionDir;
 
-  echo "<p><div class='simulate_box spell'>\n";
-  echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
-  if ($row ['NameSubtext_enUS'])
-    echo " — " . fixHTML ($row ['NameSubtext_enUS']);
-  echo "</h3>\n";
-
-  // spell icon
+  comment ('SPELL ICON');
 
   // fallback icon: INV_Misc_QuestionMark.png
 
@@ -61,6 +54,22 @@ function simulateSpell ($id, $row)
     }
   else
     echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
+
+
+} // end of showSpellIcon
+
+function simulateSpell ($row)
+  {
+  global $id, $spells, $items, $creatures;
+
+  echo "<p><div class='simulate_box spell'>\n";
+  echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
+  if ($row ['NameSubtext_enUS'])
+    echo " — " . fixHTML ($row ['NameSubtext_enUS']);
+  echo "</h3>\n";
+
+  // spell icon
+  showSpellIcon ($row);
 
   // spell type (left) and mana cost (right)
   echo "<div>\n";
@@ -301,6 +310,10 @@ function showOneSpell ()
   {
   global $id;
 
+ // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".SPELL." WHERE ID = ?", array ('i', &$id));
+
+
   $extras = array (
                   'PowerType'             => 'power_type',
                   'School'                => 'spell_school',
@@ -332,7 +345,49 @@ function showOneSpell ()
     $extras ["ImplicitTargetB_$i"] = 'spell_implicit_target';
     }
 
-  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell", "Name_enUS", $extras, 'simulateSpell');
+  $name = $row ['Name_enUS'];
+
+  if ($row ['NameSubtext_enUS'])
+    $name .= fixHTML (' <' . $row ['NameSubtext_enUS'] . '>');
+
+  startOfPageCSS ('Spell', $name, 'spells');
+  echo "<div class='object-container__informations__details1'>\n";
+  boxTitle ('General');
+
+  showSpellIcon ($row);
+  echo "<p>\n";
+
+
+  $limit = array (
+    'ID',
+    'School',
+    'ImplicitTargetA_1',
+    );
+
+  comment ('SHORT LISTING OF FIELDS');
+  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "", "Name_enUS", $extras, $limit);
+
+  echo "</div>\n";  // end of details__informations__details1
+
+  simulateSpell ($row);
+
+  comment ('SPELL DETAILS');
+
+  echo "<div class='object-container__items'>\n";
+
+  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
+
+
+  echo "<div class='object-container__items'>\n";
+
+  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell", "Name_enUS", $extras);
+
+  echo "</div>\n";  // end of object-container__items
+
+
+  endOfPageCSS ();
+
+
   } // end of showOneSpell
 
 function showSpells ()

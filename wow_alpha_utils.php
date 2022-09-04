@@ -527,31 +527,31 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
       $warnings = error_get_last();
       $warning = $warnings ['message'];
       ShowWarning ("Error evaluating regular expression: $filter\n\n$warning\n\nFilter ignored.");
-      return;
       } // if not OK
-
-
-    if (preg_match ('|^\d+$|', $filter))
-      {
-      $where .= " AND $keyname = ?";
-      $params = array ('i', &$filter);
-      }
     else
       {
-      $where = '';
-      $strings = '';
-      $params = array ('');
-      foreach ($fieldsToSearch as $field)
+      if (preg_match ('|^\d+$|', $filter))
         {
-        if ($where == '')
-          $where .= "WHERE ($field REGEXP ? ";
-        else
-          $where .= " OR $field REGEXP ? ";
-        $params [0] .= 's';
-        $params [] = &$filter;
-        } // end of for each field to search
-      $where .= ') ';
-      } // end of if
+        $where .= " AND $keyname = ?";
+        $params = array ('i', &$filter);
+        }
+      else
+        {
+        $where = '';
+        $strings = '';
+        $params = array ('');
+        foreach ($fieldsToSearch as $field)
+          {
+          if ($where == '')
+            $where .= "WHERE ($field REGEXP ? ";
+          else
+            $where .= " OR $field REGEXP ? ";
+          $params [0] .= 's';
+          $params [] = &$filter;
+          } // end of for each field to search
+        $where .= ') ';
+        } // end of if
+      }   // end of if no error in regexp
     } // end of having a filter
 
   // secondary comparison
@@ -564,11 +564,13 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
         {
         ShowWarningH ('Filter comparison value "' . fixHTML ($filter_value)  . '" not a series of comma-separated numbers: ' .
                      "<br><br><b>Secondary</b> filter ignored.");
-        return;
         }
-      $where .= " AND ($filter_column " . SECONDARY_FILTER [$filter_compare];  // ie. IN or NOT IN
-      $where .= '(' . $filter_value . ')';
-      $where .= ')';
+      else
+        {
+        $where .= " AND ($filter_column " . SECONDARY_FILTER [$filter_compare];  // ie. IN or NOT IN
+        $where .= '(' . $filter_value . ')';
+        $where .= ')';
+        } // end of if not ignored
       } // end of in or not in
    // IN RANGE
    elseif ($filter_compare == 'in range' || $filter_compare == 'not in range')
@@ -577,12 +579,14 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
         {
         ShowWarningH ('Filter comparison value "' . fixHTML ($filter_value) . '" not in format: (number) TO (number) '  .
                      "<br><br><b>Secondary</b> filter ignored.");
-        return;
         }
-      $where .= " AND (" . SECONDARY_FILTER [$filter_compare];  // ie. NOT or space
-      $where .= ' (' . $filter_column . ' >= ' . $matches [1] . ' AND ' .
-                       $filter_column . ' <= ' . $matches [2] . ')';
-      $where .= ')';
+      else
+        {
+        $where .= " AND (" . SECONDARY_FILTER [$filter_compare];  // ie. NOT or space
+        $where .= ' (' . $filter_column . ' >= ' . $matches [1] . ' AND ' .
+                         $filter_column . ' <= ' . $matches [2] . ')';
+        $where .= ')';
+        } // end of if not ignored
       } // end of in range or not in range
     // JUST A NUMBER
     else
@@ -591,21 +595,23 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
         {
         ShowWarningH ('Filter comparison value "'. fixHTML ($filter_value)  . '" not decimal, float, hex or binary number: ' .
                      "<br><br><b>Secondary</b> filter ignored.");
-        return;
         }
-      $where .= " AND ($filter_column " . SECONDARY_FILTER [$filter_compare];
-      $paramType = 'i';
-      if (strpos ($fixed_filter_value, '.') !== false)
-        $paramType = 'd';   // turn to a double since it has a decimal place
-      $params [0] .= $paramType;
-      $params [] = &$fixed_filter_value;
-      // [not] masked by all bits needs the value again
-      if (strstr ($filter_compare, 'all'))
+      else
         {
+        $where .= " AND ($filter_column " . SECONDARY_FILTER [$filter_compare];
+        $paramType = 'i';
+        if (strpos ($fixed_filter_value, '.') !== false)
+          $paramType = 'd';   // turn to a double since it has a decimal place
         $params [0] .= $paramType;
         $params [] = &$fixed_filter_value;
-        }
-      $where .= ')';
+        // [not] masked by all bits needs the value again
+        if (strstr ($filter_compare, 'all'))
+          {
+          $params [0] .= $paramType;
+          $params [] = &$fixed_filter_value;
+          }
+        $where .= ')';
+        } // end of if not ignored
       } // end of NOT (in or not in)
     } // end of secondary comparison
 
@@ -931,11 +937,14 @@ function endElementInformation ($uptop = false)
 function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName)
   {
   global $maps;
-  if (count ($results) == 0)
+  $count = count ($results);
+
+  if ($count == 0)
     return 0;
 
   echo "<div class='element-information'>\n";
-  echo "<h2 title='" . fixHTML ($table) . "' class='element-information__title'>" . fixHTML ($heading) . "</h2>\n";
+  echo "<h2 title='" . fixHTML ($table) . "' class='element-information__title'>"
+                     . fixHTML ($heading) . " ($count)</h2>\n";
   echo "<div class='element-information__bar'></div>\n";
   echo "<div class='element-information__content'>\n";
   echo "<ul>\n";
@@ -956,7 +965,7 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
   echo "</div>\n";    // end of element-information__content
   echo "</div>\n";    // end of element-information
 
-  return count($results);
+  return $count;
   } // end of listSpawnPoints
 
 function comment ($what)
@@ -1006,7 +1015,7 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $upt
 
   $running_count = 0;
 
-  startElementInformation ($heading, $table, $uptop);
+  startElementInformation ($heading . " ($totalCount)", $table, $uptop);
   echo "<ul>\n";
 
   foreach ($results as $row)
