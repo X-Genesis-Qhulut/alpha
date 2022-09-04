@@ -16,9 +16,21 @@ function showOneMap ()
   {
   global $id;
 
+// we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".MAP." WHERE ID = ?", array ('i', &$id));
+
+  $name = $row ['Directory'];
+
+  startOfPageCSS ('Map', $name, 'maps');
+  echo "<div class='object-container__items'>\n";
+
   showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  array (
-    'MapName_Mask' => 'mask',
-    ));
+                'MapName_Mask' => 'mask',
+                ));
+
+  echo "</div>\n";  // end of object-container__items
+  endOfPageCSS ();
+
   } // end of showOneMap
 
 function showMaps ()

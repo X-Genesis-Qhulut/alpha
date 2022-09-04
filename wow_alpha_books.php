@@ -9,7 +9,7 @@
 
 // BOOKS (page_text)
 
-function simulateBookPage ($id, $row)
+function simulateBookPage ($row)
   {
   echo "<p><div class='simulate_box page_text'>\n";
   echo nl2br_http (fixQuestText ($row ['text']));
@@ -52,19 +52,27 @@ function showOneBook ()
   {
   global $id, $items;
 
-  showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "Book", "", array (), 'simulateBookPage');
-
-  // find what item refers to this
-
   $item_template = ITEM_TEMPLATE;
   $page_text = PAGE_TEXT;
 
-  // find the page chains
+  // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".PAGE_TEXT." WHERE entry = ?", array ('i', &$id));
+
+
+  startOfPageCSS ('Page', "Page $id", 'books');
+  echo "<div class='object-container__informations__details1'>\n";
+  boxTitle ('General');
+
+  showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array (),
+                array ('entry', 'next_page'));
+
+
+ // find the page chains
 
   $pages = array ();
   $results = dbQuery ("SELECT entry, next_page FROM $page_text");
-  while ($row = dbFetch ($results))
-    $pages [$row ['next_page']] = $row ['entry'];
+  while ($chainRow = dbFetch ($results))
+    $pages [$chainRow ['next_page']] = $chainRow ['entry'];
   dbFree ($results);
 
   // now we can work back until we find the start of the chain
@@ -80,7 +88,7 @@ function showOneBook ()
     $id = $prevPage;
     } while ($prevPage);
 
-  $row = dbQueryOneParam (
+  $itemRow = dbQueryOneParam (
         "SELECT T2.entry AS item_key
           FROM $page_text AS T1
               INNER JOIN $item_template AS T2
@@ -88,14 +96,34 @@ function showOneBook ()
           WHERE T1.entry = ?",
           array ('i', &$id));
 
-  if (!$row)
+  if (!$itemRow)
     {
     echo "<p>Cannot find an item linked to this page";
     return;
     }
 
   echo "<p>Item with this text: ";
-  echo lookupThing ($items, $row ['item_key'], 'show_item');
+  echo lookupThing ($items, $itemRow ['item_key'], 'show_item');
+
+  echo "</div>\n";  // end of details__informations__details1
+
+  // find what item refers to this
+
+  echo "<div class='object-container__items'>\n";
+
+  simulateBookPage ($row);
+
+  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
+
+
+  echo "<div class='object-container__items'>\n";
+
+  showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array ());
+  echo "</div>\n";  // end of object-container__items
+
+
+  endOfPageCSS ();
+
   } // end of showOneBook
 
 function showBooks ()
