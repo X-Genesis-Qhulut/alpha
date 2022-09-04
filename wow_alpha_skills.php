@@ -13,6 +13,14 @@ function showOneSkill ()
   {
   global $id;
 
+// we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".SKILLLINE." WHERE ID = ?", array ('i', &$id));
+
+  $name = $row ['DisplayName_enUS'];
+
+  startOfPageCSS ('Skill details', $name, 'skills');
+  echo "<div class='object-container__items'>\n";
+
   showOneThing (SKILLLINE, 'alpha_dbc.skillline', 'ID', $id, "Skill", "DisplayName_enUS",
       array (
         'RaceMask'  => 'race_mask',
@@ -20,6 +28,10 @@ function showOneSkill ()
         'SkillType' => 'skill_type',
         'DisplayName_Mask' => 'mask',
       ));
+
+  echo "</div>\n";  // end of object-container__items
+  endOfPageCSS ();
+
   } // end of showOneSkill
 
 function showSkills ()
@@ -46,7 +58,7 @@ function showSkills ()
   $results = setUpSearch ('Skills',
                           $sortFields,            // fields we can sort on
                           array ('ID', 'Name', 'Race', 'Class', 'Max Rank'),    // headings
-                          'entry',                // key
+                          'ID',                // key
                           array ('DisplayName_enUS'),  // searchable fields
                           SKILLLINE,          // table
                           '');     // extra conditions

@@ -1,19 +1,30 @@
 .card {
-  flex-basis: 30%;
-  height: 396px;
+  flex-basis: 23%;
+  height: 365px;
   background-color: $color3;
   box-sizing: border-box;
-  margin: 20px;
+  margin: 10px;
   padding: 20px;
   padding-bottom: 10px;
   border-radius: 20px;
   border: 1px solid $color4;
   color: $color6;
   font-size: 1.2em;
-
+  position: relative;
   display: flex;
   flex-direction: column;
   // justify-content: space-between;
+
+  &__icon {
+    position: absolute;
+    right: 5%;
+    top: 4.5%;
+    font-size: 1.1em;
+    background-color: $color4;
+    padding: 10px;
+    border-radius: 13px;
+    border: 1px solid $color5;
+  }
 
   &__content {
     overflow-y: scroll;
@@ -29,7 +40,7 @@
   & ul {
     margin-top: 10px;
     margin-bottom: 10px;
-    list-style: none;
+    // list-style: none;
 
     & li {
       line-height: 25px;
@@ -44,7 +55,7 @@
 
   &--about {
     padding-bottom: 20px;
-
+    font-size: 1em;
     text-align: justify;
     p {
       padding: 0px 10px;

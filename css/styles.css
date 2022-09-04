@@ -129,9 +129,6 @@ a {
   display: flex;
   align-items: center;
 }
-.page-title h1 {
-  font-size: 2em;
-}
 .page-title__goback {
   background-color: transparent;
   margin-right: 30px;
@@ -161,9 +158,6 @@ a {
   padding-right: 20px;
 }
 @media screen and (max-width: 1200px) {
-  .page-title h1 {
-    font-size: 1.5em;
-  }
   .page-title__table {
     font-size: 1.2em;
   }
@@ -340,15 +334,58 @@ a {
 .big-title {
   position: relative;
 }
+.big-title__heading {
+  word-wrap: break-word;
+}
 .big-title__bar {
   position: absolute;
   background-color: #7daaf1;
   bottom: 10px;
-  width: 150px;
+  width: 160px;
   height: 3px;
   margin: 0;
-  margin-left: 40px;
   padding: 0;
+}
+.big-title__subtitle {
+  color: #7daaf1;
+  font-size: 0.9em;
+  font-weight: bold;
+  position: absolute;
+  bottom: 10px;
+  height: 3px;
+  left: 170px;
+  width: 100%;
+  text-align: justify;
+}
+@media screen and (max-width: 1200px) {
+  .big-title__heading {
+    font-size: 1.8em;
+  }
+  .big-title__bar {
+    width: 150px;
+  }
+  .big-title__subtitle {
+    font-size: 0.8em;
+    left: 160px;
+  }
+}
+@media screen and (max-width: 762px) {
+  .big-title__heading {
+    font-size: 1.6em;
+  }
+  .big-title__bar {
+    position: absolute;
+    background-color: #7daaf1;
+    bottom: 10px;
+    width: 100px;
+    height: 3px;
+    margin: 0;
+    padding: 0;
+  }
+  .big-title__subtitle {
+    left: 110px;
+    font-size: 0.8em;
+  }
 }
 
 .sql-statement {
@@ -362,19 +399,30 @@ a {
 }
 
 .card {
-  flex-basis: 30%;
-  height: 396px;
+  flex-basis: 23%;
+  height: 365px;
   background-color: #383838;
   box-sizing: border-box;
-  margin: 20px;
+  margin: 10px;
   padding: 20px;
   padding-bottom: 10px;
   border-radius: 20px;
   border: 1px solid #535353;
   color: #d9d9d9;
   font-size: 1.2em;
+  position: relative;
   display: flex;
   flex-direction: column;
+}
+.card__icon {
+  position: absolute;
+  right: 5%;
+  top: 4.5%;
+  font-size: 1.1em;
+  background-color: #535353;
+  padding: 10px;
+  border-radius: 13px;
+  border: 1px solid #919191;
 }
 .card__content {
   overflow-y: scroll;
@@ -388,13 +436,13 @@ a {
 .card ul {
   margin-top: 10px;
   margin-bottom: 10px;
-  list-style: none;
 }
 .card ul li {
   line-height: 25px;
 }
 .card--about {
   padding-bottom: 20px;
+  font-size: 1em;
   text-align: justify;
 }
 .card--about p {
@@ -586,16 +634,21 @@ a {
   position: absolute;
   z-index: 50;
   font-size: 3em;
-  color: #d9d9d9;
+  color: white;
+  font-weight: bold;
   padding: 0px 10px;
   top: 50%;
   left: 278px;
+}
+.caroussel__left-arrow svg {
+  border: 10px solid black;
 }
 .caroussel__right-arrow {
   position: absolute;
   z-index: 50;
   font-size: 3em;
-  color: #d9d9d9;
+  color: white;
+  font-weight: bold;
   padding: 0px 10px;
   top: 50%;
   left: 215px;

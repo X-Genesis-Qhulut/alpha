@@ -27,24 +27,30 @@ function fixQuestText ($s)
   return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText
 
-function simulateQuest ($id, $row)
+function simulateQuest ($row)
   {
-  global $game_objects, $creatures, $zones, $quests, $spells, $items;
+  global $id, $game_objects, $creatures, $zones, $quests, $spells, $items;
 
  // simulate quest
 
-  echo "<p><div class='simulate_box quest'>\n";
+  echo "<div class='simulate_box quest'>\n";
   echo "<h2>" . fixHTML ($row ['Title']) . "</h2>\n";
   echo "<p>" . fixQuestText ($row ['Details'] ). "</h2>\n";
 
+  comment ('OBJECTIVES');
+
   echo "<h3>Objectives</h3>\n";
   echo "<p>" . fixQuestText ($row ['Objectives']) . "</h2>\n";
+
+  comment ('REQUIREMENTS');
 
   echo "<h3>Requirements</h3>\n";
 
   for ($n = 1; $n <= QUEST_REQUIRED_ITEMS; $n++)
     if ($row ["ReqItemId$n"])
       echo (lookupItemHelper ($row ["ReqItemId$n"], $row ["ReqItemCount$n"]) . "<br>");
+
+  comment ('REQUIRED CREATURES OR GAME OBJECTS');
 
   // creatures or game objects
 
@@ -64,18 +70,25 @@ function simulateQuest ($id, $row)
 
   echo "<p>\n";
 
+  comment ('REQUIRED SPELLS');
+
   // spells
 
   for ($n = 1; $n <= QUEST_REQUIRED_SPELLS; $n++)
     if ($row ["ReqSpellCast$n"])
       echo ('Cast: ' . lookupThing ($spells, $row ["ReqSpellCast$n"], 'show_spell'). "<br>");
 
+  comment ('PROGRESS');
 
   echo "<h3>Progress</h3>\n";
-  echo "<p>" . fixQuestText ($row ['RequestItemsText']) . "</h2>\n";
+  echo "<p>" . fixQuestText ($row ['RequestItemsText']) . "\n";
+
+  comment ('COMPLETION');
 
   echo "<hr><h3>Completion</h3>\n";
-  echo "<p>" . fixQuestText ($row ['OfferRewardText']) . "</h2>\n";
+  echo "<p>" . fixQuestText ($row ['OfferRewardText']) . "\n";
+
+  comment ('REWARDS');
 
   echo "<h3>Reward</h3>\n";
 
@@ -111,6 +124,8 @@ function simulateQuest ($id, $row)
   if ($row ['RewSpell'])
     echo "<p>" . lookupThing ($spells, $row ["RewSpell"], 'show_spell') . " will be cast on you<br>";
 
+  comment ('REPUTATION');
+
   // reputation
 
   $count = getCount ($row, 'RewRepValue', QUEST_REWARD_REPUTATION);
@@ -123,6 +138,8 @@ function simulateQuest ($id, $row)
         echo ('<li>' . addSign ($row ["RewRepValue$n"]) . ' with ' . getFaction ($row ["RewRepFaction$n"], false));
     echo "</ul>\n";
     } // end of any reputation adjustment
+
+  comment ('OTHER INFO');
 
   echo "<hr>\n";
 
@@ -159,6 +176,12 @@ function simulateQuest ($id, $row)
 // ===============================================================================================================
 
 
+  } // end of simulateQuest
+
+function showQuestGivers ()
+{
+  global $id, $creatures, $items, $game_objects;
+
  // who gives this quest
 
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
@@ -183,6 +206,12 @@ function simulateQuest ($id, $row)
       listThing ($game_objects, $row ['entry'], 'show_go');
       });
 
+} // end of showQuestGivers
+
+function showQuestFinishers ()
+{
+  global $id, $creatures, $items, $game_objects;
+
   // who finishes this quest
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
 
@@ -199,6 +228,16 @@ function simulateQuest ($id, $row)
       {
       listThing ($game_objects, $row ['entry'], 'show_go');
       });
+
+
+} // end of showQuestFinishers
+
+function showQuestChain ()
+{
+  global $id, $quests;
+
+ // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
   // find previous quests in the chain
 
@@ -253,12 +292,21 @@ function simulateQuest ($id, $row)
         });
     } // end of other quests in the chain
 
-  } // end of simulateQuest
+} // end of showQuestChain
 
 function showOneQuest ()
   {
   global $id;
   global $quests, $creatures, $items, $game_objects, $spells;
+
+ // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+
+  $name = $row ['Title'];
+
+  startOfPageCSS ('Quest', $name, 'quests');
+  echo "<div class='object-container__informations__details1'>\n";
+  boxTitle ('General');
 
   $extras = array (
         'SrcItemId' => 'item',
@@ -291,7 +339,45 @@ function showOneQuest ()
   for ($i = 1; $i <= QUEST_REWARD_REPUTATION; $i++)
     $extras ["RewRepFaction$i"] = 'faction';
 
-  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title", $extras, 'simulateQuest');
+  $limit = array (
+    'entry',
+    'PrevQuestId',
+    'NextQuestId',
+  );
+
+
+  comment ('SHORT LISTING OF FIELDS');
+  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "", "Title", $extras, $limit);
+
+  echo "</div>\n";  // end of details__informations__details1
+
+  echo "<div class='object-container__informations__details2'>\n";
+  boxTitle ("Quest simulation");
+  simulateQuest ($row);
+  echo "</div>\n";  // end of object-container__informations__details2
+
+
+  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
+
+  comment ('OTHER DETAILS');
+
+
+  echo "<div class='details-container' style='display:flex;'>\n";
+
+  showQuestGivers ();
+  showQuestFinishers ();
+  showQuestChain ();
+
+  echo "</div>\n"; // details-container
+
+
+  echo "<div class='object-container__items'>\n";
+
+  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest", "Title", $extras);
+  echo "</div>\n";  // end of object-container__items
+
+
+  endOfPageCSS ();
 
   } // end of showOneQuest
 

@@ -1,16 +1,66 @@
 .big-title {
   position: relative;
   &__heading {
+    word-wrap: break-word;
   }
 
   &__bar {
     position: absolute;
     background-color: $color7;
     bottom: 10px;
-    width: 150px;
+    width: 160px;
     height: 3px;
     margin: 0;
-    margin-left: 40px;
+    // margin-left: 40px;
     padding: 0;
+  }
+
+  &__subtitle {
+    color: $color7;
+    font-size: 0.9em;
+    font-weight: bold;
+    position: absolute;
+    bottom: 10px;
+    height: 3px;
+    left: 170px;
+    width: 100%;
+    text-align: justify;
+  }
+
+  @include tablet-design {
+    &__heading {
+      font-size: 1.8em;
+    }
+
+    &__bar {
+      width: 150px;
+    }
+
+    &__subtitle {
+      font-size: 0.8em;
+      left: 160px;
+    }
+  }
+
+  @include mobile-design {
+    &__heading {
+      font-size: 1.6em;
+    }
+
+    &__bar {
+      position: absolute;
+      background-color: $color7;
+      bottom: 10px;
+      width: 100px;
+      height: 3px;
+      margin: 0;
+      // margin-left: 40px;
+      padding: 0;
+    }
+
+    &__subtitle {
+      left: 110px;
+      font-size: 0.8em;
+    }
   }
 }

@@ -12,10 +12,22 @@
 function showOneZone ()
   {
   global $id;
+
+// we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".WORLDMAPAREA." WHERE ID = ?", array ('i', &$id));
+
+  $name = $row ['AreaName'];
+
+  startOfPageCSS ('Zone info', $name, 'zones');
+  echo "<div class='object-container__items'>\n";
+
   showOneThing (WORLDMAPAREA, 'alpha_dbc.worldmaparea', 'ID', $id, "Zone", "AreaName",
       array (
         'MapID' => 'map',
       ));
+
+  echo "</div>\n";  // end of object-container__items
+  endOfPageCSS ();
   } // end of showOneZone
 
 function showZones ()
@@ -37,7 +49,7 @@ function showZones ()
   $results = setUpSearch ('Zones',
                           $sortFields,            // fields we can sort on
                           array ('ID', 'Name', 'Area ID'),    // headings
-                          'id',                // key
+                          'ID',                // key
                           array ('directory'),  // searchable fields
                           WORLDMAPAREA,          // table
                           '');     // extra conditions

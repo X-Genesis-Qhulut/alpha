@@ -12,24 +12,27 @@
     border-radius: 20px 0px 0px 20px;
   }
 
-  & a {
-  }
-
   &__left-arrow {
     position: absolute;
     z-index: 50;
     font-size: 3em;
-    color: $color6;
+    color: white;
+    font-weight: bold;
     padding: 0px 10px;
     top: 50%;
     left: 278px;
+
+    & svg {
+      border: 10px solid black;
+    }
   }
 
   &__right-arrow {
     position: absolute;
     z-index: 50;
     font-size: 3em;
-    color: $color6;
+    color: white;
+    font-weight: bold;
     padding: 0px 10px;
     top: 50%;
     left: 215px;

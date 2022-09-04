@@ -396,11 +396,9 @@ function showOneSpell ()
 
   simulateSpell ($row);
 
-  echo "</div>\n";  // end of details-container
+  echo "</div>\n";  // end of object-container__informations__details2
 
   echo "</div>\n";  // end of details-container
-
-  comment ('SPELL DETAILS');
 
 
   echo "<div class='details-container' style='display:flex;'>\n";
@@ -411,10 +409,11 @@ function showOneSpell ()
 
   echo "</div>\n";  // end of details-container
 
+
+  comment ('SPELL DETAILS');
+
   echo "<div class='object-container__items'>\n";
-
   showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell details", "Name_enUS", $extras);
-
   echo "</div>\n";  // end of object-container__items
 
   endOfPageCSS ();
