@@ -109,11 +109,12 @@ function showOneBook ()
 
   // find what item refers to this
 
-  echo "<div class='object-container__items'>\n";
+
+  echo "<div class='object-container__informations__details2'>\n";
 
   simulateBookPage ($row);
 
-  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
+  echo "</div>\n";  // end of object-container__informations__details2  (spawn points, quests, etc.)
 
 
   echo "<div class='object-container__items'>\n";
