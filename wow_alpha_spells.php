@@ -62,6 +62,8 @@ function simulateSpell ($row)
   {
   global $id, $spells, $items, $creatures;
 
+  comment ('SPELL SIMULATION');
+
   echo "<div class='simulate_box spell'>\n";
   echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
   if ($row ['NameSubtext_enUS'])
@@ -243,9 +245,14 @@ function simulateSpell ($row)
 
   echo "</div>\n";    // end of simulation box
 
-  // ==========================================================================================================
 
-  // ---------------- WHO TRAINS THIS -----------------
+  } // end of simulateSpell
+
+function spellTrainers ()
+{
+  global $id, $creatures;
+
+  comment ('WHO TRAINS THIS');
 
   // what they train
 
@@ -262,8 +269,13 @@ function simulateSpell ($row)
       {
       listThing ($creatures, $row ['entry'], 'show_creature');
       });
+} // end of spellTrainers
 
-  // ---------------- WHAT ITEMS CAST THIS -----------------
+function spellItemCasters ()
+{
+  global $id, $items;
+
+  comment ('WHAT ITEMS CAST THIS');
 
   $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE.
                            " WHERE (spellid_1 = ? OR spellid_2 = ? OR spellid_3 = ? OR spellid_4 = ? OR spellid_5 = ?)
@@ -278,7 +290,15 @@ function simulateSpell ($row)
       });
 
 
-  // ---------------- WHAT CREATURES CAST THIS -----------------
+} // end of spellItemCasters
+
+function spellCasters ()
+{
+    global $id, $creatures;
+
+    $creature_template = CREATURE_TEMPLATE;
+
+  comment ('WHAT CREATURES CAST THIS');
 
   // build a list of all 8 possible spell slots in CREATURE_SPELLS
   $where = '';
@@ -304,11 +324,13 @@ function simulateSpell ($row)
       listThing ($creatures, $row ['npc'], 'show_creature');
       });
 
-  } // end of simulateSpell
+} // end of spellCasters
 
 function showOneSpell ()
   {
   global $id;
+
+  comment ('SHOWING ONE SPELL');
 
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".SPELL." WHERE ID = ?", array ('i', &$id));
@@ -370,24 +392,30 @@ function showOneSpell ()
   echo "</div>\n";  // end of details__informations__details1
 
   echo "<div class='object-container__informations__details2'>\n";
+  boxTitle ("Spell simulation");
 
   simulateSpell ($row);
 
-  echo "</div>\n";
+  echo "</div>\n";  // end of details-container
+
+  echo "</div>\n";  // end of details-container
 
   comment ('SPELL DETAILS');
 
+
+  echo "<div class='details-container' style='display:flex;'>\n";
+
+  spellTrainers ();
+  spellItemCasters ();
+  spellCasters ();
+
+  echo "</div>\n";  // end of details-container
+
   echo "<div class='object-container__items'>\n";
 
-  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
-
-
-  echo "<div class='object-container__items'>\n";
-
-  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell", "Name_enUS", $extras);
+  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell details", "Name_enUS", $extras);
 
   echo "</div>\n";  // end of object-container__items
-
 
   endOfPageCSS ();
 

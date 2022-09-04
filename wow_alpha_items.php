@@ -433,9 +433,7 @@ function showOneItem ()
 
 
   echo "<div class='object-container__items'>\n";
-
-    showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "", "name", $extras);
-
+  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item details", "name", $extras);
   echo "</div>\n";  // end of object-container__items
 
 
