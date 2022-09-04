@@ -96,8 +96,10 @@ echo "
 ?>
     </nav>
     <div class="menu-bar-social-container">
-      <a href=""><i class="menu-bar-social fab fa-github"></i></a>
-      <a href=""><i class="menu-bar-social fab fa-discord"></i></a>
+      <a href="https://github.com/The-Alpha-Project/alpha-core"
+              title="Alpha Core project on GitHub"><i class="menu-bar-social fab fa-github"></i></a>
+      <a href="https://discord.gg/RzBMAKU"
+              title="Invite to Alpha Core project on Discord"><i class="menu-bar-social fab fa-discord"></i></a>
     </div>
   </div>
   <nav class="header__nav"></nav>

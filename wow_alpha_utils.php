@@ -661,14 +661,7 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     echo "<div class='table-container'>";
 
   if ($description)
-    echo "
-      <div class='tiny-title'>
-        <h2 class='tiny-title__heading'>" . fixHTML ($description) . "</h2>
-        <div class='tiny-title__bar'></div>
-      </div>";
-
-
-
+    boxTitle ($description);
 
   if  (!$limit && preg_match ('|\.(.+)$|', $table, $matches))
     {
@@ -871,6 +864,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
   $imageWidth  = $imageSize [0];
   $imageHeight = $imageSize [1];
 
+  echo "<div class='map-container'>";
   echo "<img src='maps/{$mapName}.jpg' style='display:block;
         max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
         alt='{$mapName} map' title='{$mapName} map' >\n";
@@ -910,8 +904,8 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       } // end of if we have a mapName
 
     } // for each spawn point
-
-
+    echo "</div>\n";  // end of relative div
+    echo "<p>\n";
 } // end of showSpawnPoints
 
 function startElementInformation ($heading, $table, $uptop = false)
@@ -970,7 +964,7 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
 
 function comment ($what)
   {
-  echo "\n  <!-- " . str_replace ('--', '- -', $what) . " -->\n\n";
+  echo "\n  <!-- " . str_replace ('--', '- -', fixHTML ($what)) . " -->\n\n";
   } // end of comment
 
 function showItemCount ($n)
@@ -1257,14 +1251,11 @@ function startOfPageCSS ($pageType, $name, $goback)
     <div class='object-container page-content'>
       <div class='object-container__informations'>
         <div class='object-container__informations__details1'>
-          <div class='tiny-title'>
-            <h2 class='tiny-title__heading'>General</h2>
-            <div class='tiny-title__bar'></div>
-          </div>
-
-    <!-- CONTENT STARTS NOW ... -->
 
   ";
+  boxTitle ('General');
+  comment ('CONTENT STARTS NOW ...');
+
   } // end of startOfPageCSS
 
 function endOfPageCSS ()
@@ -1277,5 +1268,32 @@ function endOfPageCSS ()
   ";
 
   } // end of endOfPageCSS
+
+function showNoSpawnPoints ()
+  {
+    echo "
+   <div class='element-information'>
+   <h2  class='element-information__title'>Spawn points</h2>
+   <div class='element-information__bar'></div>
+    <div class='element-information__content'>
+        <ul>
+          <li>None</li>
+        </ul>
+      </div>
+    </div>
+    ";
+  }   // end of showNoSpawnPoints
+
+function boxTitle ($what)
+{
+  comment ("BOX TITLE: $what");
+  echo "
+    <div class='tiny-title'>
+    <h2 class='tiny-title__heading'>". fixHTML ($what) . "</h2>
+    <div class='tiny-title__bar'></div>
+  </div>
+  ";
+
+} // end of boxTitle
 
 ?>

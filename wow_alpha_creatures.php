@@ -81,6 +81,8 @@ function showOneCreature ()
 
   startOfPageCSS ('Creature', $name, 'creatures');
 
+  echo "<div class='object-container__informations__details1'>\n";
+
   // ---------------- IMAGE OF CREATURE -----------------
 
   for ($i = 1; $i <= 1; $i++)   // should be 4 lol  TODO
@@ -166,17 +168,7 @@ function showOneCreature ()
 
 
   if (!$count)
-    echo "
-   <div class='element-information'>
-   <h2  class='element-information__title'>Spawn points</h2>
-   <div class='element-information__bar'></div>
-    <div class='element-information__content'>
-        <ul>
-          <li>None</li>
-        </ul>
-      </div>
-    </div>
-    ";
+    showNoSpawnPoints ();
 
   comment ('END SPAWN POINTS');
 
@@ -335,7 +327,6 @@ function showOneCreature ()
       );
 
 
-
   // ---------------- LOOT-----------------
 
   comment ('LOOT');
@@ -458,7 +449,6 @@ function showOneCreature ()
            $row ['ChanceOrQuestChance'] . '%';
       } // end listing function
       );
-
 
 
   echo "</div>\n"; // details-container

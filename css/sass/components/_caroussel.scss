@@ -1,0 +1,42 @@
+.caroussel {
+  display: flex;
+  max-width: 272px;
+  overflow-x: scroll;
+  margin-left: 2%;
+  scroll-behavior: smooth;
+
+  position: relative;
+
+  & img {
+    border-radius: 20px 0px 0px 20px;
+  }
+
+  & a {
+  }
+
+  &__left-arrow {
+    position: absolute;
+    z-index: 50;
+    font-size: 3em;
+    color: $color6;
+    padding: 0px 10px;
+    top: 50%;
+    left: 278px;
+  }
+
+  &__right-arrow {
+    position: absolute;
+    z-index: 50;
+    font-size: 3em;
+    color: $color6;
+    padding: 0px 10px;
+    top: 50%;
+    left: 215px;
+  }
+
+  @include tiny-laptop-design {
+    & img {
+      border-radius: 0px 20px 0px 20px;
+    }
+  }
+}

@@ -54,16 +54,11 @@ function simulateItem ($id, $row)
   global $game_objects, $creatures, $zones, $quests, $spells, $skills;
   global $documentRoot, $executionDir;
 
+  comment ('SIMULATED ITEM CONTAINER');
 
-  echo "
-  <div class='object-container__informations__details2'>
-    <!-- SIMULATED ITEM CONTAINER -->
-    <div class='tiny-title'>
-      <h2 class='tiny-title__heading'>Simulated in-game view</h2>
-      <div class='tiny-title__bar'></div>
-    </div>
-    <div class='simulate_box item'>
-    ";
+  echo "<div class='object-container__informations__details2'>\n";
+  boxTitle ('Simulated in-game view');
+  echo "<div class='simulate_box item'>";
 
  // simulate item
 
@@ -252,6 +247,8 @@ function showOneItem ()
   $name = $row ['name'];
 
   startOfPageCSS ('Item', $name, 'items');
+  echo "<div class='object-container__informations__details1'>\n";
+
 
   echo "
     <!-- MODEL DISPLAY ID -->

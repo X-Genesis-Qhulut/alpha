@@ -1,4 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #303030;
   font-family: "Roboto", sans-serif;
@@ -563,6 +567,41 @@ a {
   border-radius: 20px;
 }
 
+.caroussel {
+  display: flex;
+  max-width: 272px;
+  overflow-x: scroll;
+  margin-left: 2%;
+  scroll-behavior: smooth;
+  position: relative;
+}
+.caroussel img {
+  border-radius: 20px 0px 0px 20px;
+}
+.caroussel__left-arrow {
+  position: absolute;
+  z-index: 50;
+  font-size: 3em;
+  color: #d9d9d9;
+  padding: 0px 10px;
+  top: 50%;
+  left: 278px;
+}
+.caroussel__right-arrow {
+  position: absolute;
+  z-index: 50;
+  font-size: 3em;
+  color: #d9d9d9;
+  padding: 0px 10px;
+  top: 50%;
+  left: 215px;
+}
+@media screen and (max-width: 1250px) {
+  .caroussel img {
+    border-radius: 0px 20px 0px 20px;
+  }
+}
+
 .main-container {
   background-color: #404040;
   width: 98%;
@@ -793,11 +832,23 @@ a {
   }
 }
 .object-container__informations aside {
+  display: flex;
+  max-width: 272px;
+  overflow-x: scroll;
   margin-left: 2%;
   position: relative;
 }
 .object-container__informations aside img {
   border-radius: 20px 0px 0px 20px;
+}
+.object-container__informations aside a:last-child {
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  z-index: 1000;
+}
+.object-container__informations aside a:last-child i {
+  font-size: 3em;
 }
 @media screen and (max-width: 1600px) {
   .object-container__informations__details1 {
@@ -838,6 +889,10 @@ a {
     margin-bottom: 20px;
     margin-top: 15px;
   }
+}
+
+.map-container {
+  position: relative;
 }
 
 /*# sourceMappingURL=styles.css.map */
