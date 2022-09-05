@@ -166,8 +166,6 @@ if ($action)
 else  // otherwise show a bigger menu
   mainPage ();
 
-// now the credits
-showCredits ();
 // wrap up web page
 
 ?>

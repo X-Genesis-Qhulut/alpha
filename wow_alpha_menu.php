@@ -420,12 +420,13 @@ function mainPage ()
                 <div class='medium-title__bar'></div>
               </div>
               <i class='card__icon fas fa-copyright'></i>
-              <div class='card__content' style='font-size:small;'>
-                Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.
+              <div class='card__content'>
+                <p>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</p>
                 <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
                 “for home, noncommercial and personal use only”.
-                <hr><b>Blizzard Entertainment®</b>
-                <p>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.
+                <hr>
+                <p><b>Blizzard Entertainment®</b></p>
+                <p>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</p>
 
               </div>
             </article>
