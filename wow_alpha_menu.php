@@ -421,13 +421,15 @@ function mainPage ()
               </div>
               <i class='card__icon fas fa-copyright'></i>
               <div class='card__content'>
+                <div style='font-size:smaller;'>
+
                 <p>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</p>
                 <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
                 “for home, noncommercial and personal use only”.
                 <hr>
                 <p><b>Blizzard Entertainment®</b></p>
                 <p>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</p>
-
+                </div>
               </div>
             </article>
             <!-- END CARD COPYRIGHT -->
