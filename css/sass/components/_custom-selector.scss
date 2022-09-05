@@ -6,6 +6,7 @@
   padding: 5px;
   margin-left: 5px;
   max-width: 165px;
+  @include input-shadow;
 
   @include tiny-laptop-design {
     max-width: 100px;

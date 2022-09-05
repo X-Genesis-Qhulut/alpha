@@ -6,6 +6,8 @@
   margin: 0 auto;
   margin-bottom: 20px;
   margin-top: 20px;
+  @include big-shadow;
+
   & th {
     padding: 5px 10px 5px 10px;
     text-align: left;

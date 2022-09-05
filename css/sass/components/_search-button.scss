@@ -6,7 +6,7 @@
   border-radius: 0px 20px 0px 0px;
   cursor: pointer;
   font-size: 1.5em;
-
+  @include button-shadow;
   & i {
     color: $color6;
   }

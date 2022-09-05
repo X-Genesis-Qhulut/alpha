@@ -81,7 +81,6 @@ function bookRelatedItem ($row)
 
   $page_text = PAGE_TEXT;
   $item_template = ITEM_TEMPLATE;
-
   boxTitle ('Related item');
 
  // find the page chains
@@ -113,14 +112,21 @@ function bookRelatedItem ($row)
           WHERE T1.entry = ?",
           array ('i', &$id));
 
+
+  echo "<ul>\n";
+
   if (!$itemRow)
     {
-    echo "<p>Cannot find an item linked to this page";
-    return;
+    echo "<li>Cannot find an item linked to this page";
+    }
+  else
+    {
+    echo "<li>Item with this text: ";
+    echo lookupThing ($items, $itemRow ['item_key'], 'show_item');
     }
 
-  echo "<p>Item with this text: ";
-  echo lookupThing ($items, $itemRow ['item_key'], 'show_item');
+  echo "</ul>\n";
+
 
   } // end of bookRelatedItem
 

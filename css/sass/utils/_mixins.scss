@@ -32,3 +32,27 @@
     @content;
   }
 }
+
+@mixin big-shadow {
+  box-shadow: 0px 0px 9px $color1;
+}
+
+@mixin medium-shadow {
+  box-shadow: 0px 0px 7px $color1;
+}
+
+@mixin tiny-shadow {
+  box-shadow: 0px 0px 6px $color11;
+}
+
+@mixin menu-shadow {
+  box-shadow: 0px 0px 4px $color11;
+}
+
+@mixin button-shadow {
+  box-shadow: 0px 0px 5px $color11;
+}
+
+@mixin input-shadow {
+  box-shadow: 0px 0px 5px $color1;
+}

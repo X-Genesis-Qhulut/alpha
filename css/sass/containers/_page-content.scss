@@ -1,13 +1,10 @@
 .page-content {
-  max-height: 85vh;
+  max-height: 84vh;
   overflow-y: scroll;
   height: 100%;
 
   @include laptop-design {
     padding: 20px;
-  }
-
-  @include tablet-design {
     max-height: 80vh;
   }
 

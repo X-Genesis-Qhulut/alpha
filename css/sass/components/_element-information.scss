@@ -46,6 +46,7 @@
     margin-bottom: 20px;
     margin-right: 10px;
     margin-left: 10px;
+    @include medium-shadow;
 
     & div:last-child {
       max-height: 260px;

@@ -7,9 +7,11 @@
   -ms-overflow-style: none; /* for Internet Explorer, Edge */
   scrollbar-width: none; /* for Firefox */
   position: relative;
+  background-color: transparent;
+  @include big-shadow;
+  border-radius: 20px 0px 0px 20px;
 
   & img {
-    border-radius: 20px 0px 0px 20px;
   }
 
   &__left-arrow {

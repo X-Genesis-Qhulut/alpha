@@ -3,6 +3,7 @@
   background-color: $color1;
   color: $color6;
   margin-bottom: 20px;
+  @include big-shadow;
 
   & th {
     padding: 5px 10px 5px 10px;

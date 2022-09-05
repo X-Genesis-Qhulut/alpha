@@ -24,6 +24,7 @@
       border-radius: 0px 20px 20px 0px;
       min-height: 450px;
       position: relative;
+      @include big-shadow;
 
       & div:first-child {
         position: absolute;
@@ -50,18 +51,7 @@
       flex-direction: column;
       // justify-content: space-evenly;
       border-radius: 20px;
-
-      & .simulate_box {
-        margin: 0 auto;
-        margin-top: 50px;
-        margin-bottom: 20px;
-        // border: unset;
-        // box-shadow: unset;
-
-        @include tablet-design {
-          margin-top: 20px;
-        }
-      }
+      @include big-shadow;
     }
 
     &__items {

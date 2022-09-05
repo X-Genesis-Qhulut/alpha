@@ -32,57 +32,18 @@ function reference_item_compare ($a, $b)
   return $items [$a ['refItem']] <=> $items [$b ['refItem']];
   } // end of reference_item_compare
 
-function showOneCreature ()
-  {
+
+function creatureTopLeft ($info)
+{
   global $id;
   global $documentRoot, $executionDir;
-  global $quests, $spells, $items;
 
-  $extras = array (
-        'spell_id1' => 'spell',
-        'spell_id2' => 'spell',
-        'spell_id3' => 'spell',
-        'spell_id4' => 'spell',
-        'faction'   => 'npc_faction',
-        'mechanic_immune_mask' => 'mechanic_mask',
-        'school_immune_mask' => 'school_mask',    // I think this might be out by one
-        'inhabit_type'  => 'inhabit_type_mask',
-        'movement_type' => 'movement_type',
-        'flags_extra'   => 'flags_extra_mask',
-        'npc_flags'     => 'npc_flags_mask',
-        'rank'          => 'rank',
-        'gold_min'      => 'gold',
-        'gold_max'      => 'gold',
-        'dmg_school'    => 'spell_school',
-        'base_attack_time'    => 'time',
-        'ranged_attack_time'    => 'time',
-        'type'    => 'creature_type',
+  $row = $info ['row'];
+  $extras = $info ['extras'];
+  $limit = $info ['limit'];
 
-         'static_flags'   => 'creature_static_flags',
-         'school_immune_mask' => 'mask',
-
- //       'trainer_spell' => 'spell',   // Hmmm, must have the wrong end of the stick here
-
-    );
-
-  // we need the creature info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
-
-  if ($row ['npc_flags'] & TRAINER_FLAG)
-    {
-    $extras  ['trainer_type'] = 'trainer_type';
-    $extras  ['trainer_class'] = 'class';
-    $extras  ['trainer_race'] = 'race';
-    }
-
-  $name = fixHTML ($row ['name']);
-  if ($row ['subname'])
-    $name .= fixHTML (' <' . $row ['subname'] . '>');
-
-  startOfPageCSS ('Creature', $name, 'creatures');
-
-  echo "<div class='object-container__informations__details1'>\n";
   boxTitle ('General');
+
 
   // ---------------- IMAGE OF CREATURE -----------------
 
@@ -110,28 +71,19 @@ function showOneCreature ()
       } // end of if non-zero display ID
     } // end of for all 4 possible display IDs
 
-  $limit = array (
-    'entry',
-    'display_id1',
-    'level_min',
-    'health_min',
-    'mana_min',
-    'armor',
-    'faction',
-    'npc_flags',
 
-  );
 
   comment ('SHORT LISTING OF FIELDS');
 
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
               $id, "", "name", $extras, $limit);
 
+} // end of creatureTopLeft
 
-  echo "</div>\n";  // end of details__informations__details1
-
-  echo "<div class='object-container__informations__details2'>\n";
-
+function creatureTopMiddle ($info)
+  {
+  global $id;
+  global $quests, $spells, $items;
 
   comment ('SPAWN POINTS - EASTERN KINGDOMS');
 
@@ -204,57 +156,52 @@ function showOneCreature ()
       );
 
 
-  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
+  } // end of creatureTopMiddle
 
+function creatureTopRight ($info)
+  {
+  global $id;
 
   comment ('SPAWN POINTS ON MAP');
 
-  echo "
-  <!-- CAROUSSEL -->
-  <aside class='caroussel'>
-      <a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
-      ><i class='fas fa-angle-left'></i
-      ></a>
-      <a class='caroussel__right-arrow' href='#Kalimdor_map'
-      ><i class='fas fa-angle-right'></i
-      ></a>
-";
+  comment ('EASTERN KINGDOMS');
 
-    comment ('EASTERN KINGDOMS');
+  $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
+           ' AND ignored = 0 ';
+  $param = array ('iiii', &$id, &$id, &$id, &$id);
 
-    $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
-             ' AND ignored = 0 ';
-    $param = array ('iiii', &$id, &$id, &$id, &$id);
+  // show spawn points - Eastern Kingdoms
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+        WHERE $where AND map = 0", $param) ;
 
-    // show spawn points - Eastern Kingdoms
-    $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-          WHERE $where AND map = 0", $param) ;
+  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
+                'position_x', 'position_y', 'position_z', 'map');
 
-    showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
-                  'position_x', 'position_y', 'position_z', 'map');
+  comment ('KALIMDOR');
 
-    comment ('KALIMDOR');
+  // show spawn points - Kalimdor
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+        WHERE $where AND map = 1", $param);
 
-    // show spawn points - Kalimdor
-    $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-          WHERE $where AND map = 1", $param);
-
-    showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
-                  'position_x', 'position_y', 'position_z', 'map');
+  showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
+                'position_x', 'position_y', 'position_z', 'map');
 
 
   comment ('END MAP SPAWN POINTS');
 
-  echo "  </aside>\n";
+  } // end of creatureTopRight
 
-  echo "</div>\n";  // end of object-container__informations (stuff at top)
+function creatureSpells ($info)
+{
+  global $id;
+  global $documentRoot, $executionDir;
+  global $spells;
 
-  echo "<div class='details-container' style='display:flex;'>\n";
+  $row = $info ['row'];
 
-  // ---------------- SPELL LISTS --------------
+   comment ('SPELLS THEY CAST');
 
-
-  comment ('SPELLS THEY CAST');
+  boxTitle ('Spells they cast');
 
   if ($row ['spell_list_id'])
     {
@@ -262,7 +209,6 @@ function showOneCreature ()
     if ($spellListRow)
       {
 
-      startElementInformation ('Casts these spells', CREATURE_SPELLS);
       echo "<ul>\n";
       for ($i = 1; $i <= 8; $i++)
         {
@@ -293,15 +239,16 @@ function showOneCreature ()
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
       echo "</ul>\n";
-      endElementInformation ();
 
       } // if we found the spell list
 
-
     } // end of if they had a spell_list_id
+} // end of creatureSpells
 
-
- // ---------------- VENDOR ITEMS -----------------
+function creatureVendorItems ($info)
+{
+  global $id;
+  global $items;
 
   comment ('VENDOR ITEMS');
 
@@ -318,8 +265,13 @@ function showOneCreature ()
         echo (" (limit $maxcount)");
       } // end listing function
       );
+} // end of creatureVendorItems
 
-  // ---------------- TRAINER ITEMS -----------------
+function creatureTrainer ($info)
+{
+  global $id, $spells;
+
+  $row = $info ['row'];
 
   comment ('WHAT THEY TRAIN');
 
@@ -335,11 +287,15 @@ function showOneCreature ()
       listThing ($spells, $row ['playerspell'], 'show_spell');
       } // end listing function
       );
+} // end of creatureTrainer
 
+function creatureQuestLoot ($info)
+{
+  global $id, $items;
 
-  // ---------------- LOOT-----------------
+  $row = $info ['row'];
 
-  comment ('LOOT');
+  comment ('QUEST LOOT');
 
   // show loot
 
@@ -347,47 +303,77 @@ function showOneCreature ()
   if (!$loot_id)
     $loot_id = $id;
 
-
   $creature_loot_template = CREATURE_LOOT_TEMPLATE;
   $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
 
   $results = dbQueryParam ("SELECT * FROM $creature_loot_template
-                            WHERE entry = ? AND mincountOrRef > 0",
+                            WHERE entry = ? AND mincountOrRef > 0 AND ChanceOrQuestChance < 0",
                             array ('i', &$loot_id));
 
-  // count quest items - they have a negative drop chance
-  $count = 0;
+  $count = count ($results);
   usort($results, 'item_compare');
-  foreach ($results as $lootRow)
-    if ($lootRow ['ChanceOrQuestChance'] < 0)
-        $count++;
 
   listItems ('Quest item loot', 'alpha_world.creature_loot_template', $count, $results,
     function ($row)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      if ($chance >= 0)
-        return true; // didn't list it
       echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
            -$chance . "%\n";
       } // end listing function
       );
 
-  // now do the other drops
-  // count of remaining items
-  $count = count ($results) - $count; // all items minus quest items
+} // end of creatureQuestLoot
+
+function creatureLoot ($info)
+{
+ global $id, $items;
+
+  $row = $info ['row'];
+
+  comment ('NON-QUEST LOOT');
+
+  // show loot
+
+  $loot_id = $row ['loot_id'];
+  if (!$loot_id)
+    $loot_id = $id;
+
+  $creature_loot_template = CREATURE_LOOT_TEMPLATE;
+  $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
+
+  $results = dbQueryParam ("SELECT * FROM $creature_loot_template
+                            WHERE entry = ? AND mincountOrRef > 0 AND ChanceOrQuestChance >= 0",
+                            array ('i', &$loot_id));
+
+  $count = count ($results);
+  usort($results, 'item_compare');
+
   listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
     function ($row)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      if ($chance < 0)
-        return true; // didn't list it
       echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
            $chance . "%\n";
       } // end listing function
       );
+} // end of creatureLoot
 
-  comment ('REFERENCE LOOT');
+function creatureReferenceLoot ($info)
+{
+ global $id, $items;
+
+  $row = $info ['row'];
+
+  comment ('NON-QUEST LOOT');
+
+  // show loot
+
+  $loot_id = $row ['loot_id'];
+  if (!$loot_id)
+    $loot_id = $id;
+
+  $creature_loot_template = CREATURE_LOOT_TEMPLATE;
+  $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
 
   // reference loot - the creature_loot_template table points to the reference_loot_template table
   // if the mincountOrRef field is negative, which may lead to multiple loot items for one reference
@@ -418,10 +404,15 @@ function showOneCreature ()
       } // end listing function
       );
 
+} // end of creatureReferenceLoot
 
-  // ---------------- PICK POCKETING LOOT -----------------
+function creaturePickpocketingLoot ($info)
+{
+ global $id, $items;
 
-  // show pickpocketing loot
+  $row = $info ['row'];
+
+    // show pickpocketing loot
 
   comment ('PICKPOCKETING LOOT');
 
@@ -439,10 +430,15 @@ function showOneCreature ()
       } // end listing function
       );
 
+} // end of creaturePickpocketingLoot
 
-  // ---------------- SKINNING LOOT -----------------
+function creatureSkinningLoot ($info)
+{
+ global $id, $items;
 
-  // show skinning loot
+  $row = $info ['row'];
+
+    // show skinning loot
 
   comment ('SKINNING LOOT');
 
@@ -460,22 +456,107 @@ function showOneCreature ()
       } // end listing function
       );
 
+} // end of creatureSkinningLoot
 
-  echo "</div>\n"; // details-container
+function creatureDetails ($info)
+  {
+  global $id;
 
-  comment ('NPC DETAILS');
+  $row = $info ['row'];
 
-  echo "<div class='object-container__items'>\n";
+  topSection    ($info, function ($info) use ($id)
+      {
+      topLeft   ($info, 'creatureTopLeft');
+      topMiddle ($info, 'creatureTopMiddle');
+      topRight  ($info , 'creatureTopRight');
+      });
 
-  showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
-              $id, "Database entry for NPC", "name", $extras);
-  echo "</div>\n";  // end of object-container__items
+  middleSection ($info, function ($info) use ($id, $row)
+      {
+      if ($row ['spell_list_id'])
+        middleDetails ($info, 'creatureSpells');
+      creatureVendorItems ($info);
+      creatureTrainer ($info);
+      creatureQuestLoot ($info);
+      creatureLoot ($info);
+      creatureReferenceLoot ($info);
+      creaturePickpocketingLoot ($info);
+      creatureSkinningLoot ($info);
+      });
 
-  endOfPageCSS ();
+  bottomSection ($info, function ($info) use ($id)
+      {
+      $extras = $info ['extras'];
+      showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry', $id,
+                  "Database entry for NPC", "name", $extras);
+      });
+
+  } // end of creatureDetails
+
+function showOneCreature ()
+  {
+  global $id;
+
+  // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+
+  $extras = array (
+        'spell_id1' => 'spell',
+        'spell_id2' => 'spell',
+        'spell_id3' => 'spell',
+        'spell_id4' => 'spell',
+        'faction'   => 'npc_faction',
+        'mechanic_immune_mask' => 'mechanic_mask',
+        'school_immune_mask' => 'school_mask',    // I think this might be out by one
+        'inhabit_type'  => 'inhabit_type_mask',
+        'movement_type' => 'movement_type',
+        'flags_extra'   => 'flags_extra_mask',
+        'npc_flags'     => 'npc_flags_mask',
+        'rank'          => 'rank',
+        'gold_min'      => 'gold',
+        'gold_max'      => 'gold',
+        'dmg_school'    => 'spell_school',
+        'base_attack_time'    => 'time',
+        'ranged_attack_time'    => 'time',
+        'type'    => 'creature_type',
+
+         'static_flags'   => 'creature_static_flags',
+         'school_immune_mask' => 'mask',
+
+ //       'trainer_spell' => 'spell',   // Hmmm, must have the wrong end of the stick here
+
+    );
 
 
+  if ($row ['npc_flags'] & TRAINER_FLAG)
+    {
+    $extras  ['trainer_type'] = 'trainer_type';
+    $extras  ['trainer_class'] = 'class';
+    $extras  ['trainer_race'] = 'race';
+    }
+
+  $name = $row ['name'];
+  if ($row ['subname'])
+    $name .= ' <' . $row ['subname'] . '>';
+
+  $limit = array (
+    'entry',
+    'display_id1',
+    'level_min',
+    'health_min',
+    'mana_min',
+    'armor',
+    'faction',
+    'npc_flags',
+
+  );
+
+  // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => $limit);
+
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Creature', $name, 'creatures', 'creatureDetails');
   } // end of showOneCreature
-
 
 function showCreatures ()
   {

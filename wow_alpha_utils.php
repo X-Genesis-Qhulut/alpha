@@ -931,7 +931,8 @@ function endElementInformation ($uptop = false)
   echo "</div>";
 
   if (!$uptop)
-    echo "</div>\n";
+    endDiv ('element-information element-information--independant');
+
   } // end of endElementInformation
 
 function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName)
@@ -962,8 +963,9 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     } // end of foreach
 
   echo "</ul>\n";
-  echo "</div>\n";    // end of element-information__content
-  echo "</div>\n";    // end of element-information
+
+  endDiv ('element-information__content');
+  endDiv ('element-information');
 
   return $count;
   } // end of listSpawnPoints
@@ -1306,10 +1308,27 @@ function endOfPageCSS ()
 
   } // end of endOfPageCSS
 
+function endDiv ($what)
+{
+    echo "</div>  <!-- End of: " . str_replace ('--', '—', $what) . " -->\n\n";
+}
+
+function getFunctionName ($func)
+  {
+  if (is_string ($func))
+    $funcName = ': ' . $func;
+  else
+    $funcName = '';
+  return $funcName;
+  } // end of getFunctionName
+
 // OUTER CONTAINER (WHOLE PAGE EXCEPT FOR MENU)
-function pageContent ($row, $pageType, $name, $goback, $func)
+function pageContent ($userInfo, $pageType, $name, $goback, $func)
   {
   $searchURI = makeSearchURI (true);
+
+  $funcName = getFunctionName ($func);
+
 
   echo "
   <!-- PAGE CONTAINER-->
@@ -1321,12 +1340,12 @@ function pageContent ($row, $pageType, $name, $goback, $func)
         <a href='?action=$goback$searchURI' class='page-title__goback'>
           <i class='fas fa-angle-left'></i>
         </a>
-        <h1>$name</h1>
+        <h1>" . fixHTML ($name) . "</h1>
       </div>
       <div>
         <i class='page-title__database fas fa-database'></i>
         <i class='page-title__angle fas fa-angle-right'></i>
-        <p class='page-title__table'>$pageType</p>
+        <p class='page-title__table'>" . fixHTML ($pageType) . "</p>
       </div>
     </div>
     <!-- END PAGE TITLE -->
@@ -1334,9 +1353,9 @@ function pageContent ($row, $pageType, $name, $goback, $func)
     <!-- PAGE CONTENT -->
     <div class='object-container page-content'>
   ";
-  comment ('CONTENT STARTS NOW ...');
+  comment ("CONTENT STARTS NOW$funcName");
 
-  $func ($row);   // output contents
+  $func ($userInfo);   // output contents
 
   comment ('CONTENT FINISHED');
 
@@ -1347,84 +1366,116 @@ function pageContent ($row, $pageType, $name, $goback, $func)
   } // end of pageContent
 
 // TOP ROW OF DETAILS
-function topSection ($row, $func)
+function topSection ($userInfo, $func)
 {
-  comment ("TOP ROW OF DETAILS");
+
+  $funcName = getFunctionName ($func);
+
+  comment ("TOP ROW OF DETAILS$funcName");
 
   echo "<div class='object-container__informations'>\n";
 
-  $func ($row);   // output contents
+  $func ($userInfo);   // output contents
 
-  echo "</div>\n";  // end of object-container__informations
+  endDiv ('object-container__informations');
 
 } // end of topSection
 
 // THIS GOES INSIDE: topSection
-function topLeft ($row, $func)
+function topLeft ($userInfo, $func)
 {
-  comment ("TOP-LEFT BOX");
+  $funcName = getFunctionName ($func);
+
+  comment ("TOP-LEFT BOX$funcName");
 
   echo "<div class='object-container__informations__details1'>\n";
 
-  $func ($row);   // output contents
+  $func ($userInfo);   // output contents
 
-  echo "</div>\n";  // end of object-container__informations__details1
+  endDiv ('object-container__informations__details1');
 
 } // end of topLeft
 
 // THIS GOES INSIDE: topSection
-function topMiddle ($row, $func)
+function topMiddle ($userInfo, $func)
 {
-  comment ("TOP-MIDDLE BOX");
+  $funcName = getFunctionName ($func);
+
+  comment ("TOP-MIDDLE BOX$funcName");
 
   echo "<div class='object-container__informations__details2'>\n";
 
-  $func ($row);   // output contents
+  $func ($userInfo);   // output contents
 
-  echo "</div>\n";  // end of object-container__informations__details2
+  endDiv ('object-container__informations__details2');
+
+} // end of topLeft
+
+
+// THIS GOES INSIDE: topSection
+function topRight ($userInfo, $func)
+{
+  $funcName = getFunctionName ($func);
+
+  comment ("TOP-RIGHT BOX : CAROUSSEL$funcName");
+
+  echo "<aside class='caroussel'>\n";
+
+  $func ($userInfo);   // output contents
+
+  echo "</caroussel>\n";  // end of caroussel
 
 } // end of topLeft
 
 // THIS IS AFTER: topSection
-function middleSection ($row, $func)
+function middleSection ($userInfo, $func)
 {
-  comment ("MIDDLE ROW");
+  $funcName = getFunctionName ($func);
+
+  comment ("MIDDLE ROW$funcName");
 
   echo "<div class='details-container'>\n";
 
-  $func ($row);   // output contents
+  $func ($userInfo);   // output contents
 
-  echo "</div>\n";    // end of details-container
+  endDiv ('details-container');
 
 } // end of middleSection
 
-function middleDetails ($row, $func)
+function middleDetails ($userInfo, $func)
 {
-  comment ("DETAILS IN MIDDLE");
+  $funcName = getFunctionName ($func);
+
+  comment ("DETAILS IN MIDDLE$funcName");
 
   echo "<div class='element-information element-information--independant'>\n";
+  echo "  <div class='element-information__content'>\n";
 
-  $func ($row);   // output contents
+  $func ($userInfo);   // output contents
 
-  echo "</div>\n";    // end of element-information
+  endDiv ('element-information__content');
+  endDiv ('element-information element-information--independant');
 
 } // end of middleDetails
 
-function bottomSection ($row, $func)
+function bottomSection ($userInfo, $func)
 {
-  comment ("DETAILS AT BOTTOM");
+  $funcName = getFunctionName ($func);
+
+  comment ("DETAILS AT BOTTOM$funcName");
 
   echo "<div class='table-container'>\n";
 
-  $func ($row);   // output contents
+  $func ($userInfo);   // output contents
 
-  echo "</div>\n";    // end of table-container
-
+  endDiv ('table-container');
 
 } // end of bottomSection
 
 function showNoSpawnPoints ()
   {
+  comment ('NO SPAWN POINTS MESSAGE');
+
     echo "
    <div class='element-information'>
    <h2  class='element-information__title'>Spawn points</h2>
@@ -1445,8 +1496,9 @@ function boxTitle ($what)
     <div class='tiny-title'>
     <h2 class='tiny-title__heading'>". fixHTML ($what) . "</h2>
     <div class='tiny-title__bar'></div>
-  </div>
   ";
+
+  endDiv ('tiny-title');
 
 } // end of boxTitle
 
