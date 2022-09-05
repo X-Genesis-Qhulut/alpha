@@ -163,8 +163,8 @@ if ($action)
     ShowWarning ('Unknown action');
  // echo "<hr><a href='$PHP_SELF'>Main Menu</a>\n";
   }
-//else  // otherwise show a bigger menu
-//  showBigMenu ();
+else  // otherwise show a bigger menu
+  mainPage ();
 
 // now the credits
 showCredits ();
