@@ -683,8 +683,10 @@ a {
   color: #d9d9d9;
   margin: 0 auto;
   max-width: 30em;
-  background-color: #242424;
-  padding: 10px;
+  background-color: #303030;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
   max-width: 40em;
   border: 1px solid #1e1e1e;
   border-radius: 10px;
@@ -735,6 +737,11 @@ a {
   margin-top: 6px;
 }
 
+@media screen and (max-width: 1600px) {
+  .page_text {
+    max-width: 450px;
+  }
+}
 .spawn_point {
   position: absolute;
 }

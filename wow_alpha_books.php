@@ -47,32 +47,17 @@ function showText ()
 function bookTopLeft ($row)
 {
   global $id, $item, $items;
-
-
   boxTitle ('General');
-
   showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array (),
                 array ('entry', 'next_page'));
-
-
-
 } // end of bookTopLeft
 
 function bookTopMiddle ($row)
 {
   global $id, $item, $items;
-
-  $page_text = PAGE_TEXT;
-  $item_template = ITEM_TEMPLATE;
-
-
   boxTitle ('In-game view');
   simulateBookPage ($row);
-
-
 } // end of bookTopMiddle
-
-
 
 
 function bookRelatedItem ($row)
@@ -158,7 +143,7 @@ function showOneBook ()
   // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".PAGE_TEXT." WHERE entry = ?", array ('i', &$id));
 
-  pageContent ($row, 'Page', "Page $id", 'books', 'bookDetails');
+  pageContent ($row, 'Page', "Page $id", 'books', 'bookDetails', PAGE_TEXT);
   } // end of showOneBook
 
 function showBooks ()

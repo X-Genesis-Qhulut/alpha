@@ -71,10 +71,7 @@ function creatureTopLeft ($info)
       } // end of if non-zero display ID
     } // end of for all 4 possible display IDs
 
-
-
   comment ('SHORT LISTING OF FIELDS');
-
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
               $id, "", "name", $extras, $limit);
 
@@ -169,6 +166,9 @@ function creatureTopRight ($info)
   $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
            ' AND ignored = 0 ';
   $param = array ('iiii', &$id, &$id, &$id, &$id);
+
+  doArrowsForMap (SPAWNS_CREATURES, $where, $param, 'map');
+
 
   // show spawn points - Eastern Kingdoms
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
@@ -555,7 +555,7 @@ function showOneCreature ()
   $info = array ('row' => $row, 'extras' => $extras, 'limit' => $limit);
 
   // ready to go! show the page info and work our way down into the sub-functions
-  pageContent ($info, 'Creature', $name, 'creatures', 'creatureDetails');
+  pageContent ($info, 'Creature', $name, 'creatures', 'creatureDetails', CREATURE_TEMPLATE);
   } // end of showOneCreature
 
 function showCreatures ()

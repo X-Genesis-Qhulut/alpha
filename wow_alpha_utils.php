@@ -263,7 +263,7 @@ echo "
       <div class='big-title'>
         <i class='page-title__database fas fa-database'></i>
         <i class='page-title__angle fas fa-angle-right'></i>
-        <h1 class='big-title__heading'>" . fixHTML ($description) . "</h1>
+        <h1 class='big-title__heading' title='" . fixHTML ($table) . "'>" . fixHTML ($description) . "</h1>
       </div>
       <!-- SEARCH CONTAINER -->
       <div class='search-container'>
@@ -910,7 +910,9 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       } // end of if we have a mapName
 
     } // for each spawn point
-    echo "</div>\n";  // end of relative div
+
+    endDiv ('map-container');
+
 } // end of showSpawnPoints
 
 function startElementInformation ($heading, $table, $uptop = false)
@@ -1310,7 +1312,7 @@ function endOfPageCSS ()
 
 function endDiv ($what)
 {
-    echo "</div>  <!-- End of: " . str_replace ('--', '—', $what) . " -->\n\n";
+    echo "</div>  <!-- End of DIV: " . str_replace ('--', '—', $what) . " -->\n\n";
 }
 
 function getFunctionName ($func)
@@ -1323,7 +1325,7 @@ function getFunctionName ($func)
   } // end of getFunctionName
 
 // OUTER CONTAINER (WHOLE PAGE EXCEPT FOR MENU)
-function pageContent ($userInfo, $pageType, $name, $goback, $func)
+function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
   {
   $searchURI = makeSearchURI (true);
 
@@ -1345,7 +1347,7 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func)
       <div>
         <i class='page-title__database fas fa-database'></i>
         <i class='page-title__angle fas fa-angle-right'></i>
-        <p class='page-title__table'>" . fixHTML ($pageType) . "</p>
+        <p class='page-title__table' title='" . fixHTML ($table) . "'>" . fixHTML ($pageType) . "</p>
       </div>
     </div>
     <!-- END PAGE TITLE -->
@@ -1501,5 +1503,29 @@ function boxTitle ($what)
   endDiv ('tiny-title');
 
 } // end of boxTitle
+
+function doArrowsForMap ($table, $where, $param, $mName)
+{
+  // see if we need arrows
+  $results = dbQueryParam ("SELECT * FROM $table WHERE $where", $param);
+
+  $map0 = 0;
+  $map1 = 0;
+  foreach ($results as $spawnRow)
+    if ($spawnRow [$mName] == 0)
+      $map0 ++;   // Eastern Kingdoms
+    elseif ($spawnRow [$mName] == 1)
+      $map1 ++;   // Kalimdor
+
+  if ($map0)
+    echo "<a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
+    ><i class='fas fa-angle-left'></i></a>\n";
+
+  if ($map1)
+   echo "<a class='caroussel__right-arrow' href='#Kalimdor_map'
+    ><i class='fas fa-angle-right'></i></a>\n";
+
+
+} // end of doArrowsForMap
 
 ?>

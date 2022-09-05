@@ -4,8 +4,10 @@
   color: $color6;
   margin: 0 auto;
   max-width: 30em;
-  background-color: $color2;
-  padding: 10px;
+  background-color: $color1;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
   max-width: 40em;
   border: 1px solid $color11;
   border-radius: 10px;
@@ -27,11 +29,14 @@
 /* Extra stuff for simulated quests */
 
 .quest {
+  //   background-color: $color2;
+  //   color: $color6;
 }
 
 .page_text {
   font-family: serif;
   font-size: larger;
+  //   max-width: 800px;
 }
 
 .read_page a {
@@ -68,4 +73,10 @@
 .links_at_top {
   font-size: smaller;
   margin-top: 6px;
+}
+
+@include laptop-design {
+  .page_text {
+    max-width: 450px;
+  }
 }

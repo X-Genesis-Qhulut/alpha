@@ -11,13 +11,14 @@
 
 // See: https://github.com/cmangos/issues/wiki/gameobject_template
 
-function simulateGameObject ($id, $row)
+function simulateGameObject ($info)
   {
+  global $id;
   global $maps, $quests;
 
-  comment ('SIMULATE GAME OBJECT');
+  $row = $info ['row'];
 
-  startElementInformation ('Info', GAMEOBJECT_TEMPLATE);
+  comment ('SIMULATE GAME OBJECT');
 
   // SIMULATE GAME OBJECT
 
@@ -41,11 +42,9 @@ function simulateGameObject ($id, $row)
       }
     } // end of chest
 
-  echo "</div>\n";    // end of simulation box
+  endDiv ('simulate_box gameobject');
 
-  endElementInformation ();
-
-  } // end of simulateGameObject
+    } // end of simulateGameObject
 
 
 function listGameObjectSpawnPoints ($id)
@@ -88,48 +87,6 @@ function listGameObjectSpawnPoints ($id)
   comment ('END SPAWN POINTS');
 } // end of listGameObjectSpawnPoints
 
-function showGameObjectSpawnPoints ($id)
-{
-  comment ('SPAWN POINTS ON MAP');
-
-  echo "
-  <!-- CAROUSSEL -->
-  <aside class='caroussel'>
-      <a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
-      ><i class='fas fa-angle-left'></i
-      ></a>
-      <a class='caroussel__right-arrow' href='#Kalimdor_map'
-      ><i class='fas fa-angle-right'></i
-      ></a>
-";
-
-  $where = 'spawn_entry = ? AND ignored = 0';
-  $param = array ('i', &$id);
-
-  comment ('EASTERN KINGDOMS');
-
-  // show spawn points - Eastern Kingdoms
-  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
-        WHERE $where AND spawn_map = 0", $param) ;
-
-  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
-                'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
-
-  comment ('KALIMDOR');
-
-  // show spawn points - Kalimdor
-  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
-        WHERE $where AND spawn_map = 1", $param);
-
-  showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
-                'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
-
-
-  comment ('END MAP SPAWN POINTS');
-  echo "  </aside>\n";
-
-
-} // end of showGameObjectSpawnPoints
 
 // ---------------- QUESTS -----------------
 
@@ -179,12 +136,12 @@ function listGameObjectQuests ($id)
       , true  // goes up top, slightly different CSS
       );
 
-  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
-
 } // end of listGameObjectQuests
 
-function showGameObjectLoot ($row)
+function showGameObjectLoot ($info)
 {
+    $row = $info ['row'];
+
    // ---------------- CHEST LOOT -----------------
 
   // show chest loot, which includes mining and herb nodes
@@ -248,7 +205,7 @@ function showGameObjectModel ($row)
 
 } // end of showGameObjectModel
 
-function showOneGameObject ()
+function showOneGameObjectxxxx ()
   {
   global $id;
 
@@ -258,9 +215,124 @@ function showOneGameObject ()
 
   startOfPageCSS ('Game object', $name, 'game_objects');
   echo "<div class='object-container__informations__details1'>\n";
-  boxTitle ('General');
+
+  echo "</div>\n";  // end of details__informations__details1
+
+  echo "<div class='object-container__informations__details2'>\n";
+  echo "</div>\n";  // end of object-container__informations (stuff at top)
+
+  echo "<div class='details-container' style='display:flex;'>\n";
+  simulateGameObject ($id, $row);
+  showGameObjectLoot ($row);
+  echo "</div>\n"; // details-container
+
+  comment ('GAME OBJECT DETAILS');
+  echo "<div class='object-container__items'>\n";
+  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry',
+              $id, "Database entry for Game Object", "name", $extras);
+  echo "</div>\n";  // end of object-container__items
+
+  endOfPageCSS ();
+
+  } // end of showOneGameObjectxxxx
+
+function gameobjectTopLeft ($info)
+{
+  global $id;
+
+  $row = $info ['row'];
+  $extras = $info ['extras'];
+  $limit = $info ['limit'];
+
+ boxTitle ('General');
 
   showGameObjectModel ($row);
+
+  comment ('SHORT LISTING OF FIELDS');
+  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry',
+              $id, "", "name", $extras, $limit);
+
+} // end of gameobjectTopLeft
+
+function gameobjectTopMiddle ($info)
+{
+  global $id;
+
+  listGameObjectSpawnPoints ($id);
+  listGameObjectQuests ($id);
+
+} // end of gameobjectTopMiddle
+
+function gameobjectTopRight ($info)
+{
+  global $id;
+
+  comment ('SPAWN POINTS ON MAP');
+
+
+  $where = 'spawn_entry = ? AND ignored = 0';
+  $param = array ('i', &$id);
+
+  doArrowsForMap (SPAWNS_GAMEOBJECTS, $where, $param, 'spawn_map');
+
+  comment ('EASTERN KINGDOMS');
+
+  // show spawn points - Eastern Kingdoms
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
+        WHERE $where AND spawn_map = 0", $param) ;
+
+  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
+                'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+
+  comment ('KALIMDOR');
+
+  // show spawn points - Kalimdor
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
+        WHERE $where AND spawn_map = 1", $param);
+
+  showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
+                'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+
+
+  comment ('END MAP SPAWN POINTS');
+
+} // end of gameobjectTopRight
+
+function gameobjectDetails ($info)
+  {
+  global $id;
+
+  $row = $info ['row'];
+
+  topSection    ($info, function ($info) use ($id)
+      {
+      topLeft   ($info, 'gameobjectTopLeft');
+      topMiddle ($info, 'gameobjectTopMiddle');
+      topRight  ($info , 'gameobjectTopRight');
+      });
+
+  middleSection ($info, function ($info) use ($id, $row)
+      {
+      middleDetails ($info, 'simulateGameObject');
+      listGameObjectQuests ($info);
+      showGameObjectLoot ($info);
+      });
+
+  bottomSection ($info, function ($info) use ($id)
+      {
+      $extras = $info ['extras'];
+      showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry', $id,
+                  "Database entry for game object", "name", $extras);
+      });
+
+  } // end of gameobjectDetails
+
+function showOneGameobject ()
+  {
+  global $id;
+
+ // we need the game object info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
   // this is the short summary fields
   $limit = array (
@@ -277,32 +349,14 @@ function showOneGameObject ()
         'type' => 'gameobject_type',
   );
 
-  comment ('SHORT LISTING OF FIELDS');
-  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry',
-              $id, "", "name", $extras, $limit);
+  $name = $row ['name'];
 
-  echo "</div>\n";  // end of details__informations__details1
+  // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => $limit);
 
-  echo "<div class='object-container__informations__details2'>\n";
-  listGameObjectSpawnPoints ($id);
-  listGameObjectQuests ($id);
-  showGameObjectSpawnPoints ($id);
-  echo "</div>\n";  // end of object-container__informations (stuff at top)
-
-  echo "<div class='details-container' style='display:flex;'>\n";
-  simulateGameObject ($id, $row);
-  showGameObjectLoot ($row);
-  echo "</div>\n"; // details-container
-
-  comment ('GAME OBJECT DETAILS');
-  echo "<div class='object-container__items'>\n";
-  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry',
-              $id, "Database entry for Game Object", "name", $extras);
-  echo "</div>\n";  // end of object-container__items
-
-  endOfPageCSS ();
-
-  } // end of showOneGameObject
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Gameobject', $name, 'game_objects', 'gameobjectDetails', GAMEOBJECT_TEMPLATE);
+  } // end of showOneGameobject
 
 
 function showGameObjects ()
