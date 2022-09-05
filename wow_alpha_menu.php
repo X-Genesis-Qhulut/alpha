@@ -129,6 +129,24 @@ function mainPage ()
   $worldUpdate = convertDate ($latest_world);
 
   echo "
+      <!-- PAGE CONTAINER-->
+      <section class='main-page-container'>
+       <!-- PAGE TITLE -->
+        <div class='page-title'>
+          <div class='big-title'>
+            <h1 class='big-title__heading'>Alpha Core Database Browser</h1>
+            <div class='big-title__bar'></div>
+            <div class='big-title__subtitle'>
+              World Of Warcraft - Version 3368 0.5.3
+            </div>
+          </div>
+          <div>
+            <i class='page-title__database fas fa-database'></i>
+          </div>
+        </div>
+        <!-- END PAGE TITLE -->
+
+
         <!-- PAGE CONTENT -->
         <div class='creature-details page-content'>
           <div class='cards-container'>
@@ -395,15 +413,13 @@ function mainPage ()
               </div>
             </article>
             <!-- END CARD FRONTEND -->
-
-
             <!-- CARD COPYRIGHT -->
             <article class='card'>
               <div class='medium-title'>
                 <h2 class='medium-title__heading'>Copyright</h2>
                 <div class='medium-title__bar'></div>
               </div>
-              <i class='card__icon fas fa-tools'></i>
+              <i class='card__icon fas fa-copyright'></i>
               <div class='card__content' style='font-size:small;'>
                 Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.
                 <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
@@ -414,8 +430,6 @@ function mainPage ()
               </div>
             </article>
             <!-- END CARD COPYRIGHT -->
-
-
           </div>
         </div>
         <!-- END PAGE CONTENT -->
