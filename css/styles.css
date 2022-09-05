@@ -474,6 +474,15 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: right;
+  position: relative;
+}
+.search-bar span {
+  color: #d45555;
+  font-size: 0.8em;
+  position: absolute;
+  bottom: -17px;
+  right: 0%;
+  white-space: nowrap;
 }
 .search-bar__main {
   display: flex;

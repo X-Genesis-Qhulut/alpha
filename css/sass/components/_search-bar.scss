@@ -2,6 +2,17 @@
   display: flex;
   flex-direction: column;
   justify-content: right;
+  position: relative;
+
+  & span {
+    color: $color9;
+    font-size: 0.8em;
+    position: absolute;
+    bottom: -17px;
+    right: 0%;
+    white-space: nowrap;
+  }
+
   &__main {
     display: flex;
     // flex-direction: column;

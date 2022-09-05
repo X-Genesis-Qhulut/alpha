@@ -170,7 +170,7 @@ function columns_compare ($a, $b)
   return $a ['Field'] <=> $b ['Field'];
   } // end of columns_compare
 
-function showSearchForm ($description, $sortFields, $headings, $results, $table, $where)
+function showSearchForm ($description, $sortFields, $headings, $results, $table, $where, $searchError)
   {
   global $filter, $action, $sort_order, $params, $page, $matches;
   global $filter_column, $filter_compare, $filter_value;
@@ -271,7 +271,12 @@ echo "
         <form method='post' action='$PHP_SELF'>
             <input Type=hidden Name=action Value='$action'>
             <input Type=hidden Name=page Value='$page'>
-            <div class='search-bar'>
+            <div class='search-bar'>";
+  // error message here
+
+if ($searchError)
+  echo "<span>" . fixHTML ($searchError) . "</span>\n";
+echo "
             <div class='search-bar__main'>
               <input
                 class='custom-input'
@@ -513,6 +518,7 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
   $params = array ();
   $params [0] = '';
   $filter = trim ($filter);
+  $searchError = '';
 
   if ($filter)
     {
@@ -522,7 +528,7 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
       {
       $warnings = error_get_last();
       $warning = $warnings ['message'];
-      ShowWarning ("Error evaluating regular expression: $filter\n\n$warning\n\nFilter ignored.");
+      $searchError = "Error evaluating regular expression: $filter\n\n$warning.\n\nFILTER IGNORED.";
       } // if not OK
     else
       {
@@ -558,8 +564,7 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
       {
       if (!preg_match ('/\s*([+\-]?\d+)(\s*,([+\-]?\d+))*\s*$/', $filter_value))
         {
-        ShowWarningH ('Filter comparison value "' . fixHTML ($filter_value)  . '" not a series of comma-separated numbers: ' .
-                     "<br><br><b>Secondary</b> filter ignored.");
+        $searchError = 'Filter comparison value "' . $filter_value  . '" not a series of comma-separated numbers. SECONDARY FILTER IGNORED.';
         }
       else
         {
@@ -573,8 +578,8 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
       {
       if (!preg_match ('/\s*([+\-]?\d+)\s+to\s+([+\-]?\d+)\s*$/i', $filter_value, $matches))
         {
-        ShowWarningH ('Filter comparison value "' . fixHTML ($filter_value) . '" not in format: (number) TO (number) '  .
-                     "<br><br><b>Secondary</b> filter ignored.");
+        $searchError = 'Filter comparison value "' . $filter_value . '" not in format: (number) TO (number). '  .
+                     'SECONDARY FILTER IGNORED.';
         }
       else
         {
@@ -589,8 +594,7 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
       {
       if (!preg_match ('/(^[+\-]?\d+$)|(^0[xX][0-9A-Fa-f]+$)|(^0[bB][01]+$)|^[+\-]?(\d*\.)?(\d+)$/', $filter_value))
         {
-        ShowWarningH ('Filter comparison value "'. fixHTML ($filter_value)  . '" not decimal, float, hex or binary number: ' .
-                     "<br><br><b>Secondary</b> filter ignored.");
+        $searchError = 'Filter comparison value "'. $filter_value  . '" not decimal, float, hex or binary number. SECONDARY FILTER IGNORED.';
         }
       else
         {
@@ -619,7 +623,7 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
                             $params);
 
   // now show the search form
-  if (!showSearchForm ($description, $sortFields, $headings, $results, $table, $where . ' ' . $extraWhere))
+  if (!showSearchForm ($description, $sortFields, $headings, $results, $table, $where . ' ' . $extraWhere, $searchError))
     {
     comment ("SETTING UP SEARCH FORM FAILED");
     return false;
@@ -966,7 +970,7 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
 
 function comment ($what)
   {
-  echo "\n  <!-- " . str_replace ('--', '- -', fixHTML ($what)) . " -->\n\n";
+  echo "\n  <!-- " . str_replace ('--', '—', $what) . " -->\n\n";
   } // end of comment
 
 function showItemCount ($n)
@@ -1301,6 +1305,123 @@ function endOfPageCSS ()
   ";
 
   } // end of endOfPageCSS
+
+// OUTER CONTAINER (WHOLE PAGE EXCEPT FOR MENU)
+function pageContent ($row, $pageType, $name, $goback, $func)
+  {
+  $searchURI = makeSearchURI (true);
+
+  echo "
+  <!-- PAGE CONTAINER-->
+  <section class='main-page-container'>
+
+    <!-- PAGE TITLE -->
+    <div class='page-title'>
+      <div>
+        <a href='?action=$goback$searchURI' class='page-title__goback'>
+          <i class='fas fa-angle-left'></i>
+        </a>
+        <h1>$name</h1>
+      </div>
+      <div>
+        <i class='page-title__database fas fa-database'></i>
+        <i class='page-title__angle fas fa-angle-right'></i>
+        <p class='page-title__table'>$pageType</p>
+      </div>
+    </div>
+    <!-- END PAGE TITLE -->
+
+    <!-- PAGE CONTENT -->
+    <div class='object-container page-content'>
+  ";
+  comment ('CONTENT STARTS NOW ...');
+
+  $func ($row);   // output contents
+
+  comment ('CONTENT FINISHED');
+
+  echo "
+  </div>  <!-- END PAGE CONTENT -->
+  </section>  <!-- END PAGE CONTAINER-->
+  ";
+  } // end of pageContent
+
+// TOP ROW OF DETAILS
+function topSection ($row, $func)
+{
+  comment ("TOP ROW OF DETAILS");
+
+  echo "<div class='object-container__informations'>\n";
+
+  $func ($row);   // output contents
+
+  echo "</div>\n";  // end of object-container__informations
+
+} // end of topSection
+
+// THIS GOES INSIDE: topSection
+function topLeft ($row, $func)
+{
+  comment ("TOP-LEFT BOX");
+
+  echo "<div class='object-container__informations__details1'>\n";
+
+  $func ($row);   // output contents
+
+  echo "</div>\n";  // end of object-container__informations__details1
+
+} // end of topLeft
+
+// THIS GOES INSIDE: topSection
+function topMiddle ($row, $func)
+{
+  comment ("TOP-MIDDLE BOX");
+
+  echo "<div class='object-container__informations__details2'>\n";
+
+  $func ($row);   // output contents
+
+  echo "</div>\n";  // end of object-container__informations__details2
+
+} // end of topLeft
+
+// THIS IS AFTER: topSection
+function middleSection ($row, $func)
+{
+  comment ("MIDDLE ROW");
+
+  echo "<div class='details-container'>\n";
+
+  $func ($row);   // output contents
+
+  echo "</div>\n";    // end of details-container
+
+} // end of middleSection
+
+function middleDetails ($row, $func)
+{
+  comment ("DETAILS IN MIDDLE");
+
+  echo "<div class='element-information element-information--independant'>\n";
+
+  $func ($row);   // output contents
+
+  echo "</div>\n";    // end of element-information
+
+} // end of middleDetails
+
+function bottomSection ($row, $func)
+{
+  comment ("DETAILS AT BOTTOM");
+
+  echo "<div class='table-container'>\n";
+
+  $func ($row);   // output contents
+
+  echo "</div>\n";    // end of table-container
+
+
+} // end of bottomSection
 
 function showNoSpawnPoints ()
   {

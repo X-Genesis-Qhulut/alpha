@@ -42,30 +42,47 @@ function showText ()
     if (array_key_exists ($id, $shown))
       break;
     } // end of while each page
-
-  echo "<p>Item containing this text: ";
-  echo lookupThing ($items, $item, 'show_item');
 } // end of showText
 
-
-function showOneBook ()
-  {
-  global $id, $items;
-
-  $item_template = ITEM_TEMPLATE;
-  $page_text = PAGE_TEXT;
-
-  // we need the item info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".PAGE_TEXT." WHERE entry = ?", array ('i', &$id));
+function bookTopLeft ($row)
+{
+  global $id, $item, $items;
 
 
-  startOfPageCSS ('Page', "Page $id", 'books');
-  echo "<div class='object-container__informations__details1'>\n";
   boxTitle ('General');
 
   showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array (),
                 array ('entry', 'next_page'));
 
+
+
+} // end of bookTopLeft
+
+function bookTopMiddle ($row)
+{
+  global $id, $item, $items;
+
+  $page_text = PAGE_TEXT;
+  $item_template = ITEM_TEMPLATE;
+
+
+  boxTitle ('In-game view');
+  simulateBookPage ($row);
+
+
+} // end of bookTopMiddle
+
+
+
+
+function bookRelatedItem ($row)
+  {
+  global $id, $item, $items;
+
+  $page_text = PAGE_TEXT;
+  $item_template = ITEM_TEMPLATE;
+
+  boxTitle ('Related item');
 
  // find the page chains
 
@@ -105,26 +122,37 @@ function showOneBook ()
   echo "<p>Item with this text: ";
   echo lookupThing ($items, $itemRow ['item_key'], 'show_item');
 
-  echo "</div>\n";  // end of details__informations__details1
+  } // end of bookRelatedItem
 
-  // find what item refers to this
+function bookDetails ($row)
+  {
+  global $id;
 
+  topSection    ($row, function ($row) use ($id)
+      {
+      topLeft   ($row, 'bookTopLeft');
+      topMiddle ($row, 'bookTopMiddle');
+      });
 
-  echo "<div class='object-container__informations__details2'>\n";
+  middleSection ($row, function ($row) use ($id)
+      {
+      middleDetails ($row, 'bookRelatedItem');
+      });
 
-  simulateBookPage ($row);
+  bottomSection ($row, function ($row) use ($id)
+      {
+      showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array ());
+      });
 
-  echo "</div>\n";  // end of object-container__informations__details2  (spawn points, quests, etc.)
+  } // end of bookDetails
 
+function showOneBook ()
+  {
+  global $id;
+  // we need the item info in this function
+  $row = dbQueryOneParam ("SELECT * FROM ".PAGE_TEXT." WHERE entry = ?", array ('i', &$id));
 
-  echo "<div class='object-container__items'>\n";
-
-  showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array ());
-  echo "</div>\n";  // end of object-container__items
-
-
-  endOfPageCSS ();
-
+  pageContent ($row, 'Page', "Page $id", 'books', 'bookDetails');
   } // end of showOneBook
 
 function showBooks ()

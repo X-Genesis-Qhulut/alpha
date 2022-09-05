@@ -1,0 +1,72 @@
+.simulate_box {
+  color: white;
+  background-color: #222222;
+  padding: 10px;
+  max-width: 40em;
+  border: 2px solid white;
+  border-radius: 10px;
+  box-shadow: 3px 3px 5px gray;
+  width: fit-content;
+  margin-bottom: 1em;
+}
+
+& a {
+  color: deepskyblue;
+}
+
+/* Extra stuff for simulated quests */
+
+.quest {
+  color: black;
+  background-color: lightyellow;
+  border: 4px solid black;
+}
+
+.quest a {
+  color: blue;
+}
+
+.page_text {
+  color: black;
+  background-color: lightyellow;
+  border: 4px solid black;
+  font-family: serif;
+  font-size: larger;
+  max-width: 30em;
+}
+
+.read_page a {
+  color: lightgreen;
+}
+
+/* Extra stuff for simulated items */
+
+.item {
+}
+
+/* Extra stuff for simulated spells */
+
+.spell {
+  max-width: 30em;
+}
+
+/* Extra stuff for simulated game objects */
+
+.gameobject {
+}
+
+/* For left and right-justifying things inside a simulated box */
+
+.item_rh {
+  float: right;
+  margin-left: 2em;
+}
+
+.item_lh {
+  float: left;
+}
+
+.links_at_top {
+  font-size: smaller;
+  margin-top: 6px;
+}
