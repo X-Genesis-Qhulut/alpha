@@ -125,7 +125,7 @@ function showUnknownFactionDetails ()
 
   bottomDetails ($info, 'showBadNPCs');
 
-  echo "<p>(Excludes faction: 0)\n";  // TODO
+//  echo "<p>(Excludes faction: 0)\n";  // TODO
 
   } // end of showUnknownFactionDetails
 
@@ -133,7 +133,7 @@ function showUnknownFaction ()
   {
   pageContent (false, 'Validation', 'Faction validation',  '', function ($info)
     {
-    bottomSection ($info, 'showUnknownFactionDetails');
+    bottomSectionMany ($info, 'showUnknownFactionDetails');
     } , FACTIONTEMPLATE);
   } // end of showUnknownFaction
 
@@ -190,7 +190,7 @@ function showMissingQuestItems ()
   {
   pageContent (false, 'Validation', 'Quest items',  '', function ($info)
     {
-    bottomSection ($info, 'showMissingQuestItemsDetails');
+    bottomSectionMany ($info, 'showMissingQuestItemsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingQuestItems
 
@@ -243,7 +243,7 @@ function showMissingQuestSpells ()
   {
   pageContent (false, 'Validation', 'Quest/spell validation',  '', function ($info)
     {
-    bottomSection ($info, 'showMissingQuestSpellsDetails');
+    bottomSectionMany ($info, 'showMissingQuestSpellsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingQuestSpells
 
@@ -297,7 +297,7 @@ function showMissingQuestQuests ()
   {
   pageContent (false, 'Validation', 'Quest chain validation',  '', function ($info)
     {
-    bottomSection ($info, 'showMissingQuestQuestsDetails');
+    bottomSectionMany ($info, 'showMissingQuestQuestsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingQuestQuests
 
@@ -364,7 +364,7 @@ function showMissingCreatureQuests ()
   {
   pageContent (false, 'Validation', 'NPC/Quest validation',  '', function ($info)
     {
-    bottomSection ($info, 'showMissingCreatureQuestsDetails');
+    bottomSectionMany ($info, 'showMissingCreatureQuestsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingCreatureQuests
 
@@ -423,7 +423,7 @@ function showMissingGameobjectQuests ()
   {
   pageContent (false, 'Validation', 'Game object/Quest validation',  '', function ($info)
     {
-    bottomSection ($info, 'showMissingGameobjectQuestsDetails');
+    bottomSectionMany ($info, 'showMissingGameobjectQuestsDetails');
     } , GAMEOBJECT_TEMPLATE);
   } // end of showMissingGameobjectQuests
 
@@ -453,7 +453,7 @@ function showGameObjectsNotSpawned ()
   {
   pageContent (false, 'Validation', 'Game objects not spawned',  '', function ($info)
     {
-    bottomSection ($info, 'showGameObjectsNotSpawnedDetails');
+    bottomSectionMany ($info, 'showGameObjectsNotSpawnedDetails');
     } , GAMEOBJECT_TEMPLATE);
   } // end of showGameObjectsNotSpawned
 
@@ -490,7 +490,7 @@ function showNoItemText ()
   {
   pageContent (false, 'Validation', 'Items which should have pages',  '', function ($info)
     {
-    bottomSection ($info, 'showNoItemTextDetails');
+    bottomSectionMany ($info, 'showNoItemTextDetails');
     } , ITEM_TEMPLATE);
   } // end of showNoItemText
 

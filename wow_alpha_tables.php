@@ -104,7 +104,7 @@ function showTablesHelper ($tableName, $headingName)
 
 function showAllTables ($info)
 {
-  bottomSection ($info, function ($info)
+  bottomSectionMany ($info, function ($info)
       {
       echo "<div class='table-rows'>\n";
       showTablesHelper (DBC_DBNAME, "alpha_dbc");

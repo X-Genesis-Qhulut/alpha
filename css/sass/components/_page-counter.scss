@@ -30,6 +30,8 @@
   }
 
   @include mobile-design {
-    display: none;
+    &__results-count {
+      display: none;
+    }
   }
 }

@@ -500,6 +500,7 @@ a {
   position: relative;
   display: flex;
   flex-direction: column;
+  transition: all 300ms;
   box-shadow: 0px 0px 6px #1e1e1e;
 }
 .card__icon {
@@ -755,7 +756,7 @@ a {
   border: 1px solid #535353;
 }
 @media screen and (max-width: 700px) {
-  .page-counter {
+  .page-counter__results-count {
     display: none;
   }
 }
@@ -1048,8 +1049,6 @@ a {
   margin-top: 30px;
   margin-bottom: 20px;
   box-shadow: 0px 0px 9px #303030;
-  display: flex;
-  justify-content: space-evenly;
   border-radius: 0px 0px 20px 20px;
 }
 .table-container table {
@@ -1057,6 +1056,10 @@ a {
 }
 .table-container .tiny-title {
   margin-left: 40px;
+}
+.table-container--many {
+  display: flex;
+  justify-content: space-evenly;
 }
 .table-container--full {
   margin-bottom: 20px;

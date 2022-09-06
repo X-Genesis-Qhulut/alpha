@@ -13,6 +13,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  transition: all 300ms;
   @include tiny-shadow;
 
   // justify-content: space-between;

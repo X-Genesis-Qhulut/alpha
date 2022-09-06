@@ -1469,6 +1469,20 @@ function bottomSection ($userInfo, $func)
 
 } // end of bottomSection
 
+function bottomSectionMany ($userInfo, $func)
+{
+  $funcName = getFunctionName ($func);
+
+  comment ("DETAILS AT BOTTOM$funcName");
+
+  echo "<div class='table-container table-container--many'>\n";
+
+  $func ($userInfo);   // output contents
+
+  endDiv ('table-container table-container--many');
+
+} // end of bottomSectionMany
+
 function bottomDetails ($userInfo, $func)
 {
   $funcName = getFunctionName ($func);
