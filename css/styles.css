@@ -971,7 +971,7 @@ a {
 .toaster {
   width: 250px;
   position: absolute;
-  bottom: 5%;
+  top: 45%;
   right: 5%;
   max-height: 500px;
   max-width: 600px;
@@ -1380,12 +1380,12 @@ a {
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.067);
   backdrop-filter: blur(5px);
   z-index: 1000;
   overflow: hidden;
   animation: blur 6s normal;
   animation-fill-mode: forwards;
+  border-radius: 30px;
 }
 
 /*# sourceMappingURL=styles.css.map */

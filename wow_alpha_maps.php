@@ -29,6 +29,9 @@ function showOneMap ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
   $row = dbQueryOneParam ("SELECT * FROM ".MAP." WHERE ID = ?", array ('i', &$id));
 
   if (!$row)

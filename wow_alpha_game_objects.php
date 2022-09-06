@@ -300,6 +300,9 @@ function showOneGameobject ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
  // we need the game object info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 

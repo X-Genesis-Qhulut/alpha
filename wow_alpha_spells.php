@@ -401,6 +401,9 @@ function showOneSpell ()
 
   comment ('SHOWING ONE SPELL');
 
+  if (!checkID ())
+    return;
+
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".SPELL." WHERE ID = ?", array ('i', &$id));
 

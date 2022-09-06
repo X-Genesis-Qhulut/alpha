@@ -25,6 +25,9 @@ function showOneSkill ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
 // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".SKILLLINE." WHERE ID = ?", array ('i', &$id));
 

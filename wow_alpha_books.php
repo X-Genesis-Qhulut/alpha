@@ -156,6 +156,10 @@ function bookDetails ($row)
 function showOneBook ()
   {
   global $id;
+
+  if (!checkID ())
+    return;
+
   // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".PAGE_TEXT." WHERE entry = ?", array ('i', &$id));
 

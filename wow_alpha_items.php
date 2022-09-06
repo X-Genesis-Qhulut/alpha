@@ -420,6 +420,9 @@ function showOneItem ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 

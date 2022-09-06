@@ -25,6 +25,9 @@ function showOneZone ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
 // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".WORLDMAPAREA." WHERE ID = ?", array ('i', &$id));
 

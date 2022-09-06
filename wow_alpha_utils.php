@@ -1536,4 +1536,14 @@ function doArrowsForMap ($table, $where, $param, $mName)
 
 } // end of doArrowsForMap
 
+function checkID ()
+{
+  global $id;
+  if (!$id)
+    {
+    ShowWarning ("Parameter 'id' required but not supplied");
+    return false;
+    }
+  return true;
+} // end of checkID
 ?>

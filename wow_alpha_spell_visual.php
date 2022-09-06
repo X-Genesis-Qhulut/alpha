@@ -14,6 +14,9 @@ function showOneSpellVisual ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
   $row = dbQueryOneParam ("SELECT * FROM ".SPELLVISUAL." WHERE ID = ?", array ('i', &$id));
 
   if (!$row)
@@ -87,7 +90,16 @@ function showOneSpellVisualAnimName ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
   $row = dbQueryOneParam ("SELECT * FROM ".SPELLVISUALANIMNAME." WHERE ID = ?", array ('i', &$id));
+
+  if (!$row)
+    {
+    ShowWarning ("Spell visual anim name $id is not on the database");
+    return;
+    } // end of not finding it
 
   // page content
   pageContent (false, 'Spell Visual Anim Name', $row ['Name'], 'spell_visual_anim_names',
@@ -150,7 +162,17 @@ function showOneSpellVisualEffectName ()
   {
   global $id;
 
+
+  if (!checkID ())
+    return;
+
   $row = dbQueryOneParam ("SELECT * FROM ".SPELLVISUALEFFECTNAME." WHERE ID = ?", array ('i', &$id));
+
+  if (!$row)
+    {
+    ShowWarning ("Spell visual effect name $id is not on the database");
+    return;
+    } // end of not finding it
 
   // page content
   pageContent (false, 'Spell Visual Effect Name', $row ['FileName'], 'spell_visual_effect_names',

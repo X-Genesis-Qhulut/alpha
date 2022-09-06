@@ -507,6 +507,9 @@ function showOneCreature ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
   // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 

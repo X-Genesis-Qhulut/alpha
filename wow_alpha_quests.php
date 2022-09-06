@@ -336,6 +336,9 @@ function showOneQuest ()
   global $id;
   global $quests, $creatures, $items, $game_objects, $spells;
 
+  if (!checkID ())
+    return;
+
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 

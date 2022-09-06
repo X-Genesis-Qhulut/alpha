@@ -44,6 +44,9 @@ function showOnePort ()
   {
   global $id;
 
+  if (!checkID ())
+    return;
+
 // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".WORLDPORTS." WHERE entry = ?", array ('i', &$id));
 
