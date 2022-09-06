@@ -47,14 +47,21 @@ function fixHTML ($s)
 
 function ShowError ($theerror)
   {
-  echo "<div class='error_message'>\n";
-  echo (nl2br_http (fixHTML ($theerror) . "\n"));
-  echo "</div>\n";
+  ShowWarning ($theerror);    // pffft!
   } // end of ShowError
 
 function ShowWarningH ($theWarning)
   {
-  echo ("<p class='warning_message'>" . $theWarning . "</p>\n");
+echo "
+<div class='toaster'>
+  <p class='toaster__header'>WARNING</p>
+  <p class='toaster__body'>
+    $theWarning
+  </p>
+  <p class='toaster__footer'></p>
+  <i class='fa fa-warning'></i>";
+  endDiv ('toaster');
+
   } // end of ShowWarningH
 
 function ShowWarning ($theWarning)
@@ -75,9 +82,8 @@ function ShowInfo ($theInfo)
 
 function Problem ($why)
   {
-  echo "<h2>There is a problem ...</h2><p>\n";
   ShowError ($why);
-  echo "</body></html>\n";
+  echo "</main></body></html>\n";
 
   die ();
   } // end of Problem

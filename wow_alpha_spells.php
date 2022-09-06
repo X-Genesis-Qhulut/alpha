@@ -25,6 +25,10 @@ function fixSpellText ($s, $duration)
   $s = preg_replace ('/\$l ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
   $s = str_ireplace ('$d',  convertTimeGeneral ($duration), $s);
 
+  // gendered alternatives, eg. lad/lass, brother/sister, good sir/my lady etc.
+  // Example: "$gmister:lady;"    becomes "<mister/lady>"
+
+  $s = preg_replace ('/\$g ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
   $s = fixHTML ($s);
   return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText

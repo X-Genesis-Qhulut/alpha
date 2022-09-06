@@ -30,6 +30,44 @@ a {
   background: #535353;
 }
 
+@keyframes slideinout {
+  0% {
+    transform: translateX(20%);
+    opacity: 0;
+  }
+  30% {
+    transform: translateX(-15%);
+    opacity: 1;
+  }
+  85% {
+    transform: translateX(-15%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(25%);
+    opacity: 0;
+    display: none;
+  }
+}
+@keyframes blur {
+  0% {
+    backdrop-filter: blur(0px);
+    opacity: 0;
+  }
+  30% {
+    backdrop-filter: blur(5px);
+    opacity: 1;
+  }
+  85% {
+    backdrop-filter: blur(5px);
+    opacity: 1;
+  }
+  100% {
+    backdrop-filter: blur(0px);
+    opacity: 0;
+    display: none;
+  }
+}
 .menu-bar-logo {
   width: 60px;
   height: 60px;
@@ -930,6 +968,45 @@ a {
   background-color: #535353;
 }
 
+.toaster {
+  width: 250px;
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  max-height: 500px;
+  max-width: 600px;
+  background-color: #383838;
+  color: #d9d9d9;
+  border: 1px solid #535353;
+  border-radius: 20px;
+  z-index: 1000;
+  padding: 20px;
+  box-shadow: 0px 0px 9px #303030;
+  animation: slideinout 6s ease-in-out;
+  animation-fill-mode: forwards;
+}
+.toaster__header {
+  font-size: 1em;
+  border-bottom: 1px solid #535353;
+  margin: 0;
+  padding: 10px;
+  padding-left: 0px;
+  padding-top: 0px;
+}
+.toaster__body {
+  font-size: 0.8em;
+  margin-bottom: 0px;
+}
+.toaster i {
+  position: absolute;
+  top: 5%;
+  right: 4%;
+  font-size: 1em;
+  padding: 8px;
+  border-radius: 10px;
+  background-color: #535353;
+}
+
 .main-container {
   background-color: #404040;
   width: 98%;
@@ -1296,6 +1373,19 @@ a {
   background-color: #242424;
   backdrop-filter: blur(5px);
   z-index: 1000;
+  overflow: hidden;
+}
+
+.toaster-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.067);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  overflow: hidden;
+  animation: blur 6s normal;
+  animation-fill-mode: forwards;
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -1,0 +1,45 @@
+@keyframes slideinout {
+  0% {
+    transform: translateX(20%);
+    opacity: 0;
+  }
+
+  30% {
+    transform: translateX(-15%);
+    opacity: 1;
+  }
+
+  85% {
+    transform: translateX(-15%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(25%);
+    opacity: 0;
+    display: none;
+  }
+}
+
+@keyframes blur {
+  0% {
+    backdrop-filter: blur(0px);
+    opacity: 0;
+  }
+
+  30% {
+    backdrop-filter: blur(5px);
+    opacity: 1;
+  }
+
+  85% {
+    backdrop-filter: blur(5px);
+    opacity: 1;
+  }
+
+  100% {
+    backdrop-filter: blur(0px);
+    opacity: 0;
+    display: none;
+  }
+}
