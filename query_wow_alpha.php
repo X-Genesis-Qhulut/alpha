@@ -12,6 +12,13 @@
     <meta property="og:url"   content="https://wow-refugee.com/alpha/index.php">
     <meta property="og:description" content="A database browser for the World of Warcraft 0.5.3 Alpha release">
     <meta property="og:site_name"   content="WoW Refugee">
+
+    <meta property="og:image" content="http://wow-refugee.com/alpha/thumbnail.jpg" />
+    <meta property="og:image:secure_url" content="https://wow-refugee.com/alpha/thumbnail.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="434" />
+
     <meta name="twitter:card" content="https://wow-refugee.com/alpha/thumbnail.jpg">
 
     <title>WoW 0.5.3 Database</title>

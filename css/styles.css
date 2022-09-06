@@ -257,6 +257,12 @@ a {
     margin-left: 0px;
     margin-right: 10px;
   }
+  .page-title__database {
+    font-size: 0.8em;
+  }
+  .page-title__angle {
+    font-size: 0.8em;
+  }
   .page-title div:nth-child(3) {
     visibility: hidden;
   }

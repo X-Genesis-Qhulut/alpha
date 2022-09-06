@@ -53,46 +53,63 @@ function showProximityDetails ($info)
             array ('dddii', &$x, &$y, &$z, &$map, &$prox_distance));
 
 
-  if (count ($results) > 0)
-    boxTitle ("NPCs within $prox_distance yards");
+  $count = count ($results);
+
+  if ($count >= QUERY_LIMIT * 2)
+    $notice = ' (Query limited to ' . QUERY_LIMIT * 2 . ' results)';
+  else
+    $notice = '';
+
+  if ($count > 0)
+    boxTitle ("NPCs within $prox_distance yards ($count)$notice");
   else
     {
-    echo "<ul>\n";
-    echo ("No NPCs within $prox_distance yards");
-    echo "</ul>\n";
+    boxTitle ("No NPCs within $prox_distance yards");
     return;
     }
 
-  echo "<ul>\n";
+  echo "
+  <table class='table-rows'>
+      <thead>
+        <tr>
+        <th>Entry</th>
+        <th>Name</th>
+        <th>Distance (yards)</th>
+        <th>Alternate</th>
+        </tr>
+      </thead>
+      <tbody>
+      ";
+
   foreach ($results as $row)
     {
     $distance = $row ['distance'] ;
-    if (getCount ($row, 'spawn_entry', 4) > 1)
-      {
-      echo "<li>Distance: " . round ($distance, 1) . " yards:<ul>\n";
-      for ($i = 1; $i <= 4; $i++)
-        if ($row ["spawn_entry$i"])
-          listThing ($creatures, $row ["spawn_entry$i"], 'show_creature');
-      echo "</ul>\n";
-      }
-    else
-      {
-      // single item
-      for ($i = 1; $i <= 4; $i++)
-        if ($row ["spawn_entry$i"])
-          listThing ($creatures, $row ["spawn_entry$i"], 'show_creature');
-      echo ' — ' . round ($distance, 1) . " yards.\n";
-      } // end of one NPC
+
+    for ($i = 1; $i <= 4; $i++)
+      if ($row ["spawn_entry$i"])
+        {
+        echo "<tr>\n";
+        $id = $row ["spawn_entry$i"];
+        tdh ("<a href='?action=show_item&id=$id'>$id</a>");
+        tdh ("<a href='?action=show_item&id=$id'>" . fixHTML ($creatures [$id]) . "</a>");
+        td (round ($distance, 1));
+        if ($row ["spawn_entry2"])
+          td ('Yes');
+        else
+          td ('');
+
+        echo "</tr>\n";
+        }
+
 
     } // end of foreach result
 
+  echo "</tbody>
+  </table>";
 
-  echo "<p>" . count ($results) . " matches.</p>";
 
-  echo "</ul>\n";
-
-  if (count ($results) >= QUERY_LIMIT * 2)
-    echo "<p>Query limited to " . (QUERY_LIMIT * 2) . " matches. There may be more.";
+//  if (count ($results) >= QUERY_LIMIT * 2)
+//    echo "<p>Query limited to " . (QUERY_LIMIT * 2) . " matches. There may be more.";
 
   } // end of showProximityDetails
 
@@ -131,7 +148,7 @@ function showProximity ()
             />
         </div>
         <div class='search-bar__filters'>
-            <label for='prox_distance'>Within distance (yards)</label>
+            <label for='proximity-distance'>Within distance (yards)</label>
             <input
             class='custom-input'
             id='proximity-distance'
@@ -162,17 +179,12 @@ function showProximity ()
 
   if ($prox_location && $prox_distance)
     {
-    echo "<div class='table-container table-container--many'>\n";
-    echo "<div class='table-rows'>\n";
-
     showProximityDetails ($info);
-
-    endDiv ('table-rows');
-    endDiv ('table-container table-container--many');
     }
 
   endDiv ('table-container table-container--full');
   endDiv ('creature-details page-content');
+  echo "</section>\n";
 
 } // end of showProximity
 
