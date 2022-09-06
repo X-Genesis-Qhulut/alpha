@@ -28,6 +28,12 @@ function showOneZone ()
 // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".WORLDMAPAREA." WHERE ID = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Zone $id is not on the database");
+    return;
+    } // end of not finding it
+
   $name = $row ['AreaName'];
 
  $extras = array ('MapID' => 'map');

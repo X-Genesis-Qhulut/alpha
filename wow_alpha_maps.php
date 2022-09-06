@@ -30,6 +30,13 @@ function showOneMap ()
   global $id;
 
   $row = dbQueryOneParam ("SELECT * FROM ".MAP." WHERE ID = ?", array ('i', &$id));
+
+  if (!$row)
+    {
+    ShowWarning ("Map $id is not on the database");
+    return;
+    } // end of not finding it
+
   $name = $row ['Directory'];
   $extras = array ('MapName_Mask' => 'mask');
   // we pass this stuff around to the helper functions

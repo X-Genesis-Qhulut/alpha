@@ -423,6 +423,12 @@ function showOneItem ()
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Item $id is not on the database");
+    return;
+    } // end of not finding it
+
   $extras =  array (
         'required_skill'  => 'skill',
         'class'           => 'item_class',

@@ -159,6 +159,12 @@ function showOneBook ()
   // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".PAGE_TEXT." WHERE entry = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Page $id is not on the database");
+    return;
+    }
+
   pageContent ($row, 'Page', "Page $id", 'books', 'bookDetails', PAGE_TEXT);
   } // end of showOneBook
 

@@ -28,6 +28,12 @@ function tableDetails ($info)
       $row = dbQueryOne ("SELECT COUNT(*) AS count FROM `" .
                   ($database == 'alpha_dbc' ? DBC_DBNAME : WORLD_DBNAME) . '`.' . $table);
 
+      if (!$row)
+        {
+        ShowWarning ("Table $table is not on the database");
+        return;
+        } // end of not finding it
+
       boxTitle ($row ['count'] . " rows in this table. Schema below.");
 
       $results = dbQueryParam ("SELECT * FROM information_schema.COLUMNS

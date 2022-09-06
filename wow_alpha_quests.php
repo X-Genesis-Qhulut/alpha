@@ -338,6 +338,13 @@ function showOneQuest ()
 
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+
+  if (!$row)
+    {
+    ShowWarning ("Quest $id is not on the database");
+    return;
+    } // end of not finding it
+
   $name = $row ['Title'];
 
   $extras = array (

@@ -404,6 +404,11 @@ function showOneSpell ()
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".SPELL." WHERE ID = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Spell $id is not on the database");
+    return;
+    } // end of not finding it
 
   $extras = array (
                   'PowerType'             => 'power_type',
@@ -440,9 +445,6 @@ function showOneSpell ()
 
   if ($row ['NameSubtext_enUS'])
     $name .= ' <' . $row ['NameSubtext_enUS'] . '>';
-
-
-
 
   $limit = array (
     'ID',

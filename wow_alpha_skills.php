@@ -28,6 +28,12 @@ function showOneSkill ()
 // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".SKILLLINE." WHERE ID = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Skill $id is not on the database");
+    return;
+    } // end of not finding it
+
   $name = $row ['DisplayName_enUS'];
 
   $extras = array (

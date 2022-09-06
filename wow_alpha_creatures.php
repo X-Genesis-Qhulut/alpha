@@ -510,6 +510,12 @@ function showOneCreature ()
   // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Creature $id is not on the database");
+    return;
+    } // end of not finding it
+
   $extras = array (
         'spell_id1' => 'spell',
         'spell_id2' => 'spell',

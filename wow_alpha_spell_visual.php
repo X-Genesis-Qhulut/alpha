@@ -16,6 +16,12 @@ function showOneSpellVisual ()
 
   $row = dbQueryOneParam ("SELECT * FROM ".SPELLVISUAL." WHERE ID = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Spell visual $id is not on the database");
+    return;
+    } // end of not finding it
+
   // page content
   pageContent (false, 'Spell Visual', "Spell Visual ID $id", 'spell_visuals',
        function ($info)

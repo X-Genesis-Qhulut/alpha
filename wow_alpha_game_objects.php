@@ -303,6 +303,12 @@ function showOneGameobject ()
  // we need the game object info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." WHERE entry = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Game object $id is not on the database");
+    return;
+    } // end of not finding it
+
   // this is the short summary fields
   $limit = array (
     'entry',

@@ -47,6 +47,12 @@ function showOnePort ()
 // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".WORLDPORTS." WHERE entry = ?", array ('i', &$id));
 
+  if (!$row)
+    {
+    ShowWarning ("Port $id is not on the database");
+    return;
+    } // end of not finding it
+
   $name = $row ['name'];
   $extras = array ('map' => 'map');
   // we pass this stuff around to the helper functions
