@@ -17,10 +17,15 @@
   }
 
   &--many {
-    display: flex;
-    justify-content: space-evenly;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    overflow: hidden;
+
+    table {
+      width: 45%;
+      float: left;
+      margin-right: 2%;
+      margin-left: 2%;
+      border: 1px solid $color2;
+    }
   }
 
   &--full {
@@ -51,6 +56,13 @@
     padding: 10px;
     & .tiny-title {
       margin-left: 10px;
+    }
+
+    &--many {
+      table {
+        width: 96%;
+        float: left;
+      }
     }
   }
 }

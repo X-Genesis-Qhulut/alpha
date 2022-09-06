@@ -170,6 +170,29 @@ function columns_compare ($a, $b)
   return $a ['Field'] <=> $b ['Field'];
   } // end of columns_compare
 
+function searchContainerStart ($title, $description)
+{
+echo "
+ <!-- PAGE CONTAINER-->
+  <section class='main-page-container'>
+    <!-- PAGE TITLE -->
+    <div class='page-title page-title--search'>
+      <div class='big-title'>
+        <i class='page-title__database fas fa-database'></i>
+        <i class='page-title__angle fas fa-angle-right'></i>
+        <h1 class='big-title__heading' title='" . fixHTML ($title) . "'>" . fixHTML ($description) . "</h1>
+      </div>
+      <!-- SEARCH CONTAINER -->
+      <div class='search-container'>
+    ";
+} // end of searchContainerStart
+
+function searchContainerEnd ()
+  {
+  endDiv ('search-container');
+  endDiv ('page-title page-title--search');
+  } // end of searchContainerEnd
+
 function showSearchForm ($description, $sortFields, $headings, $results, $table, $where, $searchError)
   {
   global $filter, $action, $sort_order, $params, $page, $matches;
@@ -255,27 +278,19 @@ $searchURI = makeSearchURI ();
 $nextPage = $page + 1;
 $prevPage = $page - 1;
 
+searchContainerStart ($table, $description);
+
 echo "
- <!-- PAGE CONTAINER-->
-  <section class='main-page-container'>
-    <!-- PAGE TITLE -->
-    <div class='page-title page-title--search'>
-      <div class='big-title'>
-        <i class='page-title__database fas fa-database'></i>
-        <i class='page-title__angle fas fa-angle-right'></i>
-        <h1 class='big-title__heading' title='" . fixHTML ($table) . "'>" . fixHTML ($description) . "</h1>
-      </div>
-      <!-- SEARCH CONTAINER -->
-      <div class='search-container'>
         <!-- SEARCH FORM -->
         <form method='post' action='$PHP_SELF'>
             <input Type=hidden Name=action Value='$action'>
             <input Type=hidden Name=page Value='$page'>
             <div class='search-bar'>";
-  // error message here
 
+// error message here
 if ($searchError)
   echo "<span>" . fixHTML ($searchError) . "</span>\n";
+
 echo "
             <div class='search-bar__main'>
               <input
@@ -338,13 +353,11 @@ echo "
           <button class='search-button'>
             <i class='fas fa-search'></i>
           </button>
-        </form>
-        <!-- END SEARCH FORM -->
-      </div>
-      <!-- END SEARCH CONTAINER -->
-    </div>
-    <!-- END PAGE TITLE -->
+        </form>   <!-- END SEARCH FORM -->
+";
+  searchContainerEnd ();
 
+echo"
 
     <!-- PAGE CONTENT -->
     <div class='creature-details page-content'>

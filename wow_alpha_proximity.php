@@ -10,7 +10,7 @@
 // PROXIMITY
 
 
-function showProximity ()
+function showProximityDetails ()
   {
   global $creatures;
 
@@ -25,6 +25,43 @@ function showProximity ()
 
   echo "<h2>Proximity spawn point search</h2>\n";
 
+  echo "
+   <form method='post' action='$PHP_SELF'>
+   <input Type=hidden Name=action Value=proximity>
+        <div class='search-bar'>
+        <div class='search-bar__main'>
+            <input
+            class='custom-input'
+            id='proximity-coord'
+            type='text'
+            size='40'
+            value='" . fixHTML ($prox_location) . "'
+            placeholder='x y z map'
+            autofocus=''
+            title='Enter a number, text, or a regular expression'
+            name='prox_location'
+            />
+        </div>
+        <div class='search-bar__filters'>
+            <label for='prox_distance'>Within distance (yard)</label>
+            <input
+            class='custom-input'
+            id='proximity-distance'
+            type='text'
+            name='prox_distance'
+            size='15'
+            value='" . fixHTML ($prox_distance)  . "'
+            placeholder='100'
+            />
+        </div>
+        </div>
+        <button class='search-button' type='submit' name='SubmitFilter' title='Click to search'>
+        <i class='fas fa-search'></i>
+        </button>
+    </form>
+    ";
+
+    /*
   echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
   echo "<input Type=hidden Name=action Value=proximity>\n";
   echo "Location: ";
@@ -36,6 +73,7 @@ function showProximity ()
   echo " yards.\n";
   echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Search' title='Click to search'>\n";
   echo "</form>\n";
+*/
 
   if (!$prox_location || !$prox_distance)
     return;   // no location? We are DONE HERE!
@@ -114,5 +152,12 @@ function showProximity ()
   if (count ($results) >= QUERY_LIMIT * 2)
     echo "<p>Query limited to " . (QUERY_LIMIT * 2) . " matches. There may be more.";
 
-  } // end of showProximity
+  } // end of showProximityDetails
+
+
+function showProximity ()
+{
+  pageContent (false, 'Proximity search', '?name?', '', 'showProximityDetails', '');
+} // end of showProximity
+
 ?>

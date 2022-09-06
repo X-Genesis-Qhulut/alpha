@@ -603,7 +603,5 @@ function showCreatures ()
 
   wrapUpSearch ();
 
-//  showCount ($results);
-
   } // end of showCreatures
 ?>

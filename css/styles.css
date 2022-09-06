@@ -1058,10 +1058,14 @@ a {
   margin-left: 40px;
 }
 .table-container--many {
-  display: flex;
-  justify-content: space-evenly;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  overflow: hidden;
+}
+.table-container--many table {
+  width: 45%;
+  float: left;
+  margin-right: 2%;
+  margin-left: 2%;
+  border: 1px solid #242424;
 }
 .table-container--full {
   margin-bottom: 20px;
@@ -1092,6 +1096,10 @@ a {
   }
   .table-container .tiny-title {
     margin-left: 10px;
+  }
+  .table-container--many table {
+    width: 96%;
+    float: left;
   }
 }
 

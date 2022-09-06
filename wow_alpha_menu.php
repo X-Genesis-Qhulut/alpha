@@ -348,7 +348,7 @@ function mainPage ()
             <!-- CARD BACKEND -->
             <article class='card'>
               <div class='medium-title'>
-                <h2 class='medium-title__heading'>Backend</h2>
+                <h2 class='medium-title__heading'>Back end</h2>
                 <div class='medium-title__bar'></div>
               </div>
               <i class='card__icon fas fa-server'></i>
@@ -389,7 +389,7 @@ function mainPage ()
             <!-- CARD FRONTEND -->
             <article class='card'>
               <div class='medium-title'>
-                <h2 class='medium-title__heading'>Frontend</h2>
+                <h2 class='medium-title__heading'>Front end</h2>
                 <div class='medium-title__bar'></div>
               </div>
               <i class='card__icon fas fa-brush'></i>
