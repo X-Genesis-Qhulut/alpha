@@ -10,73 +10,12 @@
 // PROXIMITY
 
 
-function showProximityDetails ()
+function showProximityDetails ($info)
   {
   global $creatures;
 
-  $PHP_SELF = $_SERVER['PHP_SELF'];
-
-  $prox_location    = getP ('prox_location', 50);
-  $prox_distance    = getP ('prox_distance', 10);
-
-  // default to 100 yards
-  if (!$prox_distance)
-    $prox_distance = 100;
-
-  echo "<h2>Proximity spawn point search</h2>\n";
-
-  echo "
-   <form method='post' action='$PHP_SELF'>
-   <input Type=hidden Name=action Value=proximity>
-        <div class='search-bar'>
-        <div class='search-bar__main'>
-            <input
-            class='custom-input'
-            id='proximity-coord'
-            type='text'
-            size='40'
-            value='" . fixHTML ($prox_location) . "'
-            placeholder='x y z map'
-            autofocus=''
-            title='Enter a number, text, or a regular expression'
-            name='prox_location'
-            />
-        </div>
-        <div class='search-bar__filters'>
-            <label for='prox_distance'>Within distance (yard)</label>
-            <input
-            class='custom-input'
-            id='proximity-distance'
-            type='text'
-            name='prox_distance'
-            size='15'
-            value='" . fixHTML ($prox_distance)  . "'
-            placeholder='100'
-            />
-        </div>
-        </div>
-        <button class='search-button' type='submit' name='SubmitFilter' title='Click to search'>
-        <i class='fas fa-search'></i>
-        </button>
-    </form>
-    ";
-
-    /*
-  echo "<form METHOD=\"post\" ACTION=$PHP_SELF>\n";
-  echo "<input Type=hidden Name=action Value=proximity>\n";
-  echo "Location: ";
-
-  echo " <input style='margin-right:1em;' placeholder='x y z map' type=text autofocus
-         Name='prox_location' size=30 Value='" . fixHTML ($prox_location) . "'>\n";
-  echo " Within distance: ";
-  echo " <input type=text Name='prox_distance' size=5 placeholder='yards' Value='" . fixHTML ($prox_distance) . "'>\n";
-  echo " yards.\n";
-  echo "<input style='margin-left:1em;' Type=submit Name=SubmitFilter Value='Search' title='Click to search'>\n";
-  echo "</form>\n";
-*/
-
-  if (!$prox_location || !$prox_distance)
-    return;   // no location? We are DONE HERE!
+  $prox_location    = $info ['prox_location'];
+  $prox_distance    = $info ['prox_distance'];
 
   $ok = preg_match ('`^\s*' .
                     '(?P<x>[+\-]?(\d*\.)?\d+)\s+' .
@@ -86,13 +25,13 @@ function showProximityDetails ()
 
   if (!$ok)
     {
-    ShowWarning ("Invalid location. Must be in form 'x y z map' (all numbers)");
+    boxTitle ("Invalid location. Must be in form 'x y z map' (all numbers)");
     return;
     }
 
   if (!preg_match ('/^\d+$/', $prox_distance))
     {
-    ShowWarning ("Invalid distance. Must be a number.");
+    boxTitle ("Invalid distance. Must be a number.");
     return;
     }
 
@@ -115,10 +54,12 @@ function showProximityDetails ()
 
 
   if (count ($results) > 0)
-    echo "<h3>NPCs within $prox_distance yards</h3>\n";
+    boxTitle ("NPCs within $prox_distance yards");
   else
     {
-    echo "<p>No NPCs within $prox_distance yards.\n";
+    echo "<ul>\n";
+    echo ("No NPCs within $prox_distance yards");
+    echo "</ul>\n";
     return;
     }
 
@@ -145,9 +86,10 @@ function showProximityDetails ()
 
     } // end of foreach result
 
-  echo "</ul>\n";
 
-  echo "<p>" . count ($results) . " matches.";
+  echo "<p>" . count ($results) . " matches.</p>";
+
+  echo "</ul>\n";
 
   if (count ($results) >= QUERY_LIMIT * 2)
     echo "<p>Query limited to " . (QUERY_LIMIT * 2) . " matches. There may be more.";
@@ -155,9 +97,83 @@ function showProximityDetails ()
   } // end of showProximityDetails
 
 
+define ('PROX_LOCATION_SIZE', 50);
+define ('PROX_DISTANCE_SIZE', 50);
+define ('PROX_DEFAULT_DISTANCE', 100);
+
 function showProximity ()
 {
-  pageContent (false, 'Proximity search', '?name?', '', 'showProximityDetails', '');
+  $prox_location    = getP ('prox_location', PROX_LOCATION_SIZE);
+  $prox_distance    = getP ('prox_distance', PROX_DISTANCE_SIZE);
+
+  // default to 100 yards
+  if (!$prox_distance)
+    $prox_distance = PROX_DEFAULT_DISTANCE;
+
+  $PHP_SELF = $_SERVER['PHP_SELF'];
+
+  searchContainerStart ('', 'Proximity search');
+  echo "
+   <form method='post' action='$PHP_SELF'>
+   <input Type=hidden Name=action Value=proximity>
+        <div class='search-bar'>
+        <div class='search-bar__main'>
+            <input
+            class='custom-input'
+            id='proximity-coord'
+            type='text'
+            size='" . PROX_LOCATION_SIZE . "'
+            value='" . fixHTML ($prox_location) . "'
+            placeholder='x y z map'
+            autofocus='autofocus'
+            title='Enter a number, text, or a regular expression'
+            name='prox_location'
+            />
+        </div>
+        <div class='search-bar__filters'>
+            <label for='prox_distance'>Within distance (yards)</label>
+            <input
+            class='custom-input'
+            id='proximity-distance'
+            type='text'
+            name='prox_distance'
+            size='" . PROX_DISTANCE_SIZE. "'
+            value='" . fixHTML ($prox_distance)  . "'
+            placeholder='" . PROX_DEFAULT_DISTANCE . "'
+            />
+        </div>
+        </div>
+        <button class='search-button' type='submit' name='SubmitFilter' title='Click to search'>
+        <i class='fas fa-search'></i>
+        </button>
+    </form>
+    ";
+
+  searchContainerEnd ();
+
+  $info = array ('prox_location' => $prox_location, 'prox_distance' => $prox_distance);
+
+  echo "
+    <!-- PAGE CONTENT -->
+    <div class='creature-details page-content'>
+      <!-- TABLE CONTAINER -->
+      <div class='table-container table-container--full'>
+    ";
+
+  if ($prox_location && $prox_distance)
+    {
+    echo "<div class='table-container table-container--many'>\n";
+    echo "<div class='table-rows'>\n";
+
+    showProximityDetails ($info);
+
+    endDiv ('table-rows');
+    endDiv ('table-container table-container--many');
+    }
+
+  endDiv ('table-container table-container--full');
+  endDiv ('creature-details page-content');
+
 } // end of showProximity
 
 ?>

@@ -301,7 +301,7 @@ echo "
                 size='40'
                 value='" . fixHTML ($filter) . "'
                 placeholder='ID or regular expression'
-                autofocus=''
+                autofocus='autofocus'
                 title='Enter a number, text, or a regular expression'
               />
               <label for='sort_order'>Sort by</label>
