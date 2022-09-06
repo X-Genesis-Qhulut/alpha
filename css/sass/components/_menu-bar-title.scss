@@ -26,4 +26,8 @@
       font-size: 0.85em;
     }
   }
+
+  @include mobile-design {
+    display: none;
+  }
 }

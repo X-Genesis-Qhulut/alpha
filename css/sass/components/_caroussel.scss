@@ -45,4 +45,10 @@
       border-radius: 0px 20px 0px 20px;
     }
   }
+  @include mobile-design {
+    // margin-left: 0px;
+    // margin-right: 0px;
+    margin: 0px;
+    width: 95%;
+  }
 }

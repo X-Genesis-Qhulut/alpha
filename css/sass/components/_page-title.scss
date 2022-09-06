@@ -57,4 +57,58 @@
       font-size: 1.2em;
     }
   }
+
+  @include mobile-design {
+    padding-left: 10px;
+    padding-right: 10px;
+    height: 69px;
+    overflow-x: hidden;
+
+    & h1 {
+      font-size: 1.2em;
+    }
+
+    &__goback {
+      margin-left: 0px;
+      margin-right: 10px;
+    }
+
+    & div:last-child {
+      display: none;
+    }
+
+    &--search {
+      & div {
+        display: block;
+        // justify-content: unset;
+      }
+
+      & i {
+        display: none;
+      }
+
+      & div:last-child {
+        display: flex;
+        width: 150px;
+        & .search-bar__filters {
+          display: flex;
+        }
+      }
+    }
+
+    // &__database {
+    //   display: none;
+    //   font-size: 0.8em;
+    // }
+
+    // &__angle {
+    //   font-size: 0.9em;
+    //   margin-left: 5px;
+    //   margin-right: 5px;
+    // }
+
+    // &__table {
+    //   font-size: 0.9em;
+    // }
+  }
 }

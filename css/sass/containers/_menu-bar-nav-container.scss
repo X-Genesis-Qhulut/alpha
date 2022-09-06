@@ -1,7 +1,8 @@
 .menu-bar-nav-container {
   margin-top: 20px;
-  border-top: 1px solid $color4;
   border-bottom: 1px solid $color4;
+  border-top: 1px solid $color4;
+
   height: 76vh;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -10,11 +11,9 @@
     margin-bottom: 20px;
   }
 
-  // @include medium-height {
-  //   max-height: 71vh;
-  // }
-
-  // @include small-height {
-  //   max-height: 60vh;
-  // }
+  @include mobile-design {
+    margin-top: 10px;
+    height: 92vh;
+    border-top: unset;
+  }
 }

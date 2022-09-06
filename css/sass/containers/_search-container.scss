@@ -2,4 +2,8 @@
   & form {
     display: flex;
   }
+
+  @include mobile-design {
+    max-width: 250px;
+  }
 }

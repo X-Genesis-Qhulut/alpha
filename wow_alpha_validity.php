@@ -11,13 +11,18 @@
 
 // See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/creature-loot-template.html
 
-function showBadNPCs ($heading, $results, $label, $field)
+function showBadNPCs ($info)
   {
   global $creatures;
 
-  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+  $heading = $info ['heading'];
+  $results = $info ['results'];
+  $label = $info ['label'];
+  $field = $info ['field'];
 
   $count = dbRows ($results);
+
+  boxTitle ("$heading ($count)");
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
@@ -26,13 +31,23 @@ function showBadNPCs ($heading, $results, $label, $field)
   dbFree ($results);
   echo "</ul>\n";
 
-  $s = 's';
-  if ($count == 1)
-    $s = '';
-
-  echo "$count row$s returned.\n";
-
   } // end of showBadNPCs
+
+/*
+function showBadNPCs ($heading, $results, $label, $field)
+  {
+  global $action;
+  $info = array ('results' => $results, 'label' => $label, 'field' => $field);
+  pageContent ($info, 'Validation', $heading,  '',
+    function ($info)
+      {
+      topSection ($info, function  ($info)
+        {
+        middleDetails ($info, 'showBadNPCsHelper');
+        });
+      }, $field);
+  } // end of showBadNPCs
+*/
 
 function showBadGOs ($heading, $results, $label, $field)
   {
@@ -254,9 +269,17 @@ function showMissingQuestQuests ()
 
 } // end of showMissingQuestQuests
 
+function showNoProblems ()
+{
+    middleDetails ($info, 'showBadNPCs');
+
+    echo "<p>No problems found.\n";
+
+
+} // end of showNoProblems
 
 // analyse creatures to see if they start a missing quest
-function showMissingCreatureQuests ()
+function showMissingCreatureQuestsDetails ($info)
 {
   $totalCount = 0;
 
@@ -289,16 +312,30 @@ function showMissingCreatureQuests ()
       else
         $label = 'finish';
 
-      showBadNPCs ("NPCs which $label a quest which is not on file", $results, 'Quest', 'npc_quest');
+      $info = array ('heading' => "NPCs which $label a missing quest",
+                     'results' => $results,
+                     'label' => 'Quest',
+                     'field' => 'npc_quest');
+
+      middleDetails ($info, 'showBadNPCs');
 
       } // end of if any rows
 
     } // end of foreach
 
   if ($totalCount == 0)
-    echo "<p>No problems found.\n";
+    showNoProblems ();
 
-} // end of showMissingCreatureQuests
+} // end of showMissingCreatureQuestsDetails
+
+function showMissingCreatureQuests ()
+  {
+  pageContent (false, 'Validation', 'NPC/Quest validation',  '', function ($info)
+    {
+    middleSection ($info, 'showMissingCreatureQuestsDetails');
+    } , QUEST_TEMPLATE);
+  }
+
 
 // analyse game objects to see if they start a missing quest
 function showMissingGameobjectQuests ()

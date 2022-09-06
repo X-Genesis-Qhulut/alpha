@@ -28,4 +28,8 @@
     // margin-right: 10px;
     border: 1px solid $color4;
   }
+
+  @include mobile-design {
+    display: none;
+  }
 }

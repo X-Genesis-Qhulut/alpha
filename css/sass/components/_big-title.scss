@@ -43,24 +43,22 @@
   }
 
   @include mobile-design {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+    width: 100px;
     &__heading {
-      font-size: 1.6em;
+      font-size: 1.2em;
     }
 
     &__bar {
-      position: absolute;
-      background-color: $color7;
-      bottom: 10px;
-      width: 100px;
-      height: 3px;
-      margin: 0;
-      // margin-left: 40px;
-      padding: 0;
+      display: none;
+      width: 0px;
     }
 
     &__subtitle {
-      left: 110px;
-      font-size: 0.8em;
+      visibility: hidden;
+      width: 0px;
     }
   }
 }

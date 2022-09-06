@@ -205,37 +205,6 @@ function showGameObjectModel ($row)
 
 } // end of showGameObjectModel
 
-function showOneGameObjectxxxx ()
-  {
-  global $id;
-
-  // we need the game object info in this function
-  $row = dbQueryOneParam ("SELECT * FROM ".GAMEOBJECT_TEMPLATE." WHERE entry = ?", array ('i', &$id));
-  $name = fixHTML ($row ['name']);
-
-  startOfPageCSS ('Game object', $name, 'game_objects');
-  echo "<div class='object-container__informations__details1'>\n";
-
-  echo "</div>\n";  // end of details__informations__details1
-
-  echo "<div class='object-container__informations__details2'>\n";
-  echo "</div>\n";  // end of object-container__informations (stuff at top)
-
-  echo "<div class='details-container' style='display:flex;'>\n";
-  simulateGameObject ($id, $row);
-  showGameObjectLoot ($row);
-  echo "</div>\n"; // details-container
-
-  comment ('GAME OBJECT DETAILS');
-  echo "<div class='object-container__items'>\n";
-  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry',
-              $id, "Database entry for Game Object", "name", $extras);
-  echo "</div>\n";  // end of object-container__items
-
-  endOfPageCSS ();
-
-  } // end of showOneGameObjectxxxx
-
 function gameobjectTopLeft ($info)
 {
   global $id;

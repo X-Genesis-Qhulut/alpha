@@ -9,4 +9,8 @@
   @include tablet-design {
     margin-top: 20px;
   }
+
+  @include mobile-design {
+    width: 80%;
+  }
 }

@@ -4,4 +4,9 @@
   padding: 20px;
   padding-left: 50px;
   //   background-color: yellow;
+
+  @include mobile-design {
+    padding: 0px;
+    margin: 0px;
+  }
 }

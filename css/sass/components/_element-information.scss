@@ -20,8 +20,8 @@
 
   &__content {
     overflow-y: scroll;
-    max-height: 147.8px;
-    min-height: 147.8px;
+    max-height: 146.5px;
+    min-height: 146.5px;
     // padding-top: 5px;
     padding-top: 0px;
     margin-top: 0px;
@@ -47,7 +47,18 @@
     margin-bottom: 20px;
     margin-right: 10px;
     margin-left: 10px;
+    border: 1px solid $color1;
+
     @include medium-shadow;
+
+    &__content {
+      max-height: unset;
+      min-height: 0px;
+    }
+
+    & div:first-child {
+      min-height: unset;
+    }
 
     & div:last-child {
       max-height: 260px;
@@ -75,6 +86,12 @@
       margin-left: 20px;
       flex-basis: 95%;
       border-radius: 20px;
+    }
+
+    @include tiny-laptop-design {
+      margin-right: 0px;
+      margin-left: 0px;
+      flex-basis: 100%;
     }
   }
 }

@@ -24,6 +24,8 @@
       border-radius: 0px 20px 20px 0px;
       min-height: 450px;
       position: relative;
+      border: 1px solid $color1;
+
       @include big-shadow;
 
       & div:first-child {
@@ -46,6 +48,7 @@
       padding: 0px 20px 0px 20px;
       background-color: $color4;
       display: flex;
+      border: 1px solid $color1;
       // justify-content: space-between;
       // align-items: center;
       flex-direction: column;
@@ -112,6 +115,15 @@
         padding-bottom: 20px;
         margin-bottom: 20px;
         margin-top: 15px;
+      }
+    }
+  }
+
+  @include mobile-design {
+    &__informations {
+      &__details1 {
+        flex-direction: column;
+        min-width: unset;
       }
     }
   }

@@ -45,4 +45,10 @@
   & span {
     font-size: 1.3em;
   }
+
+  @include mobile-design {
+    padding: 0;
+    margin: 8px;
+    justify-content: center;
+  }
 }

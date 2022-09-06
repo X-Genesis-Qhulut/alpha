@@ -8,6 +8,7 @@
   padding: 20px;
   padding-bottom: 0px;
   box-sizing: border-box;
+  @include big-shadow;
 
   @include laptop-design {
     // margin-left: 20px;
@@ -20,5 +21,8 @@
 
   @include tablet-design {
     margin-bottom: 30px;
+  }
+  @include mobile-design {
+    padding: 10px;
   }
 }

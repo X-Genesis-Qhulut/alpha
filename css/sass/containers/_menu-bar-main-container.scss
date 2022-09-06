@@ -9,8 +9,19 @@
   flex-direction: column;
   // justify-content: space-between;
   height: 100%;
+  transition: all 300ms;
 
   @include tablet-design {
     width: 230px;
+  }
+
+  @include mobile-design {
+    width: 70px;
+    border: 0px solid $color4;
+    border-radius: 0px;
+
+    & span {
+      display: none;
+    }
   }
 }

@@ -6,9 +6,22 @@
   padding-right: 10px;
   text-align: right;
   border-radius: 20px 0px 0px 0px;
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
   margin-top: 20px;
   border: 1px solid $color2;
   @include menu-shadow;
+
+  @include mobile-design {
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    border-radius: 0px;
+    width: 95%;
+    background-color: $color3;
+    box-shadow: unset;
+    border: unset;
+    border-bottom: 1px solid $color4;
+    margin: 0px;
+  }
 }

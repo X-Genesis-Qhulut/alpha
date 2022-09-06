@@ -4,4 +4,8 @@
   transform: scale(1);
   transition: all 500ms;
   margin-top: 10px;
+
+  @include mobile-design {
+    font-size: 1.5em;
+  }
 }

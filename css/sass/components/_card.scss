@@ -84,4 +84,10 @@
     flex-basis: 95%;
     margin-bottom: 30px;
   }
+
+  @include mobile-design {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    // margin-bottom: 30px;
+  }
 }

@@ -3,7 +3,6 @@
   flex-direction: column;
   justify-content: right;
   position: relative;
-
   & #proximity-coord {
     margin-right: 0px;
   }
@@ -61,7 +60,6 @@
 
     &__main {
       input {
-        width: 170px;
         font-size: 1em;
       }
 
@@ -75,6 +73,38 @@
       & input {
         width: 50px;
       }
+    }
+  }
+
+  @include mobile-design {
+    display: block;
+    & label {
+      font-size: 0.7em;
+    }
+    &__main {
+      input {
+        max-width: 120px;
+        font-size: 1em;
+        position: absolute;
+        right: 6%;
+        top: 30%;
+        z-index: 50;
+      }
+
+      & label {
+        display: none;
+      }
+
+      & select {
+        visibility: hidden;
+        width: 0px;
+        height: 0px;
+      }
+    }
+
+    &__filters {
+      visibility: hidden;
+      width: 0px;
     }
   }
 }
