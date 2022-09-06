@@ -11,4 +11,9 @@
     // border: 32px solid black;
     outline: 1px solid $color7;
   }
+
+  @include mobile-design {
+    // padding: 0px;
+    margin: 0px;
+  }
 }

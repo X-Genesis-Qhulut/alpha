@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="title" content="WoW 0.5.3 Database" />
     <meta name="description" content="Database browser for Alpha core 0.5.3" />
+
+    <meta property="og:title" content="WoW Alpha Core Database Browser">
+    <meta property="og:type"  content="website" />
+    <meta property="og:image" content="https://wow-refugee.com/alpha/thumbnail.jpg">
+    <meta property="og:url"   content="https://wow-refugee.com/alpha/index.php">
+    <meta property="og:description" content="A database browser for the World of Warcraft 0.5.3 Alpha release">
+    <meta property="og:site_name"   content="WoW Refugee">
+
     <title>WoW 0.5.3 Database</title>
     <link rel="stylesheet" href="./css/normalize.css" />
     <link rel="stylesheet" href="./css/styles.css" />

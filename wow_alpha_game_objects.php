@@ -352,7 +352,6 @@ function showGameObjects ()
     $sort_order = 'name';
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Game Objects',
                           $sortFields,          // fields we can sort on
@@ -371,9 +370,9 @@ function showGameObjects ()
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_go&id=$id$searchURI'>$id</a>");
-    $tdr ('name');
-    tdxr (expandSimple ($npc_factions, $row ["faction"]));;
+    tdh ("<a href='?action=show_go&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_go&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
+    td (expandSimple ($npc_factions, $row ["faction"]));;
     showFilterColumn ($row);
     echo "</tr>\n";
     }

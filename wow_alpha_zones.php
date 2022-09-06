@@ -60,7 +60,6 @@ function showZones ()
     $sort_order = 'AreaName';
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Zones',
                           $sortFields,            // fields we can sort on
@@ -79,9 +78,9 @@ function showZones ()
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_zone&id=$id$searchURI'>$id</a>");
-    $td ('AreaName');
-    $tdr ('AreaID');
+    tdh ("<a href='?action=show_zone&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_zone&id=$id$searchURI'>" . fixHTML ($row ['AreaName']) . "</a>");
+    $td ('AreaID');
     showFilterColumn ($row);
     echo "</tr>\n";
     }

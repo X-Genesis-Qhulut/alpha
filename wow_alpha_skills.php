@@ -68,11 +68,7 @@ function showSkills ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'DisplayName_enUS';
 
-
- // echo "<h2>Skills</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Skills',
                           $sortFields,            // fields we can sort on
@@ -91,11 +87,11 @@ function showSkills ()
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_skill&id=$id$searchURI'>$id</a>");
-    $td ('DisplayName_enUS');
+    tdh ("<a href='?action=show_skill&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_skill&id=$id$searchURI'>" . fixHTML ($row ['DisplayName_enUS']) . "</a>");
     tdx (expandRaceMask ($row ['RaceMask']));
     tdx (expandClassMask ($row ['ClassMask']));
-    $tdr ('MaxRank');
+    $td ('MaxRank');
     showFilterColumn ($row);
     echo "</tr>\n";
     }

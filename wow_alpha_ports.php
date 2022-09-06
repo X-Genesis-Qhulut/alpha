@@ -83,7 +83,6 @@ function showPorts ()
 
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('World Ports',
                           $sortFields,            // fields we can sort on
@@ -105,10 +104,10 @@ function showPorts ()
     echo "<tr>\n";
     $id = $row ['entry'];
     tdhr ("<a href='?action=show_port&id=$id$searchURI'>$id</a>");
-    $td ('name');
-    $tdr ('x');
-    $tdr ('y');
-    $tdr ('z');
+    tdhr ("<a href='?action=show_port&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
+    $td ('x');
+    $td ('y');
+    $td ('z');
     $map = $row ['map'];
     tdh (expandSimple ($maps, $map));
     showFilterColumn ($row);

@@ -65,7 +65,7 @@
     overflow-x: hidden;
 
     & h1 {
-      font-size: 1.4em;
+      font-size: 1.2em;
       width: 100%;
     }
 
@@ -83,16 +83,20 @@
     }
 
     &--search {
-      & div {
-        // display: block;
-        // position: absolute;
-        // right: 5%;
+      & div:last-child {
+        position: absolute;
+        width: 0%;
+        right: 3%;
+        display: flex;
+        & input {
+          position: absolute;
+          right: 0%;
+        }
       }
 
       & i {
         // display: none;
         font-size: 0.7em;
-        // margin-top: 10px;
       }
 
       & div:last-child {

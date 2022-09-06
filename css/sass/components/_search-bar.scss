@@ -108,7 +108,7 @@
     }
     &__main {
       input {
-        max-width: 120px;
+        max-width: 180px;
         font-size: 1em;
         position: absolute;
         right: 6%;
@@ -137,6 +137,15 @@
     &__main {
       position: absolute;
       right: 0%;
+    }
+
+    input {
+      top: -50%;
+      max-width: 150px;
+      font-size: 1em;
+      height: 35px;
+      left: -1%;
+      // right: 1%;
     }
 
     & span {

@@ -60,7 +60,6 @@ function showMaps ()
     $sort_order = 'Directory';
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Maps',
                           $sortFields,            // fields we can sort on
@@ -79,8 +78,8 @@ function showMaps ()
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_map&id=$id$searchURI'>$id</a>");
-    $td ('Directory');
+    tdh ("<a href='?action=show_map&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_map&id=$id$searchURI'>" . fixHTML ($row ['Directory']) . "</a>");
     showFilterColumn ($row);
     echo "</tr>\n";
     }
