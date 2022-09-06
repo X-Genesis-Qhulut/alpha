@@ -96,8 +96,6 @@ function MajorProblem ($why)
   die ();
   } // end of MajorProblem
 
-
-
 function validateArgument ($name, $value, $maxLength, $validation, $decode = false)
   {
   $value = trim ($value);
@@ -1272,51 +1270,6 @@ function makeSearchURI ($withPage = false)
 
   return $searchURI;
   }
-
-function startOfPageCSS ($pageType, $name, $goback)
-  {
-
-  $searchURI = makeSearchURI (true);
-
-  echo "
-  <!-- PAGE CONTAINER-->
-  <section class='main-page-container'>
-
-    <!-- PAGE TITLE -->
-    <div class='page-title'>
-      <div>
-        <a href='?action=$goback$searchURI' class='page-title__goback'>
-          <i class='fas fa-angle-left'></i>
-        </a>
-        <h1>$name</h1>
-      </div>
-      <div>
-        <i class='page-title__database fas fa-database'></i>
-        <i class='page-title__angle fas fa-angle-right'></i>
-        <p class='page-title__table'>$pageType</p>
-      </div>
-    </div>
-    <!-- END PAGE TITLE -->
-
-    <!-- PAGE CONTENT -->
-    <div class='object-container page-content'>
-      <div class='object-container__informations'>
-
-  ";
-  comment ('CONTENT STARTS NOW ...');
-
-  } // end of startOfPageCSS
-
-function endOfPageCSS ()
-  {
-  echo "
-  <!-- CONTENT ENDS NOW ... -->
-
-  </div>  <!-- END PAGE CONTENT -->
-  </section>  <!-- END PAGE CONTAINER-->
-  ";
-
-  } // end of endOfPageCSS
 
 function endDiv ($what)
 {
