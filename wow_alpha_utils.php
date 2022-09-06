@@ -194,7 +194,7 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
       $selected = "selected = 'selected'";
     else
       $selected = '';
-    $sortOptions [] =  "<option value='" . fixHTML ($field) . "' $selected>" .
+    $sortOptions [] =  "               <option value='" . fixHTML ($field) . "' $selected>" .
                         fixHTML (($field)) . "</option>";
     } // end of foreach sort field
 
@@ -209,7 +209,7 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
         $selected = "selected = 'selected'";
       else
         $selected = '';
-      $filterOptions [] = "<option value='" . fixHTML ($field ['Field']) . "' $selected>" .
+      $filterOptions [] = "               <option value='" . fixHTML ($field ['Field']) . "' $selected>" .
                           fixHTML ($field ['Field']) . "</option>";
       } // end of being a number
     }   // end of foreach field
@@ -221,7 +221,7 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
       $selected = "selected = 'selected'";
     else
       $selected = '';
-    $comparisonOptions [] =  "<option value='" . fixHTML ($compare) . "' $selected>" .
+    $comparisonOptions [] =  "              <option value='" . fixHTML ($compare) . "' $selected>" .
                             fixHTML ($compare) . "</option>";
     } // end of foreach comparison
 
@@ -297,7 +297,7 @@ echo "
                 size='1'
                 title='Which column to sort on'
               >"
-              . implode("\n", $sortOptions) . "
+              . "\n" . implode("\n", $sortOptions) . "
               </select>
             </div>
             <div class='search-bar__filters'>
@@ -309,7 +309,7 @@ echo "
                 size='1'
                 title='Which database column to filter on'
               >"
-              . implode ("\n", $filterOptions) . "
+              . "\n" . implode ("\n", $filterOptions) . "
               </select>
               <select
                 class='custom-selector'
@@ -318,7 +318,7 @@ echo "
                 size='1'
                 title='What comparison to do'
               >"
-              . implode ("\n", $comparisonOptions) . "
+              . "\n" . implode ("\n", $comparisonOptions) . "
               </select>
               <input
                 class='custom-input'

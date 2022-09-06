@@ -1060,6 +1060,8 @@ a {
 .table-container--many {
   display: flex;
   justify-content: space-evenly;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 .table-container--full {
   margin-bottom: 20px;
