@@ -30,32 +30,21 @@ function showBadNPCs ($info)
           " ($label " . $row [$field] . ")\n";
   dbFree ($results);
   echo "</ul>\n";
-
   } // end of showBadNPCs
 
-/*
-function showBadNPCs ($heading, $results, $label, $field)
-  {
-  global $action;
-  $info = array ('results' => $results, 'label' => $label, 'field' => $field);
-  pageContent ($info, 'Validation', $heading,  '',
-    function ($info)
-      {
-      topSection ($info, function  ($info)
-        {
-        middleDetails ($info, 'showBadNPCsHelper');
-        });
-      }, $field);
-  } // end of showBadNPCs
-*/
 
-function showBadGOs ($heading, $results, $label, $field)
+function showBadGOs ($info)
   {
   global $game_objects;
 
-  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+  $heading = $info ['heading'];
+  $results = $info ['results'];
+  $label = $info ['label'];
+  $field = $info ['field'];
 
   $count = dbRows ($results);
+
+  boxTitle ("$heading ($count)");
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
@@ -68,21 +57,21 @@ function showBadGOs ($heading, $results, $label, $field)
   dbFree ($results);
   echo "</ul>\n";
 
-  $s = 's';
-  if ($count == 1)
-    $s = '';
-
-  echo "$count row$s returned.\n";
-
   } // end of showBadGOs
 
-function showBadQuests ($heading, $results, $label, $field)
+function showBadQuests ($info)
   {
   global $quests;
 
-  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+  $heading = $info ['heading'];
+  $results = $info ['results'];
+  $label = $info ['label'];
+  $field = $info ['field'];
+
 
   $count = dbRows ($results);
+
+  boxTitle ("$heading ($count)");
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
@@ -90,22 +79,20 @@ function showBadQuests ($heading, $results, $label, $field)
           " ($label " . $row [$field] . ")\n";
   dbFree ($results);
   echo "</ul>\n";
-
-  $s = 's';
-  if ($count == 1)
-    $s = '';
-
-  echo "$count row$s returned.\n";
-
   } // end of showBadQuests
 
-function showBadItems ($heading, $results, $label, $field)
+function showBadItems ($info)
   {
   global $items;
 
-  echo "<h2>" . fixHTML ($heading) . "</h2>\n";
+  $heading = $info ['heading'];
+  $results = $info ['results'];
+  $label = $info ['label'];
+  $field = $info ['field'];
 
   $count = dbRows ($results);
+
+  boxTitle ("$heading ($count)");
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
@@ -113,16 +100,9 @@ function showBadItems ($heading, $results, $label, $field)
           " ($label " . $row [$field] . ")\n";
   dbFree ($results);
   echo "</ul>\n";
-
-  $s = 's';
-  if ($count == 1)
-    $s = '';
-
-  echo "$count row$s returned.\n";
-
   } // end of showBadItems
 
-function showUnknownFaction ()
+function showUnknownFactionDetails ()
   {
 
   $factiontemplate = FACTIONTEMPLATE;
@@ -138,17 +118,28 @@ function showUnknownFaction ()
                         AND T1.entry <= " . MAX_CREATURE .
                         " ORDER BY name");
 
-  showBadNPCs ('Creatures with unknown faction', $results, 'Faction', 'creature_faction');
+  $info = array ('heading' => "NPCs with unknown faction",
+                 'results' => $results,
+                 'label' => 'Faction',
+                 'field' => 'creature_faction');
 
-  echo "<p>(Excludes faction: 0)\n";
+  middleDetails ($info, 'showBadNPCs');
 
+  echo "<p>(Excludes faction: 0)\n";  // TODO
+
+  } // end of showUnknownFactionDetails
+
+function showUnknownFaction ()
+  {
+  pageContent (false, 'Validation', 'Faction validation',  '', function ($info)
+    {
+    middleSection ($info, 'showUnknownFactionDetails');
+    } , FACTIONTEMPLATE);
   } // end of showUnknownFaction
 
-function showMissingQuestItems ()
+function showMissingQuestItemsDetails ()
 {
   global $quests;
-
-  echo "<h2>Missing quest items</h2>\n";
 
   $quest_template = QUEST_TEMPLATE;
   $item_template = ITEM_TEMPLATE;
@@ -179,20 +170,33 @@ function showMissingQuestItems ()
     $totalCount += $count;
 
     if ($count)
-      showBadQuests ("Quests where <$field> item is not on file", $results, 'Item', 'quest_item');
+      {
+      $info = array ('heading' => "Quests where <$field> is missing",
+                     'results' => $results,
+                     'label' => 'Item',
+                     'field' => 'quest_item');
+
+      middleDetails ($info, 'showBadQuests');
+      }
 
     } // end of foreach
 
   if ($totalCount == 0)
-    echo "<p>No problems found.\n";
+    showNoProblems ();
 
-} // end of showMissingQuestItems
+} // end of showMissingQuestItemsDetails
 
-function showMissingQuestSpells ()
+function showMissingQuestItems ()
+  {
+  pageContent (false, 'Validation', 'Quest items',  '', function ($info)
+    {
+    middleSection ($info, 'showMissingQuestItemsDetails');
+    } , QUEST_TEMPLATE);
+  } // end of showMissingQuestItems
+
+function showMissingQuestSpellsDetails ()
 {
   global $quests;
-
-  echo "<h2>Missing quest spells</h2>\n";
 
   $quest_template = QUEST_TEMPLATE;
   $spell = SPELL;
@@ -219,22 +223,35 @@ function showMissingQuestSpells ()
     $totalCount += $count;
 
     if ($count)
-       showBadQuests ("Quests where <$field> spell is not on file", $results, 'Spell', 'quest_spell');
+      {
+      $info = array ('heading' => "Quests where <$field> spell is missing",
+                     'results' => $results,
+                     'label' => 'Spell',
+                     'field' => 'quest_spell');
+
+      middleDetails ($info, 'showBadQuests');
+      }
 
     } // end of foreach
 
   if ($totalCount == 0)
-    echo "<p>No problems found.\n";
+    showNoProblems ();
 
-} // end of showMissingQuestSpells
+} // end of showMissingQuestSpellsDetails
+
+function showMissingQuestSpells ()
+  {
+  pageContent (false, 'Validation', 'Quest/spell validation',  '', function ($info)
+    {
+    middleSection ($info, 'showMissingQuestSpellsDetails');
+    } , QUEST_TEMPLATE);
+  } // end of showMissingQuestSpells
 
 // analyse quests to see if the previous, next or next in chain are not on file
-function showMissingQuestQuests ()
+function showMissingQuestQuestsDetails ()
 {
   global $quests;
   $totalCount = 0;
-
-  echo "<h2>Missing quest chains</h2>\n";
 
   $quest_template = QUEST_TEMPLATE;
 
@@ -260,21 +277,36 @@ function showMissingQuestQuests ()
     $totalCount += $count;
 
     if ($count)
-      showBadQuests ("Quests where <$field> quest is not on file", $results, 'Quest', 'quest_quest');
+      {
+      $info = array ('heading' => "Quests where <$field> quest is missing",
+                     'results' => $results,
+                     'label' => 'Quest',
+                     'field' => 'quest_quest');
+
+      middleDetails ($info, 'showBadQuests');
+      }
 
     } // end of foreach
 
   if ($totalCount == 0)
-    echo "<p>No problems found.\n";
+    showNoProblems ();
 
-} // end of showMissingQuestQuests
+} // end of showMissingQuestQuestsDetails
+
+function showMissingQuestQuests ()
+  {
+  pageContent (false, 'Validation', 'Quest chain validation',  '', function ($info)
+    {
+    middleSection ($info, 'showMissingQuestQuestsDetails');
+    } , QUEST_TEMPLATE);
+  } // end of showMissingQuestQuests
 
 function showNoProblems ()
 {
-    middleDetails ($info, 'showBadNPCs');
-
-    echo "<p>No problems found.\n";
-
+    middleDetails (false, function  ($info)
+      {
+      echo "<ul><li>No problems found.</ul>\n";
+      });
 
 } // end of showNoProblems
 
@@ -334,11 +366,11 @@ function showMissingCreatureQuests ()
     {
     middleSection ($info, 'showMissingCreatureQuestsDetails');
     } , QUEST_TEMPLATE);
-  }
+  } // end of showMissingCreatureQuests
 
 
 // analyse game objects to see if they start a missing quest
-function showMissingGameobjectQuests ()
+function showMissingGameobjectQuestsDetails ()
 {
   $totalCount = 0;
 
@@ -371,18 +403,32 @@ function showMissingGameobjectQuests ()
       else
         $label = 'finish';
 
-      showBadGOs ("Game objects which $label a quest which is not on file", $results, 'Quest', 'go_quest');
+      $info = array ('heading' => "Game objects which $label a missing quest",
+                     'results' => $results,
+                     'label' => 'Quest',
+                     'field' => 'go_quest');
+
+      middleDetails ($info, 'showBadGOs');
 
       } // end of if any rows
 
     } // end of foreach
 
   if ($totalCount == 0)
-    echo "<p>No problems found.\n";
+    showNoProblems ();
 
-} // end of showMissingGameobjectQuests
+} // end of showMissingGameobjectQuestsDetails
 
-function showGameObjectsNotSpawned ()
+function showMissingGameobjectQuests ()
+  {
+  pageContent (false, 'Validation', 'Game object/Quest validation',  '', function ($info)
+    {
+    middleSection ($info, 'showMissingGameobjectQuestsDetails');
+    } , GAMEOBJECT_TEMPLATE);
+  } // end of showMissingGameobjectQuests
+
+
+function showGameObjectsNotSpawnedDetails ()
   {
   $gameobject_template = GAMEOBJECT_TEMPLATE;
   $spawns_gameobjects = SPAWNS_GAMEOBJECTS;
@@ -394,11 +440,24 @@ function showGameObjectsNotSpawned ()
                       WHERE T2.spawn_entry IS NULL
                       ORDER BY T1.name");
 
-  showBadGOs ("Game objects which are not spawned", $results, '', '');
+    $info = array ('heading' => "Game objects which are not spawned",
+                   'results' => $results,
+                   'label' => '',
+                   'field' => '');
 
+    middleDetails ($info, 'showBadGOs');
+
+  } // end of showGameObjectsNotSpawnedDetails
+
+function showGameObjectsNotSpawned ()
+  {
+  pageContent (false, 'Validation', 'Game objects not spawned',  '', function ($info)
+    {
+    middleSection ($info, 'showGameObjectsNotSpawnedDetails');
+    } , GAMEOBJECT_TEMPLATE);
   } // end of showGameObjectsNotSpawned
 
-function showNoItemText ()
+function showNoItemTextDetails ()
   {
   $item_template = ITEM_TEMPLATE;
   $page_text = PAGE_TEXT;
@@ -411,7 +470,28 @@ function showNoItemText ()
                       WHERE T2.entry IS NULL AND T1.page_text > 0
                       ORDER BY T1.name");
 
-  showBadItems ("Items which should have text to be read", $results, 'Item', 'page_text');
+  $count = dbRows ($results);
+
+  if ($count)
+    {
+    $info = array ('heading' => "Items which should have text to be read",
+                 'results' => $results,
+                 'label' => 'Item',
+                 'field' => 'page_text');
+
+    middleDetails ($info, 'showBadItems');
+    }
+  else
+    showNoProblems ();
+
+  } // end of showNoItemTextDetails
+
+function showNoItemText ()
+  {
+  pageContent (false, 'Validation', 'Items which should have pages',  '', function ($info)
+    {
+    middleSection ($info, 'showNoItemTextDetails');
+    } , ITEM_TEMPLATE);
   } // end of showNoItemText
 
 ?>
