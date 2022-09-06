@@ -29,7 +29,7 @@
     border: 1px solid $color4;
   }
 
-  @include mobile-design {
+  @include tablet-design {
     &__results-count {
       display: none;
     }

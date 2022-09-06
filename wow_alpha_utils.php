@@ -52,37 +52,26 @@ function ShowError ($theerror)
 
 function ShowWarningH ($theWarning)
   {
-echo "
-<div class='toaster-container'>
-  <div class='toaster'>
-    <p class='toaster__header'>WARNING</p>
-    <p class='toaster__body'>
-      $theWarning
-    </p>
-    <p class='toaster__footer'></p>
-    <i class='fa fa-warning'></i>
-    ";
-
-  endDiv ('toaster-container');
-  endDiv ('toaster');
-
+  pageContent (false, '', '',  '',
+    function ($info) use ($theWarning)
+      {
+      topSection (false, function ($info)  use ($theWarning)
+          {
+          topMiddle (false, function ($info) use ($theWarning)
+            {
+            boxTitle ('Warning');
+            echo "<div style='color:yellow'>\n";
+            echo ("<ul><li>$theWarning</ul>");
+            echo "</div>\n";
+            });
+          });
+      } , '');
   } // end of ShowWarningH
 
 function ShowWarning ($theWarning)
   {
   ShowWarningH (nl2br_http (fixHTML ($theWarning)));
   } // end of ShowWarning
-
-function ShowInfoH ($theInfo)
-  {
-  echo ("<p class='info_message'>" . $theInfo . "</p>\n");
-  } // end of ShowInfoH
-
-function ShowInfo ($theInfo)
-  {
-  ShowInfoH (nl2br_http (fixHTML ($theInfo)));
-  } // end of ShowInfo
-
 
 function Problem ($why)
   {
@@ -481,9 +470,15 @@ function addSign ($value)
   return $value;
   } // end of addSign
 
+function td ($s)
+  {
+  echo "<td>";
+  echo (fixHTML ($s));
+  echo "</td>\n";
+  } // end of td
+
 function tdx ($s, $c='tdl')
   {
- // echo "<td class='$c'>";
   echo "<td>";
   echo (fixHTML ($s));
   echo "</td>\n";
@@ -497,12 +492,12 @@ function tdxr ($s)
 // for hyperlinks
 function tdhr ($s)
   {
-  echo "<td class='tdr'>$s</td>\n";
+  echo "<td>$s</td>\n";
   } // end of tdhr
 
 function tdh ($s)
   {
-  echo "<td class='tdl'>$s</td>\n";
+  echo "<td>$s</td>\n";
   } // end of tdh
 
 function th ($s)
@@ -939,6 +934,8 @@ function startElementInformation ($heading, $table, $uptop = false)
   {
   if (!$uptop)
     echo "<div class='element-information element-information--independant'>\n";
+  else
+    echo "<div class='element-information'>\n";
 
   echo "
   <h2 class='element-information__title' title='" . fixHTML ($table) . "'>" . fixHTML ($heading) . "</h2>
@@ -950,11 +947,8 @@ function startElementInformation ($heading, $table, $uptop = false)
 
 function endElementInformation ($uptop = false)
   {
-  echo "</div>";
-
-  if (!$uptop)
-    endDiv ('element-information element-information--independant');
-
+  endDiv ('element-information__content');
+  endDiv ('element-information [element-information--independant]');
   } // end of endElementInformation
 
 function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName)
@@ -1320,8 +1314,12 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
       <div>
         <a href='?action=$goback$searchURI' class='page-title__goback'>
           <i class='fas fa-angle-left'></i>
-        </a>
+        </a>";
+    if ($name)
+      echo "
         <h1>" . fixHTML ($name) . "</h1>
+        ";
+    echo "
       </div>
       <div>
         <i class='page-title__database fas fa-database'></i>

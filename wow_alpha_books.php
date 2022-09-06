@@ -16,7 +16,7 @@ function simulateBookPage ($row, $page = 0)
     boxTitle ("Page $page");
   echo "<p>";
   echo nl2br_http (fixQuestText ($row ['text']));
-  echo "</div>\n";
+  endDiv ('simulate_box page_text');
   }
 
 function showTextDetails ()
@@ -148,7 +148,7 @@ function bookDetails ($row)
 
   bottomSection ($row, function ($row) use ($id)
       {
-      showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array ());
+      showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "Database entry for page", "", array ());
       });
 
   } // end of bookDetails
@@ -169,7 +169,7 @@ function showOneBook ()
     return;
     }
 
-  pageContent ($row, 'Page', "Page $id", 'books', 'bookDetails', PAGE_TEXT);
+  pageContent ($row, 'Page', "Page (entry) $id", 'books', 'bookDetails', PAGE_TEXT);
   } // end of showOneBook
 
 function showBooks ()

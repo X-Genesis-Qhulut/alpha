@@ -51,6 +51,10 @@
 
     @include medium-shadow;
 
+    & .simulate_box {
+      box-shadow: unset;
+    }
+
     &__content {
       max-height: unset;
       min-height: 0px;

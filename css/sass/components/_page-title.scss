@@ -61,11 +61,12 @@
   @include mobile-design {
     padding-left: 10px;
     padding-right: 10px;
-    height: 69px;
+    height: 70px;
     overflow-x: hidden;
 
     & h1 {
-      font-size: 1.2em;
+      font-size: 1.4em;
+      width: 100%;
     }
 
     &__goback {
@@ -73,18 +74,25 @@
       margin-right: 10px;
     }
 
-    & div:last-child {
-      display: none;
+    // & div:nth-child(2) {
+    //   display: none;
+    // }
+
+    & div:nth-child(3) {
+      visibility: hidden;
     }
 
     &--search {
       & div {
-        display: block;
-        // justify-content: unset;
+        // display: block;
+        // position: absolute;
+        // right: 5%;
       }
 
       & i {
-        display: none;
+        // display: none;
+        font-size: 0.7em;
+        // margin-top: 10px;
       }
 
       & div:last-child {

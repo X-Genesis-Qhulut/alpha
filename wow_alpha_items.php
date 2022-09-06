@@ -474,7 +474,7 @@ function showOneItem ()
     'display_id',
     'sell_price',
     'inventory_type',
-    'disenchant_id',
+    'spellid_1',
 
   );
 
@@ -494,9 +494,9 @@ function showItems ()
 
   $sortFields = array (
     'entry',
+    'name',
     'class',
     'subclass',
-    'name',
     'description',
   );
 
@@ -504,11 +504,10 @@ function showItems ()
     $sort_order = 'name';
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Items',
                           $sortFields,            // fields we can sort on
-                          array ('Entry', 'Class', 'Subclass', 'Name', 'Description'),    // headings
+                          array ('Entry', 'Name', 'Class', 'Subclass', 'Description'),    // headings
                           'entry',                // key
                           array ('name', 'description'),  // searchable fields
                           ITEM_TEMPLATE,          // table
@@ -523,12 +522,12 @@ function showItems ()
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_item&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_item&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_item&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
     $item_class = $row ['class'];
-    tdx ("$item_class: " . ITEM_CLASS [$item_class]);
+    td ("$item_class: " . ITEM_CLASS [$item_class]);
     $item_subclass = $row ['subclass'];
     tdx ("$item_subclass : " . ITEM_SUBCLASSES [$item_class] [$item_subclass]);
-    $td  ('name');
     $td  ('description');
     showFilterColumn ($row);
     echo "</tr>\n";

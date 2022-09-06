@@ -1,7 +1,7 @@
 .toaster {
   width: 250px;
   position: absolute;
-  top: 45%;
+  bottom: 5%;
   right: 5%;
   max-height: 500px;
   max-width: 600px;
@@ -12,7 +12,7 @@
   z-index: 1000;
   padding: 20px;
   @include big-shadow;
-  animation: slideinout 6s ease-in-out;
+  animation: slideinout 4s ease-in-out;
   animation-fill-mode: forwards;
 
   &__header {

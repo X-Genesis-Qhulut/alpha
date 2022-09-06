@@ -120,6 +120,8 @@ if (mysqli_connect_errno())
 
  //MajorProblem ('blah blah blah');
 
+// ShowWarning ("my test warning");
+
 $PHP_SELF = $_SERVER['PHP_SELF'];
 
 // grab things we are likely to cross-reference a lot

@@ -406,7 +406,6 @@ function showQuests ()
 
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Quests',
                           $sortFields,            // fields we can sort on
@@ -427,12 +426,12 @@ function showQuests ()
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_quest&id=$id$searchURI'>$id</a>");
-    $td ('Title');
+    tdh ("<a href='?action=show_quest&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_quest&id=$id$searchURI'>" . fixHTML ($row ['Title']) . "</a>");
     if ($row ['MinLevel'] != $row ['MaxLevel'] && $row ['MaxLevel']  > 0)
-      tdxr  ($row ['MinLevel'] . '-' . $row ['MaxLevel'] );
+      td  ($row ['MinLevel'] . '-' . $row ['MaxLevel'] );
     else
-      $tdr ('MinLevel');
+      $td ('MinLevel');
     showFilterColumn ($row);
     echo "</tr>\n";
     }

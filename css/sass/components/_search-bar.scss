@@ -14,6 +14,9 @@
     bottom: -17px;
     right: 10px;
     white-space: nowrap;
+    max-width: 400px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   &__main {
@@ -22,6 +25,10 @@
     // background-color: yellow;
     margin-bottom: 10px;
     margin-right: 8px;
+
+    & label {
+      margin-right: 5px;
+    }
 
     & input {
       width: 420px;
@@ -47,6 +54,10 @@
 
     & select {
       font-size: 0.9em;
+    }
+
+    & label {
+      margin-right: 5px;
     }
     // display: flex;
     // flex-direction: column;
@@ -119,6 +130,17 @@
     &__filters {
       visibility: hidden;
       width: 0px;
+    }
+  }
+
+  @include mobile-design {
+    &__main {
+      position: absolute;
+      right: 0%;
+    }
+
+    & span {
+      display: none;
     }
   }
 }

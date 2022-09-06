@@ -16,6 +16,8 @@
   }
 
   @include mobile-design {
+    border-top: 1px solid $color4;
+
     & a:first-child {
       display: none;
     }

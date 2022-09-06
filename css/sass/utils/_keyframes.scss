@@ -17,7 +17,6 @@
   100% {
     transform: translateX(25%);
     opacity: 0;
-    display: none;
   }
 }
 
@@ -40,6 +39,26 @@
   100% {
     backdrop-filter: blur(0px);
     opacity: 0;
-    display: none;
+    z-index: -50;
+  }
+}
+
+@keyframes expandmenu {
+  0% {
+    width: 70px;
+  }
+
+  100% {
+    width: 120px;
+  }
+}
+
+@keyframes appearslowly {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }

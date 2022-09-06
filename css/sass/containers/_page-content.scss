@@ -8,18 +8,18 @@
     max-height: 80vh;
   }
 
-  // @include medium-height {
-  //   max-height: 680px;
-  // }
+  @include medium-height {
+    max-height: 72vh;
+  }
 
   @include tablet-design {
     padding: 10px;
     max-height: 82.5vh;
   }
 
-  // @include small-height {
-  //   max-height: 680px;
-  // }
+  @include small-height {
+    max-height: 66vh;
+  }
 
   @include mobile-design {
     padding: 10px;

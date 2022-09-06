@@ -6,6 +6,7 @@
   margin: 0 auto;
   margin-bottom: 20px;
   margin-top: 20px;
+
   @include big-shadow;
 
   & th {
@@ -16,6 +17,7 @@
   & td {
     padding: 5px 20px 5px 20px;
     text-align: left;
+    width: 10px; /* some width */
   }
 
   & tr:nth-child(odd) {
@@ -23,5 +25,60 @@
   }
   & tr:nth-child(even) {
     background-color: $color8;
+  }
+
+  @include tablet-design {
+    table-layout: fixed;
+
+    & td {
+      width: 10px; /* some width */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:nth-child(6) {
+        display: none;
+      }
+      &:nth-child(5) {
+        display: none;
+      }
+
+      &:nth-child(4) {
+        display: none;
+      }
+    }
+
+    & thead {
+      & th:nth-child(6) {
+        display: none;
+      }
+      & th:nth-child(5) {
+        display: none;
+      }
+
+      & th:nth-child(4) {
+        display: none;
+      }
+    }
+  }
+
+  @include mobile-design {
+    table-layout: fixed;
+
+    & td {
+      width: 10px; /* some width */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:nth-child(3) {
+        display: none;
+      }
+    }
+
+    & thead {
+      & th:nth-child(3) {
+        display: none;
+      }
+    }
   }
 }

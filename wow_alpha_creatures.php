@@ -26,10 +26,20 @@ function item_compare ($a, $b)
   return $items [$a ['item']] <=> $items [$b ['item']];
   } // end of item_compare
 
+function loot_item_compare ($a, $b)
+  {
+  global $items;
+  if ($a ['ChanceOrQuestChance'] == $b ['ChanceOrQuestChance'])
+    return $items [$a ['item']] <=> $items [$b ['item']];
+  return - ($a ['ChanceOrQuestChance'] <=> $b ['ChanceOrQuestChance']);
+  } // end of loot_item_compare
+
 function reference_item_compare ($a, $b)
   {
   global $items;
-  return $items [$a ['refItem']] <=> $items [$b ['refItem']];
+  if ($a ['chance'] == $b ['chance'])
+    return $items [$a ['refItem']] <=> $items [$b ['refItem']];
+  return - ($a ['chance'] <=> $b ['chance']);
   } // end of reference_item_compare
 
 
@@ -342,11 +352,12 @@ function creatureLoot ($info)
   $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
 
   $results = dbQueryParam ("SELECT * FROM $creature_loot_template
-                            WHERE entry = ? AND mincountOrRef > 0 AND ChanceOrQuestChance >= 0",
+                            WHERE entry = ? AND mincountOrRef > 0 AND ChanceOrQuestChance >= 0
+                            ORDER BY ChanceOrQuestChance DESC",
                             array ('i', &$loot_id));
 
   $count = count ($results);
-  usort($results, 'item_compare');
+  usort($results, 'loot_item_compare');
 
   listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
     function ($row)
@@ -386,11 +397,12 @@ function creatureReferenceLoot ($info)
                                 INNER JOIN $reference_loot_template
                                   ON ($reference_loot_template.entry = $creature_loot_template.item)
                            WHERE $creature_loot_template.entry = ?
-                                AND $creature_loot_template.mincountOrRef < 0",
+                                AND $creature_loot_template.mincountOrRef < 0
+                           ORDER BY chance DESC",
                            array ('i', &$loot_id));
 
 
-  usort ($lootResults, 'reference_item_compare');
+  usort ($lootResults, 'reference_item_compare');  // ordering by loot chance now
   listItems ('Reference loot', 'alpha_world.reference_loot_template', count ($lootResults), $lootResults,
     function ($row)
       {
@@ -420,8 +432,10 @@ function creaturePickpocketingLoot ($info)
   if (!$loot_id)
     $loot_id = $id;
 
-  $lootResults = dbQueryParam ("SELECT * FROM ".PICKPOCKETING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
-  usort($lootResults, 'item_compare');
+  $lootResults = dbQueryParam ("SELECT * FROM ".PICKPOCKETING_LOOT_TEMPLATE."
+                               WHERE entry = ?
+                               ORDER BY ChanceOrQuestChance DESC", array ('i', &$loot_id));
+  usort($lootResults, 'loot_item_compare');
   listItems ('Pickpocketing loot', 'alpha_world.pickpocketing_loot_template', count ($lootResults), $lootResults,
     function ($row)
       {
@@ -447,7 +461,7 @@ function creatureSkinningLoot ($info)
     $loot_id = $id;
 
   $lootResults = dbQueryParam ("SELECT * FROM ".SKINNING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
-  usort($lootResults, 'item_compare');
+  usort($lootResults, 'loot_item_compare');
   listItems ('Skinning loot', 'alpha_world.skinning_loot_template', count ($lootResults), $lootResults,
     function ($row)
       {
@@ -591,8 +605,7 @@ function showCreatures ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
-  $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
+  $td  = function ($s) use (&$row) { td ($row  [$s]); };
 
   $headings = array ('Entry', 'Name', 'Subname', 'Level');
 
@@ -608,13 +621,13 @@ function showCreatures ()
     {
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_creature&id=$id$searchURI'>$id</a>");
-    $tdr ('name');
-    $tdr ('subname');
+    tdh ("<a href='?action=show_creature&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_creature&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
+    $td ('subname');
     if ($row ['level_min'] != $row ['level_max'])
-      tdxr  ($row ['level_min'] . '-' . $row ['level_max'] );
+      td  ($row ['level_min'] . '-' . $row ['level_max'] );
     else
-      $tdr ('level_min');
+      $td ('level_min');
     showFilterColumn ($row);
 
     echo "</tr>\n";

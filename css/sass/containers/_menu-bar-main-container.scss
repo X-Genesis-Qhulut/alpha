@@ -12,16 +12,12 @@
   transition: all 300ms;
 
   @include tablet-design {
-    width: 230px;
+    width: unset;
   }
 
   @include mobile-design {
-    width: 70px;
-    border: 0px solid $color4;
-    border-radius: 0px;
-
-    & span {
-      display: none;
-    }
+    border: unset;
+    border-radius: unset;
+    border-right: 1px solid $color4;
   }
 }

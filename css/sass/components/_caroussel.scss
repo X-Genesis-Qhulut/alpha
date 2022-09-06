@@ -1,6 +1,8 @@
 .caroussel {
   display: flex;
   max-width: 272px;
+  max-height: 648px;
+
   overflow-x: scroll;
   margin-left: 2%;
   scroll-behavior: smooth;
