@@ -73,17 +73,21 @@ function showOneTable ()
 
 function showTablesHelper ($tableName, $headingName)
 {
-  echo "<div class='one_thing_section'>\n";
+//  echo "<div class='one_thing_section'>\n";
+
 
   $results = dbQueryParam ("SELECT TABLE_NAME AS tableName FROM information_schema.TABLES
                             WHERE TABLE_SCHEMA = ?",
                             array ('s', &$tableName));
 
-  echo "<table class='search_results'>\n";
+  echo "<table class='table-rows'>\n";
+  echo "<thead>\n";
 
   echo "<tr>\n";
     th ('Tables in ' . fixHTML ($headingName));
   echo "</tr>\n";
+  echo "</thead>\n";
+  echo "<tbody>\n";
 
   foreach ($results as $row)
     {
@@ -94,7 +98,7 @@ function showTablesHelper ($tableName, $headingName)
     }
   echo "</table>\n";
 
-  echo "</div>\n";  // end of database details
+//  echo "</div>\n";  // end of database details
 
 } // end of showTablesHelper
 

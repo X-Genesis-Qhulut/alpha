@@ -1469,6 +1469,21 @@ function bottomSection ($userInfo, $func)
 
 } // end of bottomSection
 
+function bottomDetails ($userInfo, $func)
+{
+  $funcName = getFunctionName ($func);
+
+  comment ("DETAILS AT BOTTOM$funcName");
+
+  echo "<div class='table-rows'>\n";
+
+  $func ($userInfo);   // output contents
+
+  endDiv ('table-rows');
+
+} // end of bottomDetails
+
+
 function showNoSpawnPoints ()
   {
   comment ('NO SPAWN POINTS MESSAGE');

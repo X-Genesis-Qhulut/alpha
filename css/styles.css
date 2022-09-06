@@ -145,7 +145,7 @@ a {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 119px;
+  height: 113px;
   width: 100%;
   padding-left: 30px;
   padding-right: 50px;
@@ -439,6 +439,11 @@ a {
   text-align: justify;
 }
 @media screen and (max-width: 1200px) {
+  .big-title {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+  }
   .big-title__heading {
     font-size: 1.8em;
   }
@@ -603,15 +608,25 @@ a {
 .search-bar__filters select {
   font-size: 0.9em;
 }
+@media screen and (max-width: 1600px) {
+  .search-bar__main input {
+    width: 300px;
+  }
+  .search-bar__main select {
+    font-size: 1em;
+  }
+}
 @media screen and (max-width: 1200px) {
   .search-bar label {
     font-size: 0.7em;
   }
   .search-bar__main input {
     font-size: 1em;
+    width: 180px;
   }
   .search-bar__main select {
     font-size: 1em;
+    width: 80px;
   }
   .search-bar__filters {
     margin-right: 12px;
@@ -620,7 +635,7 @@ a {
     width: 50px;
   }
 }
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 900px) {
   .search-bar {
     display: block;
   }
@@ -655,7 +670,6 @@ a {
   border: 1px solid #535353;
   font-size: 1.3em;
   padding: 5px;
-  margin-left: 5px;
   max-width: 165px;
   box-shadow: 0px 0px 5px #303030;
 }
@@ -704,10 +718,8 @@ a {
 }
 @media screen and (max-width: 1200px) {
   .search-button {
-    width: 50px;
-  }
-  .search-button svg {
-    font-size: 1.2em;
+    visibility: hidden;
+    width: 0px;
   }
 }
 @media screen and (max-width: 700px) {
@@ -897,7 +909,7 @@ a {
 @media screen and (max-width: 700px) {
   .main-container {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     border-radius: 0px;
     border: 0px solid #535353;
   }
@@ -939,9 +951,9 @@ a {
   padding-right: 10px;
   text-align: right;
   border-radius: 20px 0px 0px 0px;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 15px;
   border: 1px solid #242424;
   box-shadow: 0px 0px 4px #1e1e1e;
 }
@@ -1004,7 +1016,7 @@ a {
 }
 
 .page-content {
-  max-height: 84vh;
+  max-height: 84.5vh;
   overflow-y: scroll;
   height: 100%;
 }
@@ -1014,10 +1026,16 @@ a {
     max-height: 80vh;
   }
 }
+@media screen and (max-width: 1200px) {
+  .page-content {
+    padding: 10px;
+    max-height: 82.5vh;
+  }
+}
 @media screen and (max-width: 700px) {
   .page-content {
     padding: 10px;
-    max-height: 86vh;
+    max-height: 90vh;
   }
 }
 
@@ -1030,6 +1048,8 @@ a {
   margin-top: 30px;
   margin-bottom: 20px;
   box-shadow: 0px 0px 9px #303030;
+  display: flex;
+  justify-content: space-evenly;
   border-radius: 0px 0px 20px 20px;
 }
 .table-container table {
@@ -1045,6 +1065,7 @@ a {
   padding: unset;
   max-width: unset;
   background-color: unset;
+  box-shadow: unset;
   margin-left: 20px;
   margin-right: 20px;
 }
@@ -1194,6 +1215,7 @@ a {
     border-radius: 0px 20px 0px 20px;
     padding-top: 20px;
     padding-bottom: 20px;
+    transition: all 300ms;
   }
   .object-container__informations__details2 {
     margin: unset;
@@ -1202,6 +1224,7 @@ a {
     padding-bottom: 20px;
     margin-bottom: 20px;
     margin-top: 15px;
+    transition: all 300ms;
   }
 }
 @media screen and (max-width: 700px) {

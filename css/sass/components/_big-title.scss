@@ -28,6 +28,10 @@
   }
 
   @include tablet-design {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+
     &__heading {
       font-size: 1.8em;
     }

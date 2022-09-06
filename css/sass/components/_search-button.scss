@@ -25,11 +25,8 @@
   }
 
   @include tablet-design {
-    width: 50px;
-
-    & svg {
-      font-size: 1.2em;
-    }
+    visibility: hidden;
+    width: 0px;
   }
 
   @include mobile-design {

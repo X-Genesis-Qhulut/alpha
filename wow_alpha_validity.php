@@ -123,7 +123,7 @@ function showUnknownFactionDetails ()
                  'label' => 'Faction',
                  'field' => 'creature_faction');
 
-  middleDetails ($info, 'showBadNPCs');
+  bottomDetails ($info, 'showBadNPCs');
 
   echo "<p>(Excludes faction: 0)\n";  // TODO
 
@@ -133,7 +133,7 @@ function showUnknownFaction ()
   {
   pageContent (false, 'Validation', 'Faction validation',  '', function ($info)
     {
-    middleSection ($info, 'showUnknownFactionDetails');
+    bottomSection ($info, 'showUnknownFactionDetails');
     } , FACTIONTEMPLATE);
   } // end of showUnknownFaction
 
@@ -176,7 +176,7 @@ function showMissingQuestItemsDetails ()
                      'label' => 'Item',
                      'field' => 'quest_item');
 
-      middleDetails ($info, 'showBadQuests');
+      bottomDetails ($info, 'showBadQuests');
       }
 
     } // end of foreach
@@ -190,7 +190,7 @@ function showMissingQuestItems ()
   {
   pageContent (false, 'Validation', 'Quest items',  '', function ($info)
     {
-    middleSection ($info, 'showMissingQuestItemsDetails');
+    bottomSection ($info, 'showMissingQuestItemsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingQuestItems
 
@@ -229,7 +229,7 @@ function showMissingQuestSpellsDetails ()
                      'label' => 'Spell',
                      'field' => 'quest_spell');
 
-      middleDetails ($info, 'showBadQuests');
+      bottomDetails ($info, 'showBadQuests');
       }
 
     } // end of foreach
@@ -243,7 +243,7 @@ function showMissingQuestSpells ()
   {
   pageContent (false, 'Validation', 'Quest/spell validation',  '', function ($info)
     {
-    middleSection ($info, 'showMissingQuestSpellsDetails');
+    bottomSection ($info, 'showMissingQuestSpellsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingQuestSpells
 
@@ -283,7 +283,7 @@ function showMissingQuestQuestsDetails ()
                      'label' => 'Quest',
                      'field' => 'quest_quest');
 
-      middleDetails ($info, 'showBadQuests');
+      bottomDetails ($info, 'showBadQuests');
       }
 
     } // end of foreach
@@ -297,13 +297,13 @@ function showMissingQuestQuests ()
   {
   pageContent (false, 'Validation', 'Quest chain validation',  '', function ($info)
     {
-    middleSection ($info, 'showMissingQuestQuestsDetails');
+    bottomSection ($info, 'showMissingQuestQuestsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingQuestQuests
 
 function showNoProblems ()
 {
-    middleDetails (false, function  ($info)
+    bottomDetails (false, function  ($info)
       {
       echo "<ul><li>No problems found.</ul>\n";
       });
@@ -349,7 +349,7 @@ function showMissingCreatureQuestsDetails ($info)
                      'label' => 'Quest',
                      'field' => 'npc_quest');
 
-      middleDetails ($info, 'showBadNPCs');
+      bottomDetails ($info, 'showBadNPCs');
 
       } // end of if any rows
 
@@ -364,7 +364,7 @@ function showMissingCreatureQuests ()
   {
   pageContent (false, 'Validation', 'NPC/Quest validation',  '', function ($info)
     {
-    middleSection ($info, 'showMissingCreatureQuestsDetails');
+    bottomSection ($info, 'showMissingCreatureQuestsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingCreatureQuests
 
@@ -408,7 +408,7 @@ function showMissingGameobjectQuestsDetails ()
                      'label' => 'Quest',
                      'field' => 'go_quest');
 
-      middleDetails ($info, 'showBadGOs');
+      bottomDetails ($info, 'showBadGOs');
 
       } // end of if any rows
 
@@ -423,7 +423,7 @@ function showMissingGameobjectQuests ()
   {
   pageContent (false, 'Validation', 'Game object/Quest validation',  '', function ($info)
     {
-    middleSection ($info, 'showMissingGameobjectQuestsDetails');
+    bottomSection ($info, 'showMissingGameobjectQuestsDetails');
     } , GAMEOBJECT_TEMPLATE);
   } // end of showMissingGameobjectQuests
 
@@ -445,7 +445,7 @@ function showGameObjectsNotSpawnedDetails ()
                    'label' => '',
                    'field' => '');
 
-    middleDetails ($info, 'showBadGOs');
+    bottomDetails ($info, 'showBadGOs');
 
   } // end of showGameObjectsNotSpawnedDetails
 
@@ -453,7 +453,7 @@ function showGameObjectsNotSpawned ()
   {
   pageContent (false, 'Validation', 'Game objects not spawned',  '', function ($info)
     {
-    middleSection ($info, 'showGameObjectsNotSpawnedDetails');
+    bottomSection ($info, 'showGameObjectsNotSpawnedDetails');
     } , GAMEOBJECT_TEMPLATE);
   } // end of showGameObjectsNotSpawned
 
@@ -479,7 +479,7 @@ function showNoItemTextDetails ()
                  'label' => 'Item',
                  'field' => 'page_text');
 
-    middleDetails ($info, 'showBadItems');
+    bottomDetails ($info, 'showBadItems');
     }
   else
     showNoProblems ();
@@ -490,7 +490,7 @@ function showNoItemText ()
   {
   pageContent (false, 'Validation', 'Items which should have pages',  '', function ($info)
     {
-    middleSection ($info, 'showNoItemTextDetails');
+    bottomSection ($info, 'showNoItemTextDetails');
     } , ITEM_TEMPLATE);
   } // end of showNoItemText
 

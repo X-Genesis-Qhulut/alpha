@@ -53,6 +53,18 @@
     // background-color: green;
   }
 
+  @include laptop-design {
+    &__main {
+      input {
+        width: 300px;
+      }
+
+      & select {
+        font-size: 1em;
+      }
+    }
+  }
+
   @include tablet-design {
     & label {
       font-size: 0.7em;
@@ -61,10 +73,12 @@
     &__main {
       input {
         font-size: 1em;
+        width: 180px;
       }
 
       & select {
         font-size: 1em;
+        width: 80px;
       }
     }
 
@@ -76,7 +90,7 @@
     }
   }
 
-  @include mobile-design {
+  @include small-tablet-design {
     display: block;
     & label {
       font-size: 0.7em;

@@ -1,5 +1,5 @@
 .page-content {
-  max-height: 84vh;
+  max-height: 84.5vh;
   overflow-y: scroll;
   height: 100%;
 
@@ -12,12 +12,17 @@
   //   max-height: 680px;
   // }
 
+  @include tablet-design {
+    padding: 10px;
+    max-height: 82.5vh;
+  }
+
   // @include small-height {
   //   max-height: 680px;
   // }
 
   @include mobile-design {
     padding: 10px;
-    max-height: 86vh;
+    max-height: 90vh;
   }
 }
