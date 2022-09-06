@@ -102,10 +102,12 @@ function showAllTables ($info)
 {
   bottomSection ($info, function ($info)
       {
-      echo "<div class='table-rows' style='display:flex; flex-wrap: wrap;'>\n";
+      echo "<div class='table-rows'>\n";
       showTablesHelper (DBC_DBNAME, "alpha_dbc");
+      endDiv ('table-rows');
+      echo "<div class='table-rows'>\n";
       showTablesHelper (WORLD_DBNAME, "alpha_world");
-      echo "</div>\n";  // end of flex container
+      endDiv ('table-rows');
       });
 } // end of showAllTables
 
