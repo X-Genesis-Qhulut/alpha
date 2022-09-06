@@ -9,54 +9,65 @@
 
 // TABLES
 
+function tableDetails ($info)
+{
+  bottomSection ($info, function ($info)
+      {
+      global $database, $table;
+
+      if ($database == 'alpha_dbc')
+        $realDatabase = DBC_DBNAME;
+      elseif ($database == 'alpha_world')
+        $realDatabase = WORLD_DBNAME;
+      else
+        Problem ("Invalid database specified, must be alpha_dbc or alpha_world");
+
+      $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
+      $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
+
+      $results = dbQueryParam ("SELECT * FROM information_schema.COLUMNS
+                                WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?",
+                                array ('ss', &$realDatabase, &$table));
+
+      echo "<table class='table-rows'>\n";
+      echo "<thead>\n";
+
+      echo "<tr>\n";
+        th ('Name');
+        th ('Type');
+        th ('Null');
+        th ('Key');
+        th ('Default');
+      echo "</tr>\n";
+      echo "</thead>\n";
+      echo "<tbody>\n";
+
+      foreach ($results as $row)
+        {
+        echo "<tr>\n";
+        $td ('COLUMN_NAME');
+        $td ('COLUMN_TYPE');
+        $td ('IS_NULLABLE');
+        $td ('COLUMN_KEY');
+        $td ('COLUMN_DEFAULT');
+        echo "</tr>\n";
+        }
+      echo "</tbody>\n";
+      echo "</table>\n";
+
+      $row = dbQueryOne ("SELECT COUNT(*) AS count FROM `" .
+                  ($database == 'alpha_dbc' ? DBC_DBNAME : WORLD_DBNAME) . '`.' . $table);
+
+      echo ('<ul><li>' . $row ['count'] . " rows in this table.</ul>\n");
+
+      });
+} // end of tableDetails
+
 function showOneTable ()
   {
   global $database, $table;
 
-  if ($database == 'alpha_dbc')
-    $realDatabase = DBC_DBNAME;
-  elseif ($database == 'alpha_world')
-    $realDatabase = WORLD_DBNAME;
-  else
-    Problem ("Invalid database specified, must be alpha_dbc or alpha_world");
-
-  echo "<h2>Table: " . fixHTML ("$database.$table") . "</h2>\n";
-
-
-  $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
-
-  $results = dbQueryParam ("SELECT * FROM information_schema.COLUMNS
-                            WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?",
-                            array ('ss', &$realDatabase, &$table));
-
-  echo "<table class='search_results'>\n";
-
-  echo "<tr>\n";
-    th ('Name');
-    th ('Type');
-    th ('Null');
-    th ('Key');
-    th ('Default');
-  echo "</tr>\n";
-
-  foreach ($results as $row)
-    {
-    echo "<tr>\n";
-    $td ('COLUMN_NAME');
-    $td ('COLUMN_TYPE');
-    $td ('IS_NULLABLE');
-    $td ('COLUMN_KEY');
-    $td ('COLUMN_DEFAULT');
-    echo "</tr>\n";
-    }
-  echo "</table>\n";
-
-  $row = dbQueryOne ("SELECT COUNT(*) AS count FROM `" .
-              ($database == 'alpha_dbc' ? DBC_DBNAME : WORLD_DBNAME) . '`.' . $table);
-
-  echo ('<p>' . $row ['count'] . " rows in this table.\n");
-
+  pageContent (false, 'Table', $database . '.' . $table, 'tables', 'tableDetails', $database);
 
   } // end of showOneTable
 
@@ -87,16 +98,20 @@ function showTablesHelper ($tableName, $headingName)
 
 } // end of showTablesHelper
 
+function showAllTables ($info)
+{
+  bottomSection ($info, function ($info)
+      {
+      echo "<div class='table-rows' style='display:flex; flex-wrap: wrap;'>\n";
+      showTablesHelper (DBC_DBNAME, "alpha_dbc");
+      showTablesHelper (WORLD_DBNAME, "alpha_world");
+      echo "</div>\n";  // end of flex container
+      });
+} // end of showAllTables
+
 function showTables ()
   {
-
-  echo "<h2>Tables</h2>\n";
-
-  echo "<div class='one_thing_container'>\n";
-  showTablesHelper (DBC_DBNAME, "alpha_dbc");
-  showTablesHelper (WORLD_DBNAME, "alpha_world");
-  echo "</div>\n";  // end of flex container
-
+  pageContent (false, 'Tables', 'Database tables', 'tables', 'showAllTables', '');
   } // end of showTables
 
 

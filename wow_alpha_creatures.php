@@ -464,14 +464,14 @@ function creatureDetails ($info)
 
   $row = $info ['row'];
 
-  topSection    ($info, function ($info) use ($id)
+  topSection    ($info, function ($info)
       {
       topLeft   ($info, 'creatureTopLeft');
       topMiddle ($info, 'creatureTopMiddle');
       topRight  ($info , 'creatureTopRight');
       });
 
-  middleSection ($info, function ($info) use ($id, $row)
+  middleSection ($info, function ($info) use ($row)
       {
       if ($row ['spell_list_id'])
         middleDetails ($info, 'creatureSpells');

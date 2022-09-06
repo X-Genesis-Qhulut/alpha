@@ -4,6 +4,10 @@
   justify-content: right;
   position: relative;
 
+  & #proximity-coord {
+    margin-right: 0px;
+  }
+
   & span {
     color: $color9;
     font-size: 0.8em;

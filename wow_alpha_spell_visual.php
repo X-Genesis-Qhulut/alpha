@@ -9,13 +9,26 @@
 
 // SPELL VISUALS
 
+
 function showOneSpellVisual ()
   {
   global $id;
 
-  showOneThing (SPELLVISUAL, 'alpha_dbc.SpellVisual', 'ID', $id, "Spell Visual", '',
-      array (
-      ));
+  $row = dbQueryOneParam ("SELECT * FROM ".SPELLVISUAL." WHERE ID = ?", array ('i', &$id));
+
+  // page content
+  pageContent (false, 'Spell Visual', "Spell Visual ID $id", 'spell_visuals',
+       function ($info)
+        {
+        // put it down the bottom in the table area
+        bottomSection ($info, function ($info)
+          {
+          global $id;
+          showOneThing (SPELLVISUAL, 'alpha_dbc.SpellVisual', 'ID',
+                        $id, "Spell Visual", '',  array ());
+          });
+        },
+        SPELLVISUAL);
   } // end of showOneSpellVisual
 
 function showSpellVisuals ()
@@ -29,28 +42,26 @@ function showSpellVisuals ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'ID';
 
-//  echo "<h2>Spell Visuals</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Spell Visuals', 'ID', array ());
+  $results = setUpSearch ('Spell Visuals',
+                          $sortFields,            // fields we can sort on
+                          array ('ID', 'PrecastKit', 'CastKit', 'ImpactKit', 'StateKit', 'ChannelKit', 'AreaKit'),    // headings
+                          'ID',                // key
+                          array ('Name'),  // searchable fields
+                          SPELLVISUAL,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".SPELLVISUAL." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, SPELLVISUAL, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('ID', 'PrecastKit', 'CastKit', 'ImpactKit', 'StateKit', 'ChannelKit', 'AreaKit'));
+  $searchURI = makeSearchURI (true);
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_spell_visual&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_spell_visual&id=$id'$searchURI>$id</a>");
     $tdr ('PrecastKit');
     $tdr ('CastKit');
     $tdr ('ImpactKit');
@@ -60,9 +71,8 @@ function showSpellVisuals ()
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
+  wrapUpSearch ();
 
-  showCount ($results);
 
   } // end of showSpellVisuals
 
@@ -71,10 +81,23 @@ function showOneSpellVisualAnimName ()
   {
   global $id;
 
-  showOneThing (SPELLVISUALANIMNAME, 'alpha_dbc.SpellVisualAnimName', 'ID', $id, "Spell Visual Animation", '',
-      array (
-      ));
+  $row = dbQueryOneParam ("SELECT * FROM ".SPELLVISUALANIMNAME." WHERE ID = ?", array ('i', &$id));
+
+  // page content
+  pageContent (false, 'Spell Visual Anim Name', $row ['Name'], 'spell_visual_anim_names',
+       function ($info)
+        {
+        // put it down the bottom in the table area
+        bottomSection ($info, function ($info)
+          {
+          global $id;
+          showOneThing (SPELLVISUALANIMNAME, 'alpha_dbc.SpellVisualAnimName', 'ID',
+                        $id, "Spell Visual Animation", '',  array ());
+          });
+        },
+        SPELLVISUALANIMNAME);
   } // end of showOneSpellVisualAnimName
+
 
 function showSpellVisualAnimNames ()
   {
@@ -87,37 +110,33 @@ function showSpellVisualAnimNames ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'AnimID';
 
-//  echo "<h2>Spell Visual Animation names</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Spell Visual Animation names', 'ID', array ());
+  $results = setUpSearch ('Spell Visual Animation names',
+                          $sortFields,            // fields we can sort on
+                          array ('ID', 'AnimID', 'Name'),    // headings
+                          'ID',                // key
+                          array ('Name'),  // searchable fields
+                          SPELLVISUALANIMNAME,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".SPELLVISUALANIMNAME." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, SPELLVISUALANIMNAME, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('ID', 'AnimID', 'Name'));
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_spell_visual_anim&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_spell_visual_anim&id=$id$searchURI'>$id</a>");
     $tdr ('AnimID');
     $td ('Name');
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
-
-  showCount ($results);
-
+  wrapUpSearch ();
   } // end of showSpellVisualAnimNames
 
 
@@ -125,9 +144,21 @@ function showOneSpellVisualEffectName ()
   {
   global $id;
 
-  showOneThing (SPELLVISUALEFFECTNAME, 'alpha_dbc.SpellVisualEffectName', 'ID', $id, "Spell Visual Effect", '',
-      array (
-      ));
+  $row = dbQueryOneParam ("SELECT * FROM ".SPELLVISUALEFFECTNAME." WHERE ID = ?", array ('i', &$id));
+
+  // page content
+  pageContent (false, 'Spell Visual Effect Name', $row ['FileName'], 'spell_visual_effect_names',
+       function ($info)
+        {
+        // put it down the bottom in the table area
+        bottomSection ($info, function ($info)
+          {
+          global $id;
+          showOneThing (SPELLVISUALEFFECTNAME, 'alpha_dbc.SpellVisualEffectName', 'ID',
+                        $id, "Spell Visual Effect", '',  array ());
+          });
+        },
+        SPELLVISUALEFFECTNAME);
   } // end of showOneSpellVisualEffectName
 
 function showSpellVisualEffectNames ()
@@ -141,35 +172,33 @@ function showSpellVisualEffectNames ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'FileName';
 
- // echo "<h2>Spell Visual Effect names</h2>\n";
-
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
-  setUpSearch ('Spell Visual Effect names', 'ID', array ());
+  $results = setUpSearch ('Spell Visual Effect names',
+                          $sortFields,            // fields we can sort on
+                          array ('ID', 'File Name'),    // headings
+                          'ID',                // key
+                          array ('FileName'),  // searchable fields
+                          SPELLVISUALEFFECTNAME,          // table
+                          '');     // extra conditions
 
-  $offset = getQueryOffset(); // based on the requested page number
-
-  $results = dbQueryParam ("SELECT * FROM ".SPELLVISUALEFFECTNAME." $where ORDER BY $sort_order, ID LIMIT $offset, " . QUERY_LIMIT,
-                    $params);
-
-  if (!showSearchForm ($sortFields, $results, SPELLVISUALEFFECTNAME, $where))
+  if (!$results)
     return;
 
-  echo "<table class='search_results'>\n";
-  headings (array ('ID', 'File Name'));
+  $searchURI = makeSearchURI (true);
+
   foreach ($results as $row)
     {
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_spell_visual_effect&id=$id'>$id</a>");
+    tdhr ("<a href='?action=show_spell_visual_effect&id=$id$searchURI'>$id</a>");
     $td ('FileName');
     showFilterColumn ($row);
     echo "</tr>\n";
     }
-  echo "</table>\n";
+  wrapUpSearch ();
 
-  showCount ($results);
 
   } // end of showSpellVisualEffectNames
 

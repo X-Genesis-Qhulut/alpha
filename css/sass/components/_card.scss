@@ -32,11 +32,12 @@
     overflow-y: scroll;
 
     &__cover {
-      width: 97%;
+      width: 96.5%;
       max-height: 150px;
       object-fit: cover;
+      margin-left: 7px;
       margin-top: 10px;
-      margin-right: 10px;
+      border-radius: 10px;
     }
 
     &__thumbnail {

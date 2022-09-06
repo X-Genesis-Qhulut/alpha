@@ -294,6 +294,43 @@ function showQuestChain ()
 
 } // end of showQuestChain
 
+function questTopMiddle ($info)
+  {
+  $row = $info ['row'];
+
+  boxTitle ("Quest simulation");
+  simulateQuest ($row);
+  } // end of questTopMiddle
+
+function questDetails ($info)
+  {
+  global $id;
+
+  $row = $info ['row'];
+
+  topSection    ($info, function ($info) use ($id)
+      {
+      topMiddle ($info, 'questTopMiddle');
+      });
+
+  middleSection ($info, function ($info) use ($id, $row)
+      {
+      showQuestGivers ();
+      showQuestFinishers ();
+      showQuestChain ();
+
+      });
+
+  bottomSection ($info, function ($info) use ($id)
+      {
+      $extras = $info ['extras'];
+      showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id,
+                  "Database entry for quest", "Title", $extras);
+      });
+
+  } // end of questDetails
+
+
 function showOneQuest ()
   {
   global $id;
@@ -301,10 +338,7 @@ function showOneQuest ()
 
  // we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".QUEST_TEMPLATE." WHERE entry = ?", array ('i', &$id));
-
   $name = $row ['Title'];
-
-  startOfPageCSS ('Quest', $name, 'quests');
 
   $extras = array (
         'SrcItemId' => 'item',
@@ -337,35 +371,13 @@ function showOneQuest ()
   for ($i = 1; $i <= QUEST_REWARD_REPUTATION; $i++)
     $extras ["RewRepFaction$i"] = 'faction';
 
-  echo "<div class='object-container__informations__details2'>\n";
-  boxTitle ("Quest simulation");
-  simulateQuest ($row);
-  echo "</div>\n";  // end of object-container__informations__details2
+  // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => array ());
 
-
-  echo "</div>\n";  // end of object-container__informations__details2  (spawn points, quests, etc.)
-
-  comment ('OTHER DETAILS');
-
-
-  echo "<div class='details-container' style='display:flex;'>\n";
-
-  showQuestGivers ();
-  showQuestFinishers ();
-  showQuestChain ();
-
-  echo "</div>\n"; // details-container
-
-
-  echo "<div class='object-container__items'>\n";
-  showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id, "Quest details", "Title", $extras);
-  echo "</div>\n";  // end of object-container__items
-
-
-  endOfPageCSS ();
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Quest', $name, 'quests', 'questDetails', QUEST_TEMPLATE);
 
   } // end of showOneQuest
-
 
 
 function showQuests ()

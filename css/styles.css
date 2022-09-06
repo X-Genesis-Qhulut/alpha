@@ -247,7 +247,8 @@ a {
 }
 .element-information__content {
   overflow-y: scroll;
-  max-height: 150px;
+  max-height: 147.8px;
+  min-height: 147.8px;
   padding-top: 0px;
   margin-top: 0px;
 }
@@ -433,11 +434,12 @@ a {
   overflow-y: scroll;
 }
 .card__content__cover {
-  width: 97%;
+  width: 96.5%;
   max-height: 150px;
   object-fit: cover;
+  margin-left: 7px;
   margin-top: 10px;
-  margin-right: 10px;
+  border-radius: 10px;
 }
 .card__content__thumbnail {
   float: left;
@@ -480,6 +482,9 @@ a {
   flex-direction: column;
   justify-content: right;
   position: relative;
+}
+.search-bar #proximity-coord {
+  margin-right: 0px;
 }
 .search-bar span {
   color: #e44d4d;
@@ -707,6 +712,7 @@ a {
 
 /* Extra stuff for simulated quests */
 .page_text {
+  padding-top: 20px;
   font-family: serif;
   font-size: larger;
 }
@@ -761,6 +767,7 @@ a {
   min-height: 800px;
   min-width: 700px;
   max-width: 1960px;
+  box-shadow: 0px 0px 20px #1e1e1e;
 }
 
 .menu-bar-main-container {
@@ -961,6 +968,7 @@ a {
   flex-grow: 1;
   padding: 0px 20px 0px 20px;
   background-color: #535353;
+  display: flex;
   flex-direction: column;
   border-radius: 20px;
   box-shadow: 0px 0px 9px #303030;

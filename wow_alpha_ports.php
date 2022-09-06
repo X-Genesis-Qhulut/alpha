@@ -9,12 +9,36 @@
 
 // WORLD PORTS (for use with .tel command)
 
-function extraPortInformation ($id, $row)
+function portTopLeft ($info)
   {
-    showSpawnPoints (array ($row), 'Teleport location', 'alpha_world.worldports',
+  global $id;
+      $extras = $info ['extras'];
+      comment ('PORT DETAILS');
+        showOneThing (WORLDPORTS, 'alpha_world.worldports', 'entry', $id, "World Port", "name", $extras);
+
+  } // end of portTopLeft
+
+function portTopRight ($info)
+  {
+  global $id;
+  $row = $info ['row'];
+
+  showSpawnPoints (array ($row), 'Teleport location', 'alpha_world.worldports',
                     'x', 'y', 'z', 'map');
 
-  } // end of extraPortInformation
+  } // end of portTopRight
+
+function portDetails ($info)
+  {
+  global $id;
+
+  topSection    ($info, function ($info)
+      {
+      topMiddle ($info, 'portTopLeft');
+      topRight ($info, 'portTopRight');
+      });
+  } // end of portDetails
+
 
 function showOnePort ()
   {
@@ -24,18 +48,11 @@ function showOnePort ()
   $row = dbQueryOneParam ("SELECT * FROM ".WORLDPORTS." WHERE entry = ?", array ('i', &$id));
 
   $name = $row ['name'];
-
-  startOfPageCSS ('World ports', $name, 'ports');
-  echo "<div class='object-container__items'>\n";
-
-  showOneThing (WORLDPORTS, 'alpha_world.worldports', 'entry', $id, "World Port", "name",
-      array (
-        'map' => 'map',
-      ));
-
-  echo "</div>\n";  // end of object-container__items
-  endOfPageCSS ();
-
+  $extras = array ('map' => 'map');
+  // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => array ());
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Port', $name, 'ports', 'portDetails', WORLDPORTS);
 
   } // end of showOnePort
 
@@ -55,7 +72,6 @@ function showPorts ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
 
-//  echo "<p>For use with <b>.tel</b> command. Only map 0 and 1 shown.\n";
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
@@ -70,6 +86,8 @@ function showPorts ()
 
   if (!$results)
     return;
+
+  echo "<ul><li>For use with <b>.tel</b> command. Only map 0 and 1 shown.</ul>\n";
 
   $searchURI = makeSearchURI (true);
 

@@ -13,4 +13,5 @@
   min-height: 800px;
   min-width: 700px;
   max-width: 1960px;
+  @include main-shadow;
 }

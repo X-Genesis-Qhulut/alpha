@@ -12,32 +12,35 @@
 // https://wowdev.wiki/DB/WorldMapArea
 
 
+
+function mapDetails ($info)
+  {
+  bottomSection ($info, function ($info)
+      {
+      global $id;
+      $extras = $info ['extras'];
+      comment ('MAP DETAILS');
+      showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  $extras);
+      });
+  } // end of mapDetails
+
+
 function showOneMap ()
   {
   global $id;
 
-// we need the item info in this function
   $row = dbQueryOneParam ("SELECT * FROM ".MAP." WHERE ID = ?", array ('i', &$id));
-
   $name = $row ['Directory'];
-
-  startOfPageCSS ('Map', $name, 'maps');
-  echo "<div class='object-container__items'>\n";
-
-  showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  array (
-                'MapName_Mask' => 'mask',
-                ));
-
-  echo "</div>\n";  // end of object-container__items
-  endOfPageCSS ();
-
+  $extras = array ('MapName_Mask' => 'mask');
+  // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => array ());
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Map', $name, 'maps', 'mapDetails', MAP);
   } // end of showOneMap
 
 function showMaps ()
   {
   global $where, $params, $sort_order;
-
-
   $sortFields = array (
     'ID',
     'Directory',

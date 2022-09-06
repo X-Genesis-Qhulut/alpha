@@ -663,9 +663,6 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
 */
 
 
-  if (!$limit)
-    echo "<div class='table-container'>";
-
   if ($description)
     boxTitle ($description);
 
@@ -713,8 +710,6 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
   echo "</tbody>\n";
   echo "</table>\n";
 
-  if (!$limit)
-    echo "</div>\n";  // end of table-container
 
 /*
   // extra stuff

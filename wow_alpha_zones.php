@@ -9,6 +9,18 @@
 
 // ZONES
 
+function zoneDetails ($info)
+  {
+  bottomSection ($info, function ($info)
+      {
+      global $id;
+      $extras = $info ['extras'];
+      comment ('ZONE DETAILS');
+      showOneThing (WORLDMAPAREA, 'alpha_dbc.worldzonearea', 'ID', $id, "Zone", "AreaName", $extras);
+      });
+  } // end of zoneDetails
+
+
 function showOneZone ()
   {
   global $id;
@@ -18,16 +30,11 @@ function showOneZone ()
 
   $name = $row ['AreaName'];
 
-  startOfPageCSS ('Zone info', $name, 'zones');
-  echo "<div class='object-container__items'>\n";
-
-  showOneThing (WORLDMAPAREA, 'alpha_dbc.worldmaparea', 'ID', $id, "Zone", "AreaName",
-      array (
-        'MapID' => 'map',
-      ));
-
-  echo "</div>\n";  // end of object-container__items
-  endOfPageCSS ();
+ $extras = array ('MapID' => 'map');
+  // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => array ());
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Map', $name, 'zones', 'zoneDetails', WORLDMAPAREA);
   } // end of showOneZone
 
 function showZones ()

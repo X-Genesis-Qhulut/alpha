@@ -9,6 +9,18 @@
 
 // SKILLS
 
+function skillDetails ($info)
+  {
+  bottomSection ($info, function ($info)
+      {
+      global $id;
+      $extras = $info ['extras'];
+      comment ('MAP DETAILS');
+      showOneThing (SKILLLINE, 'alpha_dbc.skillline', 'ID', $id, "Skill", "DisplayName_enUS",  $extras);
+      });
+  } // end of skillDetails
+
+
 function showOneSkill ()
   {
   global $id;
@@ -18,19 +30,17 @@ function showOneSkill ()
 
   $name = $row ['DisplayName_enUS'];
 
-  startOfPageCSS ('Skill details', $name, 'skills');
-  echo "<div class='object-container__items'>\n";
-
-  showOneThing (SKILLLINE, 'alpha_dbc.skillline', 'ID', $id, "Skill", "DisplayName_enUS",
-      array (
+  $extras = array (
         'RaceMask'  => 'race_mask',
         'ClassMask' => 'class_mask',
         'SkillType' => 'skill_type',
         'DisplayName_Mask' => 'mask',
-      ));
+      );
 
-  echo "</div>\n";  // end of object-container__items
-  endOfPageCSS ();
+  // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => array ());
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Skill', $name, 'skills', 'skillDetails', SKILLLINE);
 
   } // end of showOneSkill
 

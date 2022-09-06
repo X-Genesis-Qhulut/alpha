@@ -326,6 +326,71 @@ function spellCasters ()
 
 } // end of spellCasters
 
+function spellTopLeft ($info)
+{
+  global $id;
+  global $documentRoot, $executionDir;
+
+  $row = $info ['row'];
+  $extras = $info ['extras'];
+  $limit = $info ['limit'];
+
+  boxTitle ('General');
+
+  comment ('ICON');
+  showSpellIcon ($row);
+
+  echo "<p></p>\n";
+
+  comment ('SHORT LISTING OF FIELDS');
+  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "", "Name_enUS", $extras, $limit);
+
+} // end of spellTopLeft
+
+function spellTopMiddle ($info)
+{
+  global $id;
+  global $documentRoot, $executionDir;
+
+  $row = $info ['row'];
+  $extras = $info ['extras'];
+  $limit = $info ['limit'];
+
+  simulateSpell ($row);
+
+
+}   // end of spellTopMiddle
+
+
+function spellDetails ($info)
+  {
+  global $id;
+
+  $row = $info ['row'];
+
+  topSection    ($info, function ($info) use ($id, $row)
+      {
+      topLeft   ($info, 'spellTopLeft');
+      topMiddle ($info, 'spellTopMiddle');
+      });
+
+  middleSection ($info, function ($info) use ($id, $row)
+      {
+      spellTrainers ();
+      spellItemCasters ();
+      spellCasters ();
+      });
+
+  bottomSection ($info, function ($info) use ($id)
+      {
+      $extras = $info ['extras'];
+      comment ('SPELL DETAILS');
+      showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell details", "Name_enUS", $extras);
+      });
+
+  } // end of spellDetails
+
+
 function showOneSpell ()
   {
   global $id;
@@ -372,12 +437,7 @@ function showOneSpell ()
   if ($row ['NameSubtext_enUS'])
     $name .= fixHTML (' <' . $row ['NameSubtext_enUS'] . '>');
 
-  startOfPageCSS ('Spell', $name, 'spells');
-  echo "<div class='object-container__informations__details1'>\n";
-  boxTitle ('General');
 
-  showSpellIcon ($row);
-  echo "<p>\n";
 
 
   $limit = array (
@@ -389,38 +449,11 @@ function showOneSpell ()
     'SpellIconId',
     );
 
-  comment ('SHORT LISTING OF FIELDS');
-  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "", "Name_enUS", $extras, $limit);
+ // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => $limit);
 
-  echo "</div>\n";  // end of details__informations__details1
-
-  echo "<div class='object-container__informations__details2'>\n";
-  boxTitle ("Spell simulation");
-
-  simulateSpell ($row);
-
-  echo "</div>\n";  // end of object-container__informations__details2
-
-  echo "</div>\n";  // end of details-container
-
-
-  echo "<div class='details-container' style='display:flex;'>\n";
-
-  spellTrainers ();
-  spellItemCasters ();
-  spellCasters ();
-
-  echo "</div>\n";  // end of details-container
-
-
-  comment ('SPELL DETAILS');
-
-  echo "<div class='object-container__items'>\n";
-  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell details", "Name_enUS", $extras);
-  echo "</div>\n";  // end of object-container__items
-
-  endOfPageCSS ();
-
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Spell', $name, 'spells', 'spellDetails', SPELL);
 
   } // end of showOneSpell
 

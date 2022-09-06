@@ -56,8 +56,7 @@ function simulateItem ($row)
 
   comment ('SIMULATED ITEM CONTAINER');
 
-  echo "<div class='object-container__informations__details2'>\n";
-  boxTitle ('Simulated in-game view');
+  boxTitle ('In-game view');
   echo "<div class='simulate_box item'>";
 
  // simulate item
@@ -196,8 +195,7 @@ function simulateItem ($row)
     echo "<p class='read_page'><a href='?action=read_text&id=$page_text&item=$id' >Click to read</a></p>\n";
     }
 
-  echo "</div>\n";  // end of simulate_box item
-  echo "</div>\n";  // end of object-container__informations__details2
+  endDiv ('simulate_box item');
 
   comment ('END SIMULATED ITEM CONTAINER');
 
@@ -342,12 +340,80 @@ function showItemModel ($row)
   <!-- MODEL DISPLAY ID -->
   <img
     class='model-display'
-    src='no-image.png'
+    src='missing_creature.png'
     alt='Item model'
   />
   <!-- END MODEL DISPLAY ID -->
   ";
 } // end of showItemModel
+
+
+function itemTopLeft ($info)
+{
+  global $id;
+  global $documentRoot, $executionDir;
+
+  $row = $info ['row'];
+  $extras = $info ['extras'];
+  $limit = $info ['limit'];
+
+  boxTitle ('General');
+
+  comment ('ICON');
+
+  $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
+
+  if ($imageRow)
+    {
+    $icon = $imageRow ['InventoryIcon'] . '.png';
+    if (file_exists ("$documentRoot$executionDir/icons/$icon"))
+      echo "<img src='icons/$icon' alt='Item icon' title='" . fixHTML ($imageRow ['InventoryIcon']) . "'>\n";
+    else
+      echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
+    }
+  else
+    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
+
+  echo "<p></p>\n";
+
+  comment ('SHORT LISTING OF FIELDS');
+  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry',
+              $id, "", "name", $extras, $limit);
+
+} // end of itemTopLeft
+
+function itemTopMiddle ($info)
+{
+  $row = $info ['row'];
+  simulateItem ($row);
+}   // end of itemTopMiddle
+
+
+function itemDetails ($info)
+  {
+  global $id;
+
+  topSection    ($info, function ($info)       {
+      topLeft   ($info, 'itemTopLeft');
+      topMiddle ($info, 'itemTopMiddle');
+      });
+
+  middleSection ($info, function ($info)
+      {
+      showItemVendors ();
+      showItemDrops ();
+      showItemSkinningLoot ();
+      });
+
+  bottomSection ($info, function ($info) use ($id)
+      {
+      $extras = $info ['extras'];
+      comment ('ITEM DETAILS');
+      showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry',
+                    $id, "Item details", "name", $extras);
+      });
+
+  } // end of itemDetails
 
 
 function showOneItem ()
@@ -391,12 +457,6 @@ function showOneItem ()
 
   $name = $row ['name'];
 
-  startOfPageCSS ('Item', $name, 'items');
-  echo "<div class='object-container__informations__details1'>\n";
-  boxTitle ('General');
-
-  showItemModel ($row);
-
 
   // fields to show in short summary
   $limit = array (
@@ -409,35 +469,12 @@ function showOneItem ()
 
   );
 
-  comment ('SHORT LISTING OF FIELDS');
-  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "", "name", $extras, $limit);
 
-  echo "</div>\n";  // end of details__informations__details1
+ // we pass this stuff around to the helper functions
+  $info = array ('row' => $row, 'extras' => $extras, 'limit' => $limit);
 
-  simulateItem ($row);
-
-  echo "</div>\n";  // end of object-container__informations__details1  (spawn points, quests, etc.)
-
-  comment ('OTHER DETAILS');
-
-  echo "<div class='details-container' style='display:flex;'>\n";
-
-  showItemVendors ();
-  showItemDrops ();
-  showItemSkinningLoot ();
-
-  echo "</div>\n"; // details-container
-
-
-  comment ('ITEM DETAILS');
-
-
-  echo "<div class='object-container__items'>\n";
-  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry', $id, "Item details", "name", $extras);
-  echo "</div>\n";  // end of object-container__items
-
-
-  endOfPageCSS ();
+  // ready to go! show the page info and work our way down into the sub-functions
+  pageContent ($info, 'Item', $name, 'items', 'itemDetails', ITEM_TEMPLATE);
 
 
   } // end of showOneItem

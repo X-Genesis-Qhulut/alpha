@@ -217,7 +217,7 @@ function mainPage ()
                 <h2 class='medium-title__heading'>Validation</h2>
                 <div class='medium-title__bar'></div>
               </div>
-              <i class='card__icon fas fa-pen'></i>
+              <i class='card__icon fas fa-cog'></i>
               <div class='card__content card--validation__content'>
                 <h3>NPC</h3>
                 <ul>
