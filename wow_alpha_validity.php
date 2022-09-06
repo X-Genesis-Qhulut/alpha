@@ -467,7 +467,7 @@ function showNoItemTextDetails ()
                       FROM $item_template AS T1
                           LEFT JOIN $page_text AS T2
                       ON (T1.page_text = T2.entry)
-                      WHERE T2.entry IS NULL AND T1.page_text > 0
+                      WHERE (T2.entry IS NULL OR T2.text = 'Missing Text') AND T1.page_text > 0
                       ORDER BY T1.name");
 
   $count = dbRows ($results);

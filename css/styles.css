@@ -199,7 +199,7 @@ a {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 113px;
+  height: 114px;
   width: 100%;
   padding-left: 30px;
   padding-right: 50px;
@@ -263,9 +263,6 @@ a {
   .page-title__angle {
     font-size: 0.8em;
   }
-  .page-title div:nth-child(3) {
-    visibility: hidden;
-  }
   .page-title--search div:last-child {
     position: absolute;
     width: 0%;
@@ -285,6 +282,9 @@ a {
   }
   .page-title--search div:last-child .search-bar__filters {
     display: flex;
+  }
+  .page-title--search div:last-child #proximity-coord {
+    top: -10px;
   }
 }
 
