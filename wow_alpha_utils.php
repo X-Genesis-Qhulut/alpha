@@ -53,13 +53,17 @@ function ShowError ($theerror)
 function ShowWarningH ($theWarning)
   {
 echo "
-<div class='toaster'>
-  <p class='toaster__header'>WARNING</p>
-  <p class='toaster__body'>
-    $theWarning
-  </p>
-  <p class='toaster__footer'></p>
-  <i class='fa fa-warning'></i>";
+<div class='toaster-container'>
+  <div class='toaster'>
+    <p class='toaster__header'>WARNING</p>
+    <p class='toaster__body'>
+      $theWarning
+    </p>
+    <p class='toaster__footer'></p>
+    <i class='fa fa-warning'></i>
+    ";
+
+  endDiv ('toaster-container');
   endDiv ('toaster');
 
   } // end of ShowWarningH
