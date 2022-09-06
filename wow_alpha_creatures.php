@@ -199,7 +199,7 @@ function creatureSpells ($info)
 
   $row = $info ['row'];
 
-   comment ('SPELLS THEY CAST');
+  comment ('SPELLS THEY CAST');
 
   boxTitle ('Spells they cast');
 
@@ -473,6 +473,10 @@ function creatureDetails ($info)
 
   middleSection ($info, function ($info) use ($row)
       {
+      global $listedItemsCount;
+
+      $listedItemsCount = 0;
+
       if ($row ['spell_list_id'])
         middleDetails ($info, 'creatureSpells');
       creatureVendorItems ($info);
@@ -482,6 +486,12 @@ function creatureDetails ($info)
       creatureReferenceLoot ($info);
       creaturePickpocketingLoot ($info);
       creatureSkinningLoot ($info);
+      if ($listedItemsCount == 0)
+        middleDetails ($info, function ($info)
+          {
+          boxTitle ('Extra information');
+          echo "<ul><li>No further information about this NPC.</ul>";
+            });
       });
 
   bottomSection ($info, function ($info) use ($id)

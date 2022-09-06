@@ -1,0 +1,40 @@
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-height: 500px;
+  max-width: 600px;
+  background-color: $color3;
+  color: $color6;
+  border: 1px solid $color4;
+  border-radius: 20px;
+  z-index: 1000;
+  padding: 20px;
+  @include big-shadow;
+
+  &__header {
+    font-size: 1.5em;
+    border-bottom: 1px solid $color4;
+    margin: 0;
+    padding: 10px;
+    padding-left: 0px;
+    padding-top: 0px;
+  }
+
+  &__body {
+    padding-top: 40px;
+    font-size: 1.1em;
+  }
+
+  & i {
+    position: absolute;
+    top: 5%;
+    right: 2%;
+    font-size: 1.5em;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: $color4;
+  }
+}

@@ -118,12 +118,9 @@ $dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
 if (mysqli_connect_errno())
   MajorProblem ("Cannot connect to server " . DBSERVER . ':' . mysqli_connect_error());
 
-MajorProblem ('blah blah blah');
+ //MajorProblem ('blah blah blah');
 
 $PHP_SELF = $_SERVER['PHP_SELF'];
-
-// echo "<div class='banner' title='Click for menu'><a href='$PHP_SELF'>WoW Alpha 0.5.3 database browser</a></div>\n";
-
 
 // grab things we are likely to cross-reference a lot
 if ($action)
@@ -158,12 +155,11 @@ showBigMenu ();
 if ($action)
   {
 //  showMenu ();
-  $handler = $handlers [$action];
-  if ($handler)
-    $handler ();
+
+  if (array_key_exists ($action, $handlers))
+    $handlers [$action] ();
   else
     ShowWarning ('Unknown action');
- // echo "<hr><a href='$PHP_SELF'>Main Menu</a>\n";
   }
 else  // otherwise show a bigger menu
   mainPage ();

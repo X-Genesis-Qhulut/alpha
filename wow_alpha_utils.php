@@ -86,13 +86,17 @@ function Problem ($why)
 // Use this before database opened
 function MajorProblem ($why)
   {
-  echo "<div class='major_problem' >
-        <p>We apologise that there has been a problem with the server ...</p>";
+echo "
+<div class='modal-container'>
+  <div class='modal'>
+    <p class='modal__header'>Error occurred at " . strftime ("%Y-%m-%d %H:%M:%S", time()) . "</p>
+    <p class='modal__body'>We apologise that there has been a problem with the server ...</p>
+    <p class='modal__footer'>" . fixHTML ($why) . "</p>
+  </div>
+  </main>
+  </body>
+</html>";
 
-  ShowError ($why);
-  echo "<p>Error occurred at " . strftime ("%Y-%m-%d %H:%M:%S", time()) . "</p>
-        </div>
-        </body></html>\n";
   die ();
   } // end of MajorProblem
 
@@ -1019,6 +1023,10 @@ function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints)
 // if the item was listed, and true if it was skipped for some reason.
 function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
 {
+  global $listedItemsCount;
+
+  $listedItemsCount += $totalCount;
+
   // trivial case - nothing to list
   if ($totalCount <= 0)
     return;
@@ -1412,7 +1420,7 @@ function middleDetails ($userInfo, $func)
   comment ("DETAILS IN MIDDLE$funcName");
 
   echo "<div class='element-information element-information--independant'>\n";
-  echo "  <div class='element-information__content'>\n";
+  echo "<div class='element-information__content'>\n";
 
   $func ($userInfo);   // output contents
 

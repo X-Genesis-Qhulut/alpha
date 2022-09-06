@@ -35,6 +35,7 @@
 @import "components/caroussel";
 @import "components/simulated_box";
 @import "components/spawn_point";
+@import "components/modal";
 
 // Containers
 @import "containers/main-container";
@@ -50,6 +51,7 @@
 @import "containers/search-container";
 @import "containers/object-container";
 @import "containers/map-container";
+@import "containers/modal-container";
 
 // Pages:
 // @import "pages/creature-details";

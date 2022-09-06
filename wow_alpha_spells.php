@@ -435,7 +435,7 @@ function showOneSpell ()
   $name = $row ['Name_enUS'];
 
   if ($row ['NameSubtext_enUS'])
-    $name .= fixHTML (' <' . $row ['NameSubtext_enUS'] . '>');
+    $name .= ' <' . $row ['NameSubtext_enUS'] . '>';
 
 
 

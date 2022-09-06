@@ -9,14 +9,17 @@
 
 // BOOKS (page_text)
 
-function simulateBookPage ($row)
+function simulateBookPage ($row, $page = 0)
   {
   echo "<p><div class='simulate_box page_text'>\n";
+  if ($page)
+    boxTitle ("Page $page");
+  echo "<p>";
   echo nl2br_http (fixQuestText ($row ['text']));
   echo "</div>\n";
   }
 
-function showText ()
+function showTextDetails ()
 {
   global $id, $item, $items;
 
@@ -25,7 +28,7 @@ function showText ()
   // to avoid loops
   $shown = array ();
 
-  echo "<h2>" . fixHTML ($items [$item]) . "</h2>\n";
+//  boxTitle ($items [$item]);
   // for each page ...
 
   while ($id)
@@ -34,15 +37,28 @@ function showText ()
     if (!$row)
       break;
     $page++;
-    echo "<h3 style='margin-bottom:0px;'>Page $page</h3>\n";
-    simulateBookPage ($id, $row);
+    simulateBookPage ($row, $page);
     $shown [$id] = true;
     $id = $row ['next_page'];
     // avoid endless loops
     if (array_key_exists ($id, $shown))
       break;
     } // end of while each page
-} // end of showText
+} // end of showTextDetails
+
+function showText ()
+  {
+  global $id, $item, $items;
+  $name = $items [$item];
+  pageContent (false, 'Page', $name , 'books', function ($info)
+    {
+     middleSection (false, function ($info)
+          {
+          showTextDetails ();
+          });
+    }
+  , PAGE_TEXT);
+  } // end of showText
 
 function bookTopLeft ($row)
 {
@@ -66,7 +82,7 @@ function bookRelatedItem ($row)
 
   $page_text = PAGE_TEXT;
   $item_template = ITEM_TEMPLATE;
-  boxTitle ('Related item');
+  boxTitle ('Item containing this page');
 
  // find the page chains
 
@@ -106,7 +122,7 @@ function bookRelatedItem ($row)
     }
   else
     {
-    echo "<li>Item with this text: ";
+    echo "<li>";
     echo lookupThing ($items, $itemRow ['item_key'], 'show_item');
     }
 
