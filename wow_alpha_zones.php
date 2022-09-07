@@ -38,6 +38,7 @@ function showOneZone ()
     } // end of not finding it
 
   $name = $row ['AreaName'];
+  setTitle ("Zone $name");
 
  $extras = array ('MapID' => 'map');
   // we pass this stuff around to the helper functions
@@ -58,6 +59,8 @@ function showZones ()
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'AreaName';
+
+  setTitle ("Zones listing");
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 

@@ -29,6 +29,7 @@ function showOneSpellVisual ()
   pageContent (false, 'Spell Visual', "Spell Visual ID $id", 'spell_visuals',
        function ($info)
         {
+        setTitle ("Spell Visual ID $id ");
         // put it down the bottom in the table area
         bottomSection ($info, function ($info)
           {
@@ -50,6 +51,8 @@ function showSpellVisuals ()
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'ID';
+
+  setTitle ("Spell Visual IDs");
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
@@ -105,6 +108,8 @@ function showOneSpellVisualAnimName ()
   pageContent (false, 'Spell Visual Anim Name', $row ['Name'], 'spell_visual_anim_names',
        function ($info)
         {
+        setTitle ("Spell Visual Anim Name " . $row ['Name']);
+
         // put it down the bottom in the table area
         bottomSection ($info, function ($info)
           {
@@ -128,8 +133,9 @@ function showSpellVisualAnimNames ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'AnimID';
 
+  setTitle ("Spell Visual anim names");
+
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Spell Visual Animation names',
                           $sortFields,            // fields we can sort on
@@ -149,7 +155,7 @@ function showSpellVisualAnimNames ()
     echo "<tr>\n";
     $id = $row ['ID'];
     tdhr ("<a href='?action=show_spell_visual_anim&id=$id$searchURI'>$id</a>");
-    $tdr ('AnimID');
+    $td ('AnimID');
     $td ('Name');
     showFilterColumn ($row);
     echo "</tr>\n";
@@ -178,6 +184,8 @@ function showOneSpellVisualEffectName ()
   pageContent (false, 'Spell Visual Effect Name', $row ['FileName'], 'spell_visual_effect_names',
        function ($info)
         {
+        setTitle ("Spell Visual Effect Name " . $row ['FileName']);
+
         // put it down the bottom in the table area
         bottomSection ($info, function ($info)
           {
@@ -199,6 +207,8 @@ function showSpellVisualEffectNames ()
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'FileName';
+
+  setTitle ("Spell Visual effect names");
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
   $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };

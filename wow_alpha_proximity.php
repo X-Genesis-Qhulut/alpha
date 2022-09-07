@@ -129,6 +129,8 @@ function showProximity ()
 
   $PHP_SELF = $_SERVER['PHP_SELF'];
 
+  setTitle ("Proximity search");
+
   searchContainerStart ('', 'Proximity search');
   echo "
    <form method='post' action='$PHP_SELF'>

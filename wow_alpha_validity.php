@@ -131,6 +131,8 @@ function showUnknownFactionDetails ()
 
 function showUnknownFaction ()
   {
+  setTitle ("Unknown factions");
+
   pageContent (false, 'Validation', 'Faction validation',  '', function ($info)
     {
     bottomSectionMany ($info, 'showUnknownFactionDetails');
@@ -188,6 +190,8 @@ function showMissingQuestItemsDetails ()
 
 function showMissingQuestItems ()
   {
+  setTitle ("Quests with missing items");
+
   pageContent (false, 'Validation', 'Quest items',  '', function ($info)
     {
     bottomSectionMany ($info, 'showMissingQuestItemsDetails');
@@ -241,6 +245,8 @@ function showMissingQuestSpellsDetails ()
 
 function showMissingQuestSpells ()
   {
+  setTitle ("Quests with missing spells");
+
   pageContent (false, 'Validation', 'Quest/spell validation',  '', function ($info)
     {
     bottomSectionMany ($info, 'showMissingQuestSpellsDetails');
@@ -295,6 +301,8 @@ function showMissingQuestQuestsDetails ()
 
 function showMissingQuestQuests ()
   {
+  setTitle ("Quest chain validation");
+
   pageContent (false, 'Validation', 'Quest chain validation',  '', function ($info)
     {
     bottomSectionMany ($info, 'showMissingQuestQuestsDetails');
@@ -362,6 +370,8 @@ function showMissingCreatureQuestsDetails ($info)
 
 function showMissingCreatureQuests ()
   {
+  setTitle ("NPCs with missing quests");
+
   pageContent (false, 'Validation', 'NPC/Quest validation',  '', function ($info)
     {
     bottomSectionMany ($info, 'showMissingCreatureQuestsDetails');
@@ -421,6 +431,8 @@ function showMissingGameobjectQuestsDetails ()
 
 function showMissingGameobjectQuests ()
   {
+  setTitle ("G/Os with missing quests");
+
   pageContent (false, 'Validation', 'Game object/Quest validation',  '', function ($info)
     {
     bottomSectionMany ($info, 'showMissingGameobjectQuestsDetails');
@@ -451,6 +463,8 @@ function showGameObjectsNotSpawnedDetails ()
 
 function showGameObjectsNotSpawned ()
   {
+  setTitle ("Game objects not spawned");
+
   pageContent (false, 'Validation', 'Game objects not spawned',  '', function ($info)
     {
     bottomSectionMany ($info, 'showGameObjectsNotSpawnedDetails');
@@ -488,6 +502,8 @@ function showNoItemTextDetails ()
 
 function showNoItemText ()
   {
+  setTitle ("Items with no page");
+
   pageContent (false, 'Validation', 'Items which should have pages',  '', function ($info)
     {
     bottomSectionMany ($info, 'showNoItemTextDetails');

@@ -945,7 +945,7 @@ function startElementInformation ($heading, $table, $uptop = false)
 
   } // end of startElementInformation
 
-function endElementInformation ($uptop = false)
+function endElementInformation ()
   {
   endDiv ('element-information__content');
   endDiv ('element-information [element-information--independant]');
@@ -1050,7 +1050,7 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $upt
     } // for each row
 
   echo "</ul>\n";
-  endElementInformation ($uptop);
+  endElementInformation ();
   return $running_count;
 }
 
@@ -1313,9 +1313,9 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
     <!-- PAGE TITLE -->
     <div class='page-title'>
       <div>
-        <a href='?action=$goback$searchURI' class='page-title__goback'>
-          <i class='fas fa-angle-left'></i>
-        </a>";
+        <button class='page-title__goback'>
+          <i class='fas fa-angle-left' onclick='window.history.go(-1); return false;' ></i>
+        </button>";
     if ($name)
       echo "
         <h1>" . fixHTML ($name) . "</h1>
@@ -1547,4 +1547,9 @@ function checkID ()
     }
   return true;
 } // end of checkID
+
+function setTitle ($what)
+  {
+  echo "\n<script> document.title = 'WoW DB | $what' </script>\n";
+  }
 ?>

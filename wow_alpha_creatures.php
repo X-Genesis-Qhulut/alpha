@@ -572,6 +572,8 @@ function showOneCreature ()
   if ($row ['subname'])
     $name .= ' <' . $row ['subname'] . '>';
 
+  setTitle ("NPC $name");
+
   $limit = array (
     'entry',
     'display_id1',
@@ -601,6 +603,8 @@ function showCreatures ()
     'subname',
     'level_min',
   );
+
+  setTitle ("NPCs listing");
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';

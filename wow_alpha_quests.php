@@ -350,6 +350,8 @@ function showOneQuest ()
 
   $name = $row ['Title'];
 
+  setTitle ("Quest $name");
+
   $extras = array (
         'SrcItemId' => 'item',
         'PrevQuestId' => 'quest',
@@ -404,6 +406,7 @@ function showQuests ()
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'Title';
 
+  setTitle ("Quests listing");
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 

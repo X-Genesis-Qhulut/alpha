@@ -41,6 +41,9 @@ function showOneMap ()
     } // end of not finding it
 
   $name = $row ['Directory'];
+
+  setTitle ("Map $name");
+
   $extras = array ('MapName_Mask' => 'mask');
   // we pass this stuff around to the helper functions
   $info = array ('row' => $row, 'extras' => $extras, 'limit' => array ());
@@ -55,6 +58,8 @@ function showMaps ()
     'ID',
     'Directory',
   );
+
+  setTitle ("Maps listing");
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'Directory';

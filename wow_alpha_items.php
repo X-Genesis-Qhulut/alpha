@@ -466,6 +466,8 @@ function showOneItem ()
 
   $name = $row ['name'];
 
+  setTitle ("Item $name");
+
 
   // fields to show in short summary
   $limit = array (
@@ -491,6 +493,8 @@ function showOneItem ()
 function showItems ()
   {
   global $where, $params, $sort_order;
+
+  setTitle ('Items listing');
 
   $sortFields = array (
     'entry',

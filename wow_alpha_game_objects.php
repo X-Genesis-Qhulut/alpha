@@ -20,6 +20,8 @@ function simulateGameObject ($info)
 
   comment ('SIMULATE GAME OBJECT');
 
+  boxTitle ('Details');
+
   // SIMULATE GAME OBJECT
 
   echo "<div class='simulate_box gameobject'>\n";
@@ -329,6 +331,8 @@ function showOneGameobject ()
 
   $name = $row ['name'];
 
+  setTitle ("G/O $name");
+
   // we pass this stuff around to the helper functions
   $info = array ('row' => $row, 'extras' => $extras, 'limit' => $limit);
 
@@ -350,6 +354,8 @@ function showGameObjects ()
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
+
+  setTitle ("Game objects listing");
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 

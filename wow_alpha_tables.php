@@ -75,6 +75,8 @@ function showOneTable ()
   {
   global $database, $table;
 
+  setTitle ("Database table: $table");
+
   pageContent (false, 'Table', $database . '.' . $table, 'tables', 'tableDetails', $database);
 
   } // end of showOneTable
@@ -107,6 +109,8 @@ function showTablesHelper ($tableName, $headingName)
 
 function showAllTables ($info)
 {
+  setTitle ("Database tables");
+
   bottomSectionMany ($info, function ($info)
       {
       showTablesHelper (DBC_DBNAME, "alpha_dbc");

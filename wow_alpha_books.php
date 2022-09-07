@@ -169,6 +169,8 @@ function showOneBook ()
     return;
     }
 
+  setTitle ("Book page (entry) $id");
+
   pageContent ($row, 'Page', "Page (entry) $id", 'books', 'bookDetails', PAGE_TEXT);
   } // end of showOneBook
 
@@ -181,6 +183,8 @@ function showBooks ()
     'text',
     'next_page',
   );
+
+  setTitle ('Books listing');
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'entry';

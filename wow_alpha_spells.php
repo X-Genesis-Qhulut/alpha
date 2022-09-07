@@ -449,6 +449,8 @@ function showOneSpell ()
   if ($row ['NameSubtext_enUS'])
     $name .= ' <' . $row ['NameSubtext_enUS'] . '>';
 
+  setTitle ("Spell $name");
+
   $limit = array (
     'ID',
     'School',
@@ -470,6 +472,8 @@ function showSpells ()
   {
   global $where, $params, $sort_order;
 
+  setTitle ('Spells listing');
+
   $sortFields = array (
     'ID',
     'Name_enUS',
@@ -484,7 +488,6 @@ function showSpells ()
     $sort_order = 'Name_enUS';
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
 
   $results = setUpSearch ('Spells',
                           $sortFields,            // fields we can sort on
@@ -505,10 +508,9 @@ function showSpells ()
     echo "<tr>\n";
     $id = $row ['ID'];
     tdhr ("<a href='?action=show_spell&id=$id$searchURI'>$id</a>");
-    $td ('Name_enUS');
+    tdhr ("<a href='?action=show_spell&id=$id$searchURI'>" . $row ['Name_enUS'] . "</a>");
     $td ('NameSubtext_enUS');
     tdx (expandSimple (SPELL_SCHOOLS, $row ['School'], false));
-//    $tdr ('Category');
     tdx (expandSimple (POWER_TYPES, $row ['PowerType'], false));
     $reagents = array ();
     $reagentCounts = array ();

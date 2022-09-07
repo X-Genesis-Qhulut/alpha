@@ -39,6 +39,8 @@ function showOneSkill ()
 
   $name = $row ['DisplayName_enUS'];
 
+  setTitle ("Skill $name");
+
   $extras = array (
         'RaceMask'  => 'race_mask',
         'ClassMask' => 'class_mask',
@@ -67,6 +69,8 @@ function showSkills ()
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'DisplayName_enUS';
+
+  setTitle ("Skills listing");
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 

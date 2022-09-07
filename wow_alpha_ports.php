@@ -57,6 +57,8 @@ function showOnePort ()
     } // end of not finding it
 
   $name = $row ['name'];
+  setTitle ("Port $name");
+
   $extras = array ('map' => 'map');
   // we pass this stuff around to the helper functions
   $info = array ('row' => $row, 'extras' => $extras, 'limit' => array ());
@@ -80,6 +82,8 @@ function showPorts ()
 
   if (!in_array ($sort_order, $sortFields))
     $sort_order = 'name';
+
+  setTitle ("Ports listing");
 
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
