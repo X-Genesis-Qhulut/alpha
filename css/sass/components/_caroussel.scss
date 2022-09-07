@@ -2,8 +2,7 @@
   display: flex;
   max-width: 272px;
   max-height: 648px;
-
-  overflow-x: scroll;
+  overflow: hidden;
   margin-left: 2%;
   scroll-behavior: smooth;
   -ms-overflow-style: none; /* for Internet Explorer, Edge */
@@ -13,33 +12,33 @@
   @include big-shadow;
   border-radius: 20px 0px 0px 20px;
 
+  // ::-webkit-scrollbar {
+  //   display: none;
+  // }
+
   & img {
   }
 
   &__left-arrow {
     position: absolute;
     z-index: 50;
-    font-size: 3em;
-    color: white;
+    font-size: 4em;
+    color: rgb(249, 249, 249);
     font-weight: bold;
     padding: 0px 10px;
-    top: 50%;
-    left: 278px;
-
-    & svg {
-      border: 10px solid black;
-    }
+    top: 40%;
+    left: 270px;
   }
 
   &__right-arrow {
     position: absolute;
     z-index: 50;
-    font-size: 3em;
-    color: white;
+    font-size: 4em;
+    color: rgb(249, 249, 249);
     font-weight: bold;
     padding: 0px 10px;
-    top: 50%;
-    left: 215px;
+    top: 40%;
+    left: 218px;
   }
 
   @include tiny-laptop-design {

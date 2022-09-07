@@ -15,6 +15,10 @@
     align-items: center;
   }
 
+  & #proximity-distance {
+    max-width: 100px;
+  }
+
   &__goback {
     background-color: transparent;
     margin-right: 30px;
@@ -89,6 +93,14 @@
     // & div:nth-child(3) {
     //   visibility: hidden;
     // }
+
+    & .big-title__bar {
+      display: none;
+    }
+
+    & .big-title__subtitle {
+      visibility: hidden;
+    }
 
     &--search {
       & div:last-child {

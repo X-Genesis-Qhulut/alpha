@@ -209,6 +209,9 @@ a {
   display: flex;
   align-items: center;
 }
+.page-title #proximity-distance {
+  max-width: 100px;
+}
 .page-title__goback {
   background-color: transparent;
   margin-right: 30px;
@@ -262,6 +265,12 @@ a {
   }
   .page-title__angle {
     font-size: 0.8em;
+  }
+  .page-title .big-title__bar {
+    display: none;
+  }
+  .page-title .big-title__subtitle {
+    visibility: hidden;
   }
   .page-title--search div:last-child {
     position: absolute;
@@ -612,6 +621,9 @@ a {
   transition: all 300ms;
   box-shadow: 0px 0px 6px #1e1e1e;
 }
+.card ::-webkit-scrollbar {
+  display: none;
+}
 .card__icon {
   position: absolute;
   right: 5%;
@@ -917,7 +929,7 @@ a {
   display: flex;
   max-width: 272px;
   max-height: 648px;
-  overflow-x: scroll;
+  overflow: hidden;
   margin-left: 2%;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
@@ -932,25 +944,22 @@ a {
 .caroussel__left-arrow {
   position: absolute;
   z-index: 50;
-  font-size: 3em;
-  color: white;
+  font-size: 4em;
+  color: #f9f9f9;
   font-weight: bold;
   padding: 0px 10px;
-  top: 50%;
-  left: 278px;
-}
-.caroussel__left-arrow svg {
-  border: 10px solid black;
+  top: 40%;
+  left: 270px;
 }
 .caroussel__right-arrow {
   position: absolute;
   z-index: 50;
-  font-size: 3em;
-  color: white;
+  font-size: 4em;
+  color: #f9f9f9;
   font-weight: bold;
   padding: 0px 10px;
-  top: 50%;
-  left: 215px;
+  top: 40%;
+  left: 218px;
 }
 @media screen and (max-width: 1250px) {
   .caroussel img {
@@ -1506,6 +1515,7 @@ a {
     padding-top: 20px;
     padding-bottom: 20px;
     transition: all 300ms;
+    margin-bottom: 0px;
   }
   .object-container__informations__details2 {
     margin: unset;
