@@ -90,8 +90,8 @@ function showProximityDetails ($info)
         {
         echo "<tr>\n";
         $id = $row ["spawn_entry$i"];
-        tdh ("<a href='?action=show_item&id=$id'>$id</a>");
-        tdh ("<a href='?action=show_item&id=$id'>" . fixHTML ($creatures [$id]) . "</a>");
+        tdh ("<a href='?action=show_creature&id=$id'>$id</a>");
+        tdh ("<a href='?action=show_creature&id=$id'>" . fixHTML ($creatures [$id]) . "</a>");
         td (round ($distance, 1));
         if ($row ["spawn_entry2"])
           td ('Yes');

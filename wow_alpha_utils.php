@@ -472,14 +472,14 @@ function addSign ($value)
 
 function td ($s)
   {
-  echo "<td>";
+  echo "  <td>";
   echo (fixHTML ($s));
   echo "</td>\n";
   } // end of td
 
 function tdx ($s, $c='tdl')
   {
-  echo "<td>";
+  echo "  <td>";
   echo (fixHTML ($s));
   echo "</td>\n";
   } // end of tdx
@@ -492,17 +492,17 @@ function tdxr ($s)
 // for hyperlinks
 function tdhr ($s)
   {
-  echo "<td>$s</td>\n";
+  echo "  <td>$s</td>\n";
   } // end of tdhr
 
 function tdh ($s)
   {
-  echo "<td>$s</td>\n";
+  echo "  <td>$s</td>\n";
   } // end of tdh
 
 function th ($s)
   {
-  echo "<th>";
+  echo "  <th>";
   echo (fixHTML ($s));
   echo "</th>\n";
   } // end of th
@@ -514,10 +514,10 @@ function headings ($what)
   if (strlen ($filter_value) > 0 && strlen ($filter_column) > 0)
     $what [] = $filter_column;
 
-  echo "<tr>\n";
+  echo "  <tr>\n";
   foreach ($what as $hdg)
-    th ($hdg);
-  echo "</tr>\n";
+    th ('  ' . $hdg);
+  echo "  </tr>\n";
 } // end of headings
 
 function showFilterColumn ($row)
@@ -716,16 +716,16 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
       continue;
     // the row will generate an SQL update if you Alt+click it
     if ($limit)
-      echo "<tr>\n";
+      echo " <tr>\n";
     else
-      echo "<tr onclick='onRowClick(event,this.id)' id='field_$fieldName'>\n";
+      echo " <tr onclick='onRowClick(event,this.id)' id='field_$fieldName'>\n";
     tdx ($fieldName);
     // check if we can be more informative, like show an item name
     if (isset ($expand [$fieldName]))
       expandField ($row [$fieldName], $expand [$fieldName]);
     else
       tdx ($row [$fieldName], preg_match ('/text/', $col ['Type']) ? 'tdl' : 'tdr');
-    echo "</tr>\n";
+    echo " </tr>\n";
     } // end of foreach
   echo "</tbody>\n";
   echo "</table>\n";
@@ -918,8 +918,8 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       $mapy -= $halfMapDotSize;
 
       echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'>\n";
-      echo "<circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
-      echo "<title>$x $y $z $map</title>\n";
+      echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
+      echo "  <title>$x $y $z $map</title>\n";
       echo "</svg>\n";
 
       } // end of if we have a mapName
@@ -973,9 +973,10 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     $z = $row [$zName];
     $map = $row [$mName];
     if ($map < 2)
-      echo "<li>$x $y $z $map";
+      echo " <li>$x $y $z $map";
     else
-      echo "<li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
+      echo " <li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
+    echo "\n";
     } // end of foreach
 
   echo "</ul>\n";
@@ -1518,18 +1519,20 @@ function doArrowsForMap ($table, $where, $param, $mName)
   $map0 = 0;
   $map1 = 0;
   foreach ($results as $spawnRow)
+    {
     if ($spawnRow [$mName] == 0)
       $map0 ++;   // Eastern Kingdoms
     elseif ($spawnRow [$mName] == 1)
       $map1 ++;   // Kalimdor
+    } // end of foreach
 
-  if ($map0)
+  if ($map0 && $map1)
+    {
     echo "<a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
-    ><i class='fas fa-angle-left'></i></a>\n";
-
-  if ($map1)
-   echo "<a class='caroussel__right-arrow' href='#Kalimdor_map'
-    ><i class='fas fa-angle-right'></i></a>\n";
+        ><i class='fas fa-angle-left'></i></a>\n";
+    echo "<a class='caroussel__right-arrow' href='#Kalimdor_map'
+        ><i class='fas fa-angle-right'></i></a>\n";
+    } // we are showing both maps so we need both arrows
 
 
 } // end of doArrowsForMap
