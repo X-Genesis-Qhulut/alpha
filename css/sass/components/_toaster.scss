@@ -12,7 +12,7 @@
   z-index: 1000;
   padding: 20px;
   @include big-shadow;
-  animation: slideinout 4s ease-in-out;
+  animation: slideinout 6s ease-in-out;
   animation-fill-mode: forwards;
 
   &__header {

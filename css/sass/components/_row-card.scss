@@ -1,0 +1,136 @@
+.row-card {
+  background-color: $color3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 450px;
+  //   width: 100px;
+  border-radius: 20px 0px 0px 20px;
+  padding: 3px;
+  margin-top: 6.5px;
+  font-size: 0.7em;
+  border: 1px solid $color4;
+  @include very-tiny-shadow;
+  transition: all 300ms;
+
+  & span {
+    // display: flex;
+    // align-items: center;
+    background-color: $color8;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    border: 1px solid $color4;
+    color: $color6;
+    padding-left: 5px;
+    box-sizing: border-box;
+    padding: 3px;
+  }
+
+  &__head {
+    width: 18%;
+    min-width: 18%;
+    border-radius: 15px 0px 0px 15px;
+    margin-right: 3px;
+    color: $color7;
+
+    justify-content: center;
+    & i {
+      padding-right: 2px;
+      color: $color7;
+    }
+  }
+
+  &__content {
+    justify-content: left;
+    flex-grow: 1;
+    border-radius: 0px;
+    font-size: 1.1em;
+  }
+
+  &__extra {
+    width: 15%;
+    min-width: 15%;
+    margin-left: 3px;
+  }
+
+  @include laptop-design {
+    width: 350px;
+  }
+
+  @media screen and (max-width: 1333px) {
+    width: 320px;
+  }
+
+  @media screen and (max-width: 1295px) {
+    width: 300px;
+  }
+
+  @media screen and (max-width: 1268px) {
+    width: 280px;
+  }
+
+  @media screen and (max-width: 1259px) {
+    width: 260px;
+  }
+
+  @media screen and (max-width: 1225px) {
+    width: 240px;
+  }
+
+  @media screen and (max-width: 1205px) {
+    width: 220px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 815px) {
+    width: 400px;
+  }
+
+  @media screen and (max-width: 750px) {
+    width: 300px;
+  }
+
+  @media screen and (max-width: 680px) {
+    width: 400px;
+  }
+
+  @media screen and (max-width: 570px) {
+    width: 300px;
+  }
+
+  @media screen and (max-width: 570px) {
+    width: 300px;
+  }
+
+  @media screen and (max-width: 470px) {
+    width: 250px;
+
+    &__head {
+      width: 50px;
+      min-width: 50px;
+      overflow-x: hidden;
+      text-overflow: unset;
+    }
+
+    &__content {
+      // width: 110px;
+    }
+
+    &__extra {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 415px) {
+    width: 200px;
+  }
+
+  @media screen and (max-width: 365px) {
+  }
+}

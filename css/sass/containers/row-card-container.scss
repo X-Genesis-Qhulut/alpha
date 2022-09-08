@@ -1,0 +1,15 @@
+.row-card-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 300ms;
+
+  & a:hover {
+    opacity: 0.8;
+  }
+
+  & div {
+  }
+}

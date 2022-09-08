@@ -52,6 +52,14 @@
   box-shadow: 0px 0px 6px $color11;
 }
 
+@mixin very-tiny-shadow {
+  box-shadow: 0px 0px 2px $color11;
+}
+
+@mixin main-shadow {
+  box-shadow: 0px 0px 20px $color11;
+}
+
 @mixin menu-shadow {
   box-shadow: 0px 0px 4px $color11;
 }

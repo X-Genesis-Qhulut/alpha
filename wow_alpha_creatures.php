@@ -148,7 +148,6 @@ function creatureTopMiddle ($info)
       } // end listing function
       , true  // goes up top, slightly different CSS
       );
-
   comment ('QUESTS FINISHED');
 
   // what quests they finish

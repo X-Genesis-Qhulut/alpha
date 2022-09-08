@@ -44,12 +44,17 @@
     padding: 20px;
     padding-top: 0;
     flex-basis: 31.5%;
+    max-width: 31.5%;
     margin-bottom: 20px;
     margin-right: 10px;
     margin-left: 10px;
     border: 1px solid $color1;
 
     @include medium-shadow;
+
+    & .row-card:first-child {
+      margin-top: 30px;
+    }
 
     & .simulate_box {
       box-shadow: unset;
@@ -62,6 +67,10 @@
 
     & div:first-child {
       min-height: unset;
+
+      & .row-card-container {
+        margin-top: 20px;
+      }
     }
 
     & div:last-child {
@@ -83,6 +92,7 @@
       margin-right: 1%;
       margin-left: 1%;
       flex-basis: 48%;
+      max-width: unset;
     }
 
     @include tiny-laptop-design {

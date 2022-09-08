@@ -32,19 +32,19 @@ a {
 
 @keyframes slideinout {
   0% {
-    transform: translateX(20%);
+    transform: translateX(0px);
     opacity: 0;
   }
   30% {
-    transform: translateX(-15%);
+    transform: translateX(-30px);
     opacity: 1;
   }
   85% {
-    transform: translateX(-15%);
+    transform: translateX(-30px);
     opacity: 1;
   }
   100% {
-    transform: translateX(25%);
+    transform: translateX(100px);
     opacity: 0;
   }
 }
@@ -54,7 +54,7 @@ a {
     opacity: 0;
   }
   30% {
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
     opacity: 1;
   }
   85% {
@@ -455,11 +455,15 @@ a {
   padding: 20px;
   padding-top: 0;
   flex-basis: 31.5%;
+  max-width: 31.5%;
   margin-bottom: 20px;
   margin-right: 10px;
   margin-left: 10px;
   border: 1px solid #303030;
   box-shadow: 0px 0px 7px #303030;
+}
+.element-information--independant .row-card:first-child {
+  margin-top: 30px;
 }
 .element-information--independant .simulate_box {
   box-shadow: unset;
@@ -470,6 +474,9 @@ a {
 }
 .element-information--independant div:first-child {
   min-height: unset;
+}
+.element-information--independant div:first-child .row-card-container {
+  margin-top: 20px;
 }
 .element-information--independant div:last-child {
   max-height: 260px;
@@ -488,6 +495,7 @@ a {
     margin-right: 1%;
     margin-left: 1%;
     flex-basis: 48%;
+    max-width: unset;
   }
 }
 @media screen and (max-width: 1250px) {
@@ -1093,7 +1101,7 @@ a {
   z-index: 1000;
   padding: 20px;
   box-shadow: 0px 0px 9px #303030;
-  animation: slideinout 4s ease-in-out;
+  animation: slideinout 6s ease-in-out;
   animation-fill-mode: forwards;
 }
 .toaster__header {
@@ -1118,6 +1126,140 @@ a {
   background-color: #535353;
 }
 
+.row-card {
+  background-color: #383838;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 450px;
+  border-radius: 20px 0px 0px 20px;
+  padding: 3px;
+  margin-top: 6.5px;
+  font-size: 0.7em;
+  border: 1px solid #535353;
+  box-shadow: 0px 0px 2px #1e1e1e;
+  transition: all 300ms;
+}
+.row-card span {
+  background-color: #404040;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-wrap: break-word;
+  border: 1px solid #535353;
+  color: #d9d9d9;
+  padding-left: 5px;
+  box-sizing: border-box;
+  padding: 3px;
+}
+.row-card__head {
+  width: 18%;
+  min-width: 18%;
+  border-radius: 15px 0px 0px 15px;
+  margin-right: 3px;
+  color: #7daaf1;
+  justify-content: center;
+}
+.row-card__head i {
+  padding-right: 2px;
+  color: #7daaf1;
+}
+.row-card__content {
+  justify-content: left;
+  flex-grow: 1;
+  border-radius: 0px;
+  font-size: 1.1em;
+}
+.row-card__extra {
+  width: 15%;
+  min-width: 15%;
+  margin-left: 3px;
+}
+@media screen and (max-width: 1600px) {
+  .row-card {
+    width: 350px;
+  }
+}
+@media screen and (max-width: 1333px) {
+  .row-card {
+    width: 320px;
+  }
+}
+@media screen and (max-width: 1295px) {
+  .row-card {
+    width: 300px;
+  }
+}
+@media screen and (max-width: 1268px) {
+  .row-card {
+    width: 280px;
+  }
+}
+@media screen and (max-width: 1259px) {
+  .row-card {
+    width: 260px;
+  }
+}
+@media screen and (max-width: 1225px) {
+  .row-card {
+    width: 240px;
+  }
+}
+@media screen and (max-width: 1205px) {
+  .row-card {
+    width: 220px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .row-card {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 815px) {
+  .row-card {
+    width: 400px;
+  }
+}
+@media screen and (max-width: 750px) {
+  .row-card {
+    width: 300px;
+  }
+}
+@media screen and (max-width: 680px) {
+  .row-card {
+    width: 400px;
+  }
+}
+@media screen and (max-width: 570px) {
+  .row-card {
+    width: 300px;
+  }
+}
+@media screen and (max-width: 570px) {
+  .row-card {
+    width: 300px;
+  }
+}
+@media screen and (max-width: 470px) {
+  .row-card {
+    width: 250px;
+  }
+  .row-card__head {
+    width: 50px;
+    min-width: 50px;
+    overflow-x: hidden;
+    text-overflow: unset;
+  }
+  .row-card__extra {
+    display: none;
+  }
+}
+@media screen and (max-width: 415px) {
+  .row-card {
+    width: 200px;
+  }
+}
 .main-container {
   background-color: #404040;
   width: 98%;
@@ -1555,9 +1697,21 @@ a {
   backdrop-filter: blur(5px);
   z-index: 1000;
   overflow: hidden;
-  animation: blur 4s normal;
+  animation: blur 9s normal;
   animation-fill-mode: forwards;
   border-radius: 30px;
+}
+
+.row-card-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 300ms;
+}
+.row-card-container a:hover {
+  opacity: 0.8;
 }
 
 /*# sourceMappingURL=styles.css.map */

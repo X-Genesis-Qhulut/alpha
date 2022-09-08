@@ -813,6 +813,7 @@ function convertTimeGeneral ($time)
 
 function listThing ($array, $id, $action)
   {
+  /*
   echo "<li>";
   $link = "<a href='?action=$action&id=$id'>$id</a>";
   if (! isset ($array [$id]))
@@ -820,6 +821,41 @@ function listThing ($array, $id, $action)
   else
     echo ("$link: " . $array  [$id] );
   echo "\n";
+  */
+  fancyListThing ($array, $id, $action);
+  } // end of listThing
+
+function fancyListThing ($array, $id, $action)
+  {
+  if (array_key_exists ($action, ICONS))
+    $icon = ICONS [$action];
+  else
+    $icon = 'fa-table';
+
+  // if they are known, make a hyperlink
+  if (array_key_exists ($id, $array ))
+    {
+    $link = "<a href='?action=$action&id=$id' class='row-card'>";
+    $unlink = '</a>';
+    $description = fixHTML ($array  [$id]);
+    }
+  else
+    {
+    $link = "<div class='row-card'>";
+    $unlink = '</div>';
+    $description = "(not found)";
+    }
+
+  echo "
+  $link
+  <span class='row-card__head'>
+  <i class='fas $icon'></i>$id</span>
+  <span class='row-card__content'>$description</span>
+  $unlink
+  ";
+
+//  <span class='row-card__extra'>Info</span>
+
   } // end of listThing
 
 function convertGold ($amount)
@@ -959,12 +995,8 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
   if ($count == 0)
     return 0;
 
-  echo "<div class='element-information'>\n";
-  echo "<h2 title='" . fixHTML ($table) . "' class='element-information__title'>"
-                     . fixHTML ($heading) . " ($count)</h2>\n";
-  echo "<div class='element-information__bar'></div>\n";
-  echo "<div class='element-information__content'>\n";
-  echo "<ul>\n";
+  startElementInformation ($heading . " ($count)", $table, true);
+  echo "<div class='row-card-container'>\n";
 
   foreach ($results as $row)
     {
@@ -972,17 +1004,22 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     $y = $row [$yName];
     $z = $row [$zName];
     $map = $row [$mName];
+
     if ($map < 2)
-      echo " <li>$x $y $z $map";
+       $description = "$x $y $z $map";
     else
-      echo " <li>$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
-    echo "\n";
+       $description = "$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
+    echo "
+    <div  class='row-card'>
+    <span class='row-card__head'><i class='fas fa-globe'></i></span>
+    <span class='row-card__content'>$description</span>
+    </div>
+    ";
     } // end of foreach
 
-  echo "</ul>\n";
+  endDiv ('row-card-container');
 
-  endDiv ('element-information__content');
-  endDiv ('element-information');
+  endElementInformation ();
 
   return $count;
   } // end of listSpawnPoints
@@ -1027,6 +1064,8 @@ function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints, $minOnly =
 // if the item was listed, and true if it was skipped for some reason.
 function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
 {
+  return fancyListItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop);
+  /*
   global $listedItemsCount;
 
   $listedItemsCount += $totalCount;
@@ -1051,12 +1090,14 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $upt
   echo "</ul>\n";
   endElementInformation ();
   return $running_count;
+  */
+
 } // end of listItems
 
 // generic handler for listing things (like items, spells, creatures) wit
 // the function $listItemFunc does the actual listing. It returns false (or null)
 // if the item was listed, and true if it was skipped for some reason.
-function newListItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
+function fancyListItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
 {
   global $listedItemsCount;
 
@@ -1069,7 +1110,7 @@ function newListItems ($heading, $table, $totalCount, $results, $listItemFunc, $
   $running_count = 0;
 
   startElementInformation ($heading . " ($totalCount)", $table, $uptop);
-  echo "<ul>\n";
+  echo "<div class='row-card-container'>\n";
 
   foreach ($results as $row)
     {
@@ -1079,10 +1120,10 @@ function newListItems ($heading, $table, $totalCount, $results, $listItemFunc, $
       } // end of if this row actually got listed
     } // for each row
 
-  echo "</ul>\n";
+  endDiv ('row-card-container');
   endElementInformation ();
   return $running_count;
-} // end of newListItems
+} // end of fancyListItems
 
 
 // look up items for cross-referencing (eg. in spells)
@@ -1434,7 +1475,7 @@ function topRight ($userInfo, $func)
 
   $func ($userInfo);   // output contents
 
-  echo "</caroussel>\n";  // end of caroussel
+  echo "</aside>\n";  // end of caroussel
 
 } // end of topLeft
 

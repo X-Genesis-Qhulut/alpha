@@ -986,6 +986,15 @@ define ('TRAINER_TYPE', array (
     3 =>'Pets',
 ));
 
+
+define ('ICONS', array (
+  'show_quest'      => 'fa-list',
+  'show_item'       => 'fa-gavel',
+  'show_spell'      => 'fa-book',
+  'show_creature'   => 'fa-user',
+  'show_go'         => 'fa-cube',
+));
+
 // ACTIONS THAT REQUIRE wow_alpha_validity.php
 
 define ('VALIDATION_ACTIONS', array (
