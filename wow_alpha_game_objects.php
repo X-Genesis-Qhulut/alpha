@@ -25,7 +25,8 @@ function simulateGameObject ($info)
   // SIMULATE GAME OBJECT
 
   echo "<div class='simulate_box gameobject'>\n";
-  echo "<h3 style='color:yellow;'>" . fixHTML ($row ['name'] ) . "</h3>\n";
+  if ($row ['name'])
+    echo "<h3 style='color:yellow;'>" . fixHTML ($row ['name'] ) . "</h3>\n";
   echo expandSimple (GAMEOBJECT_TYPE, $row ['type'], false);
   if ($row ['mingold'])
     echo "<p>Money: " . convertGold ($row ['mingold']) . ' to ' . convertGold ($row ['maxgold']);
@@ -167,14 +168,6 @@ function showGameObjectLoot ($info)
       listThing ($items, $row ['item'], 'show_item', $chance . "%");
       } // end listing function
       );
-      /*
-      function ($row)
-        {
-        echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-             $row ['ChanceOrQuestChance'] . '%';
-        } // end listing function
-        );
-*/
 
     } // end of chest type
 } // end of showGameObjectLoot

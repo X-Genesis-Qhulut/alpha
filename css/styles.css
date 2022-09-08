@@ -857,6 +857,9 @@ a {
   }
 }
 @media screen and (max-width: 700px) {
+  .search-bar {
+    position: unset;
+  }
   .search-bar__main {
     position: absolute;
     right: 0%;
@@ -866,7 +869,7 @@ a {
     max-width: 150px;
     font-size: 1em;
     height: 35px;
-    left: -1%;
+    right: 0px;
   }
   .search-bar span {
     display: none;
@@ -1242,6 +1245,7 @@ a {
   background-color: unset;
   border: unset;
   color: #7daaf1;
+  width: 100%;
 }
 @media screen and (max-width: 1600px) {
   .row-card {

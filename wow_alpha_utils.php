@@ -1000,12 +1000,16 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     else
        $description = "$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
     echo "
-    <button  class='row-card' data-location='$x $y $z $map' onclick='copyContents(event)' >
+    <div  class='row-card'>
     <span class='row-card__head'><i class='fas fa-globe'></i></span>
-    <span class='row-card__content' title='Click to copy'>$description</span>
-    <span class='row-card__extra'><i class='fas fa-copy'></i></span>
+    <span class='row-card__content'>$description</span>
+    <span class='row-card__extra'>
+     <button  data-location='$x $y $z $map' onclick='copyContents(event)'  title='Click to copy spawn point to clipboard' >
+     <i class='fas fa-copy'></i>
     </button>
+    </span>
     ";
+    endDiv ('row-card');
     } // end of foreach
 
   endDiv ('row-card-container');
@@ -1514,12 +1518,13 @@ function showNoSpawnPoints ()
 
     echo "
    <div class='element-information'>
-   <h2  class='element-information__title'>Spawn points</h2>
-   <div class='element-information__bar'></div>
-    <div class='element-information__content'>
-        <ul>
-          <li>None</li>
-        </ul>
+     <h2  class='element-information__title'>Spawn points</h2>
+       <div class='element-information__bar'></div>
+          <div class='element-information__content'>
+          <div  class='row-card'>
+          <span class='row-card__head'><i class='fas fa-globe'></i></span>
+          <span class='row-card__content'>None</span>
+        </div>
       </div>
     </div>
     ";
@@ -1579,5 +1584,11 @@ function setTitle ($what)
   // we don't want single quotes in the title, so we put a backslash in front of them
   echo "\n<script> document.title = 'WoW DB | " .  str_replace("'", "\\'", $what) . "' </script>\n";
   } // end of setTitle
+
+// so we can tweak later how many decimal points for chance displays
+function roundChance ($chance)
+  {
+  return round (abs ($chance), 2) . '%';
+  } // end of roundChance
 
 ?>

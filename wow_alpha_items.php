@@ -255,7 +255,7 @@ function showItemDrops ()
       {
       if ($row ['chance'] >= 0)
         return true;   // ignore non-quest items
-      listThing ($creatures, $row ['npc'], 'show_creature', round (-$row ['chance'], 2) . '%');
+      listThing ($creatures, $row ['npc'], 'show_creature', roundChance ($row ['chance']));
       } // end listing function
       );
 
@@ -267,7 +267,7 @@ function showItemDrops ()
       {
       if ($row ['chance'] < 0)
         return true;   // ignore quest items
-      listThing ($creatures, $row ['npc'], 'show_creature', round ($row ['chance'], 2) . '%');
+      listThing ($creatures, $row ['npc'], 'show_creature', roundChance ($row ['chance']));
       } // end listing function
       );
 
@@ -292,7 +292,7 @@ function showItemDrops ()
              count($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
-      listThing ($creatures, $row ['npc'], 'show_creature',  round ($row ['chance'], 2) . "%");
+      listThing ($creatures, $row ['npc'], 'show_creature',  roundChance ($row ['chance']));
       } // end listing function
       );
 
@@ -325,7 +325,7 @@ function showItemSkinningLoot ()
             count ($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
-      listThing ($creatures, $row ['npc'], 'show_creature', round ($row ['chance'], 2) . '%');
+      listThing ($creatures, $row ['npc'], 'show_creature', roundChance ($row ['chance']));
       } // end listing function
       );
 } // end of showItemSkinningLoot

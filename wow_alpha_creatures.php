@@ -368,8 +368,7 @@ function creatureLoot ($info)
   listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
     function ($row) use ($items)
       {
-      $chance = round ($row ['ChanceOrQuestChance'], 2);
-      listThing ($items, $row ['item'], 'show_item', $chance . '%');
+      listThing ($items, $row ['item'], 'show_item', roundChance ($row ['ChanceOrQuestChance']));
       } // end listing function
       );
 } // end of creatureLoot
@@ -418,7 +417,7 @@ function creatureReferenceLoot ($info)
         $chance = -$chance;
         $info2 = 'Quest';
         }
-      listThing ($items, $row ['refItem'], 'show_item', round ($chance, 2) . '%', $info2);
+      listThing ($items, $row ['refItem'], 'show_item', roundChance ($chance), $info2);
       } // end listing function
       );
 
@@ -446,7 +445,7 @@ function creaturePickpocketingLoot ($info)
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      listThing ($items, $row ['item'], 'show_item', round ($chance, 2) . '%');
+      listThing ($items, $row ['item'], 'show_item', roundChance ($chance));
       } // end listing function
       );
 
@@ -472,7 +471,7 @@ function creatureSkinningLoot ($info)
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      listThing ($items, $row ['item'], 'show_item', round ($chance, 2) . '%');
+      listThing ($items, $row ['item'], 'show_item', roundChance ($chance));
       } // end listing function
       );
 

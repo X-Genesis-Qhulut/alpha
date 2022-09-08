@@ -134,6 +134,7 @@
   }
 
   @include mobile-design {
+    position: unset;
     &__main {
       position: absolute;
       right: 0%;
@@ -144,8 +145,8 @@
       max-width: 150px;
       font-size: 1em;
       height: 35px;
-      left: -1%;
-      // right: 1%;
+      // left: -1%;
+      right: 0px;
     }
 
     & span {
