@@ -22,4 +22,25 @@
   & tr:nth-child(even) {
     background-color: $color8;
   }
+
+  @media screen and (max-width: 370px) {
+    table-layout: fixed;
+
+    & tr {
+      width: 10px; /* some width */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      &:nth-child(3) {
+        display: none;
+      }
+    }
+
+    & td {
+      width: 50px; /* some width */
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 }

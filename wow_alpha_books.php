@@ -82,7 +82,6 @@ function bookRelatedItem ($row)
 
   $page_text = PAGE_TEXT;
   $item_template = ITEM_TEMPLATE;
-  boxTitle ('Item containing this page');
 
  // find the page chains
 
@@ -105,7 +104,7 @@ function bookRelatedItem ($row)
     $id = $prevPage;
     } while ($prevPage);
 
-  $itemRow = dbQueryOneParam (
+  $results = dbQueryParam (
         "SELECT T2.entry AS item_key
           FROM $page_text AS T1
               INNER JOIN $item_template AS T2
@@ -113,21 +112,20 @@ function bookRelatedItem ($row)
           WHERE T1.entry = ?",
           array ('i', &$id));
 
-
-  echo "<ul>\n";
-
-  if (!$itemRow)
+  if (count ($results) > 0)
     {
-    echo "<li>Cannot find an item linked to this page";
+   listItems ('Items containing this page', 'alpha_world.item_template', count ($results), $results,
+      function ($row) use ($items)
+        {
+        listThing ($items, $row ['item_key'], 'show_item');
+        },
+        true);
     }
   else
     {
-    echo "<li>";
-    echo lookupThing ($items, $itemRow ['item_key'], 'show_item');
+    boxTitle ('Items containing this page');
+    echo "<ul><li>No items containing this page could be found.</ul>";
     }
-
-  echo "</ul>\n";
-
 
   } // end of bookRelatedItem
 

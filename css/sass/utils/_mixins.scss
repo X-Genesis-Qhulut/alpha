@@ -35,7 +35,7 @@
 }
 
 @mixin medium-height {
-  @media screen and (max-height: 950px) {
+  @media screen and (max-height: 900px) {
     @content;
   }
 }

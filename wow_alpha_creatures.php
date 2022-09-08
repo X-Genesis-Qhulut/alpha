@@ -210,7 +210,8 @@ function creatureSpells ($info)
 
   comment ('SPELLS THEY CAST');
 
-  boxTitle ('Spells they cast');
+  startElementInformation ('Spells they cast', CREATURE_SPELLS, true);
+  echo "<div class='row-card-container'>\n";
 
   if ($row ['spell_list_id'])
     {
@@ -218,40 +219,49 @@ function creatureSpells ($info)
     if ($spellListRow)
       {
 
-      echo "<ul>\n";
       for ($i = 1; $i <= 8; $i++)
         {
         if ($spellListRow ["spellId_$i"])
           {
-          echo "<li><details><summary>";
-          echo (lookupThing ($spells,   $spellListRow ["spellId_$i"], 'show_spell'));
-          echo "</summary><ul>\n";
-          echo "<li>Probability: " . $spellListRow ["probability_$i"] . "%";
-          echo "<li>Target type: " . expandSimple (TARGET_TYPE, $spellListRow ["castTarget_$i"]);
+          $details =
+          "Probability: " . $spellListRow ["probability_$i"] . "%\n" .
+          "Target type: " . expandSimple (TARGET_TYPE, $spellListRow ["castTarget_$i"]) . "\n";
           if ($spellListRow ["targetParam1_$i"] || $spellListRow ["targetParam2_$i"])
             {
-            echo " (param1: " . $spellListRow ["targetParam1_$i"];
-            echo ", param2: " . $spellListRow ["targetParam2_$i"] . ")";
+            $details .= " (param1: " . $spellListRow ["targetParam1_$i"] .
+            ", param2: " . $spellListRow ["targetParam2_$i"] . ")\n";
             }
           if ($spellListRow ["castFlags_$i"])
-            echo "<li>Flags: "  . expandShiftedMask (SPELL_CAST_FLAGS, $spellListRow ["castFlags_$i"], false);
-
-          echo "<li>Initial delay: "  . $spellListRow ["delayInitialMin_$i"];
+            $details .= "Flags: "  . expandShiftedMask (SPELL_CAST_FLAGS, $spellListRow ["castFlags_$i"], false) . "\n";
+          $details .= "Initial delay: "  . $spellListRow ["delayInitialMin_$i"];
           if ($spellListRow ["delayInitialMin_$i"] != $spellListRow ["delayInitialMax_$i"])
-            echo ' to ' . $spellListRow ["delayInitialMax_$i"];
-          echo "<li>Repeat delay: "  . $spellListRow ["delayRepeatMin_$i"];
+            $details .= ' to ' . $spellListRow ["delayInitialMax_$i"];
+          $details .=  "\n";
+          $details .= "Repeat delay: "  . $spellListRow ["delayRepeatMin_$i"];
           if ($spellListRow ["delayRepeatMin_$i"] != $spellListRow ["delayRepeatMax_$i"])
-            echo ' to ' . $spellListRow ["delayRepeatMax_$i"];
+            $details .= ' to ' . $spellListRow ["delayRepeatMax_$i"];
+          $details .=  "\n";
           if ($spellListRow ["scriptId_$i"])
-            echo "<li>Script ID: "  . $spellListRow ["scriptId_$i"];
-          echo "</ul></details>\n";
+            $details .= "Script ID: "  . $spellListRow ["scriptId_$i"] . "\n";
+
+          echo "
+          <div  class='row-card'>
+          <span class='row-card__head'><i class='fas fa-book'></i></span>
+          <span class='row-card__content' title='" . fixHTML ($details) . "'>"
+          . lookupThing ($spells,   $spellListRow ["spellId_$i"], 'show_spell') . "</span>
+          </div>
+          ";
+
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
-      echo "</ul>\n";
 
       } // if we found the spell list
 
     } // end of if they had a spell_list_id
+
+  endDiv ('row-card-container');
+  endElementInformation ();
+
 } // end of creatureSpells
 
 function creatureVendorItems ($info)
@@ -324,7 +334,7 @@ function creatureQuestLoot ($info)
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      listThing ($items, $row ['item'], -$chance . "%");
+      listThing ($items, $row ['item'], 'show_item', -$chance . "%");
       } // end listing function
       );
 

@@ -239,7 +239,7 @@ function showItemDrops ()
                             WHERE $creature_loot_template.item = ?
                             AND $creature_loot_template.mincountOrRef >= 0
                             AND $creature_template.entry <= " . MAX_CREATURE . "
-                            ORDER BY name", array ('i', &$id));
+                            ORDER BY chance DESC, name", array ('i', &$id));
 
   // count quest items - they have a negative drop chance
   $count = 0;

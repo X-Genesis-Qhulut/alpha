@@ -36,7 +36,7 @@ function showSQLerror ($sql)
   echo (fixHTML (mysqli_error ($dblink)));
   echo "<hr>\n";
   echo "<div class='sqlerror'>\n";
-  echo (fixHTML ($sql). "\n");\
+  echo (fixHTML ($sql). "\n");
   endDiv ('sqlerror');
 
   showBacktrace (2);

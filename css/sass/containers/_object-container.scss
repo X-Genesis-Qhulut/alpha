@@ -130,4 +130,10 @@
       }
     }
   }
+
+  @media screen and (max-width: 370px) {
+    & .table-fields {
+      width: 180px;
+    }
+  }
 }

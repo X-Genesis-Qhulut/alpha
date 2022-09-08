@@ -142,6 +142,8 @@ function listGameObjectQuests ($id)
 
 function showGameObjectLoot ($info)
 {
+  global $items;
+
     $row = $info ['row'];
 
    // ---------------- CHEST LOOT -----------------
@@ -152,15 +154,27 @@ function showGameObjectLoot ($info)
   if ($row ['type'] == GAMEOBJECT_TYPE_CHEST)
     {
 
-    $lootResults = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$row ['data1']));
-    usort($lootResults, 'item_compare');
+    $lootResults = dbQueryParam (
+          "SELECT * FROM ".GAMEOBJECT_LOOT_TEMPLATE." WHERE entry = ?
+            ORDER BY ChanceOrQuestChance DESC", array ('i', &$row ['data1']));
+
+    usort($lootResults, 'loot_item_compare');
     listItems ('Gameobject loot', 'alpha_world.gameobject_loot_template', count ($lootResults), $lootResults,
+
+    function ($row) use ($items)
+      {
+      $chance = $row ['ChanceOrQuestChance'];
+      listThing ($items, $row ['item'], 'show_item', $chance . "%");
+      } // end listing function
+      );
+      /*
       function ($row)
         {
         echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
              $row ['ChanceOrQuestChance'] . '%';
         } // end listing function
         );
+*/
 
     } // end of chest type
 } // end of showGameObjectLoot

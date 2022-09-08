@@ -147,4 +147,28 @@
     //   font-size: 0.9em;
     // }
   }
+
+  @media screen and (max-width: 425px) {
+    & h1 {
+      font-size: 1em;
+    }
+    &__goback {
+      margin-right: 0px;
+    }
+
+    &__angle {
+      margin-left: 1px;
+      margin-right: 1px;
+    }
+
+    &__table {
+      font-size: 0.85em;
+    }
+  }
+
+  @media screen and (max-width: 350px) {
+    & h1 {
+      font-size: 0.9em;
+    }
+  }
 }

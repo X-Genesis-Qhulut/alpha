@@ -68,6 +68,8 @@ function simulateSpell ($row)
 
   comment ('SPELL SIMULATION');
 
+  boxTitle ('In-game view');
+
   echo "<div class='simulate_box spell'>\n";
   echo "<h3 style='color:yellow;'>" . fixHTML ($row ['Name_enUS'] );
   if ($row ['NameSubtext_enUS'])

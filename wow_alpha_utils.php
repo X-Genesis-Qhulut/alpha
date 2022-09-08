@@ -995,20 +995,20 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     $z = $row [$zName];
     $map = $row [$mName];
 
-    if ($map < 2)
+    if ($map >= 2)
        $description = "$x $y $z $map";
     else
        $description = "$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
     echo "
-    <div  class='row-card'>
+    <button  class='row-card' data-location='$x $y $z $map' onclick='copyContents(event)' >
     <span class='row-card__head'><i class='fas fa-globe'></i></span>
-    <span class='row-card__content'>$description</span>
-    </div>
+    <span class='row-card__content' title='Click to copy'>$description</span>
+    <span class='row-card__extra'><i class='fas fa-copy'></i></span>
+    </button>
     ";
     } // end of foreach
 
   endDiv ('row-card-container');
-
   endElementInformation ();
 
   return $count;
@@ -1561,7 +1561,6 @@ function doArrowsForMap ($table, $where, $param, $mName)
         ><i class='fas fa-angle-right'></i></a>\n";
     } // we are showing both maps so we need both arrows
 
-
 } // end of doArrowsForMap
 
 function checkID ()
@@ -1577,35 +1576,8 @@ function checkID ()
 
 function setTitle ($what)
   {
+  // we don't want single quotes in the title, so we put a backslash in front of them
   echo "\n<script> document.title = 'WoW DB | " .  str_replace("'", "\\'", $what) . "' </script>\n";
-  }
-
-
-// this is crap
-function getUnspawnedCreatures ()
-{
-  $creature_template = CREATURE_TEMPLATE;
-  $spawns_creatures = SPAWNS_CREATURES;
-
-  $results = dbQuery ("SELECT T1.entry AS npc_key
-                      FROM $creature_template AS T1
-                          LEFT JOIN $spawns_creatures AS T2
-                      ON ((T1.entry = T2.spawn_entry1 OR
-                           T1.entry = T2.spawn_entry2 OR
-                           T1.entry = T2.spawn_entry3 OR
-                           T1.entry = T2.spawn_entry4 )
-                        AND T2.ignored = 0)
-                      WHERE T2.spawn_id IS NULL");
-
-  $t = array ();
-  while ($row = dbFetch ($results))
-    {
-    $t [] = $row ['npc_key'];
-    }
-  dbFree ($results);
-
-  return $t;
-} // end of getUnspawnedCreatures
-
+  } // end of setTitle
 
 ?>

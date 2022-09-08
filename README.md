@@ -193,6 +193,19 @@ If you are planning to submit an update to the database via the Alpha Core GitHu
 
     These instructions assume that you have downloaded the alpha-core project from GitHub and are in the "alpha-core" directory.
 
+    Note that if you are using MySQL server (and not MariaDB server) then the updates.sql files will (probably) not be processed properly because they have "if" statements in them which MySQL server doesn't recognise. In that case you can strip them out, like this:
+
+    ```
+    sed -E '/^(delimiter)|(\s+if)|(begin)|(end)/d' \
+      < etc/databases/world/updates/updates.sql \
+      > etc/databases/world/updates/fixed_world_updates.sql
+
+    sed -E '/^(delimiter)|(\s+if)|(begin)|(end)/d' \
+      < etc/databases/dbc/updates/updates.sql \
+      > etc/databases/dbc/updates/fixed_world_updates.sql
+    ```
+
+    Then, "source" those two files you just created (fixed_world_updates.sql and fixed_dbc_updates.sql) instead of "updates.sql" as in the instructions above.
 
 7. Rename the file wow_alpha_config.php.dist to be wow_alpha_config.php, ie.
 

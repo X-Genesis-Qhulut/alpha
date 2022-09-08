@@ -36,6 +36,14 @@
       text-overflow: ellipsis;
       white-space: nowrap;
 
+      &:nth-child(8) {
+        display: none;
+      }
+
+      &:nth-child(7) {
+        display: none;
+      }
+
       &:nth-child(6) {
         display: none;
       }
@@ -49,6 +57,14 @@
     }
 
     & thead {
+      &:nth-child(8) {
+        display: none;
+      }
+
+      &:nth-child(7) {
+        display: none;
+      }
+
       & th:nth-child(6) {
         display: none;
       }
