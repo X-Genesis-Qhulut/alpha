@@ -1,5 +1,5 @@
 .page-content {
-  max-height: 86vh;
+  max-height: 87.5vh;
   overflow-y: scroll;
   height: 100%;
 
@@ -9,7 +9,7 @@
   }
 
   @include medium-height {
-    max-height: 83vh;
+    max-height: 84vh;
   }
 
   @include small-height {

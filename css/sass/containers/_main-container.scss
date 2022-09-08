@@ -14,7 +14,7 @@
   // min-width: 700px;
   max-width: 1960px;
   @include main-shadow;
-  overflow-y: hidden;
+  overflow: hidden;
 
   @include mobile-design {
     width: 100%;

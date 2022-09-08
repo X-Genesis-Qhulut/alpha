@@ -56,6 +56,13 @@
     width: 18%;
     min-width: 18%;
     margin-left: 3px;
+
+    & button {
+      cursor: pointer;
+      background-color: unset;
+      border: unset;
+      color: $color7;
+    }
   }
 
   @include laptop-design {
