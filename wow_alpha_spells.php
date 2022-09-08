@@ -194,10 +194,12 @@ function simulateSpell ($row)
     // calculate aura amounts for all three effect auras
     for ($i = 1; $i <= SPELL_EFFECT_AURAS; $i++)
       if ($row ["EffectAura_$i"] > 0 && $row ["EffectAuraPeriod_$i"] > 0)
+        {
         $description = str_replace ('$o' . $i,
                       spellRoll ($row ["EffectDieSides_$i"], $row ["EffectBaseDice_$i"], $row ["EffectDicePerLevel_$i"],
-                                 $row ["EffectBasePoints_$i"]) * $duration / $row ["EffectAuraPeriod_$i"],
+                                 $row ["EffectBasePoints_$i"], true) * $duration / $row ["EffectAuraPeriod_$i"],
                         $description);
+        }
 
     echo "<span style='color:yellow;'>" . fixSpellText ($description, $duration) . "</span>\n";
     } // end of having a description

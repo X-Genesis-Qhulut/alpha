@@ -11,6 +11,8 @@
 
 // See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/creature-loot-template.html
 
+// HELPER FUNCTIONS
+
 function showBadNPCs ($info)
   {
   global $creatures;
@@ -31,6 +33,26 @@ function showBadNPCs ($info)
   dbFree ($results);
   echo "</ul>\n";
   } // end of showBadNPCs
+
+function listBadNPCs ($info)
+  {
+  global $creatures;
+
+  $heading = $info ['heading'];
+  $rows    = $info ['rows'];
+  $label = $info ['label'];
+  $field = $info ['field'];
+
+  $count = count ($rows);
+
+  boxTitle ("$heading ($count)");
+
+  echo "<ul>\n";
+  foreach ($rows as $row)
+    echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature') .
+          " ($label " . $row [$field] . ")\n";
+  echo "</ul>\n";
+  } // end of listBadNPCs
 
 
 function showBadGOs ($info)
@@ -101,6 +123,27 @@ function showBadItems ($info)
   dbFree ($results);
   echo "</ul>\n";
   } // end of showBadItems
+
+function showBadSpells ($info)
+  {
+  global $spells;
+
+  $heading = $info ['heading'];
+  $results = $info ['results'];
+  $label = $info ['label'];
+  $field = $info ['field'];
+
+  $count = dbRows ($results);
+
+  boxTitle ("$heading ($count)");
+
+  echo "<ul>\n";
+  while ($row = dbFetch ($results))
+    echo "<li>" . lookupThing ($spells,  $row ['spell_key'], 'show_spell') .
+          " ($label " . $row [$field] . ")\n";
+  dbFree ($results);
+  echo "</ul>\n";
+  } // end of showBadSpells
 
 function showUnknownFactionDetails ()
   {
@@ -448,7 +491,7 @@ function showGameObjectsNotSpawnedDetails ()
   $results = dbQuery ("SELECT T1.entry AS go_key
                       FROM $gameobject_template AS T1
                           LEFT JOIN $spawns_gameobjects AS T2
-                      ON (T1.entry = T2.spawn_entry)
+                      ON (T1.entry = T2.spawn_entry AND T2.ignored = 0)
                       WHERE T2.spawn_entry IS NULL
                       ORDER BY T1.name");
 
@@ -509,6 +552,197 @@ function showNoItemText ()
     bottomSectionMany ($info, 'showNoItemTextDetails');
     } , ITEM_TEMPLATE);
   } // end of showNoItemText
+
+
+
+function showMissingSpellSpellsDetails ()
+{
+  global $quests;
+
+  $spell = SPELL;
+  $totalCount = 0;
+
+  $fields = array ();
+
+  for ($i = 1; $i <= SPELL_EFFECT_TRIGGER_SPELLS; $i++)
+    $fields [] = "EffectTriggerSpell_$i";
+
+  foreach ($fields as $field)
+    {
+    $results = dbQuery ("SELECT T1.ID AS spell_key,
+                                T1.$field AS spell_spell
+                        FROM $spell AS T1
+                            LEFT JOIN $spell AS T2
+                            ON T1.$field = T2.ID
+                        WHERE T2.ID IS NULL
+                        AND T1.$field <> 0
+                        ORDER BY T1.ID");
+
+    $count = dbRows ($results);
+    $totalCount += $count;
+
+    if ($count)
+      {
+      $info = array ('heading' => "Spells where <$field> spell is missing",
+                     'results' => $results,
+                     'label' => 'Spell',
+                     'field' => 'spell_spell');
+
+      bottomDetails ($info, 'showBadSpells');
+      }
+
+    } // end of foreach
+
+  if ($totalCount == 0)
+    showNoProblems ();
+
+} // end of showMissingSpellSpellsDetails
+
+function showMissingSpellSpells ()
+  {
+  setTitle ("Spells with missing spells");
+
+  pageContent (false, 'Validation', 'Spell/spell validation',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showMissingSpellSpellsDetails');
+    } , SPELL);
+  } // end of showMissingSpellSpells
+
+
+function showMissingSpellItemsDetails ()
+{
+  $spell = SPELL;
+  $item_template = ITEM_TEMPLATE;
+
+  $totalCount = 0;
+
+  $fields = array ();
+
+  for ($i = 1; $i <= SPELL_REAGENTS; $i++)
+    $fields [] = "Reagent_$i";
+
+  for ($i = 1; $i <= SPELL_EFFECT_ITEM_TYPES; $i++)
+    $fields [] = "EffectItemType_$i";
+
+  foreach ($fields as $field)
+    {
+    $results = dbQuery ("SELECT T1.ID AS spell_key,
+                                T1.$field AS spell_item
+                        FROM $spell AS T1
+                            LEFT JOIN $item_template AS T2
+                            ON (T1.$field = T2.entry AND T2.ignored = 0)
+                        WHERE T2.entry IS NULL
+                        AND T1.$field <> 0
+                        ORDER BY T1.ID");
+
+    $count = dbRows ($results);
+    $totalCount += $count;
+
+    if ($count)
+      {
+      $info = array ('heading' => "Spells where <$field> item is missing",
+                     'results' => $results,
+                     'label' => 'Item',
+                     'field' => 'spell_item');
+
+      bottomDetails ($info, 'showBadSpells');
+      }
+
+    } // end of foreach
+
+  if ($totalCount == 0)
+    showNoProblems ();
+
+} // end of showMissingSpellItemsDetails
+
+function showMissingSpellItems ()
+  {
+  setTitle ("Spells with missing items");
+
+  pageContent (false, 'Validation', 'Spell/item validation',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showMissingSpellItemsDetails');
+    } , SPELL);
+  } // end of showMissingSpellItems
+
+
+
+// analyse creatures to see if they start a missing quest
+function showMissingCreatureModelsDetails ($info)
+{
+  global $documentRoot, $executionDir;
+
+  $totalCount = 0;
+
+  $creature_template = CREATURE_TEMPLATE;
+
+  for ($i = 1; $i <= CREATURE_DISPLAY_IDS; $i++)
+    $fields [] = "display_id$i";
+
+  foreach ($fields as $field)
+    {
+    // find all spawned creatures
+    $results = dbQuery (
+           "SELECT T1.entry AS npc_key, T1.$field AS npc_model
+            FROM creature_template AS T1
+            WHERE entry < " . MAX_CREATURE . "
+            AND (entry IN (SELECT spawn_entry1 from alpha_world.spawns_creatures WHERE ignored = 0)
+              OR entry IN (SELECT spawn_entry2 from alpha_world.spawns_creatures WHERE ignored = 0)
+              OR entry IN (SELECT spawn_entry3 from alpha_world.spawns_creatures WHERE ignored = 0)
+              OR entry IN (SELECT spawn_entry4 from alpha_world.spawns_creatures WHERE ignored = 0))
+            ");
+
+    $results = dbQuery ("SELECT T1.entry AS npc_key,
+                          T1.$field as npc_model
+                        FROM $creature_template AS T1
+                        WHERE T1.entry <= " . MAX_CREATURE .
+                        " AND T1.$field <> 0
+                        ORDER BY T1.entry
+                        LIMIT 10");
+
+    $missingModels = array ();
+    while ($row = dbFetch ($results))
+      {
+      $model = $row ['npc_model'] . '.webp';
+      if ($row ['npc_model'] > MAX_CREATURE_MODEL ||
+         !file_exists ("$documentRoot$executionDir/creatures/$model"))
+        {
+        $missingModels [] = $row;
+        }
+      }
+    dbFree ($results);
+
+    $count = count ($missingModels);
+    $totalCount += $count;
+
+    if ($count)
+      {
+
+      $info = array ('heading' => "NPCs with no model for <$field>",
+                     'rows' => $missingModels,
+                     'label' => 'Model',
+                     'field' => 'npc_model');
+
+      bottomDetails ($info, 'listBadNPCs');
+
+      } // end of if any rows
+
+    } // end of foreach
+
+  if ($totalCount == 0)
+    showNoProblems ();
+
+} // end of showMissingCreatureModelsDetails
+
+function showMissingCreatureModels ()
+  {
+  setTitle ("NPCs with missing models");
+
+  pageContent (false, 'Validation', 'NPC with missing models',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showMissingCreatureModelsDetails');
+    } , CREATURE_TEMPLATE);
+  } // end of showMissingCreatureModels
 
 ?>
 

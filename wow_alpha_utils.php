@@ -1000,7 +1000,7 @@ function showItemCount ($n)
   return " x$n";
   } // end of showItemCount
 
-function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints)
+function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints, $minOnly = false)
   {
   // lowest roll
   if ($dieSides)
@@ -1016,14 +1016,13 @@ function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints)
     $rolled_points = 0;
   $max = $basePoints + $rolled_points;
 
-  if ($min != $max)
+  if ($min != $max && !$minOnly)
     return "$min to $max";
   else
     return $min;
   }
 
 // generic handler for listing things (like items, spells, creatures) wit
-// automatic splitting into two columns if there are a lot of them
 // the function $listItemFunc does the actual listing. It returns false (or null)
 // if the item was listed, and true if it was skipped for some reason.
 function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
@@ -1052,7 +1051,39 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $upt
   echo "</ul>\n";
   endElementInformation ();
   return $running_count;
-}
+} // end of listItems
+
+// generic handler for listing things (like items, spells, creatures) wit
+// the function $listItemFunc does the actual listing. It returns false (or null)
+// if the item was listed, and true if it was skipped for some reason.
+function newListItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
+{
+  global $listedItemsCount;
+
+  $listedItemsCount += $totalCount;
+
+  // trivial case - nothing to list
+  if ($totalCount <= 0)
+    return;
+
+  $running_count = 0;
+
+  startElementInformation ($heading . " ($totalCount)", $table, $uptop);
+  echo "<ul>\n";
+
+  foreach ($results as $row)
+    {
+    if (!$listItemFunc ($row))
+      {
+      $running_count++;
+      } // end of if this row actually got listed
+    } // for each row
+
+  echo "</ul>\n";
+  endElementInformation ();
+  return $running_count;
+} // end of newListItems
+
 
 // look up items for cross-referencing (eg. in spells)
 function getThings (&$theArray, $table, $key, $description, $condition = '')
@@ -1550,6 +1581,35 @@ function checkID ()
 
 function setTitle ($what)
   {
-  echo "\n<script> document.title = 'WoW DB | $what' </script>\n";
+  echo "\n<script> document.title = 'WoW DB | " .  str_replace("'", "\\'", $what) . "' </script>\n";
   }
+
+
+// this is crap
+function getUnspawnedCreatures ()
+{
+  $creature_template = CREATURE_TEMPLATE;
+  $spawns_creatures = SPAWNS_CREATURES;
+
+  $results = dbQuery ("SELECT T1.entry AS npc_key
+                      FROM $creature_template AS T1
+                          LEFT JOIN $spawns_creatures AS T2
+                      ON ((T1.entry = T2.spawn_entry1 OR
+                           T1.entry = T2.spawn_entry2 OR
+                           T1.entry = T2.spawn_entry3 OR
+                           T1.entry = T2.spawn_entry4 )
+                        AND T2.ignored = 0)
+                      WHERE T2.spawn_id IS NULL");
+
+  $t = array ();
+  while ($row = dbFetch ($results))
+    {
+    $t [] = $row ['npc_key'];
+    }
+  dbFree ($results);
+
+  return $t;
+} // end of getUnspawnedCreatures
+
+
 ?>

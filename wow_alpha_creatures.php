@@ -62,18 +62,18 @@ function creatureTopLeft ($info)
     if ($row ["display_id$i"])
       {
       $display_id = $row ["display_id$i"];
-      $icon = $display_id . '.webp';
-      if (!file_exists ("$documentRoot$executionDir/creatures/$icon"))
+      $model = $display_id . '.webp';
+      if (!file_exists ("$documentRoot$executionDir/creatures/$model"))
         {
-        comment ("$documentRoot$executionDir/creatures/$icon   NOT ON FILE");
-        $icon = 'missing_creature.png';
+        comment ("$documentRoot$executionDir/creatures/$model   NOT ON FILE");
+        $model = 'missing_creature.png';
         }
 
       echo "
         <!-- MODEL DISPLAY ID -->
         <img
           class='model-display'
-          src='creatures/$icon'
+          src='creatures/$model'
           alt='Creature model for display ID $display_id'
         />
         <!-- END MODEL DISPLAY ID -->

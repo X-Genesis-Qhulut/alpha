@@ -12,8 +12,8 @@
 // configuration
 
 define ('QUERY_LIMIT', 200);
-define ('MAX_CREATURE', 5759);    // creatures > this are not in 0.5.3 alpha
-define ('TWO_COLUMN_SPLIT', 30);  // where we break long columns into two
+define ('MAX_CREATURE', 5759);          // creatures > this are not in 0.5.3 alpha
+define ('MAX_CREATURE_MODEL', 4185);    // creatures > this we don't have a model for
 
 // table names
 
@@ -93,8 +93,10 @@ define ('ITEM_SPELL_COOLDOWNS', 5);         // spellcooldown_(n) and spellcatego
 define ('ITEM_SPELLS', 5);                  // spellid_(n)
 define ('ITEM_DAMAGES', 5);                 // dmg_min(n) and dmg_max(n)
 
+// creatures
 define ('CREATURE_SPELLS_COUNT', 8); // spellId_(n), probability_(n), castTarget_(n), targetParam(n)_(n), targetParam2_(n), castFlags_(n)
                                      // delayInitialMin_(n), delayInitialMax_(n), delayRepeatMin_(n), delayRepeatMax_(n), scriptId_(n)
+define ('CREATURE_DISPLAY_IDS', 4);  // display_id(n)
 
 
 define ('MONTHS', array (
@@ -984,5 +986,20 @@ define ('TRAINER_TYPE', array (
     3 =>'Pets',
 ));
 
+// ACTIONS THAT REQUIRE wow_alpha_validity.php
+
+define ('VALIDATION_ACTIONS', array (
+  'unknown_faction'     =>  true,
+  'quest_missing_item'  =>  true,
+  'quest_missing_spell' =>  true,
+  'quest_missing_quest' =>  true,
+  'npc_missing_quest'   =>  true,
+  'npc_no_model'        =>  true,
+  'go_missing_quest'    =>  true,
+  'go_not_spawned'      =>  true,
+  'no_item_text'        =>  true,
+  'spell_missing_spell' =>  true,
+  'spell_missing_item'  =>  true,
+  ));
 
 ?>

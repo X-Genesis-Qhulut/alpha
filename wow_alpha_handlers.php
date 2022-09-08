@@ -98,9 +98,13 @@ $handlers = array (
   'quest_missing_spell' => 'showMissingQuestSpells',
   'quest_missing_quest' => 'showMissingQuestQuests',
   'npc_missing_quest'   => 'showMissingCreatureQuests',
+  'npc_no_model'        => 'showMissingCreatureModels',
   'go_missing_quest'    => 'showMissingGameobjectQuests',
   'go_not_spawned'      => 'showGameObjectsNotSpawned',
   'no_item_text'        => 'showNoItemText',
+  'spell_missing_spell' => 'showMissingSpellSpells',
+  'spell_missing_item'  => 'showMissingSpellItems',
+
 ); // end of $handlers
 
 ?>

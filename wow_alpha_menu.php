@@ -107,6 +107,24 @@ echo "
 
   } // end of showBigMenu
 
+// For showing a card. $details are in HTML.
+function oneCard ($title, $icon, $details, $extra_class = '')
+{
+comment ("CARD: $title");
+  echo "
+ <article class='card'>
+    <div class='medium-title'>
+      <h2 class='medium-title__heading'>" . fixHTML ($title) . "</h2>
+      <div class='medium-title__bar'></div>
+    </div>
+    <i class='card__icon $icon'></i>
+    <div class='card__content $extra_class'>
+      $details
+    </div>
+  </article>
+  ";
+comment ("END CARD: $title");
+} // end of oneCard
 
 function showMenu ()
   {
@@ -129,318 +147,244 @@ function mainPage ()
   $worldUpdate = convertDate ($latest_world);
 
   echo "
-      <!-- PAGE CONTAINER-->
-      <section class='main-page-container'>
-       <!-- PAGE TITLE -->
-        <div class='page-title'>
-          <div class='big-title'>
-            <h1 class='big-title__heading'>Alpha Core Database Browser</h1>
-            <div class='big-title__bar'></div>
-            <div class='big-title__subtitle'>
-              World Of Warcraft - Version 3368 0.5.3
-            </div>
-          </div>
-          <div>
-            <i class='page-title__database fas fa-database'></i>
-          </div>
+  <!-- PAGE CONTAINER-->
+  <section class='main-page-container'>
+   <!-- PAGE TITLE -->
+    <div class='page-title'>
+      <div class='big-title'>
+        <h1 class='big-title__heading'>Alpha Core Database Browser</h1>
+        <div class='big-title__bar'></div>
+        <div class='big-title__subtitle'>
+          World Of Warcraft - Version 3368 0.5.3
         </div>
-        <!-- END PAGE TITLE -->
+      </div>
+      <div>
+        <i class='page-title__database fas fa-database'></i>
+      </div>
+    </div>
+    <!-- END PAGE TITLE -->
 
 
-        <!-- PAGE CONTENT -->
-        <div class='creature-details page-content'>
-          <div class='cards-container'>
-            <!-- CARD UPDATE -->
-            <article class='card'>
-              <i class='card__icon fas fa-calendar-days'></i>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Updates</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <div class='card__content'>
-                <h3>Latest DBC table update</h3>
-                <ul>
-                  <li>$dbcUpdate</li>
-                </ul>
-                <h3>Latest World table update</h3>
-                <ul>
-                  <li>$worldUpdate</li>
-                </ul>
-                <h3>Source</h3>
-                <ul>
-                  <li><a href='https://github.com/The-Alpha-Project/alpha-core/tree/master/etc/databases'>GitHub: alpha-core/etc/databases/</a></li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD UPDATE -->
-  ";
+    <!-- PAGE CONTENT -->
+    <div class='creature-details page-content'>
+      <div class='cards-container'>
+      ";
 
-?>
+  // UPDATES
+  oneCard ('Updates', 'fas fa-calendar-days', "
+      <h3>Latest DBC table update</h3>
+      <ul>
+        <li>$dbcUpdate</li>
+      </ul>
+      <h3>Latest World table update</h3>
+      <ul>
+        <li>$worldUpdate</li>
+      </ul>
+      <h3>Source</h3>
+      <ul>
+        <li><a href='https://github.com/The-Alpha-Project/alpha-core/tree/master/etc/databases'>GitHub: alpha-core/etc/databases/</a></li>
+      </ul>
+      ");
 
-            <!-- CARD UTILITIES -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Utilities</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-tools'></i>
-              <div class='card__content'>
-                <h3>Spawn point</h3>
-                <ul>
-                  <li><a href='?action=proximity'>Proximity search</a></li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD UTILITIES -->
+  // TOOLS
+  oneCard ('Utilities', 'fas fa-tools', "
+      <h3>Spawn point</h3>
+      <ul>
+        <li><a href='?action=proximity'>Proximity search</a></li>
+      </ul>
+    ");
 
-            <!-- CARD OTHER TABLES -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Other tables</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-table'></i>
-              <div class='card__content'>
-                <h3>Spell table</h3>
-                <ul>
-                  <li><a href='?action=spell_visuals'>Spell visuals</a></li>
-                  <li><a href='?action=spell_visual_anim_names'>Spell visuals animation names</a></li>
-                  <li><a href='?action=spell_visual_effect_names'>Spell visuals effect names</a></li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD OTHER TABLES -->
+  // OTHER TABLES
+  oneCard ('Other tables', 'fas fa-table', "
+      <h3>Spell table</h3>
+      <ul>
+        <li><a href='?action=spell_visuals'>Spell visuals</a></li>
+        <li><a href='?action=spell_visual_anim_names'>Spell visuals animation names</a></li>
+        <li><a href='?action=spell_visual_effect_names'>Spell visuals effect names</a></li>
+      </ul>
+    ");
 
-            <!-- CARD VALIDATION -->
-            <article class='card card--validation'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Validation</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-cog'></i>
-              <div class='card__content card--validation__content'>
-                <h3>NPC</h3>
-                <ul>
-                  <li><a href='?action=unknown_faction'>NPCs with unknown faction</a></li>
-                  <li><a href='?action=npc_missing_quest'>NPCs which start/finish a missing quest</a></li>
-                </ul>
-                <h3>Game objects</h3>
-                <ul>
-                  <li><a href='?action=go_missing_quest'>Game objects which start/finish a missing quest</a></li>
-                  <li><a href='?action=go_not_spawned'>Game objects which are not spawned</a></li>
-                </ul>
-                <h3>Quests</h3>
-                <ul>
-                  <li><a href='?action=quest_missing_item'>Quests with missing items</a></li>
-                  <li><a href='?action=quest_missing_spell'>Quests with missing spells</a></li>
-                  <li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a></li>
-                </ul>
-                <h3>Items</h3>
-                <ul>
-                  <li><a href='?action=no_item_text'>Items with no text</a></li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD VALIDATION -->
+  // VALIDATION
+  oneCard ('Validation', 'fas fa-cog', "
+      <h3>NPC</h3>
+      <ul>
+        <li><a href='?action=unknown_faction'>NPCs with unknown faction</a></li>
+        <li><a href='?action=npc_no_model'>NPCs with missing model</a></li>
+        <li><a href='?action=npc_missing_quest'>NPCs which start/finish a missing quest</a></li>
+      </ul>
+      <h3>Game objects</h3>
+      <ul>
+        <li><a href='?action=go_missing_quest'>Game objects which start/finish a missing quest</a></li>
+        <li><a href='?action=go_not_spawned'>Game objects which are not spawned</a></li>
+      </ul>
+      <h3>Quests</h3>
+      <ul>
+        <li><a href='?action=quest_missing_item'>Quests with missing items</a></li>
+        <li><a href='?action=quest_missing_spell'>Quests with missing spells</a></li>
+        <li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a></li>
+      </ul>
+      <h3>Items</h3>
+      <ul>
+        <li><a href='?action=no_item_text'>Items with no text</a></li>
+      </ul>
+      <h3>Spells</h3>
+      <ul>
+        <li><a href='?action=spell_missing_spell'>Spells with missing spells</a></li>
+        <li><a href='?action=spell_missing_item'>Spells with missing items</a></li>
+      </ul>
 
-            <!-- CARD ALPHA CORE -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Alpha Core</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fab fa-github'></i>
-              <div class='card__content'>
-                <img
-                  class='card__content__cover'
-                  src='./assets/img/alphacore.png'
-                  alt=''
-                />
-                <h3>O.5.3 WoW Emulator</h3>
-                <ul>
-                  <li>
-                    <a href='https://github.com/The-Alpha-Project'
-                      >Alpha core main repo</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD ALPHA CORE -->
+  ", 'card--validation__content');
 
-            <!-- CARD ARCHIVE -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Alpha Archive</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-image'></i>
-              <div class='card__content'>
-                <img
-                  class='card__content__cover'
-                  src='./assets/img/archive.png'
-                  alt=''
-                />
-                <h3>Browse old screenshots</h3>
-                <ul>
-                  <li>
-                    <a href='https://archive.thealphaproject.eu/browse/'
-                      >Alpha archive website</a
-                    >
-                  </li>
-                </ul>
-                <p style='font-size:small;'>(Needs Javascript)</p>
-              </div>
-            </article>
-            <!-- END CARD ARCHIVE -->
+  // ALPHA CORE
+  oneCard ('Alpha Core', 'fab fa-github', "
+      <img
+        class='card__content__cover'
+        src='./assets/img/alphacore.png'
+        alt=''
+      />
+      <h3>O.5.3 WoW Emulator</h3>
+      <ul>
+        <li>
+          <a href='https://github.com/The-Alpha-Project'
+            >Alpha core main repo</a
+          >
+        </li>
+      </ul>
+");
 
-            <!-- CARD DISCORD -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Discord</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fab fa-discord'></i>
-              <div class='card__content'>
-                <img
-                  class='card__content__cover'
-                  src='./assets/img/discord.jpeg'
-                  alt=''
-                />
-                <h3>Join Alpha core on discord</h3>
-                <ul>
-                  <li>
-                    <a href='https://discord.com/invite/RzBMAKU?'
-                      >Discord Invitation</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD DISCORD -->
+  // ALPHA ARCHIVE
+  oneCard ('Alpha Archive', 'fas fa-image', "
+      <img
+        class='card__content__cover'
+        src='./assets/img/archive.png'
+        alt=''
+      />
+      <h3>Browse old screenshots</h3>
+      <ul>
+        <li>
+          <a href='https://archive.thealphaproject.eu/browse/'
+            >Alpha archive website</a
+          >
+        </li>
+      </ul>
+      <p style='font-size:small;'>(Needs Javascript)</p>
+  ");
 
-            <!-- CARD ALAKAZAM-->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Allakhazam</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-paperclip'></i>
-              <div class='card__content'>
-                <img
-                  class='card__content__cover'
-                  src='./assets/img/alakazam.jpg'
-                  alt=''
-                />
-                <h3>Old WoW Beta Database</h3>
-                <ul>
-                  <li>
-                    <a
-                      href='http://web.archive.org/web/20041116024110/http://wow.allakhazam.com/'
-                      >Allakhazam website</a
-                    >
-                  </li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD ALAKAZAM -->
+  // DISCORD
+  oneCard ('Discord', 'fab fa-discord', "
+    <div class='card__content'>
+      <img
+        class='card__content__cover'
+        src='./assets/img/discord.jpeg'
+        alt=''
+      />
+      <h3>Join Alpha core on discord</h3>
+      <ul>
+        <li>
+          <a href='https://discord.com/invite/RzBMAKU?'
+            >Discord Invitation</a
+          >
+        </li>
+      </ul>
+");
 
-            <!-- CARD BACKEND -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Back end</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-server'></i>
-              <div class='card__content'>
-                <img
-                  class='card__content__cover'
-                  src='./assets/img/avatar.jpg'
-                  alt=''
-                />
-                <h3>Created by  X'Genesis Qhulut</h3>
+  // ALLAKHAZAM
+  oneCard ('Allakhazam', 'fas fa-paperclip', "
+      <img
+        class='card__content__cover'
+        src='./assets/img/alakazam.jpg'
+        alt=''
+      />
+      <h3>Old WoW Beta Database</h3>
+      <ul>
+        <li>
+          <a
+            href='http://web.archive.org/web/20041116024110/http://wow.allakhazam.com/'
+            >Allakhazam website</a
+          >
+        </li>
+      </ul>
+");
 
-                <ul>
-                  <li>
-                    <a href='https://github.com/X-Genesis-Qhulut/alpha'
-                      >Github profile</a
-                    >
-                  </li>
-                </ul>
-                <div style='font-size:smaller;'>
-                <p>
-                  Designed and coded in August 2022 by X’Genesis Qhulut.
-                </p>
-                <p>Thanks to Grender from the Alpha Project.
-                </p>
-                <hr>
-                <p>
-                  Thanks to the original developers of WoW and also John Staats
-                  for writing <i>The WoW Diary: A Journal of Computer Game
-                  Development</i>. Maps courtesy of Entropy and WoW.tools. Creature
-                  screenshots by Daribon.
-                  Thanks also to Geo for developing the database front-end CSS and HTML code.
-                </p>
-                </div>
-              </div>
-            </article>
-            <!-- END CARD BACKEND -->
+  // BACK END
+  oneCard ('Back end', 'fas fa-server', "
+    <div class='card__content'>
+      <img
+        class='card__content__cover'
+        src='./assets/img/avatar.jpg'
+        alt=''
+      />
+      <h3>Created by  X'Genesis Qhulut</h3>
 
-            <!-- CARD FRONTEND -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Front end</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-brush'></i>
-              <div class='card__content'>
-                <img
-                  class='card__content__cover'
-                  src='./assets/img/napoleon.jpg'
-                  alt=''
-                />
-                <h3>Created by Geo</h3>
-                <ul>
-                  <li>
-                    <a href='https://github.com/geo-tp/053-Database-Frontend'
-                      >Frontend database repo</a
-                    >
-                  </li>
-                  <li>
-                    <a href='https://github.com/geo-tp'>Geo github profile</a>
-                  </li>
-                </ul>
-              </div>
-            </article>
-            <!-- END CARD FRONTEND -->
-            <!-- CARD COPYRIGHT -->
-            <article class='card'>
-              <div class='medium-title'>
-                <h2 class='medium-title__heading'>Copyright</h2>
-                <div class='medium-title__bar'></div>
-              </div>
-              <i class='card__icon fas fa-copyright'></i>
-              <div class='card__content'>
-                <div style='font-size:smaller;'>
+      <ul>
+        <li>
+          <a href='https://github.com/X-Genesis-Qhulut/alpha'
+            >Github profile</a
+          >
+        </li>
+      </ul>
+      <div style='font-size:smaller;'>
+      <p>
+        Designed and coded in August 2022 by X’Genesis Qhulut.
+      </p>
+      <p>Thanks to Grender from the Alpha Project.
+      </p>
+      <hr>
+      <p>
+        Thanks to the original developers of WoW and also John Staats
+        for writing <i>The WoW Diary: A Journal of Computer Game
+        Development</i>. Maps courtesy of Entropy and WoW.tools. Creature
+        screenshots by Daribon.
+        Thanks also to Geo for developing the database front-end CSS and HTML code.
+      </p>
+      </div>
+");
 
-                <p>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</p>
-                <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
-                “for home, noncommercial and personal use only”.
-                <hr>
-                <p><b>Blizzard Entertainment®</b></p>
-                <p>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</p>
-                </div>
-              </div>
-            </article>
-            <!-- END CARD COPYRIGHT -->
-          </div>
-        </div>
-        <!-- END PAGE CONTENT -->
-      </section>
-      <!-- END PAGE CONTAINER-->
-    </main>
-    <!-- END MAIN -->
-<?php
+  // FRONT END
+  oneCard ('Front end', 'fas fa-brush', "
+      <img
+        class='card__content__cover'
+        src='./assets/img/napoleon.jpg'
+        alt=''
+      />
+      <h3>Created by Geo</h3>
+      <ul>
+        <li>
+          <a href='https://github.com/geo-tp/053-Database-Frontend'
+            >Frontend database repo</a
+          >
+        </li>
+        <li>
+          <a href='https://github.com/geo-tp'>Geo github profile</a>
+        </li>
+      </ul>
+");
+
+  // COPYRIGHT
+  oneCard ('Copyright', 'fas fa-copyright', "
+      <div style='font-size:smaller;'>
+
+      <p>Image assets shown are Copyright ©2022 Blizzard Entertainment, Inc.</p>
+      <p>Images used in accordance with permission given <a href='https://www.blizzard.com/en-us/legal/c1ae32ac-7ff9-4ac3-a03b-fc04b8697010/blizzard-legal-faq'>here</a>
+      “for home, noncommercial and personal use only”.
+      <hr>
+      <p><b>Blizzard Entertainment®</b></p>
+      <p>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</p>
+      </div>
+");
+
+  // WRAP UP PAGE
+echo "
+
+      </div>
+    </div>
+    <!-- END PAGE CONTENT -->
+  </section>
+  <!-- END PAGE CONTAINER-->
+</main>
+<!-- END MAIN -->
+";
+
 } // end of mainPage
 
 ?>

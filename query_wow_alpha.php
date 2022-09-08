@@ -73,7 +73,6 @@ require ("wow_alpha_ports.php");
 require ("wow_alpha_skills.php");
 require ("wow_alpha_tables.php");
 require ("wow_alpha_proximity.php");
-require ("wow_alpha_validity.php");
 require ("wow_alpha_spell_visual.php");
 // field expansions
 require ("wow_alpha_fields.php");
@@ -134,10 +133,6 @@ $dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
 if (mysqli_connect_errno())
   MajorProblem ("Cannot connect to server " . DBSERVER . ':' . mysqli_connect_error());
 
- //MajorProblem ('blah blah blah');
-
-// ShowWarning ("my test warning");
-
 $PHP_SELF = $_SERVER['PHP_SELF'];
 
 // grab things we are likely to cross-reference a lot
@@ -175,7 +170,12 @@ if ($action)
 //  showMenu ();
 
   if (array_key_exists ($action, $handlers))
+    {
+    // only pull in this file if we have to
+    if (array_key_exists ($action, VALIDATION_ACTIONS))
+      require ("wow_alpha_validity.php");
     $handlers [$action] ();
+    }
   else
     ShowWarning ('Unknown action');
   }
