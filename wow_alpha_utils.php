@@ -995,7 +995,7 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     $z = $row [$zName];
     $map = $row [$mName];
 
-    if ($map >= 2)
+    if ($map < 2)
        $description = "$x $y $z $map";
     else
        $description = "$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
