@@ -8,6 +8,8 @@
   //   width: 100px;
   border-radius: 20px 0px 0px 20px;
   padding: 3px;
+  padding-left: 4px;
+  padding-right: 4px;
   margin-top: 6.5px;
   font-size: 0.7em;
   border: 1px solid $color4;
@@ -64,12 +66,12 @@
     width: 320px;
   }
 
-  @media screen and (max-width: 1295px) {
-    width: 300px;
+  @media screen and (max-width: 1310px) {
+    width: 280px;
   }
 
   @media screen and (max-width: 1268px) {
-    width: 280px;
+    width: 270px;
   }
 
   @media screen and (max-width: 1259px) {

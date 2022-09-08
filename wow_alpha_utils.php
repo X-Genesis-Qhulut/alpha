@@ -811,7 +811,7 @@ function convertTimeGeneral ($time)
   } // end of convertTimeGeneral
 
 
-function listThing ($array, $id, $action)
+function listThing ($array, $id, $action, $info = '')
   {
   /*
   echo "<li>";
@@ -822,10 +822,10 @@ function listThing ($array, $id, $action)
     echo ("$link: " . $array  [$id] );
   echo "\n";
   */
-  fancyListThing ($array, $id, $action);
+  fancyListThing ($array, $id, $action, $info);
   } // end of listThing
 
-function fancyListThing ($array, $id, $action)
+function fancyListThing ($array, $id, $action, $info = '')
   {
   if (array_key_exists ($action, ICONS))
     $icon = ICONS [$action];
@@ -851,10 +851,13 @@ function fancyListThing ($array, $id, $action)
   <span class='row-card__head'>
   <i class='fas $icon'></i>$id</span>
   <span class='row-card__content'>$description</span>
+  ";
+  if ($info)
+    echo "<span class='row-card__extra'>" . fixHTML ($info) . "</span>\n";
+
+  echo "
   $unlink
   ";
-
-//  <span class='row-card__extra'>Info</span>
 
   } // end of listThing
 

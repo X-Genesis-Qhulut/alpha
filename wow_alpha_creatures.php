@@ -323,11 +323,10 @@ function creatureQuestLoot ($info)
   usort($results, 'item_compare');
 
   listItems ('Quest item loot', 'alpha_world.creature_loot_template', $count, $results,
-    function ($row)
+    function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           -$chance . "%\n";
+      listThing ($items, $row ['item'], -$chance . "%");
       } // end listing function
       );
 
@@ -359,11 +358,10 @@ function creatureLoot ($info)
   usort($results, 'loot_item_compare');
 
   listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
-    function ($row)
+    function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           $chance . "%\n";
+      listThing ($items, $row ['item'], 'show_item', $chance . '%');
       } // end listing function
       );
 } // end of creatureLoot
@@ -403,15 +401,14 @@ function creatureReferenceLoot ($info)
 
   usort ($lootResults, 'reference_item_compare');  // ordering by loot chance now
   listItems ('Reference loot', 'alpha_world.reference_loot_template', count ($lootResults), $lootResults,
-    function ($row)
+    function ($row) use ($items)
       {
       $chance = $row ['chance'];
       if ($chance >= 0)
         $chance .= "%\n";
       else
         $chance = -$chance . "% (quest)";
-      echo "<li>" . lookupItemHelper ($row ['refItem'], $row ['minCount']) . ' — ' .
-           $chance;
+      listThing ($items, $row ['refItem'], 'show_item', $chance);
       } // end listing function
       );
 
@@ -436,10 +433,10 @@ function creaturePickpocketingLoot ($info)
                                ORDER BY ChanceOrQuestChance DESC", array ('i', &$loot_id));
   usort($lootResults, 'loot_item_compare');
   listItems ('Pickpocketing loot', 'alpha_world.pickpocketing_loot_template', count ($lootResults), $lootResults,
-    function ($row)
+    function ($row) use ($items)
       {
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           $row ['ChanceOrQuestChance'] . '%';
+      $chance = $row ['ChanceOrQuestChance'];
+      listThing ($items, $row ['item'], 'show_item', $chance . '%');
       } // end listing function
       );
 
@@ -462,10 +459,10 @@ function creatureSkinningLoot ($info)
   $lootResults = dbQueryParam ("SELECT * FROM ".SKINNING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
   usort($lootResults, 'loot_item_compare');
   listItems ('Skinning loot', 'alpha_world.skinning_loot_template', count ($lootResults), $lootResults,
-    function ($row)
+    function ($row) use ($items)
       {
-      echo "<li>" . lookupItemHelper ($row ['item'], $row ['mincountOrRef']) . ' — ' .
-           $row ['ChanceOrQuestChance'] . '%';
+      $chance = $row ['ChanceOrQuestChance'];
+      listThing ($items, $row ['item'], 'show_item', $chance . '%');
       } // end listing function
       );
 

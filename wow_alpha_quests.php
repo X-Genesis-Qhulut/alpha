@@ -286,9 +286,7 @@ function showQuestChain ()
     listItems ('Quest chain', 'alpha_world.quest_template', count ($foundQuests) , $foundQuests,
       function ($quest) use ($quests, $id)
         {
-        echo ("<li>" . lookupThing ($quests, $quest, 'show_quest'));
-        if ($quest == $id)
-          echo ' <i>(this quest)</i>';
+        listThing ($quests, $quest, 'show_quest', $quest == $id ? '<- This' : '');
         });
     } // end of other quests in the chain
 

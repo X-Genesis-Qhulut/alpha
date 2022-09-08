@@ -52,8 +52,9 @@
 
     @include medium-shadow;
 
-    & .row-card:first-child {
-      margin-top: 30px;
+    & .row-card-container {
+      margin-top: 10px;
+      justify-content: unset;
     }
 
     & .simulate_box {
