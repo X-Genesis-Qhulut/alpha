@@ -268,10 +268,8 @@ function creatureVendorItems ($info)
   listItems ('NPC sells', 'alpha_world.npc_vendor', count ($results), $results,
     function ($row) use ($items)
       {
-      listThing ($items, $row ['item'], 'show_item');
       $maxcount = $row ['maxcount'];
-      if ($maxcount  > 0)
-        echo (" (limit $maxcount)");
+      listThing ($items, $row ['item'], 'show_item', $maxcount  > 0 ? "(limit $maxcount)" : 0);
       } // end listing function
       );
 } // end of creatureVendorItems
@@ -360,7 +358,7 @@ function creatureLoot ($info)
   listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
     function ($row) use ($items)
       {
-      $chance = $row ['ChanceOrQuestChance'];
+      $chance = round ($row ['ChanceOrQuestChance'], 2);
       listThing ($items, $row ['item'], 'show_item', $chance . '%');
       } // end listing function
       );
@@ -404,11 +402,13 @@ function creatureReferenceLoot ($info)
     function ($row) use ($items)
       {
       $chance = $row ['chance'];
-      if ($chance >= 0)
-        $chance .= "%\n";
-      else
-        $chance = -$chance . "% (quest)";
-      listThing ($items, $row ['refItem'], 'show_item', $chance);
+      $info2 = '';
+      if ($chance < 0)
+        {
+        $chance = -$chance;
+        $info2 = 'Quest';
+        }
+      listThing ($items, $row ['refItem'], 'show_item', round ($chance, 2) . '%', $info2);
       } // end listing function
       );
 
@@ -436,7 +436,7 @@ function creaturePickpocketingLoot ($info)
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      listThing ($items, $row ['item'], 'show_item', $chance . '%');
+      listThing ($items, $row ['item'], 'show_item', round ($chance, 2) . '%');
       } // end listing function
       );
 
@@ -462,7 +462,7 @@ function creatureSkinningLoot ($info)
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
-      listThing ($items, $row ['item'], 'show_item', $chance . '%');
+      listThing ($items, $row ['item'], 'show_item', round ($chance, 2) . '%');
       } // end listing function
       );
 

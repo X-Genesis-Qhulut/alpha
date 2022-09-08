@@ -810,22 +810,7 @@ function convertTimeGeneral ($time)
 
   } // end of convertTimeGeneral
 
-
-function listThing ($array, $id, $action, $info = '')
-  {
-  /*
-  echo "<li>";
-  $link = "<a href='?action=$action&id=$id'>$id</a>";
-  if (! isset ($array [$id]))
-    echo ("$id (not found)");
-  else
-    echo ("$link: " . $array  [$id] );
-  echo "\n";
-  */
-  fancyListThing ($array, $id, $action, $info);
-  } // end of listThing
-
-function fancyListThing ($array, $id, $action, $info = '')
+function listThing ($array, $id, $action, $info = '', $info2 = '')
   {
   if (array_key_exists ($action, ICONS))
     $icon = ICONS [$action];
@@ -854,6 +839,8 @@ function fancyListThing ($array, $id, $action, $info = '')
   ";
   if ($info)
     echo "<span class='row-card__extra'>" . fixHTML ($info) . "</span>\n";
+  if ($info2)
+    echo "<span class='row-card__extra'>" . fixHTML ($info2) . "</span>\n";
 
   echo "
   $unlink
@@ -1066,41 +1053,6 @@ function spellRoll ($dieSides, $baseDice, $dicePerLevel, $basePoints, $minOnly =
 // the function $listItemFunc does the actual listing. It returns false (or null)
 // if the item was listed, and true if it was skipped for some reason.
 function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
-{
-  return fancyListItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop);
-  /*
-  global $listedItemsCount;
-
-  $listedItemsCount += $totalCount;
-
-  // trivial case - nothing to list
-  if ($totalCount <= 0)
-    return;
-
-  $running_count = 0;
-
-  startElementInformation ($heading . " ($totalCount)", $table, $uptop);
-  echo "<ul>\n";
-
-  foreach ($results as $row)
-    {
-    if (!$listItemFunc ($row))
-      {
-      $running_count++;
-      } // end of if this row actually got listed
-    } // for each row
-
-  echo "</ul>\n";
-  endElementInformation ();
-  return $running_count;
-  */
-
-} // end of listItems
-
-// generic handler for listing things (like items, spells, creatures) wit
-// the function $listItemFunc does the actual listing. It returns false (or null)
-// if the item was listed, and true if it was skipped for some reason.
-function fancyListItems ($heading, $table, $totalCount, $results, $listItemFunc, $uptop = false)
 {
   global $listedItemsCount;
 

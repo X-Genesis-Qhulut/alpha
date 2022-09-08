@@ -53,8 +53,8 @@
   }
 
   &__extra {
-    width: 15%;
-    min-width: 15%;
+    width: 18%;
+    min-width: 18%;
     margin-left: 3px;
   }
 
@@ -123,14 +123,13 @@
     &__content {
       // width: 110px;
     }
-
-    &__extra {
-      display: none;
-    }
   }
 
   @media screen and (max-width: 415px) {
     width: 200px;
+    &__extra {
+      display: none;
+    }
   }
 
   @media screen and (max-width: 365px) {

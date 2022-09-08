@@ -213,10 +213,8 @@ function showItemVendors ()
   listItems ('Sold by', 'alpha_world.npc_vendor', count ($results), $results,
     function ($row) use ($creatures)
       {
-      listThing ($creatures, $row ['entry'], 'show_creature');
       $maxcount = $row ['maxcount'];
-      if ($maxcount  > 0)
-        echo (" (limit $maxcount)");
+      listThing ($creatures, $row ['entry'], 'show_creature', $maxcount  > 0 ? "(limit $maxcount)" : '');
       } // end listing function
       );
 }  // end of showItemVendorsshowItemVendors
@@ -249,14 +247,15 @@ function showItemDrops ()
     if ($creatureRow ['chance'] < 0)
         $count++;
 
+  // TODO: fix this - counts will be wrong
+
   listItems ('Quest item dropped by', 'alpha_world.creature_loot_template',
             $count, $results,
     function ($row) use ($creatures)
       {
       if ($row ['chance'] >= 0)
         return true;   // ignore non-quest items
-      listThing ($creatures, $row ['npc'], 'show_creature');
-      echo ' — ' . -$row ['chance'] . '%';
+      listThing ($creatures, $row ['npc'], 'show_creature', round (-$row ['chance'], 2) . '%');
       } // end listing function
       );
 
@@ -268,8 +267,7 @@ function showItemDrops ()
       {
       if ($row ['chance'] < 0)
         return true;   // ignore quest items
-      listThing ($creatures, $row ['npc'], 'show_creature');
-      echo ' — ' . $row ['chance'] . '%';
+      listThing ($creatures, $row ['npc'], 'show_creature', round ($row ['chance'], 2) . '%');
       } // end listing function
       );
 
@@ -294,8 +292,7 @@ function showItemDrops ()
              count($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
-      listThing ($creatures, $row ['npc'], 'show_creature');
-      echo  ' — ' .  $row ['chance'] . "%\n";
+      listThing ($creatures, $row ['npc'], 'show_creature',  round ($row ['chance'], 2) . "%");
       } // end listing function
       );
 
@@ -328,8 +325,7 @@ function showItemSkinningLoot ()
             count ($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
-      listThing ($creatures, $row ['npc'], 'show_creature');
-      echo ' — ' . -$row ['chance'] . '%';
+      listThing ($creatures, $row ['npc'], 'show_creature', round ($row ['chance'], 2) . '%');
       } // end listing function
       );
 } // end of showItemSkinningLoot
