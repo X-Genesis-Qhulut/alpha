@@ -691,10 +691,10 @@ function showMissingCreatureModelsDetails ($info)
             FROM $creature_template AS T1
             WHERE entry < " . MAX_CREATURE . "
             AND T1.$field <> 0
-            AND (entry IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0)
-              OR entry IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0)
-              OR entry IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0)
-              OR entry IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0))
+            AND (entry IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0 AND spawn_entry1 < " . MAX_CREATURE . " GROUP BY spawn_entry1)
+              OR entry IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0 AND spawn_entry2 < " . MAX_CREATURE . " GROUP BY spawn_entry2)
+              OR entry IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0 AND spawn_entry3 < " . MAX_CREATURE . " GROUP BY spawn_entry3)
+              OR entry IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0 AND spawn_entry4 < " . MAX_CREATURE . " GROUP BY spawn_entry4))
             ");
 
     $missingModels = array ();
@@ -744,7 +744,7 @@ function showMissingCreatureModels ()
 
 
 
-// analyse creatures to see if they start a missing quest
+// analyse creatures to see if they are not spawned
 function showCreaturesNotSpawnedDetails ($info)
 {
   $creature_template = CREATURE_TEMPLATE;
@@ -755,10 +755,10 @@ function showCreaturesNotSpawnedDetails ($info)
          "SELECT T1.entry AS npc_key
           FROM $creature_template AS T1
           WHERE entry < " . MAX_CREATURE . "
-          AND (entry NOT IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0)
-            AND entry NOT IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0)
-            AND entry NOT IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0)
-            AND entry NOT IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0))
+            AND (entry NOT IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0 AND spawn_entry1 < " . MAX_CREATURE . " GROUP BY spawn_entry1)
+             AND entry NOT IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0 AND spawn_entry2 < " . MAX_CREATURE . " GROUP BY spawn_entry2)
+             AND entry NOT IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0 AND spawn_entry3 < " . MAX_CREATURE . " GROUP BY spawn_entry3)
+             AND entry NOT IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0 AND spawn_entry4 < " . MAX_CREATURE . " GROUP BY spawn_entry4))
           ");
 
     $count = dbRows ($results);
