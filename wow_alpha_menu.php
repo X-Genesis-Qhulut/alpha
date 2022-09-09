@@ -208,13 +208,9 @@ function mainPage ()
   oneCard ('Validation', 'fas fa-cog', "
       <h3>NPC</h3>
       <ul>
-        <li><a href='?action=unknown_faction'>NPCs with unknown faction</a></li>" .
-
-/*
+        <li><a href='?action=unknown_faction'>NPCs with unknown faction</a></li>
         <li><a href='?action=npc_no_model'>NPCs with missing model</a></li>
         <li><a href='?action=npc_not_spawned'>NPCs which are not spawned</a></li>
-*/
-        "
         <li><a href='?action=npc_missing_quest'>NPCs which start/finish a missing quest</a></li>
       </ul>
       <h3>Game objects</h3>

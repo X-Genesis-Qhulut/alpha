@@ -688,7 +688,7 @@ function showMissingCreatureModelsDetails ($info)
     // find all spawned creatures
     $results = dbQuery (
            "SELECT T1.entry AS npc_key, T1.$field AS npc_model
-            FROM creature_template AS T1
+            FROM $creature_template AS T1
             WHERE entry < " . MAX_CREATURE . "
             AND T1.$field <> 0
             AND (entry IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0)
@@ -753,7 +753,7 @@ function showCreaturesNotSpawnedDetails ($info)
   // find all spawned creatures
   $results = dbQuery (
          "SELECT T1.entry AS npc_key
-          FROM creature_template AS T1
+          FROM $creature_template AS T1
           WHERE entry < " . MAX_CREATURE . "
           AND (entry NOT IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0)
             AND entry NOT IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0)
