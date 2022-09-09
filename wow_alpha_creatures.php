@@ -104,21 +104,23 @@ function creatureTopLeft ($info)
       $x = $i * ($navDotSize * 3);
       $y = 5;
       if ($row ["display_id$i"])
-        {
-        if ($i == 1)
-          $colour = 'whitesmoke';
-        else
-          $colour = 'darkgray';
-        echo "<i id='model_navigate$i' class='fas fa-circle' style='position:absolute; left:" . $x . "px; bottom:" . $y . "px;
-              color:$colour;  cursor:pointer;' onclick='modelPage(event, $i)' ></i>\n";
-        /*
-        echo "<svg width='$navDotSize' height='$navDotSize' class='spawn_point' style='bottom:{$y}px; left:{$x}px;'
-              onclick='modelPage(event, $i)' >\n";
-        echo "  <circle cx='$halfNavDotSize' cy='$halfNavDotSize' r='$halfNavDotSize' fill='lightgray' stroke='none'/>\n";
-        echo "</svg>\n";
-        */
+        $display = '';
+      else
+        $display = 'none';
 
-        }
+      if ($i == 1)
+        $colour = 'whitesmoke';
+      else
+        $colour = 'darkgray';
+      echo "<i id='model_navigate$i' class='fas fa-circle' style='position:absolute; left:" . $x . "px; bottom:" . $y . "px;
+            color:$colour;  cursor:pointer; display:$display' onclick='modelPage(event)' data-page='$i' ></i>\n";
+      /*
+      echo "<svg width='$navDotSize' height='$navDotSize' class='spawn_point' style='bottom:{$y}px; left:{$x}px;'
+            onclick='modelPage(event, $i)' >\n";
+      echo "  <circle cx='$halfNavDotSize' cy='$halfNavDotSize' r='$halfNavDotSize' fill='lightgray' stroke='none'/>\n";
+      echo "</svg>\n";
+      */
+
       } // for each of the 4 model IDs
     } // if there are more than one
 

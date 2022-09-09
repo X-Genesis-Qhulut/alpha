@@ -778,5 +778,61 @@ function showCreaturesNotSpawned ()
     } , CREATURE_TEMPLATE);
   } // end of showCreaturesNotSpawned
 
+
+function showMissingItemSpellsDetails ()
+{
+  global $quests;
+
+  $spell = SPELL;
+  $item_template = ITEM_TEMPLATE;
+  $totalCount = 0;
+
+  $fields = array ();
+
+  for ($i = 1; $i <= ITEM_SPELLS; $i++)
+    $fields [] = "spellid_$i";
+
+  foreach ($fields as $field)
+    {
+    $results = dbQuery ("SELECT T1.entry AS item_key,
+                                T1.$field AS item_spell
+                        FROM $item_template AS T1
+                            LEFT JOIN $spell AS T2
+                            ON T1.$field = T2.ID
+                        WHERE T2.ID IS NULL
+                        AND T1.$field <> 0 AND T1.ignored = 0
+                        ORDER BY T1.entry");
+
+    $count = dbRows ($results);
+    $totalCount += $count;
+
+    if ($count)
+      {
+      $info = array ('heading' => "Items where <$field> spell is missing",
+                     'results' => $results,
+                     'label' => 'Spell',
+                     'field' => 'item_spell');
+
+      bottomDetails ($info, 'showBadItems');
+      }
+
+    } // end of foreach
+
+  if ($totalCount == 0)
+    showNoProblems ();
+
+} // end of showMissingItemSpellsDetails
+
+function showMissingItemSpells ()
+  {
+  setTitle ("Items with missing spells");
+
+  pageContent (false, 'Validation', 'Item/spell validation',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showMissingItemSpellsDetails');
+    } , ITEM_TEMPLATE);
+  } // end of showMissingItemSpells
+
+
 ?>
 

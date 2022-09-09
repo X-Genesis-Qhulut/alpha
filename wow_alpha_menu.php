@@ -227,6 +227,7 @@ function mainPage ()
       <h3>Items</h3>
       <ul>
         <li><a href='?action=no_item_text'>Items with no text</a></li>
+        <li><a href='?action=item_missing_spell'>Items with missing spells</a></li>
       </ul>
       <h3>Spells</h3>
       <ul>

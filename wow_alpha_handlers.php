@@ -105,7 +105,28 @@ $handlers = array (
   'no_item_text'        => 'showNoItemText',
   'spell_missing_spell' => 'showMissingSpellSpells',
   'spell_missing_item'  => 'showMissingSpellItems',
+  'item_missing_spell'  => 'showMissingItemSpells',
 
 ); // end of $handlers
+
+
+// ACTIONS THAT REQUIRE wow_alpha_validity.php
+
+define ('VALIDATION_ACTIONS', array (
+  'unknown_faction'     =>  true,
+  'quest_missing_item'  =>  true,
+  'quest_missing_spell' =>  true,
+  'quest_missing_quest' =>  true,
+  'npc_missing_quest'   =>  true,
+  'npc_not_spawned'     =>  true,
+  'npc_no_model'        =>  true,
+  'go_missing_quest'    =>  true,
+  'go_not_spawned'      =>  true,
+  'no_item_text'        =>  true,
+  'spell_missing_spell' =>  true,
+  'spell_missing_item'  =>  true,
+  'item_missing_spell'  =>  true,
+  ));
+
 
 ?>

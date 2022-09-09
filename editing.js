@@ -85,8 +85,10 @@ function copyContents (event)
   return false
   }
 
-function modelPage (event, page)
+function modelPage (event)
   {
+  var page = event.currentTarget.dataset.page
+
   for (i = 1; i <= 4; i++)
     {
     document.getElementById('model' + i).style.display = 'none';
