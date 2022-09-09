@@ -52,8 +52,11 @@ function listBadNPCs ($info)
 
   echo "<ul>\n";
   foreach ($rows as $row)
-    echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature') .
-          " ($label " . $row [$field] . ")\n";
+    echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature');
+
+  if ($label)
+     echo " ($label " . $row [$field] . ")";
+  echo "\n";
   echo "</ul>\n";
   } // end of listBadNPCs
 
@@ -678,35 +681,36 @@ function showMissingCreatureModelsDetails ($info)
   $totalCount = 0;
 
   $creature_template = CREATURE_TEMPLATE;
-  $spawns_creatures = SPAWNS_CREATURES;
+  // find all spawned creatures
+  $spawned = getAllSpawnedCreatures ();
 
   for ($i = 1; $i <= CREATURE_DISPLAY_IDS; $i++)
     $fields [] = "display_id$i";
 
+  // for each of the display IDs ...
   foreach ($fields as $field)
     {
-    // find all spawned creatures
+    // get all creatures, spawned or not
     $results = dbQuery (
            "SELECT T1.entry AS npc_key, T1.$field AS npc_model
             FROM $creature_template AS T1
             WHERE entry < " . MAX_CREATURE . "
             AND T1.$field <> 0
-            AND (entry IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0 AND spawn_entry1 < " . MAX_CREATURE . " GROUP BY spawn_entry1)
-              OR entry IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0 AND spawn_entry2 < " . MAX_CREATURE . " GROUP BY spawn_entry2)
-              OR entry IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0 AND spawn_entry3 < " . MAX_CREATURE . " GROUP BY spawn_entry3)
-              OR entry IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0 AND spawn_entry4 < " . MAX_CREATURE . " GROUP BY spawn_entry4))
             ");
 
     $missingModels = array ();
     while ($row = dbFetch ($results))
       {
-      $model = $row ['npc_model'] . '.webp';
-      if ($row ['npc_model'] > MAX_CREATURE_MODEL ||
-         !file_exists ("$documentRoot$executionDir/creatures/$model"))
+      if (array_key_exists ($row ['npc_key'], $spawned))
         {
-        $missingModels [] = $row;
-        }
-      }
+        $model = $row ['npc_model'] . '.webp';
+        if ($row ['npc_model'] > MAX_CREATURE_MODEL ||
+           !file_exists ("$documentRoot$executionDir/creatures/$model"))
+          {
+          $missingModels [] = $row;
+          }
+        } // if spawned
+      } // end of for each row
     dbFree ($results);
 
     $count = count ($missingModels);
@@ -714,14 +718,11 @@ function showMissingCreatureModelsDetails ($info)
 
     if ($count)
       {
-
       $info = array ('heading' => "NPCs with no model for <$field>",
                      'rows' => $missingModels,
                      'label' => 'Model',
                      'field' => 'npc_model');
-
       bottomDetails ($info, 'listBadNPCs');
-
       } // end of if any rows
 
     } // end of foreach
@@ -747,33 +748,22 @@ function showMissingCreatureModels ()
 // analyse creatures to see if they are not spawned
 function showCreaturesNotSpawnedDetails ($info)
 {
-  $creature_template = CREATURE_TEMPLATE;
-  $spawns_creatures = SPAWNS_CREATURES;
+  global $creatures;
+  $spawned = getAllSpawnedCreatures ();
+  $badOnes = array ();
+  foreach ($creatures as $npc_entry => $npc_name)
+    {
+    if (!array_key_exists ($npc_entry, $spawned))
+      $badOnes [] = array ('npc_key' => $npc_entry);
+    }
 
-  // find all spawned creatures
-  $results = dbQuery (
-         "SELECT T1.entry AS npc_key
-          FROM $creature_template AS T1
-          WHERE entry < " . MAX_CREATURE . "
-            AND (entry NOT IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0 AND spawn_entry1 < " . MAX_CREATURE . " GROUP BY spawn_entry1)
-             AND entry NOT IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0 AND spawn_entry2 < " . MAX_CREATURE . " GROUP BY spawn_entry2)
-             AND entry NOT IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0 AND spawn_entry3 < " . MAX_CREATURE . " GROUP BY spawn_entry3)
-             AND entry NOT IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0 AND spawn_entry4 < " . MAX_CREATURE . " GROUP BY spawn_entry4))
-          ");
+  $info = array ('heading' => "NPCs which are not spawned by the database",
+                 'rows' => $badOnes,
+                 'label' => '',
+                 'field' => '');
 
-    $count = dbRows ($results);
+  bottomDetails ($info, 'listBadNPCs');
 
-    if ($count)
-      {
-
-      $info = array ('heading' => "NPCs which are not spawned by the database",
-                     'results' => $results,
-                     'label' => '',
-                     'field' => 'npc_model');
-
-      bottomDetails ($info, 'showBadNPCs');
-
-      } // end of if any rows
 
 } // end of showCreaturesNotSpawnedDetails
 

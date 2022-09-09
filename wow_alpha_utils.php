@@ -1593,4 +1593,29 @@ function roundChance ($chance)
   return round (abs ($chance), 2) . '%';
   } // end of roundChance
 
+function getAllSpawnedCreatures ()
+{
+  $spawns_creatures = SPAWNS_CREATURES;
+
+  // find all spawned creatures
+  $spawned = array ();
+
+  for ($i = 1; $i <= 4; $i++)
+    {
+    $results = dbQuery (
+            "SELECT spawn_entry$i AS entry
+             FROM $spawns_creatures
+             WHERE spawn_entry$i < " . MAX_CREATURE . "
+             GROUP BY spawn_entry$i");
+
+    while ($row = dbFetch ($results))
+      {
+      $spawned [$row ['entry']] = true;
+      }
+    dbFree ($results);
+    } // end of all 4 spawn point entries
+
+  return $spawned;
+} // end of getAllSpawnedCreatures
+
 ?>
