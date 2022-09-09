@@ -28,8 +28,11 @@ function showBadNPCs ($info)
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
-    echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature') .
-          " ($label " . $row [$field] . ")\n";
+    echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature');
+
+  if ($label)
+    echo " ($label " . $row [$field] . ")";
+  echo "\n";
   dbFree ($results);
   echo "</ul>\n";
   } // end of showBadNPCs
@@ -667,7 +670,7 @@ function showMissingSpellItems ()
 
 
 
-// analyse creatures to see if they start a missing quest
+// analyse creatures to see if they don't have a model file
 function showMissingCreatureModelsDetails ($info)
 {
   global $documentRoot, $executionDir;
@@ -675,6 +678,7 @@ function showMissingCreatureModelsDetails ($info)
   $totalCount = 0;
 
   $creature_template = CREATURE_TEMPLATE;
+  $spawns_creatures = SPAWNS_CREATURES;
 
   for ($i = 1; $i <= CREATURE_DISPLAY_IDS; $i++)
     $fields [] = "display_id$i";
@@ -686,19 +690,12 @@ function showMissingCreatureModelsDetails ($info)
            "SELECT T1.entry AS npc_key, T1.$field AS npc_model
             FROM creature_template AS T1
             WHERE entry < " . MAX_CREATURE . "
-            AND (entry IN (SELECT spawn_entry1 from alpha_world.spawns_creatures WHERE ignored = 0)
-              OR entry IN (SELECT spawn_entry2 from alpha_world.spawns_creatures WHERE ignored = 0)
-              OR entry IN (SELECT spawn_entry3 from alpha_world.spawns_creatures WHERE ignored = 0)
-              OR entry IN (SELECT spawn_entry4 from alpha_world.spawns_creatures WHERE ignored = 0))
+            AND T1.$field <> 0
+            AND (entry IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0)
+              OR entry IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0)
+              OR entry IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0)
+              OR entry IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0))
             ");
-
-    $results = dbQuery ("SELECT T1.entry AS npc_key,
-                          T1.$field as npc_model
-                        FROM $creature_template AS T1
-                        WHERE T1.entry <= " . MAX_CREATURE .
-                        " AND T1.$field <> 0
-                        ORDER BY T1.entry
-                        LIMIT 10");
 
     $missingModels = array ();
     while ($row = dbFetch ($results))
@@ -743,6 +740,53 @@ function showMissingCreatureModels ()
     bottomSectionMany ($info, 'showMissingCreatureModelsDetails');
     } , CREATURE_TEMPLATE);
   } // end of showMissingCreatureModels
+
+
+
+
+// analyse creatures to see if they start a missing quest
+function showCreaturesNotSpawnedDetails ($info)
+{
+  $creature_template = CREATURE_TEMPLATE;
+  $spawns_creatures = SPAWNS_CREATURES;
+
+  // find all spawned creatures
+  $results = dbQuery (
+         "SELECT T1.entry AS npc_key
+          FROM creature_template AS T1
+          WHERE entry < " . MAX_CREATURE . "
+          AND (entry NOT IN (SELECT spawn_entry1 from $spawns_creatures WHERE ignored = 0)
+            AND entry NOT IN (SELECT spawn_entry2 from $spawns_creatures WHERE ignored = 0)
+            AND entry NOT IN (SELECT spawn_entry3 from $spawns_creatures WHERE ignored = 0)
+            AND entry NOT IN (SELECT spawn_entry4 from $spawns_creatures WHERE ignored = 0))
+          ");
+
+    $count = dbRows ($results);
+
+    if ($count)
+      {
+
+      $info = array ('heading' => "NPCs which are not spawned by the database",
+                     'results' => $results,
+                     'label' => '',
+                     'field' => 'npc_model');
+
+      bottomDetails ($info, 'showBadNPCs');
+
+      } // end of if any rows
+
+} // end of showCreaturesNotSpawnedDetails
+
+
+function showCreaturesNotSpawned ()
+  {
+  setTitle ("NPCs not spawned");
+
+  pageContent (false, 'Validation', 'NPC not spawned',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showCreaturesNotSpawnedDetails');
+    } , CREATURE_TEMPLATE);
+  } // end of showCreaturesNotSpawned
 
 ?>
 

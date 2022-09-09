@@ -413,10 +413,10 @@ a {
   .table-rows td:nth-child(4) {
     display: none;
   }
-  .table-rows thead:nth-child(8) {
+  .table-rows thead th:nth-child(8) {
     display: none;
   }
-  .table-rows thead:nth-child(7) {
+  .table-rows thead th:nth-child(7) {
     display: none;
   }
   .table-rows thead th:nth-child(6) {

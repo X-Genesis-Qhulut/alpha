@@ -1003,6 +1003,7 @@ define ('VALIDATION_ACTIONS', array (
   'quest_missing_spell' =>  true,
   'quest_missing_quest' =>  true,
   'npc_missing_quest'   =>  true,
+  'npc_not_spawned'     =>  true,
   'npc_no_model'        =>  true,
   'go_missing_quest'    =>  true,
   'go_not_spawned'      =>  true,

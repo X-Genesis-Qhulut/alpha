@@ -104,7 +104,7 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 0", $param) ;
 
-  $count += listSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
+  $count += listSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', 'alpha_world.spawns_creatures',
                 'position_x', 'position_y', 'position_z', 'map');
 
   comment ('SPAWN POINTS - KALIMDOR');
@@ -113,7 +113,7 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 1", $param);
 
-  $count += listSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
+  $count += listSpawnPoints ($results, 'Spawn points — Kalimdor', 'alpha_world.spawns_creatures',
                 'position_x', 'position_y', 'position_z', 'map');
 
 
@@ -123,7 +123,7 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map > 1", $param);
 
-  $count += listSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_creatures',
+  $count += listSpawnPoints ($results, 'Spawn points — Instances', 'alpha_world.spawns_creatures',
                 'position_x', 'position_y', 'position_z', 'map');
 
 
@@ -183,7 +183,7 @@ function creatureTopRight ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 0", $param) ;
 
-  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
+  showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', 'alpha_world.spawns_creatures',
                 'position_x', 'position_y', 'position_z', 'map');
 
   comment ('KALIMDOR');
@@ -192,7 +192,7 @@ function creatureTopRight ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 1", $param);
 
-  showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
+  showSpawnPoints ($results, 'Spawn points — Kalimdor', 'alpha_world.spawns_creatures',
                 'position_x', 'position_y', 'position_z', 'map');
 
 
@@ -508,9 +508,8 @@ function creatureDetails ($info)
       if ($listedItemsCount == 0)
         middleDetails ($info, function ($info)
           {
-          boxTitle ('Extra information');
-          echo "<ul><li>No further information about this NPC.</ul>";
-            });
+          showNoSpawnPoints ('Extra information', 'No further information about this NPC.');
+          });
       });
 
   bottomSection ($info, function ($info) use ($id)

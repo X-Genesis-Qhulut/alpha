@@ -1512,22 +1512,24 @@ function bottomDetails ($userInfo, $func)
 } // end of bottomDetails
 
 
-function showNoSpawnPoints ()
+function showNoSpawnPoints ($heading = 'Spawn points', $message = 'None')
   {
-  comment ('NO SPAWN POINTS MESSAGE');
+  comment ('NO SOMETHING MESSAGE');
 
-    echo "
-   <div class='element-information'>
-     <h2  class='element-information__title'>Spawn points</h2>
+  echo "
+  <div class='element-information'>
+     <h2  class='element-information__title'>$heading</h2>
        <div class='element-information__bar'></div>
           <div class='element-information__content'>
-          <div  class='row-card'>
-          <span class='row-card__head'><i class='fas fa-globe'></i></span>
-          <span class='row-card__content'>None</span>
+            <div class='row-card-container'>
+               <div  class='row-card'>
+               <span class='row-card__head'><i class='fas fa-globe'></i></span>
+               <span class='row-card__content'>$message</span>
+               </div>
+            </div>
         </div>
       </div>
-    </div>
-    ";
+     ";
   }   // end of showNoSpawnPoints
 
 function boxTitle ($what)
