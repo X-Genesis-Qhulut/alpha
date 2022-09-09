@@ -1523,7 +1523,7 @@ function showNoSpawnPoints ($heading = 'Spawn points', $message = 'None')
           <div class='element-information__content'>
             <div class='row-card-container'>
                <div  class='row-card'>
-               <span class='row-card__head'><i class='fas fa-globe'></i></span>
+               <span class='row-card__head'><i class='fas fa-circle-info'></i></span>
                <span class='row-card__content'>$message</span>
                </div>
             </div>

@@ -46,6 +46,8 @@
 
   CSS Stuff: https://github.com/geo-tp/053-Database-Frontend
 
+  Icons: https://fontawesome.com/icons
+
 */
 
 // Configuration: database name, password, etc.
