@@ -1,0 +1,50 @@
+.caroussel-model {
+  width: 200px;
+  // height: 250px;
+  display: flex;
+  // justify-content: center;
+  position: relative;
+  align-items: center;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
+  & img {
+    min-width: 200px;
+    width: 200px;
+    height: 250px;
+    object-fit: contain;
+  }
+
+  & a {
+    position: absolute;
+    bottom: 20%;
+
+    & i {
+      font-size: 2em;
+      color: white;
+    }
+  }
+
+  &__right1 {
+    left: 180px;
+  }
+
+  &__left2 {
+    left: 200px;
+  }
+  &__right2 {
+    left: 380px;
+  }
+
+  &__left3 {
+    left: 400px;
+  }
+
+  &__right3 {
+    left: 580px;
+  }
+
+  &__left4 {
+    left: 600px;
+  }
+}

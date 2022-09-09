@@ -57,9 +57,18 @@ function creatureTopLeft ($info)
 
   // ---------------- IMAGE OF CREATURE -----------------
 
-  for ($i = 1; $i <= 1; $i++)   // should be 4 lol  TODO
+  $navDotSize = 13;
+  $halfNavDotSize = $navDotSize / 2;
+
+
+  echo "
+    <!-- CAROUSSEL DISPLAY ID -->
+    <div class='caroussel-model' id='caroussel-model' >
+  ";
+
+  for ($i = 1; $i <= 4; $i++)   // should be 4 lol  TODO
     {
-    if ($row ["display_id$i"])
+//    if ($row ["display_id$i"])
       {
       $display_id = $row ["display_id$i"];
       $model = $display_id . '.webp';
@@ -69,17 +78,52 @@ function creatureTopLeft ($info)
         $model = 'missing_creature.png';
         }
 
-      echo "
-        <!-- MODEL DISPLAY ID -->
+      $display = ($i == 1) ? 'block' : 'none';
+
+      echo "<!-- MODEL DISPLAY ID $display_id -->
         <img
           class='model-display'
           src='creatures/$model'
           alt='Creature model for display ID $display_id'
-        />
-        <!-- END MODEL DISPLAY ID -->
+          title='Model for display ID $display_id'
+          id='model$i'
+          style='display:$display;'
+        >
         ";
+
+
+        echo "</img>\n";
       } // end of if non-zero display ID
     } // end of for all 4 possible display IDs
+
+
+  if (getCount ($row, 'display_id', 4) > 1)
+    {
+    for ($i = 1; $i <= 4; $i++)
+      {
+      $x = $i * ($navDotSize * 3);
+      $y = 5;
+      if ($row ["display_id$i"])
+        {
+        if ($i == 1)
+          $colour = 'whitesmoke';
+        else
+          $colour = 'darkgray';
+        echo "<i id='model_navigate$i' class='fas fa-circle' style='position:absolute; left:" . $x . "px; bottom:" . $y . "px;
+              color:$colour;  cursor:pointer;' onclick='modelPage(event, $i)' ></i>\n";
+        /*
+        echo "<svg width='$navDotSize' height='$navDotSize' class='spawn_point' style='bottom:{$y}px; left:{$x}px;'
+              onclick='modelPage(event, $i)' >\n";
+        echo "  <circle cx='$halfNavDotSize' cy='$halfNavDotSize' r='$halfNavDotSize' fill='lightgray' stroke='none'/>\n";
+        echo "</svg>\n";
+        */
+
+        }
+      } // for each of the 4 model IDs
+    } // if there are more than one
+
+
+  endDiv ('caroussel-model');
 
   comment ('SHORT LISTING OF FIELDS');
   showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',

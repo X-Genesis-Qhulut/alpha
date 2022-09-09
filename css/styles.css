@@ -1339,6 +1339,47 @@ a {
   }
 }
 
+.caroussel-model {
+  width: 200px;
+  display: flex;
+  position: relative;
+  align-items: center;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+.caroussel-model img {
+  min-width: 200px;
+  width: 200px;
+  height: 250px;
+  object-fit: contain;
+}
+.caroussel-model a {
+  position: absolute;
+  bottom: 20%;
+}
+.caroussel-model a i {
+  font-size: 2em;
+  color: white;
+}
+.caroussel-model__right1 {
+  left: 180px;
+}
+.caroussel-model__left2 {
+  left: 200px;
+}
+.caroussel-model__right2 {
+  left: 380px;
+}
+.caroussel-model__left3 {
+  left: 400px;
+}
+.caroussel-model__right3 {
+  left: 580px;
+}
+.caroussel-model__left4 {
+  left: 600px;
+}
+
 .main-container {
   background-color: #404040;
   width: 98%;
