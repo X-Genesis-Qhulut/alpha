@@ -74,12 +74,6 @@
 
   @media screen and (max-width: 370px) {
     width: 50px;
-
-    &:hover {
-      -webkit-transform: none;
-      -moz-transform: none;
-      -ms-transform: none;
-      transform: none;
-    }
+    transition: all 300ms;
   }
 }

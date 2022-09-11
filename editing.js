@@ -79,12 +79,14 @@ function copyToClipboard(textToCopy) {
     }
 } // end of copyToClipboard
 
+// for copying a spawn point coordinates to the clipboard
 function copyContents (event)
   {
   copyToClipboard (event.currentTarget.dataset.location)
   return false
-  }
+  } // end of copyContents
 
+// for switching model pages (out of a possible 4 variations)
 function modelPage (event)
   {
   var page = event.currentTarget.dataset.page
@@ -101,4 +103,4 @@ function modelPage (event)
   event.preventDefault()
 
   return false
-  }
+  } // end of modelPage

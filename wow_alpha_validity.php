@@ -52,11 +52,13 @@ function listBadNPCs ($info)
 
   echo "<ul>\n";
   foreach ($rows as $row)
+    {
     echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature');
+    if ($label)
+      echo " ($label " . $row [$field] . ")";
+    echo "\n";
+    }
 
-  if ($label)
-     echo " ($label " . $row [$field] . ")";
-  echo "\n";
   echo "</ul>\n";
   } // end of listBadNPCs
 
@@ -129,6 +131,31 @@ function showBadItems ($info)
   dbFree ($results);
   echo "</ul>\n";
   } // end of showBadItems
+
+function listBadItems ($info)
+  {
+  global $items;
+
+  $heading = $info ['heading'];
+  $rows = $info ['rows'];
+  $label = $info ['label'];
+  $field = $info ['field'];
+
+  $count = count ($rows);
+
+  boxTitle ("$heading ($count)");
+
+  echo "<ul>\n";
+  foreach ($rows as $row)
+    {
+    echo "<li>" . lookupThing ($items,  $row ['item_key'], 'show_item');
+    if ($label)
+       echo " ($label " . $row [$field] . ")";
+    echo "\n";
+    }
+
+  echo "</ul>\n";
+  } // end of listBadItems
 
 function showBadSpells ($info)
   {
@@ -531,6 +558,7 @@ function showNoItemTextDetails ()
                           LEFT JOIN $page_text AS T2
                       ON (T1.page_text = T2.entry)
                       WHERE (T2.entry IS NULL OR T2.text = 'Missing Text') AND T1.page_text > 0
+                      AND ignored = 0
                       ORDER BY T1.name");
 
   $count = dbRows ($results);
@@ -832,6 +860,144 @@ function showMissingItemSpells ()
     bottomSectionMany ($info, 'showMissingItemSpellsDetails');
     } , ITEM_TEMPLATE);
   } // end of showMissingItemSpells
+
+
+function unused_item_compare ($a, $b)
+  {
+  global $items;
+  return $items [$a ['item_key']] <=> $items [$b ['item_key']];
+  } // end of unused_item_compare
+
+function showUnusedItemsDetails ()
+{
+  global $quests, $items;
+
+  $spell = SPELL;
+  $totalCount = 0;
+
+  // here we will find if an item is used
+  $used = array ();
+  // initially none are
+  foreach ($items as $itemKey => $item)
+    $used [$itemKey] = false;
+
+  // eliminate items which are creature loot
+  $results = dbQuery ("SELECT item FROM ".CREATURE_LOOT_TEMPLATE." GROUP BY item");
+  while ($row = dbFetch ($results))
+    $used [$row ['item']] = true;
+  dbFree ($results);
+
+  // eliminate items which are creature reference loot
+  $results = dbQuery ("SELECT item FROM ".REFERENCE_LOOT_TEMPLATE." GROUP BY item");
+  while ($row = dbFetch ($results))
+    $used [$row ['item']] = true;
+  dbFree ($results);
+
+  // eliminate items which vendors sell
+  $results = dbQuery ("SELECT item FROM ".NPC_VENDOR." WHERE entry <= " . MAX_CREATURE);
+  while ($row = dbFetch ($results))
+    $used [$row ['item']] = true;
+  dbFree ($results);
+
+  // eliminate items you can skin for
+  $results = dbQuery ("SELECT item FROM ".SKINNING_LOOT_TEMPLATE." WHERE entry <= " . MAX_CREATURE);
+  while ($row = dbFetch ($results))
+    $used [$row ['item']] = true;
+  dbFree ($results);
+
+  // eliminate items used in quests
+  // I'm uncertain about the required items - if they are required how do they appear in the first place?
+
+  $fields = array ();
+  // items required
+  for ($i = 1; $i <= QUEST_REQUIRED_ITEMS; $i++)
+    $fields [] = "ReqItemId$i";
+  // item rewards
+  for ($i = 1; $i <= QUEST_REWARD_ITEMS; $i++)
+    $fields [] = "RewItemCount$i";
+  // item choice rewards
+  for ($i = 1; $i <= QUEST_REWARD_ITEM_CHOICES; $i++)
+    $fields [] = "RewChoiceItemId$i";
+
+
+  $fieldList = implode (', ', $fields);
+  $results = dbQuery ("SELECT $fieldList FROM ".QUEST_TEMPLATE." WHERE ignored = 0");
+  while ($row = dbFetch ($results))
+    foreach ($fields as $field)
+      if ($row [$field])
+        $used [$row [$field]] = true;
+  dbFree ($results);
+
+  // eliminate items used in spells
+  // I'm uncertain about the reagents - if they are required how do they appear in the first place?
+
+  $fields = array ();
+  // reagents
+  for ($i = 1; $i <= SPELL_REAGENTS; $i++)
+    $fields [] = "Reagent_$i";
+  // things they create (like conjured bread)
+  for ($i = 1; $i <= SPELL_EFFECT_ITEM_TYPES; $i++)
+    $fields [] = "EffectItemType_$i";
+
+  $fieldList = implode (', ', $fields);
+  $results = dbQuery ("SELECT $fieldList FROM ".SPELL);
+  while ($row = dbFetch ($results))
+    foreach ($fields as $field)
+      if ($row [$field])
+        $used [$row [$field]] = true;
+  dbFree ($results);
+
+  // eliminate items that NPCs equip
+
+   $fields = array ();
+  for ($i = 1; $i <= CREATURE_EQUIP_ITEMS; $i++)
+    $fields [] = "equipentry$i";
+
+  $fieldList = implode (', ', $fields);
+  $results = dbQuery ("SELECT $fieldList FROM ".CREATURE_EQUIP_TEMPLATE);
+  while ($row = dbFetch ($results))
+    foreach ($fields as $field)
+      if ($row [$field])
+        $used [$row [$field]] = true;
+  dbFree ($results);
+
+  // build appropriate array of unused items
+
+  $rows = array ();
+  foreach ($used as $usedKey => $wasItUsed)
+    if (!$wasItUsed)
+      $rows [] = array ('item_key' => $usedKey);
+
+  $count = count ($rows);
+
+  if ($count > 0)
+    {
+    // sort into name order
+    usort ($rows, 'unused_item_compare');
+
+    $info = array ('heading' => "Items which are not used",
+                     'rows' => $rows,
+                     'label' => '',
+                     'field' => '');
+
+    bottomDetails ($info, 'listBadItems');
+    }
+  else
+    showNoProblems ();
+
+} // end of showUnusedItemsDetails
+
+function showUnusedItems ()
+  {
+  setTitle ("Items which are not used");
+
+  pageContent (false, 'Validation', 'Unused items',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showUnusedItemsDetails');
+    } , ITEM_TEMPLATE);
+  } // end of showUnusedItems
+
+
 
 
 ?>

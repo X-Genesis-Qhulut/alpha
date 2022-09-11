@@ -1,0 +1,23 @@
+.entry-navigation {
+  position: absolute;
+  font-weight: bold;
+  top: 2.5%;
+  right: 7%;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &__left {
+    font-size: 1.5em;
+  }
+
+  &__entry {
+    color: $color6;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  &__right {
+    font-size: 1.5em;
+  }
+}

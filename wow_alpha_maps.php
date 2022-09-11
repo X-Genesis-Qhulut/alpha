@@ -29,7 +29,7 @@ function showOneMap ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
   $row = dbQueryOneParam ("SELECT * FROM ".MAP." WHERE ID = ?", array ('i', &$id));
@@ -53,7 +53,8 @@ function showOneMap ()
 
 function showMaps ()
   {
-  global $where, $params, $sort_order;
+  global $where, $params, $sort_order, $matches;
+
   $sortFields = array (
     'ID',
     'Directory',
@@ -66,25 +67,23 @@ function showMaps ()
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 
-  $results = setUpSearch ('Maps',
-                          $sortFields,            // fields we can sort on
-                          array ('ID', 'Name'),    // headings
-                          'id',                // key
-                          array ('directory'),  // searchable fields
-                          MAP,          // table
-                          '');     // extra conditions
+  $headings = array ('ID', 'Name');
+
+  $results = setUpSearch ('Maps', $sortFields, $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdh ("<a href='?action=show_map&id=$id$searchURI'>$id</a>");
-    tdh ("<a href='?action=show_map&id=$id$searchURI'>" . fixHTML ($row ['Directory']) . "</a>");
+    tdh ("<a href='?action=show_map&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdh ("<a href='?action=show_map&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['Directory']) . "</a>");
     showFilterColumn ($row);
     echo "</tr>\n";
     }

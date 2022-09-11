@@ -32,6 +32,7 @@ define ('CREATURE_QUEST_FINISHER',      '`' . WORLD_DBNAME. '`.' . lwr ('creatur
 define ('CREATURE_QUEST_STARTER',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_starter'));
 define ('CREATURE_SPELLS',              '`' . WORLD_DBNAME. '`.' . lwr ('creature_spells'));
 define ('CREATURE_TEMPLATE',            '`' . WORLD_DBNAME. '`.' . lwr ('creature_template'));
+define ('CREATURE_EQUIP_TEMPLATE',      '`' . WORLD_DBNAME. '`.' . lwr ('creature_equip_template'));
 define ('FACTION',                      '`' . DBC_DBNAME  . '`.' . lwr ('Faction'));
 define ('FACTIONTEMPLATE',              '`' . DBC_DBNAME  . '`.' . lwr ('FactionTemplate'));
 define ('GAMEOBJECT_QUESTRELATION',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_questrelation'));
@@ -97,6 +98,7 @@ define ('ITEM_DAMAGES', 5);                 // dmg_min(n) and dmg_max(n)
 define ('CREATURE_SPELLS_COUNT', 8); // spellId_(n), probability_(n), castTarget_(n), targetParam(n)_(n), targetParam2_(n), castFlags_(n)
                                      // delayInitialMin_(n), delayInitialMax_(n), delayRepeatMin_(n), delayRepeatMax_(n), scriptId_(n)
 define ('CREATURE_DISPLAY_IDS', 4);  // display_id(n)
+define ('CREATURE_EQUIP_ITEMS', 3);  // equipentry(n)
 
 
 define ('MONTHS', array (

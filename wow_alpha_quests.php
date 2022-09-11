@@ -334,7 +334,7 @@ function showOneQuest ()
   global $id;
   global $quests, $creatures, $items, $game_objects, $spells;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
  // we need the item info in this function
@@ -392,7 +392,7 @@ function showOneQuest ()
 
 function showQuests ()
   {
-  global $where, $params, $sort_order;
+  global $where, $params, $sort_order, $matches;
 
 
   $sortFields = array (
@@ -408,27 +408,23 @@ function showQuests ()
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 
-  $results = setUpSearch ('Quests',
-                          $sortFields,            // fields we can sort on
-                          array ('Entry', 'Title' ,'Level'),    // headings
-                          'entry',                // key
-                          array ('Title', 'Details', 'Objectives', 'OfferRewardText',
-                                'RequestItemsText', 'EndText', 'ObjectiveText1', 'ObjectiveText2',
-                                'ObjectiveText3', 'ObjectiveText4'),  // searchable fields
-                          QUEST_TEMPLATE,          // table
-                          'AND ignored = 0');     // extra conditions
+  $headings = array ('Entry', 'Title' ,'Level');
+
+  $results = setUpSearch ('Quests', $sortFields,  $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdh ("<a href='?action=show_quest&id=$id$searchURI'>$id</a>");
-    tdh ("<a href='?action=show_quest&id=$id$searchURI'>" . fixHTML ($row ['Title']) . "</a>");
+    tdh ("<a href='?action=show_quest&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdh ("<a href='?action=show_quest&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['Title']) . "</a>");
     if ($row ['MinLevel'] != $row ['MaxLevel'] && $row ['MaxLevel']  > 0)
       td  ($row ['MinLevel'] . '-' . $row ['MaxLevel'] );
     else

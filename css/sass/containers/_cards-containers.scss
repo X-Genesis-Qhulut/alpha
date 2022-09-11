@@ -4,9 +4,11 @@
   padding: 20px;
   padding-left: 50px;
   //   background-color: yellow;
+  padding-bottom: 50px;
 
   @include mobile-design {
     padding: 0px;
     margin: 0px;
+    margin-bottom: 100px;
   }
 }

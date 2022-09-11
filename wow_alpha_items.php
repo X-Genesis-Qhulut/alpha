@@ -330,6 +330,40 @@ function showItemSkinningLoot ()
       );
 } // end of showItemSkinningLoot
 
+function showCreatureEquips ()
+{
+  global $id, $creatures;
+
+  $creature_template = CREATURE_TEMPLATE;
+  $creature_equip_template = CREATURE_EQUIP_TEMPLATE;
+
+  comment ('WHAT CREATURE EQUIPS IT');
+
+ // what they equip
+
+  $fields = array ();
+  $params = array ('');
+  for ($i = 1; $i <= CREATURE_EQUIP_ITEMS; $i++)
+    {
+    $fields [] = "equipentry$i";
+    $params [0] .= 'i';
+    $params [] = &$id;
+    }
+
+  $fieldList = implode (' = ? OR ', $fields) . ' = ?';
+
+  $results = dbQueryParam ("SELECT entry AS npc FROM ".CREATURE_EQUIP_TEMPLATE." WHERE ($fieldList) AND entry <= " . MAX_CREATURE, $params);
+
+  listItems ('Item is equipped by', 'alpha_world.skinning_loot_template',
+          count ($results), $results,
+  function ($row) use ($creatures)
+    {
+    listThing ($creatures, $row ['npc'], 'show_creature');
+    } // end listing function
+    );
+} // end of showCreatureEquips
+
+
 function showItemModel ($row)
 {
   echo "
@@ -352,8 +386,6 @@ function itemTopLeft ($info)
   $row = $info ['row'];
   $extras = $info ['extras'];
   $limit = $info ['limit'];
-
-  boxTitle ('General');
 
   comment ('ICON');
 
@@ -394,11 +426,13 @@ function itemDetails ($info)
       topMiddle ($info, 'itemTopMiddle');
       });
 
-  middleSection ($info, function ($info)
+  middleSection ($info, function ($info) use ($id)
       {
       showItemVendors ();
       showItemDrops ();
       showItemSkinningLoot ();
+      if ($id > 0)
+        showCreatureEquips ();
       });
 
   bottomSection ($info, function ($info) use ($id)
@@ -416,7 +450,7 @@ function showOneItem ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
  // we need the item info in this function
@@ -488,7 +522,7 @@ function showOneItem ()
 
 function showItems ()
   {
-  global $where, $params, $sort_order;
+  global $where, $params, $sort_order, $matches;
 
   setTitle ('Items listing');
 
@@ -505,25 +539,23 @@ function showItems ()
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 
-  $results = setUpSearch ('Items',
-                          $sortFields,            // fields we can sort on
-                          array ('Entry', 'Name', 'Class', 'Subclass', 'Description'),    // headings
-                          'entry',                // key
-                          array ('name', 'description'),  // searchable fields
-                          ITEM_TEMPLATE,          // table
-                          'AND ignored = 0');     // extra conditions
+  $headings = array ('Entry', 'Name', 'Class', 'Subclass', 'Description');
+
+  $results = setUpSearch ('Items', $sortFields, $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdh ("<a href='?action=show_item&id=$id$searchURI'>$id</a>");
-    tdh ("<a href='?action=show_item&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
+    tdh ("<a href='?action=show_item&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdh ("<a href='?action=show_item&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['name']) . "</a>");
     $item_class = $row ['class'];
     td ("$item_class: " . ITEM_CLASS [$item_class]);
     $item_subclass = $row ['subclass'];

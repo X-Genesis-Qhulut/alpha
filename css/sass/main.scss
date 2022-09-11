@@ -42,6 +42,7 @@
 @import "components/toaster";
 @import "components/row-card";
 @import "components/caroussel-model";
+@import "components/entry-navigation";
 
 // Containers
 @import "containers/main-container";
@@ -60,5 +61,6 @@
 @import "containers/modal-container";
 @import "containers/toaster-container";
 @import "containers/row-card-container.scss";
+@import "containers/dot-container";
 // Pages:
 // @import "pages/creature-details";

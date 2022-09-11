@@ -343,8 +343,6 @@ function spellTopLeft ($info)
   $extras = $info ['extras'];
   $limit = $info ['limit'];
 
-  boxTitle ('General');
-
   comment ('ICON');
   showSpellIcon ($row);
 
@@ -405,7 +403,7 @@ function showOneSpell ()
 
   comment ('SHOWING ONE SPELL');
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
  // we need the item info in this function
@@ -474,7 +472,7 @@ function showOneSpell ()
 
 function showSpells ()
   {
-  global $where, $params, $sort_order;
+  global $where, $params, $sort_order, $matches;
 
   setTitle ('Spells listing');
 
@@ -493,26 +491,24 @@ function showSpells ()
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 
-  $results = setUpSearch ('Spells',
-                          $sortFields,            // fields we can sort on
-                          array ('ID', 'Name', 'Subtext', 'School',
-                                 'Power Type', 'Reagents', 'Effect Item', 'Description'),    // headings
-                          'ID',                // key
-                          array ('Name_enUS', 'Description_enUS'),  // searchable fields
-                          SPELL,          // table
-                          '');     // extra conditions
+  $headings = array ('ID', 'Name', 'Subtext', 'School',
+                    'Power Type', 'Reagents', 'Effect Item', 'Description');
+
+  $results = setUpSearch ('Spells', $sortFields, $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdhr ("<a href='?action=show_spell&id=$id$searchURI'>$id</a>");
-    tdhr ("<a href='?action=show_spell&id=$id$searchURI'>" . $row ['Name_enUS'] . "</a>");
+    tdhr ("<a href='?action=show_spell&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdhr ("<a href='?action=show_spell&id=$id$searchURI&pos=$pos&max=$matches'>" . $row ['Name_enUS'] . "</a>");
     $td ('NameSubtext_enUS');
     tdx (expandSimple (SPELL_SCHOOLS, $row ['School'], false));
     tdx (expandSimple (POWER_TYPES, $row ['PowerType'], false));

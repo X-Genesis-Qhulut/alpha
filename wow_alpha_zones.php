@@ -25,7 +25,7 @@ function showOneZone ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
 // we need the item info in this function
@@ -49,7 +49,7 @@ function showOneZone ()
 
 function showZones ()
   {
-  global $where, $params, $sort_order;
+  global $where, $params, $sort_order, $matches;
 
   $sortFields = array (
     'ID',
@@ -64,25 +64,23 @@ function showZones ()
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 
-  $results = setUpSearch ('Zones',
-                          $sortFields,            // fields we can sort on
-                          array ('ID', 'Name', 'Area ID'),    // headings
-                          'ID',                // key
-                          array ('directory'),  // searchable fields
-                          WORLDMAPAREA,          // table
-                          '');     // extra conditions
+  $headings = array ('ID', 'Name', 'Area ID');
+
+  $results = setUpSearch ('Zones', $sortFields, $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdh ("<a href='?action=show_zone&id=$id$searchURI'>$id</a>");
-    tdh ("<a href='?action=show_zone&id=$id$searchURI'>" . fixHTML ($row ['AreaName']) . "</a>");
+    tdh ("<a href='?action=show_zone&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdh ("<a href='?action=show_zone&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['AreaName']) . "</a>");
     $td ('AreaID');
     showFilterColumn ($row);
     echo "</tr>\n";

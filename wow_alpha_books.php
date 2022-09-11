@@ -63,7 +63,6 @@ function showText ()
 function bookTopLeft ($row)
 {
   global $id, $item, $items;
-  boxTitle ('General');
   showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array (),
                 array ('entry', 'next_page'));
 } // end of bookTopLeft
@@ -155,7 +154,7 @@ function showOneBook ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
   // we need the item info in this function
@@ -174,7 +173,7 @@ function showOneBook ()
 
 function showBooks ()
   {
-  global $where, $params, $maps, $sort_order;
+  global $where, $params, $maps, $sort_order, $matches;
 
   $sortFields = array (
     'entry',
@@ -188,29 +187,25 @@ function showBooks ()
     $sort_order = 'entry';
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
-  $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
+  $headings = array ('Entry', 'Text', 'Next Page');
 
-  $results = setUpSearch ('Pages',
-                          $sortFields,            // fields we can sort on
-                          array ('Entry', 'Text', 'Next Page'),    // headings
-                          'entry',                // key
-                          array ('text'),  // searchable fields
-                          PAGE_TEXT,          // table
-                          '');     // extra conditions
+  $results = setUpSearch ('Pages', $headings, $sortFields);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_book&id=$id$searchURI'>$id</a>");
+    tdh ("<a href='?action=show_book&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
     echo "<td>" . nl2br_http (fixQuestText ($row ['text'])) . "</td>\n";
 
-    $tdr ('next_page');
+    $td ('next_page');
     showFilterColumn ($row);
     echo "</tr>\n";
     }

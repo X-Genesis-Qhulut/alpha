@@ -222,8 +222,6 @@ function gameobjectTopLeft ($info)
   $extras = $info ['extras'];
   $limit = $info ['limit'];
 
- boxTitle ('General');
-
   showGameObjectModel ($row);
 
   comment ('SHORT LISTING OF FIELDS');
@@ -309,7 +307,7 @@ function showOneGameobject ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
  // we need the game object info in this function
@@ -350,7 +348,7 @@ function showOneGameobject ()
 
 function showGameObjects ()
   {
-  global $where, $params, $npc_factions, $sort_order;
+  global $where, $params, $npc_factions, $sort_order, $matches;
 
 
   $sortFields = array (
@@ -366,25 +364,23 @@ function showGameObjects ()
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 
-  $results = setUpSearch ('Game Objects',
-                          $sortFields,          // fields we can sort on
-                          array ('Entry', 'Name', 'Faction'),    // headings
-                          'entry',              // key
-                          array ('name'),       // searchable fields
-                          GAMEOBJECT_TEMPLATE,  // table
-                          '');                  // extra conditions
+  $headings = array ('Entry', 'Name', 'Faction');
+
+  $results = setUpSearch ('Game Objects', $sortFields, $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdh ("<a href='?action=show_go&id=$id$searchURI'>$id</a>");
-    tdh ("<a href='?action=show_go&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
+    tdh ("<a href='?action=show_go&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdh ("<a href='?action=show_go&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['name']) . "</a>");
     td (expandSimple ($npc_factions, $row ["faction"]));;
     showFilterColumn ($row);
     echo "</tr>\n";

@@ -25,7 +25,7 @@ function showOneSkill ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
 // we need the item info in this function
@@ -57,7 +57,7 @@ function showOneSkill ()
 
 function showSkills ()
   {
-  global $where, $params, $maps, $sort_order;
+  global $where, $params, $maps, $sort_order, $matches;
 
   $sortFields = array (
     'ID',
@@ -74,25 +74,23 @@ function showSkills ()
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
 
-  $results = setUpSearch ('Skills',
-                          $sortFields,            // fields we can sort on
-                          array ('ID', 'Name', 'Race', 'Class', 'Max Rank'),    // headings
-                          'ID',                // key
-                          array ('DisplayName_enUS'),  // searchable fields
-                          SKILLLINE,          // table
-                          '');     // extra conditions
+  $headings = array ('ID', 'Name', 'Race', 'Class', 'Max Rank');
+
+  $results = setUpSearch ('Skills', $sortFields, $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['ID'];
-    tdh ("<a href='?action=show_skill&id=$id$searchURI'>$id</a>");
-    tdh ("<a href='?action=show_skill&id=$id$searchURI'>" . fixHTML ($row ['DisplayName_enUS']) . "</a>");
+    tdh ("<a href='?action=show_skill&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdh ("<a href='?action=show_skill&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['DisplayName_enUS']) . "</a>");
     tdx (expandRaceMask ($row ['RaceMask']));
     tdx (expandClassMask ($row ['ClassMask']));
     $td ('MaxRank');

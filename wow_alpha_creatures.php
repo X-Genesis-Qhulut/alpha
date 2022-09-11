@@ -52,9 +52,6 @@ function creatureTopLeft ($info)
   $extras = $info ['extras'];
   $limit = $info ['limit'];
 
-  boxTitle ('General');
-
-
   // ---------------- IMAGE OF CREATURE -----------------
 
   $navDotSize = 13;
@@ -68,62 +65,68 @@ function creatureTopLeft ($info)
 
   for ($i = 1; $i <= 4; $i++)   // should be 4 lol  TODO
     {
-//    if ($row ["display_id$i"])
+    $display_id = $row ["display_id$i"];
+    $model = $display_id . '.webp';
+    if (!file_exists ("$documentRoot$executionDir/creatures/$model"))
       {
-      $display_id = $row ["display_id$i"];
-      $model = $display_id . '.webp';
-      if (!file_exists ("$documentRoot$executionDir/creatures/$model"))
-        {
-        comment ("$documentRoot$executionDir/creatures/$model   NOT ON FILE");
-        $model = 'missing_creature.png';
-        }
+      comment ("$documentRoot$executionDir/creatures/$model   NOT ON FILE");
+      $model = 'missing_creature.png';
+      }
 
-      $display = ($i == 1) ? 'block' : 'none';
+    $display = ($i == 1) ? 'block' : 'none';
 
-      echo "<!-- MODEL DISPLAY ID $display_id -->
-        <img
-          class='model-display'
-          src='creatures/$model'
-          alt='Creature model for display ID $display_id'
-          title='Model for display ID $display_id'
-          id='model$i'
-          style='display:$display;'
-        >
-        ";
+    echo "<!-- MODEL DISPLAY ID $display_id -->
+      <img
+        class='model-display'
+        src='creatures/$model'
+        alt='Creature model for display ID $display_id'
+        title='Model for display ID $display_id'
+        id='model$i'
+        style='display:$display;'
+      >
+      ";
 
 
-        echo "</img>\n";
-      } // end of if non-zero display ID
+      echo "</img>\n";
     } // end of for all 4 possible display IDs
 
+$count = getCount ($row, 'display_id', 4);
+$display3 = $count > 2 ? '' : 'none';
+$display4 = $count > 3 ? '' : 'none';
 
-  if (getCount ($row, 'display_id', 4) > 1)
-    {
-    for ($i = 1; $i <= 4; $i++)
-      {
-      $x = $i * ($navDotSize * 3);
-      $y = 5;
-      if ($row ["display_id$i"])
-        $display = '';
-      else
-        $display = 'none';
-
-      if ($i == 1)
-        $colour = 'whitesmoke';
-      else
-        $colour = 'darkgray';
-      echo "<i id='model_navigate$i' class='fas fa-circle' style='position:absolute; left:" . $x . "px; bottom:" . $y . "px;
-            color:$colour;  cursor:pointer; display:$display' onclick='modelPage(event)' data-page='$i' ></i>\n";
-      /*
-      echo "<svg width='$navDotSize' height='$navDotSize' class='spawn_point' style='bottom:{$y}px; left:{$x}px;'
-            onclick='modelPage(event, $i)' >\n";
-      echo "  <circle cx='$halfNavDotSize' cy='$halfNavDotSize' r='$halfNavDotSize' fill='lightgray' stroke='none'/>\n";
-      echo "</svg>\n";
-      */
-
-      } // for each of the 4 model IDs
-    } // if there are more than one
-
+if ($count > 1)
+  {
+  echo "
+  <div class='dot-container'>
+    <i
+      id='model_navigate1'
+      class='fas fa-circle'
+      onclick='modelPage(event)'
+      data-page='1'
+    ></i>
+    <i
+      id='model_navigate2'
+      class='fas fa-circle'
+      onclick='modelPage(event)'
+      data-page='2'
+    ></i>
+    <i
+      id='model_navigate3'
+      class='fas fa-circle'
+      onclick='modelPage(event)'
+      data-page='3'
+      style='display:$display3'
+    ></i>
+    <i
+      id='model_navigate4'
+      class='fas fa-circle'
+      onclick='modelPage(event)'
+      data-page='4'
+      style='display:$display4'
+    ></i>
+  </div>
+  ";
+  } // if we have more than one model
 
   endDiv ('caroussel-model');
 
@@ -330,6 +333,33 @@ function creatureVendorItems ($info)
       );
 } // end of creatureVendorItems
 
+function creatureEquippedItems ($info)
+{
+  global $id;
+  global $items;
+
+  comment ('EQUIPPED ITEMS');
+
+ // what they equip
+
+  $totalResults = array ();
+  for ($i = 1; $i <= CREATURE_EQUIP_ITEMS; $i++)
+    {
+    $results = dbQueryParam ("SELECT equipentry$i AS item FROM ".CREATURE_EQUIP_TEMPLATE." WHERE entry = ? AND equipentry$i <> 0", array ('i', &$id));
+    if ($results)
+      $totalResults [] = $results [0];
+    } // for each entry
+
+  usort($totalResults, 'item_compare');
+
+  listItems ('NPC equips', 'alpha_world.creature_equip_template', count ($totalResults), $totalResults,
+    function ($row) use ($items)
+      {
+      listThing ($items, $row ['item'], 'show_item');
+      } // end listing function
+      );
+} // end of creatureEquippedItems
+
 function creatureTrainer ($info)
 {
   global $id, $spells;
@@ -367,7 +397,6 @@ function creatureQuestLoot ($info)
     $loot_id = $id;
 
   $creature_loot_template = CREATURE_LOOT_TEMPLATE;
-  $reference_loot_template = REFERENCE_LOOT_TEMPLATE;
 
   $results = dbQueryParam ("SELECT * FROM $creature_loot_template
                             WHERE entry = ? AND mincountOrRef > 0 AND ChanceOrQuestChance < 0",
@@ -551,6 +580,7 @@ function creatureDetails ($info)
       creatureReferenceLoot ($info);
       creaturePickpocketingLoot ($info);
       creatureSkinningLoot ($info);
+      creatureEquippedItems ($info);
       if ($listedItemsCount == 0)
         middleDetails ($info, function ($info)
           {
@@ -571,7 +601,7 @@ function showOneCreature ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
   // we need the item info in this function
@@ -643,9 +673,10 @@ function showOneCreature ()
   pageContent ($info, 'Creature', $name, 'creatures', 'creatureDetails', CREATURE_TEMPLATE);
   } // end of showOneCreature
 
+
 function showCreatures ()
   {
-  global $where, $params, $sort_order;
+  global $where, $params, $sort_order, $matches;
 
   $sortFields = array (
     'entry',
@@ -663,20 +694,21 @@ function showCreatures ()
 
   $headings = array ('Entry', 'Name', 'Subname', 'Level');
 
-  $results = setUpSearch ('Creatures', $sortFields, $headings, 'entry', array ('name', 'subname'),
-                          CREATURE_TEMPLATE, 'AND entry <= ' . MAX_CREATURE);
+  $results = setUpSearch ('Creatures', $sortFields, $headings);
 
   if (!$results)
     return;
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdh ("<a href='?action=show_creature&id=$id$searchURI'>$id</a>");
-    tdh ("<a href='?action=show_creature&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
+    tdh ("<a href='?action=show_creature&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdh ("<a href='?action=show_creature&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['name']) . "</a>");
     $td ('subname');
     if ($row ['level_min'] != $row ['level_max'])
       td  ($row ['level_min'] . '-' . $row ['level_max'] );

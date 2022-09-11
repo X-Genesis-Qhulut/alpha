@@ -56,12 +56,12 @@ require ("wow_alpha_config.php");
 require ("wow_alpha_database.php");
 // main menu
 require ("wow_alpha_menu.php");
+// tables of constants
+require ("wow_alpha_constants.php");
 // what functions we support and what handles them
 require ("wow_alpha_handlers.php");
 // useful stuff
 require ("wow_alpha_utils.php");
-// tables of constants
-require ("wow_alpha_constants.php");
 // table handling for various tables
 require ("wow_alpha_creatures.php");
 require ("wow_alpha_quests.php");
@@ -169,14 +169,42 @@ showBigMenu ();
 // if there was an action, show a smaller menu, find its handler and call it
 if ($action)
   {
-//  showMenu ();
-
   if (array_key_exists ($action, $handlers))
     {
+    $actionInfo = $handlers [$action];
+    // set up some global variables for use elsewhere
+
+    // fields to search for string matches
+    if (array_key_exists ('search', $actionInfo))
+      $searchFields = $actionInfo ['search'];
+    else
+      $searchFields = array ();
+
+    // extra "where" conditions, like max creature ID
+    if (array_key_exists ('where', $actionInfo))
+      $extraWhere = $actionInfo ['where'];
+    else
+      $extraWhere = '';
+
+    // what table to search
+    if (array_key_exists ('table', $actionInfo))
+      $mainTable = $actionInfo ['table'];
+    else
+      $mainTable = '';
+
+    // what the primary key is
+    if (array_key_exists ('key', $actionInfo))
+      $keyName = $actionInfo ['key'];
+    else
+      $keyName = '';
+
     // only pull in this file if we have to
-    if (array_key_exists ($action, VALIDATION_ACTIONS))
+    if (array_key_exists ('validation', $actionInfo))
       require ("wow_alpha_validity.php");
-    $handlers [$action] ();
+
+    comment ('Executing ' . $actionInfo ['func']);
+    // call the handler function
+    $actionInfo ['func'] ();
     }
   else
     ShowWarning ('Unknown action');

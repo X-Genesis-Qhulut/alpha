@@ -194,13 +194,19 @@ function searchContainerEnd ()
   endDiv ('page-title page-title--search');
   } // end of searchContainerEnd
 
-function showSearchForm ($description, $sortFields, $headings, $results, $table, $where, $searchError)
+function showSearchForm ($description, $sortFields, $headings, $results, $where, $searchError)
   {
   global $filter, $action, $sort_order, $params, $page, $matches;
   global $filter_column, $filter_compare, $filter_value;
+  global $searchFields, $extraWhere, $mainTable, $keyName;
+
+  if ($sort_order)
+    $order_clause = "ORDER BY $sort_order";
+  else
+    $order_clause = '';
 
   // find maximum matches
-  $row = dbQueryOneParam ("SELECT COUNT(*) AS count FROM $table $where ORDER BY $sort_order", $params);
+  $row = dbQueryOneParam ("SELECT COUNT(*) AS count FROM $mainTable $where $order_clause", $params);
 
   $matches = $row ['count'];
 
@@ -222,10 +228,10 @@ function showSearchForm ($description, $sortFields, $headings, $results, $table,
                         fixHTML (($field)) . "</option>";
     } // end of foreach sort field
 
-  $tableFields = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
+  $mainTableFields = dbQueryParam ("SHOW COLUMNS FROM $mainTable", array ());
 
   $filterOptions = array ();
-  foreach ($tableFields as $field)
+  foreach ($mainTableFields as $field)
     {
     if (preg_match ('`int|float`', $field ['Type']))
       {
@@ -279,7 +285,7 @@ $searchURI = makeSearchURI ();
 $nextPage = $page + 1;
 $prevPage = $page - 1;
 
-searchContainerStart ($table, $description);
+searchContainerStart ($mainTable, $description);
 
 echo "
         <!-- SEARCH FORM -->
@@ -296,7 +302,6 @@ echo "
             <div class='search-bar__main'>
               <input
                 class='custom-input'
-                style='margin-right: 1em'
                 type='text'
                 name='filter'
                 size='40'
@@ -527,12 +532,12 @@ function showFilterColumn ($row)
       tdx ($row  [$filter_column], 'tdr');
   } // end of showFilterColumn
 
-//
-
-function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToSearch, $table, $extraWhere)
+// helper function for initial search, or moving forwards or backwards one item
+function setUpSearchHelper ()
   {
   global $filter, $where, $params, $sort_order;
   global $filter_column, $filter_compare, $filter_value, $fixed_filter_value;
+  global $searchFields, $extraWhere, $mainTable, $keyName;
 
   $where = 'WHERE TRUE ';
   $params = array ();
@@ -562,7 +567,7 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
         $where = '';
         $strings = '';
         $params = array ('');
-        foreach ($fieldsToSearch as $field)
+        foreach ($searchFields as $field)
           {
           if ($where == '')
             $where .= "WHERE ($field REGEXP ? ";
@@ -635,15 +640,32 @@ function setUpSearch ($description, $sortFields, $headings, $keyname, $fieldsToS
       } // end of NOT (in or not in)
     } // end of secondary comparison
 
+  if ($sort_order)
+    $order_clause = "ORDER BY $sort_order";
+  else
+    $order_clause = '';
+
+  return array ('select' => "SELECT * FROM $mainTable $where $extraWhere $order_clause",
+                'params' => $params,
+                'where'  => $where,
+                'error'  => $searchError);
+
+  } // end of setUpSearchHelper
+
+function setUpSearch ($description, $sortFields, $headings)
+  {
+  global $searchFields, $extraWhere, $mainTable, $keyName;
+
+  $searchParams = setUpSearchHelper ();
+
   $offset = getQueryOffset(); // based on the requested page number
 
   // do the search
-  $results = dbQueryParam ("SELECT * FROM $table $where $extraWhere
-                            ORDER BY $sort_order LIMIT $offset, " . QUERY_LIMIT,
-                            $params);
+  $results = dbQueryParam ($searchParams ['select'] . " LIMIT $offset, " . QUERY_LIMIT,
+                           $searchParams ['params']);
 
   // now show the search form
-  if (!showSearchForm ($description, $sortFields, $headings, $results, $table, $where . ' ' . $extraWhere, $searchError))
+  if (!showSearchForm ($description, $sortFields, $headings, $results,  $searchParams ['where'] . ' ' . $extraWhere, $searchParams ['error']))
     {
     comment ("SETTING UP SEARCH FORM FAILED");
     return false;
@@ -1393,13 +1415,72 @@ function topSection ($userInfo, $func)
 } // end of topSection
 
 // THIS GOES INSIDE: topSection
-function topLeft ($userInfo, $func)
+// $title is for the box title
+// $loc is which one we are out of $max (eg. 4/10)
+function topLeft ($userInfo, $func, $title = 'General' /* , $pos = 0, $max = 0 */ )
 {
+  global $VALID_NUMBER, $action;
+  global $filter;
+  global $filter_column, $filter_compare, $filter_value;
+
   $funcName = getFunctionName ($func);
+
+  // how far through the list we are
+  $pos = getG ('pos', 8, $VALID_NUMBER);
+  $max = getG ('max', 8, $VALID_NUMBER);
 
   comment ("TOP-LEFT BOX$funcName");
 
-  echo "<div class='object-container__informations__details1'>\n";
+  echo "<div class='object-container__informations__details1'>";
+
+  // the title has to come out first
+  boxTitle ($title);
+  $offset = getQueryOffset ();   // allow for page number
+
+  // we have to be at least at entry 1 for the bars to appear
+  // also we need more than one (so $max has to be more than 1)
+  if (($pos + $offset) > 0 && $max > 1)
+    {
+    echo "
+    <!-- ENTRY NAV -->
+    <div class='entry-navigation'>
+    ";
+
+    $searchURI = "?action=$action" . makeSearchURI (true) . "&max=$max";
+    $nextPos = $pos + 1;
+    $prevPos = $pos - 1;
+
+    $searchTitle = 'Full listing';
+    if ($filter || $filter_value)
+      {
+      $s = array ();
+      if ($filter)
+        $s [] = "<Text matching: $filter>";
+      if ($filter_value)
+        $s [] = "<$filter_column $filter_compare $filter_value>";
+      $searchTitle = fixHTML ('Filter: ' . implode (" and ", $s));
+      } // if we have some sort of filter
+
+    // more than entry 1, we can go back
+    if (($pos + $offset) > 1)
+      echo
+      " <a href='$searchURI&pos=$prevPos' class='entry-navigation__left'>
+        <i class='fas fa-angle-left'></i>
+      </a>
+      ";
+    $actualPos = $pos + getQueryOffset ();
+    // show how far we are through, eg. 50/200
+    echo "<span class='entry-navigation__entry' title='$searchTitle'>$actualPos/$max</span>\n";
+
+    // less than entry max, we can go forwards
+    if (($pos + $offset) < $max)
+      echo
+      "  <a href='$searchURI&pos=$nextPos' class='entry-navigation__right'>
+        <i class='fas fa-angle-right'></i>
+      </a>
+      ";
+    endDiv ('entry-navigation');
+    } // end of having navigation bars
 
   $func ($userInfo);   // output contents
 
@@ -1573,9 +1654,9 @@ function doArrowsForMap ($table, $where, $param, $mName)
 function checkID ()
 {
   global $id;
-  if (!$id)
+  if ($id == '' || $id === false || $id < 0)
     {
-    ShowWarning ("Parameter 'id' required but not supplied");
+    ShowWarning ("Parameter 'id' required but is not supplied or negative");
     return false;
     }
   return true;
@@ -1617,5 +1698,47 @@ function getAllSpawnedCreatures ()
 
   return $spawned;
 } // end of getAllSpawnedCreatures
+
+function repositionSearch ()
+  {
+  global $VALID_NUMBER, $id, $keyName;
+
+  // how far through the list we are
+  $pos = getG ('pos', 8, $VALID_NUMBER);
+  $max = getG ('max', 8, $VALID_NUMBER);
+
+  $offset = getQueryOffset () + $pos - 1;   // allow for page number
+
+  // if an ID supplied, we can't be repositioning
+  if ($id !== false)
+    return false;
+
+  // can't reposition if we don't know where we are
+  if (($pos + $offset) <= 0 || !$max)
+    {
+    ShowWarning ("Position out of range");
+    return false;
+    }
+
+  $searchParams = setUpSearchHelper ();
+
+  // give up if we couldn't generate the SQL again
+  if ($searchParams ['error'])
+    return false;
+
+  // do the search
+  $results = dbQueryParam ($searchParams ['select'] . " LIMIT $offset, 1",
+                           $searchParams ['params']);
+
+  // give up if this is not on file (they fiddled with the page or pos
+  if (!$results)
+    {
+    ShowWarning ("Record not on file");
+    return false;
+    }
+
+  $id = $results [0] [$keyName];
+  return true;
+  }
 
 ?>

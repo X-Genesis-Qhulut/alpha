@@ -44,7 +44,7 @@ function showOnePort ()
   {
   global $id;
 
-  if (!checkID ())
+  if (($id === false && !repositionSearch()) || !checkID ())
     return;
 
 // we need the item info in this function
@@ -69,7 +69,7 @@ function showOnePort ()
 
 function showPorts ()
   {
-  global $where, $params, $maps, $sort_order;
+  global $where, $params, $maps, $sort_order, $matches;
 
   $sortFields = array (
     'entry',
@@ -87,14 +87,9 @@ function showPorts ()
 
 
   $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
+  $headings = array ('Entry', 'Name', 'x', 'y', 'z', 'Map');
 
-  $results = setUpSearch ('World Ports',
-                          $sortFields,            // fields we can sort on
-                          array ('Entry', 'Name', 'x', 'y', 'z', 'Map'),    // headings
-                          'entry',                // key
-                          array ('name'),  // searchable fields
-                          WORLDPORTS,          // table
-                          '');     // extra conditions
+  $results = setUpSearch ('World Ports', $sortFields, $headings);
 
   if (!$results)
     return;
@@ -102,13 +97,15 @@ function showPorts ()
   echo "<ul><li>For use with <b>.tel</b> command. Only map 0 and 1 shown.</ul>\n";
 
   $searchURI = makeSearchURI (true);
+  $pos = 0;
 
   foreach ($results as $row)
     {
+    $pos++;
     echo "<tr>\n";
     $id = $row ['entry'];
-    tdhr ("<a href='?action=show_port&id=$id$searchURI'>$id</a>");
-    tdhr ("<a href='?action=show_port&id=$id$searchURI'>" . fixHTML ($row ['name']) . "</a>");
+    tdhr ("<a href='?action=show_port&id=$id$searchURI&pos=$pos&max=$matches'>$id</a>");
+    tdhr ("<a href='?action=show_port&id=$id$searchURI&pos=$pos&max=$matches'>" . fixHTML ($row ['name']) . "</a>");
     $td ('x');
     $td ('y');
     $td ('z');

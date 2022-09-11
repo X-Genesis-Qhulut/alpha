@@ -213,22 +213,27 @@ function mainPage ()
         <li><a href='?action=npc_not_spawned'>NPCs which are not spawned</a></li>
         <li><a href='?action=npc_missing_quest'>NPCs which start/finish a missing quest</a></li>
       </ul>
+
       <h3>Game objects</h3>
       <ul>
         <li><a href='?action=go_missing_quest'>Game objects which start/finish a missing quest</a></li>
         <li><a href='?action=go_not_spawned'>Game objects which are not spawned</a></li>
       </ul>
+
       <h3>Quests</h3>
       <ul>
         <li><a href='?action=quest_missing_item'>Quests with missing items</a></li>
         <li><a href='?action=quest_missing_spell'>Quests with missing spells</a></li>
         <li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a></li>
       </ul>
+
       <h3>Items</h3>
       <ul>
         <li><a href='?action=no_item_text'>Items with no text</a></li>
         <li><a href='?action=item_missing_spell'>Items with missing spells</a></li>
+        <li><a href='?action=item_unused'>Items which are not used</a></li>
       </ul>
+
       <h3>Spells</h3>
       <ul>
         <li><a href='?action=spell_missing_spell'>Spells with missing spells</a></li>

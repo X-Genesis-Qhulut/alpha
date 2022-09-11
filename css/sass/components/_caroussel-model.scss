@@ -1,28 +1,17 @@
 .caroussel-model {
   width: 200px;
-  // height: 250px;
   display: flex;
   // justify-content: center;
   position: relative;
   align-items: center;
   overflow-x: hidden;
   scroll-behavior: smooth;
-
   & img {
     min-width: 200px;
     width: 200px;
     height: 250px;
     object-fit: contain;
-  }
-
-  & a {
-    position: absolute;
-    bottom: 20%;
-
-    & i {
-      font-size: 2em;
-      color: white;
-    }
+    animation: appearslowly 400ms ease-in-out;
   }
 
   &__right1 {
