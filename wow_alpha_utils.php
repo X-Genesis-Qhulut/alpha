@@ -603,7 +603,7 @@ function setUpSearchHelper ()
       {
       if (preg_match ('|^\d+$|', $filter))
         {
-        $where .= " AND $keyname = ?";
+        $where .= " AND $keyName = ?";
         $params = array ('i', &$filter);
         }
       else

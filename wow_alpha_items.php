@@ -363,6 +363,132 @@ function showCreatureEquips ()
     );
 } // end of showCreatureEquips
 
+function showItemSpellReagents ()
+{
+  global $id, $spells;
+
+  comment ('REAGENTS FOR');
+
+
+  $fields = array ();
+  $params = array ('');
+  for ($i = 1; $i <= SPELL_REAGENTS; $i++)
+    {
+    $fields [] = "Reagent_$i";
+    $params [0] .= 'i';
+    $params [] = &$id;
+    }
+
+  $fieldList = implode (' = ? OR ', $fields) . ' = ?';
+
+  $results = dbQueryParam ("SELECT ID AS spell FROM ".SPELL." WHERE ($fieldList)", $params);
+
+ listItems ('Item is a reagent for spell', 'alpha_dbc.Spell',
+          count ($results), $results,
+  function ($row) use ($spells)
+    {
+    listThing ($spells, $row ['spell'], 'show_spell');
+    } // end listing function
+    );
+
+} // end of showItemSpellReagents
+
+function showItemSpellProduced ()
+{
+  global $id, $spells;
+
+  comment ('ITEM PRODUCED BY SPELLS');
+
+
+  $fields = array ();
+  $params = array ('');
+  for ($i = 1; $i <= SPELL_EFFECT_ITEM_TYPES; $i++)
+    {
+    $fields [] = "EffectItemType_$i";
+    $params [0] .= 'i';
+    $params [] = &$id;
+    }
+
+  $fieldList = implode (' = ? OR ', $fields) . ' = ?';
+
+  $results = dbQueryParam ("SELECT ID AS spell FROM ".SPELL." WHERE ($fieldList)", $params);
+
+ listItems ('Item is produced by spell', 'alpha_dbc.Spell',
+          count ($results), $results,
+  function ($row) use ($spells)
+    {
+    listThing ($spells, $row ['spell'], 'show_spell');
+    } // end listing function
+    );
+
+} // end of showItemSpellProduced
+
+function showItemQuestRequirement ()
+{
+  global $id, $quests;
+
+  comment ('ITEM IS REQUIREMENT OF QUEST');
+
+
+  $fields = array ();
+  $params = array ('');
+  for ($i = 1; $i <= QUEST_REQUIRED_ITEMS; $i++)
+    {
+    $fields [] = "ReqItemId$i";
+    $params [0] .= 'i';
+    $params [] = &$id;
+    }
+
+  $fieldList = implode (' = ? OR ', $fields) . ' = ?';
+
+  $results = dbQueryParam ("SELECT entry AS quest FROM ".QUEST_TEMPLATE." WHERE ($fieldList)", $params);
+
+ listItems ('Item is a quest requirement', 'alpha_world.quest_required_items',
+          count ($results), $results,
+  function ($row) use ($quests)
+    {
+    listThing ($quests, $row ['quest'], 'show_quest');
+    } // end listing function
+    );
+
+} // end of showItemQuestRequirement
+
+function showItemQuestReward ()
+{
+  global $id, $quests;
+
+  comment ('ITEM IS REWARD OF QUEST');
+
+
+  $fields = array ();
+  $params = array ('');
+  for ($i = 1; $i <= QUEST_REWARD_ITEMS; $i++)
+    {
+    $fields [] = "RewItemCount$i";
+    $params [0] .= 'i';
+    $params [] = &$id;
+    }
+
+  for ($i = 1; $i <= QUEST_REWARD_ITEM_CHOICES; $i++)
+    {
+    $fields [] = "RewChoiceItemId$i";
+    $params [0] .= 'i';
+    $params [] = &$id;
+    }
+
+  $fieldList = implode (' = ? OR ', $fields) . ' = ?';
+
+  $results = dbQueryParam ("SELECT entry AS quest FROM ".QUEST_TEMPLATE." WHERE ($fieldList)", $params);
+
+ listItems ('Item is a quest reward', 'alpha_world.quest_reward_items / alpha_world.quest_reward_item_choices',
+          count ($results), $results,
+  function ($row) use ($quests)
+    {
+    listThing ($quests, $row ['quest'], 'show_quest');
+    } // end listing function
+    );
+
+} // end of showItemQuestReward
 
 function showItemModel ($row)
 {
@@ -432,7 +558,15 @@ function itemDetails ($info)
       showItemDrops ();
       showItemSkinningLoot ();
       if ($id > 0)
+        {
         showCreatureEquips ();
+        showItemSpellReagents ();
+        showItemSpellProduced ();
+        showItemQuestReward ();
+        showItemQuestRequirement ();
+        }
+
+
       });
 
   bottomSection ($info, function ($info) use ($id)
