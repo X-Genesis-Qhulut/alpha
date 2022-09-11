@@ -36,7 +36,7 @@ define ('MENU', array (
 // table: table to search to find this thing: string
 // key: primary key of the table to be searched: string
 
-$handlers = array (
+define ('HANDLERS', array (
 
   // main menu items
 
@@ -264,7 +264,7 @@ $handlers = array (
                                   'validation' => true,
                            ),
 
-); // end of $handlers
+)); // end of HANDLERS
 
 
 // ACTIONS THAT REQUIRE wow_alpha_validity.php

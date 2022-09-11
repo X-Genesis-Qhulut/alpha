@@ -8,6 +8,44 @@
 */
 
 
+/*
+
+Regarding positioning:
+
+When doing a search, which may be on text (eg. "bread") and also a field (eg. level > 5) we get a bunch
+of results, which are presented in pages of QUERY_LIMIT (200) items per page.
+
+Users can select which page they want to view, and then choose an item, ie. from the first (item 1) to the
+last (item 200).
+
+When viewing an item they can go forwards or backwards without returning to the search listing. Thus we need
+to know where they are. We record, in the URL of the item being viewed (by calling makeSearchURI):
+
+* The filter (eg. "filter=bread")
+* The other field (eg. "filter_column=level")
+* The condition (eg. "filter_compare=greater") -- see SECONDARY_FILTER below
+* The thing to compare to (eg. "filter_value=5")
+* The page we are on (eg. "page=5")
+* The position in that page (eg. "pos=20")
+* The sort order (eg. "sort_order=name")
+* The maximum number available after doing that particular search (eg. max=1000)
+
+Using that information we can show where this item is in the list. For example, item 20 on page 5 would be 804.
+  That is: ((page - 1) * QUERY_LIMIT) + (pos - 1). For the user, we show one-relative, that is 805/1000.
+
+With that number, and the search information we can go forwards or backwards by adding or subtracting 1 from "pos".
+In the case of crossing a page boundary backwards pos may become negative but that is OK.
+
+The table name we establish from the $handlers table (eg. for action "showOneSpell") we can find out that the table is
+the SPELL table. That table also tells us the key for this particular database table.
+
+The we can reconstruct the exact search (filter, sort order and so on) and use the LIMIT clause to narrow down to that
+particular record. Then we read that, find its ID (key) and then press on as if the user had selected that key in the
+first place.
+
+*/
+
+
 $VALID_NUMBER     = '^[+\-]?\d+$';             // just digits with optional sign
 $VALID_FLOAT      = '^[+\-]?(\d*\.)?(\d+)$';   // optional sign, optional number and decimal point, then number
 $VALID_DATE       = '^[\w \-]+$';              // Expect letters, numbers spaces, hyphens
@@ -194,6 +232,11 @@ function searchContainerEnd ()
   endDiv ('page-title page-title--search');
   } // end of searchContainerEnd
 
+function columns_sort ($a, $b)
+  {
+  return $a ['Field'] <=> $b ['Field'];
+  } // end of columns_sort
+
 function showSearchForm ($description, $sortFields, $headings, $results, $where, $searchError)
   {
   global $filter, $action, $sort_order, $params, $page, $matches;
@@ -231,6 +274,7 @@ function showSearchForm ($description, $sortFields, $headings, $results, $where,
   $mainTableFields = dbQueryParam ("SHOW COLUMNS FROM $mainTable", array ());
 
   $filterOptions = array ();
+  usort ($mainTableFields, 'columns_sort');
   foreach ($mainTableFields as $field)
     {
     if (preg_match ('`int|float`', $field ['Type']))
@@ -1416,8 +1460,8 @@ function topSection ($userInfo, $func)
 
 // THIS GOES INSIDE: topSection
 // $title is for the box title
-// $loc is which one we are out of $max (eg. 4/10)
-function topLeft ($userInfo, $func, $title = 'General' /* , $pos = 0, $max = 0 */ )
+// $pos is which one we are out of $max (eg. 4/10)
+function topLeft ($userInfo, $func, $title = 'General')
 {
   global $VALID_NUMBER, $action;
   global $filter;
@@ -1455,10 +1499,10 @@ function topLeft ($userInfo, $func, $title = 'General' /* , $pos = 0, $max = 0 *
       {
       $s = array ();
       if ($filter)
-        $s [] = "<Text matching: $filter>";
+        $s [] = "Text matching: \"$filter\"";
       if ($filter_value)
-        $s [] = "<$filter_column $filter_compare $filter_value>";
-      $searchTitle = fixHTML ('Filter: ' . implode (" and ", $s));
+        $s [] = "`$filter_column` $filter_compare $filter_value";
+      $searchTitle = fixHTML (implode (" AND ", $s));
       } // if we have some sort of filter
 
     // more than entry 1, we can go back

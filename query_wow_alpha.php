@@ -169,9 +169,9 @@ showBigMenu ();
 // if there was an action, show a smaller menu, find its handler and call it
 if ($action)
   {
-  if (array_key_exists ($action, $handlers))
+  if (array_key_exists ($action, HANDLERS))
     {
-    $actionInfo = $handlers [$action];
+    $actionInfo = HANDLERS [$action];
     // set up some global variables for use elsewhere
 
     // fields to search for string matches

@@ -28,11 +28,12 @@ function showBadNPCs ($info)
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
+    {
     echo "<li>" . lookupThing ($creatures,  $row ['npc_key'], 'show_creature');
-
-  if ($label)
-    echo " ($label " . $row [$field] . ")";
-  echo "\n";
+    if ($label)
+      echo " ($label " . $row [$field] . ")";
+    echo "\n";
+    } // end of each row
   dbFree ($results);
   echo "</ul>\n";
   } // end of showBadNPCs
@@ -57,7 +58,7 @@ function listBadNPCs ($info)
     if ($label)
       echo " ($label " . $row [$field] . ")";
     echo "\n";
-    }
+    } // end of each row
 
   echo "</ul>\n";
   } // end of listBadNPCs
@@ -83,7 +84,7 @@ function showBadGOs ($info)
     if ($label)
       echo " ($label " . $row [$field] . ")";
     echo "\n";
-    }
+    }  // end of each row
   dbFree ($results);
   echo "</ul>\n";
 
@@ -152,7 +153,7 @@ function listBadItems ($info)
     if ($label)
        echo " ($label " . $row [$field] . ")";
     echo "\n";
-    }
+    }  // end of each row
 
   echo "</ul>\n";
   } // end of listBadItems
@@ -454,6 +455,11 @@ function showMissingCreatureQuests ()
     } , QUEST_TEMPLATE);
   } // end of showMissingCreatureQuests
 
+function game_object_compare ($a, $b)
+  {
+  return $game_objects [$a ['go_key']] <=> $game_objects [$b ['go_key']];
+  } // end of game_object_compare
+
 
 // analyse game objects to see if they start a missing quest
 function showMissingGameobjectQuestsDetails ()
@@ -476,7 +482,7 @@ function showMissingGameobjectQuestsDetails ()
                             INNER JOIN $table AS T2 USING (entry)
                             LEFT JOIN $quest_template AS T3 ON (T2.quest = T3.entry AND T3.ignored = 0)
                         WHERE T3.entry IS NULL
-                        ORDER BY T1.entry");
+                        ORDER BY T1.name");
 
     $count = dbRows ($results);
     $totalCount += $count;
@@ -699,7 +705,11 @@ function showMissingSpellItems ()
     } , SPELL);
   } // end of showMissingSpellItems
 
-
+function npc_compare ($a, $b)
+  {
+  global $creatures;
+  return $creatures [$a ['npc_key']] <=> $creatures [$b ['npc_key']];
+  } // end of npc_compare
 
 // analyse creatures to see if they don't have a model file
 function showMissingCreatureModelsDetails ($info)
@@ -743,6 +753,7 @@ function showMissingCreatureModelsDetails ($info)
 
     $count = count ($missingModels);
     $totalCount += $count;
+    usort ($missingModels, 'npc_compare');
 
     if ($count)
       {
@@ -785,11 +796,11 @@ function showCreaturesNotSpawnedDetails ($info)
       $badOnes [] = array ('npc_key' => $npc_entry);
     }
 
+  usort ($badOnes, 'npc_compare');
   $info = array ('heading' => "NPCs which are not spawned by the database",
                  'rows' => $badOnes,
                  'label' => '',
                  'field' => '');
-
   bottomDetails ($info, 'listBadNPCs');
 
 
@@ -829,7 +840,7 @@ function showMissingItemSpellsDetails ()
                             ON T1.$field = T2.ID
                         WHERE T2.ID IS NULL
                         AND T1.$field <> 0 AND T1.ignored = 0
-                        ORDER BY T1.entry");
+                        ORDER BY T1.name");
 
     $count = dbRows ($results);
     $totalCount += $count;
