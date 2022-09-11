@@ -972,6 +972,8 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
   if (!$mapName)
     return;
 
+  comment ("Drawing $mapName");
+
   // get width and height
   $imageSize = getimagesize ("maps/$mapName.jpg");
   $imageWidth  = $imageSize [0];
@@ -1009,7 +1011,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       $mapx -= $halfMapDotSize;
       $mapy -= $halfMapDotSize;
 
-      echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='bottom:{$mapy}px; left:{$mapx}px;'>\n";
+      echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'>\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
       echo "  <title>$x $y $z $map</title>\n";
       echo "</svg>\n";
