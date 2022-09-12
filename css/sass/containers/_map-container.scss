@@ -1,3 +1,11 @@
 .map-container {
   position: relative;
+
+  & svg {
+    :hover {
+      .magnifier {
+        display: block;
+      }
+    }
+  }
 }

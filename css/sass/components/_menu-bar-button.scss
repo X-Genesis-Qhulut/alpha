@@ -19,6 +19,8 @@
   overflow-x: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
+  transition: all 300ms;
+
   @include menu-shadow;
 
   & i {

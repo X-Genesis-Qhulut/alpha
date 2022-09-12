@@ -293,14 +293,7 @@ function creatureSpells ($info)
           if ($spellListRow ["scriptId_$i"])
             $details .= "Script ID: "  . $spellListRow ["scriptId_$i"] . "\n";
 
-          echo "
-          <div  class='row-card'>
-          <span class='row-card__head'><i class='fas fa-book'></i></span>
-          <span class='row-card__content' title='" . fixHTML ($details) . "'>"
-          . lookupThing ($spells,   $spellListRow ["spellId_$i"], 'show_spell') . "</span>
-          </div>
-          ";
-
+          listThing ($spells, $spellListRow ["spellId_$i"], 'show_spell');
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
 

@@ -986,8 +986,9 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
 
   echo "<div class='map-container'>";
   echo "<img src='maps/{$mapName}.jpg' style='display:block;
-        max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
-        alt='{$mapName} map' title='{$mapName} map' >\n";
+          max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
+          onmouseenter='onMouseEnterImg(event)' onmousemove='onMouseMoveImg(event)'
+          alt='{$mapName} map' title='{$mapName} map' />\n";
 
   // draw an SVG circle for each spawn point
   foreach ($results as $spawnRow)
@@ -1016,7 +1017,8 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       $mapx -= $halfMapDotSize;
       $mapy -= $halfMapDotSize;
 
-      echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'>\n";
+      echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'
+            onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)'>\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
       echo "  <title>$x $y $z $map</title>\n";
       echo "</svg>\n";
@@ -1565,6 +1567,10 @@ function topRight ($userInfo, $func)
   echo "<aside class='caroussel'>\n";
 
   $func ($userInfo);   // output contents
+
+  echo "<!-- MAGNIFIER -->
+      <div class='magnifier'></div>
+      <!-- END MAGNIFIER -->";
 
   echo "</aside>\n";  // end of caroussel
 

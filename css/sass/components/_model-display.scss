@@ -5,6 +5,7 @@
   min-height: 150px;
   margin-top: 50px;
   object-fit: contain;
+  animation: appearslowly 400ms ease-in-out;
 
   @include tablet-design {
     margin-top: 20px;

@@ -29,6 +29,7 @@
   <link href="./css/fontawesome/brands.css" rel="stylesheet" />
   <link href="./css/fontawesome/solid.css" rel="stylesheet" />
   <script src='editing.js' defer></script>
+  <script src='js/magnifier.js' defer></script>
   </head>
   <body>
     <!-- MAIN -->

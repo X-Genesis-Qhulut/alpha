@@ -54,6 +54,7 @@
       flex-direction: column;
       border-radius: 20px;
       @include big-shadow;
+      position: relative;
     }
 
     &__items {
