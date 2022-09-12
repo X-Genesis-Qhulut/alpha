@@ -490,6 +490,24 @@ function showItemQuestReward ()
 
 } // end of showItemQuestReward
 
+function showItemQuestStart ()
+{
+  global $id, $quests;
+
+  comment ('ITEM STARTS A QUEST');
+
+  $results = dbQueryParam ("SELECT start_quest AS quest FROM ".ITEM_TEMPLATE." WHERE entry = ? AND start_quest > 0", array ('i', &$id));
+
+ listItems ('Item starts a quest', 'alpha_world.quest_template / alpha_world.quest_reward_item_choices',
+          count ($results), $results,
+  function ($row) use ($quests)
+    {
+    listThing ($quests, $row ['quest'], 'show_quest');
+    } // end listing function
+    );
+
+} // end of showItemQuestStart
+
 function showItemModel ($row)
 {
   echo "
@@ -564,6 +582,7 @@ function itemDetails ($info)
         showItemSpellProduced ();
         showItemQuestReward ();
         showItemQuestRequirement ();
+        showItemQuestStart ();
         }
 
 

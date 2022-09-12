@@ -824,9 +824,9 @@ function lookupThing ($array, $id, $action)
   $link = "<a href='?action=$action&id=$id'>$id</a>";
   if (!$id)
     return ('-');
-  elseif (! isset ($array [$id]))
-    return ("$id (not found)");
-  else return ("$link: " . $array  [$id] );
+  elseif (array_key_exists ($id, $array))
+    return ("$link: <a href='?action=$action&id=$id'>" . fixHTML ($array  [$id]) . '</a>' );
+  return ("$id (not found)");
   } // end of lookupThing
 
 // for hyperlinks to things with no name to be shown
