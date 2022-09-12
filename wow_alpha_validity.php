@@ -930,7 +930,6 @@ function showUnusedItemsDetails ()
   for ($i = 1; $i <= QUEST_REWARD_ITEM_CHOICES; $i++)
     $fields [] = "RewChoiceItemId$i";
 
-
   $fieldList = implode (', ', $fields);
   $results = dbQuery ("SELECT $fieldList FROM ".QUEST_TEMPLATE." WHERE ignored = 0");
   while ($row = dbFetch ($results))
@@ -970,6 +969,13 @@ function showUnusedItemsDetails ()
     foreach ($fields as $field)
       if ($row [$field])
         $used [$row [$field]] = true;
+  dbFree ($results);
+
+  // eliminate items dropped by game objects
+
+  $results = dbQuery ("SELECT item FROM ".GAMEOBJECT_LOOT_TEMPLATE." GROUP BY item");
+  while ($row = dbFetch ($results))
+    $used [$row ['item']] = true;
   dbFree ($results);
 
   // build appropriate array of unused items

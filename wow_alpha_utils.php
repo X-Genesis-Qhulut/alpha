@@ -43,6 +43,11 @@ The we can reconstruct the exact search (filter, sort order and so on) and use t
 particular record. Then we read that, find its ID (key) and then press on as if the user had selected that key in the
 first place.
 
+
+Finding where you stuffed something up (say around line 1014):
+
+  git log --pretty=short -u -L 1010,1020:wow_alpha_utils.php
+
 */
 
 
