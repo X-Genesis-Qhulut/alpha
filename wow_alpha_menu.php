@@ -280,7 +280,6 @@ function mainPage ()
 
   // DISCORD
   oneCard ('Discord', 'fab fa-discord', "
-    <div class='card__content'>
       <img
         class='card__content__cover'
         src='./assets/img/discord.jpeg'
@@ -316,7 +315,6 @@ function mainPage ()
 
   // BACK END
   oneCard ('Back end', 'fas fa-server', "
-    <div class='card__content'>
       <img
         class='card__content__cover'
         src='./assets/img/avatar.jpg'
@@ -336,7 +334,6 @@ function mainPage ()
       <br>
       <div style='font-size:smaller;'>
         Designed and coded in August 2022 by X’Genesis Qhulut.
-      </p>
       <p>Thanks to Grender from the Alpha Project.
       </p>
       <hr>
@@ -389,8 +386,6 @@ echo "
     <!-- END PAGE CONTENT -->
   </section>
   <!-- END PAGE CONTAINER-->
-</main>
-<!-- END MAIN -->
 ";
 
 } // end of mainPage

@@ -59,7 +59,7 @@ function includeScript ($name)
   {
   $executiondir = EXECUTIONDIR;
   $time = filemtime ($_SERVER['DOCUMENT_ROOT'] . "$executiondir/$name");
-  echo "  <script  src='$executiondir/$name?v=$time' defer /></script>\n";
+  echo "  <script  src='$executiondir/$name?v=$time' defer ></script>\n";
   } // end if includeScript
 
 //-----------------------------------------------------------------------------
