@@ -1,5 +1,6 @@
 .spawn_point {
   position: absolute;
-  z-index: 1000;
+  z-index: 1001;
   cursor: pointer;
+  transition: all 300ms;
 }
