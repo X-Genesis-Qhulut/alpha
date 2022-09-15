@@ -1854,5 +1854,57 @@ function fixQuestText ($s)
   return str_ireplace ('$b', "<br>", $s);
   } // end of fixQuestText
 
+function fixSpellText ($s, $duration)
+  {
+  // numbered alternatives, eg. loaf/loaves
+  // Example: "$lloaf:loaves;"    becomes "<loaf/loaves>"
+
+  $s = preg_replace ('/\$l ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
+  $s = str_ireplace ('$d',  convertTimeGeneral ($duration), $s);
+
+  // gendered alternatives, eg. lad/lass, brother/sister, good sir/my lady etc.
+  // Example: "$gmister:lady;"    becomes "<mister/lady>"
+
+  $s = preg_replace ('/\$g ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
+  $s = fixHTML ($s);
+  return str_ireplace ('$b', "<br>", $s);
+  } // end of fixSpellText
+
+function trainer_spell_compare ($a, $b)
+  {
+  global $spells;
+  if ($spells [$a ['playerspell']] == $spells [$b ['playerspell']])
+    return $a ['playerspell'] <=> $b ['playerspell'];
+  return $spells [$a ['playerspell']] <=> $spells [$b ['playerspell']];
+  } // end of trainer_spell_compare
+
+function item_compare ($a, $b)
+  {
+  global $items;
+  return $items [$a ['item']] <=> $items [$b ['item']];
+  } // end of item_compare
+
+function loot_item_compare ($a, $b)
+  {
+  global $items;
+  if ($a ['ChanceOrQuestChance'] == $b ['ChanceOrQuestChance'])
+    return $items [$a ['item']] <=> $items [$b ['item']];
+  return - ($a ['ChanceOrQuestChance'] <=> $b ['ChanceOrQuestChance']);
+  } // end of loot_item_compare
+
+function reference_item_compare ($a, $b)
+  {
+  global $items;
+  if ($a ['chance'] == $b ['chance'])
+    return $items [$a ['refItem']] <=> $items [$b ['refItem']];
+  return - ($a ['chance'] <=> $b ['chance']);
+  } // end of reference_item_compare
+
+function creature_compare ($a, $b)
+  {
+  global $creatures;
+  return $creatures [$a ['npc']] <=> $creatures [$b ['npc']];
+  } // end of item_compare
+
 
 ?>

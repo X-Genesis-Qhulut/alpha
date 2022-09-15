@@ -11,28 +11,6 @@
 
 // Interesting info: https://tswow.github.io/tswow-wiki/introduction/05-custom-spell/
 
-function creature_compare ($a, $b)
-  {
-  global $creatures;
-  return $creatures [$a ['npc']] <=> $creatures [$b ['npc']];
-  } // end of item_compare
-
-function fixSpellText ($s, $duration)
-  {
-  // numbered alternatives, eg. loaf/loaves
-  // Example: "$lloaf:loaves;"    becomes "<loaf/loaves>"
-
-  $s = preg_replace ('/\$l ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
-  $s = str_ireplace ('$d',  convertTimeGeneral ($duration), $s);
-
-  // gendered alternatives, eg. lad/lass, brother/sister, good sir/my lady etc.
-  // Example: "$gmister:lady;"    becomes "<mister/lady>"
-
-  $s = preg_replace ('/\$g ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
-  $s = fixHTML ($s);
-  return str_ireplace ('$b', "<br>", $s);
-  } // end of fixQuestText
-
 function showSpellIcon ($row)
 {
   global $documentRoot, $executionDir;
