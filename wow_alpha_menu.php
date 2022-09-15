@@ -225,6 +225,7 @@ function mainPage ()
         <li><a href='?action=quest_missing_item'>Quests with missing items</a></li>
         <li><a href='?action=quest_missing_spell'>Quests with missing spells</a></li>
         <li><a href='?action=quest_missing_quest'>Quests with missing quest chains</a></li>
+        <li><a href='?action=quest_bad_count'>Quests with bad item/game object counts</a></li>
       </ul>
 
       <h3>Items</h3>
@@ -325,13 +326,15 @@ function mainPage ()
 
       <ul>
         <li>
-          <a href='https://github.com/X-Genesis-Qhulut/alpha'
-            >Github profile</a
-          >
+          <a href='https://github.com/X-Genesis-Qhulut/alpha'>Back end database repo</a>
+        </li>
+        <li>
+          <a href='https://github.com/X-Genesis-Qhulut/'>Github profile</a>
         </li>
       </ul>
-      <div style='font-size:smaller;'>
       <p>
+      <br>
+      <div style='font-size:smaller;'>
         Designed and coded in August 2022 by X’Genesis Qhulut.
       </p>
       <p>Thanks to Grender from the Alpha Project.
@@ -357,9 +360,7 @@ function mainPage ()
       <h3>Created by Geo</h3>
       <ul>
         <li>
-          <a href='https://github.com/geo-tp/053-Database-Frontend'
-            >Frontend database repo</a
-          >
+          <a href='https://github.com/geo-tp/053-Database-Frontend'>Front end database repo</a>
         </li>
         <li>
           <a href='https://github.com/geo-tp'>Geo github profile</a>

@@ -106,8 +106,12 @@ function showBadQuests ($info)
 
   echo "<ul>\n";
   while ($row = dbFetch ($results))
-    echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_quest') .
-          " ($label " . $row [$field] . ")\n";
+    {
+    echo "<li>" . lookupThing ($quests,  $row ['quest_key'], 'show_quest');
+    if ($label)
+       echo " ($label " . $row [$field] . ")\n";
+    echo "\n";
+    }
   dbFree ($results);
   echo "</ul>\n";
   } // end of showBadQuests
@@ -274,6 +278,77 @@ function showMissingQuestItems ()
     bottomSectionMany ($info, 'showMissingQuestItemsDetails');
     } , QUEST_TEMPLATE);
   } // end of showMissingQuestItems
+
+function showBadQuestCountsDetails ()
+{
+  global $quests;
+
+  $quest_template = QUEST_TEMPLATE;
+  $totalCount = 0;
+
+  // game objects / creatures
+  for ($i = 1; $i <= QUEST_REQUIRED_CREATURES; $i++)
+    {
+    $results = dbQuery ("SELECT entry AS quest_key
+                        FROM $quest_template
+                        WHERE ReqCreatureOrGOCount$i <> 0
+                        AND ReqCreatureOrGOId$i = 0
+                        AND ignored = 0
+                        ORDER BY entry");
+
+    $count = dbRows ($results);
+    $totalCount += $count;
+
+    if ($count)
+      {
+      $info = array ('heading' => "Quests where <ReqCreatureOrGOCount$i> is non-zero but <ReqCreatureOrGOId$i> is zero",
+                     'results' => $results,
+                     'label' => '',
+                     'field' => '');
+
+      bottomDetails ($info, 'showBadQuests');
+      }
+    } // end of foreach
+
+  // items
+  for ($i = 1; $i <= QUEST_REQUIRED_ITEMS; $i++)
+    {
+    $results = dbQuery ("SELECT entry AS quest_key
+                        FROM $quest_template
+                        WHERE ReqItemCount$i <> 0
+                        AND ReqItemId$i = 0
+                        AND ignored = 0
+                        ORDER BY entry");
+
+    $count = dbRows ($results);
+    $totalCount += $count;
+
+    if ($count)
+      {
+      $info = array ('heading' => "Quests where <ReqItemCount$i> is non-zero but <ReqItemId$i> is zero",
+                     'results' => $results,
+                     'label' => '',
+                     'field' => '');
+
+      bottomDetails ($info, 'showBadQuests');
+      }
+    } // end of foreach
+
+  if ($totalCount == 0)
+    showNoProblems ();
+
+} // end of showBadQuestCountsDetails
+
+function showBadQuestCounts ()
+  {
+  setTitle ("Quests with bad counts");
+
+  pageContent (false, 'Validation', 'Quest items',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showBadQuestCountsDetails');
+    } , QUEST_TEMPLATE);
+  } // end of showBadQuestCounts
+
 
 function showMissingQuestSpellsDetails ()
 {
@@ -919,7 +994,7 @@ function showUnusedItemsDetails ()
   // eliminate items used in quests
   // I'm uncertain about the required items - if they are required how do they appear in the first place?
 
-  $fields = array ();
+  $fields = array ('SrcItemId');
   // items required
   for ($i = 1; $i <= QUEST_REQUIRED_ITEMS; $i++)
     $fields [] = "ReqItemId$i";
