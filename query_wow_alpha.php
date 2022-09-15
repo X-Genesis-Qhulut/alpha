@@ -22,20 +22,6 @@
   <meta name="twitter:card" content="http://wow-refugee.com/alpha/thumbnail.jpg">
 
   <title>WoW 0.5.3 Database</title>
-  <link rel="stylesheet" href="./css/normalize.css" />
-  <link rel="stylesheet" href="./css/styles.css" />
-  <link rel="icon" href="favicon.png" />
-  <link href="./css/fontawesome/fontawesome.css" rel="stylesheet" />
-  <link href="./css/fontawesome/brands.css" rel="stylesheet" />
-  <link href="./css/fontawesome/solid.css" rel="stylesheet" />
-  <script src='editing.js' defer></script>
-  <script src='js/magnifier.js' defer></script>
-  </head>
-  <body>
-    <!-- MAIN -->
-    <main class="main-container">
-
-
 <?php
 
 /*
@@ -49,10 +35,59 @@
 
   Icons: https://fontawesome.com/icons
 
+
+Kalidar server:
+
+  https://github.com/vmangos/core
+  https://github.com/brotalnia/database
+
 */
 
 // Configuration: database name, password, etc.
 require ("wow_alpha_config.php");
+
+// helper function for linking in stylesheets with a timestamp
+function includeStylesheet ($name)
+  {
+  $executiondir = EXECUTIONDIR;
+  $time = filemtime ($_SERVER['DOCUMENT_ROOT'] . "$executiondir/$name");
+  echo "  <link rel='stylesheet' href='$executiondir/$name?v=$time' />\n";
+  } // end of includeStylesheet
+
+// helper function for linking in scripts with a timestamp
+function includeScript ($name)
+  {
+  $executiondir = EXECUTIONDIR;
+  $time = filemtime ($_SERVER['DOCUMENT_ROOT'] . "$executiondir/$name");
+  echo "  <script  src='$executiondir/$name?v=$time' defer /></script>\n";
+  } // end if includeScript
+
+//-----------------------------------------------------------------------------
+// get our style sheets
+//-----------------------------------------------------------------------------
+includeStylesheet ("css/normalize.css");
+includeStylesheet ("css/styles.css");
+includeStylesheet ("css/fontawesome/fontawesome.css");
+includeStylesheet ("css/fontawesome/brands.css");
+includeStylesheet ("css/fontawesome/solid.css");
+//-----------------------------------------------------------------------------
+// get our scripts
+//-----------------------------------------------------------------------------
+includeScript ("editing.js");
+includeScript ("js/magnifier.js");
+
+//-----------------------------------------------------------------------------
+// wrap up our head, and start our body
+//-----------------------------------------------------------------------------
+?>
+  <link rel='icon' href='favicon.png' />
+  </head>
+  <body>
+    <!-- MAIN -->
+    <main class='main-container'>
+
+<?php
+
 // database management
 require ("wow_alpha_database.php");
 // main menu
@@ -63,23 +98,8 @@ require ("wow_alpha_constants.php");
 require ("wow_alpha_handlers.php");
 // useful stuff
 require ("wow_alpha_utils.php");
-// table handling for various tables
-require ("wow_alpha_creatures.php");
-require ("wow_alpha_quests.php");
-require ("wow_alpha_books.php");
-require ("wow_alpha_items.php");
-require ("wow_alpha_spells.php");
-require ("wow_alpha_game_objects.php");
-require ("wow_alpha_maps.php");
-require ("wow_alpha_zones.php");
-require ("wow_alpha_ports.php");
-require ("wow_alpha_skills.php");
-require ("wow_alpha_tables.php");
-require ("wow_alpha_proximity.php");
-require ("wow_alpha_spell_visual.php");
 // field expansions
 require ("wow_alpha_fields.php");
-
 
 //-----------------------------------------------------------------------------
 // START HERE
@@ -91,7 +111,9 @@ $executionDir = EXECUTIONDIR;
 
 // incorporate our stylesheet
 
+//-----------------------------------------------------------------------------
 // GET PARAMETERS FROM POST OR GET
+//-----------------------------------------------------------------------------
 
 // get action
 $action  = getGP ('action', 40, $VALID_ACTION);
@@ -131,14 +153,18 @@ $item      = getGP ('item',      8, $VALID_NUMBER);
 if (!$page || $page < 1)
   $page = 1;
 
+//-----------------------------------------------------------------------------
 // open database, die on error
+//-----------------------------------------------------------------------------
 $dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
 if (mysqli_connect_errno())
   MajorProblem ("Cannot connect to server " . DBSERVER . ':' . mysqli_connect_error());
 
 $PHP_SELF = $_SERVER['PHP_SELF'];
 
+//-----------------------------------------------------------------------------
 // grab things we are likely to cross-reference a lot
+//-----------------------------------------------------------------------------
 if ($action)
   {
   getThings ($items,        ITEM_TEMPLATE,       'entry',  'name', 'WHERE ignored = 0');     // items
@@ -167,41 +193,45 @@ if ($action)
 
 showBigMenu ();
 
-// if there was an action, show a smaller menu, find its handler and call it
+//-----------------------------------------------------------------------------
+// if there was an action, find its handler and call it
+//-----------------------------------------------------------------------------
 if ($action)
   {
   if (array_key_exists ($action, HANDLERS))
     {
     $actionInfo = HANDLERS [$action];
+    $extraInfo = HANDLER_EXTRA [$actionInfo ['extra']];
+
     // set up some global variables for use elsewhere
 
     // fields to search for string matches
-    if (array_key_exists ('search', $actionInfo))
-      $searchFields = $actionInfo ['search'];
+    if (array_key_exists ('search', $extraInfo))
+      $searchFields = $extraInfo ['search'];
     else
       $searchFields = array ();
 
     // extra "where" conditions, like max creature ID
-    if (array_key_exists ('where', $actionInfo))
-      $extraWhere = $actionInfo ['where'];
+    if (array_key_exists ('where', $extraInfo))
+      $extraWhere = $extraInfo ['where'];
     else
       $extraWhere = '';
 
     // what table to search
-    if (array_key_exists ('table', $actionInfo))
-      $mainTable = $actionInfo ['table'];
+    if (array_key_exists ('table', $extraInfo))
+      $mainTable = $extraInfo ['table'];
     else
       $mainTable = '';
 
     // what the primary key is
-    if (array_key_exists ('key', $actionInfo))
-      $keyName = $actionInfo ['key'];
+    if (array_key_exists ('key', $extraInfo))
+      $keyName = $extraInfo ['key'];
     else
       $keyName = '';
 
     // only pull in this file if we have to
-    if (array_key_exists ('validation', $actionInfo))
-      require ("wow_alpha_validity.php");
+    if (array_key_exists ('requires', $extraInfo))
+      require ($extraInfo ['requires']);
 
     comment ('Executing ' . $actionInfo ['func']);
     // call the handler function
@@ -213,7 +243,9 @@ if ($action)
 else  // otherwise show a bigger menu
   mainPage ();
 
+//-----------------------------------------------------------------------------
 // wrap up web page
+//-----------------------------------------------------------------------------
 
 ?>
   </main>
