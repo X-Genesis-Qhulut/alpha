@@ -228,7 +228,7 @@ function creatureSpells ($info)
   comment ('SPELLS THEY CAST');
 
   startElementInformation ('Spells they cast', CREATURE_SPELLS, true);
-  echo "<div class='row-card-container'>\n";
+ // echo "<div class='row-card-container'>\n";
 
   if ($row ['spell_list_id'])
     {
@@ -261,7 +261,7 @@ function creatureSpells ($info)
           if ($spellListRow ["scriptId_$i"])
             $details .= "Script ID: "  . $spellListRow ["scriptId_$i"] . "\n";
 
-          listThing ($spells, $spellListRow ["spellId_$i"], 'show_spell');
+          listThing ($spells, $spellListRow ["spellId_$i"], 'show_spell', '', '', $details);
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
 
@@ -269,7 +269,7 @@ function creatureSpells ($info)
 
     } // end of if they had a spell_list_id
 
-  endDiv ('row-card-container');
+//  endDiv ('row-card-container');
   endElementInformation ();
 
 } // end of creatureSpells

@@ -881,23 +881,25 @@ function convertTimeGeneral ($time)
 
   } // end of convertTimeGeneral
 
-function listThing ($array, $id, $action, $info = '', $info2 = '')
+function listThing ($array, $id, $action, $info = '', $info2 = '', $title = '')
   {
   if (array_key_exists ($action, ICONS))
     $icon = ICONS [$action];
   else
     $icon = 'fa-table';
 
+  $title = fixHTML ($title);
+
   // if they are known, make a hyperlink
   if (array_key_exists ($id, $array ))
     {
-    $link = "<a href='?action=$action&id=$id' class='row-card'>";
+    $link = "<a href='?action=$action&id=$id' class='row-card' title='$title'>";
     $unlink = '</a>';
     $description = fixHTML ($array  [$id]);
     }
   else
     {
-    $link = "<div class='row-card'>";
+    $link = "<div class='row-card' title='$title'>";
     $unlink = '</div>';
     $description = "(not found)";
     }
@@ -1017,10 +1019,12 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       $mapx -= $halfMapDotSize;
       $mapy -= $halfMapDotSize;
 
+      $location = "$x $y $z $map";
       echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'
-            onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)'>\n";
+            onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)'
+            onclick='copyToClipboard (\"$location\")' >\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
-      echo "  <title>$x $y $z $map</title>\n";
+      echo "  <title>$location</title>\n";
       echo "</svg>\n";
 
       } // end of if we have a mapName
