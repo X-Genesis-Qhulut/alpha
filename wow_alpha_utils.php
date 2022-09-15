@@ -1135,11 +1135,11 @@ function listItems ($heading, $table, $totalCount, $results, $listItemFunc, $upt
 {
   global $listedItemsCount;
 
-  $listedItemsCount += $totalCount;
-
   // trivial case - nothing to list
   if ($totalCount <= 0)
     return;
+
+  $listedItemsCount += $totalCount;
 
   $running_count = 0;
 
@@ -1797,5 +1797,62 @@ function repositionSearch ()
   $id = $results [0] [$keyName];
   return true;
   }
+
+
+function lookupItemHelper ($id, $count)
+  {
+  global $items;
+  $countStr = '';
+  if ($count > 1)
+    $countStr = "&nbsp;x$count";
+
+  $link = "<a href='?action=show_item&id=$id'>$id</a>";
+  if (!$id)
+    return ('');
+
+  if (!isset ($items [$id]))
+    return ("$id (not found)$countStr");
+
+  return ("$link: " . $items  [$id] . $countStr);
+
+  } // end of lookupItem
+
+function lookupItem ($id, $count)
+  {
+  tdh (lookupItemHelper ($id, $count));
+  } // end of lookupItem
+
+function lookupItems ($row, $items, $counts)
+  {
+  $s = '';
+  foreach ($items as $n => $item)
+    {
+    if ($row [$item])
+      {
+      if ($s)
+        $s .= '<br>';
+      $s .= lookupItemHelper ($row [$item], $row [$counts [$n]]);
+      }
+    } // end of foreach
+
+  return $s;
+  } // end of lookupItems
+
+
+function fixQuestText ($s)
+  {
+  $s = str_ireplace ('$n', "<name>", $s);
+  $s = str_ireplace ('$r', "<race>", $s);
+  $s = str_ireplace ('$c', "<class>", $s);
+
+  // gendered alternatives, eg. lad/lass, brother/sister, good sir/my lady etc.
+  // Example: "$gmister:lady;"    becomes "<mister/lady>"
+
+  $s = preg_replace ('/\$g ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
+
+  $s = fixHTML ($s);
+  return str_ireplace ('$b', "<br>", $s);
+  } // end of fixQuestText
+
 
 ?>

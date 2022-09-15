@@ -10,45 +10,6 @@
 
 // ITEMS
 
-function lookupItemHelper ($id, $count)
-  {
-  global $items;
-  $countStr = '';
-  if ($count > 1)
-    $countStr = "&nbsp;x$count";
-
-  $link = "<a href='?action=show_item&id=$id'>$id</a>";
-  if (!$id)
-    return ('');
-
-  if (!isset ($items [$id]))
-    return ("$id (not found)$countStr");
-
-  return ("$link: " . $items  [$id] . $countStr);
-
-  } // end of lookupItem
-
-function lookupItem ($id, $count)
-  {
-  tdh (lookupItemHelper ($id, $count));
-  } // end of lookupItem
-
-function lookupItems ($row, $items, $counts)
-  {
-  $s = '';
-  foreach ($items as $n => $item)
-    {
-    if ($row [$item])
-      {
-      if ($s)
-        $s .= '<br>';
-      $s .= lookupItemHelper ($row [$item], $row [$counts [$n]]);
-      }
-    } // end of foreach
-
-  return $s;
-  } // end of lookupItems
-
 function simulateItem ($row)
   {
   global $id, $game_objects, $creatures, $zones, $quests, $spells, $skills;
@@ -430,8 +391,9 @@ function showItemQuestRequirement ()
   comment ('ITEM IS REQUIREMENT OF QUEST');
 
 
-  $fields = array ();
-  $params = array ('');
+  $fields = array ('SrcItemId');
+  $params = array ('i');
+  $params [] = &$id;
   for ($i = 1; $i <= QUEST_REQUIRED_ITEMS; $i++)
     {
     $fields [] = "ReqItemId$i";
@@ -443,7 +405,7 @@ function showItemQuestRequirement ()
 
   $results = dbQueryParam ("SELECT entry AS quest FROM ".QUEST_TEMPLATE." WHERE ($fieldList)", $params);
 
- listItems ('Item is a quest requirement', 'alpha_world.quest_required_items',
+  listItems ('Item is a quest requirement', 'alpha_world.quest_required_items',
           count ($results), $results,
   function ($row) use ($quests)
     {
@@ -572,6 +534,10 @@ function itemDetails ($info)
 
   middleSection ($info, function ($info) use ($id)
       {
+      global $listedItemsCount;
+
+      $listedItemsCount = 0;
+
       showItemVendors ();
       showItemDrops ();
       showItemSkinningLoot ();
@@ -585,6 +551,11 @@ function itemDetails ($info)
         showItemQuestStart ();
         }
 
+      if ($listedItemsCount == 0)
+        middleDetails ($info, function ($info) use ($listedItemsCount)
+          {
+          showNoSpawnPoints ('Unused item', 'This item appears to be unused.');
+          });
 
       });
 
@@ -628,6 +599,8 @@ function showOneItem ()
         'max_money_loot'  => 'gold',
         'bonding'         => 'bonding',
         'extra_flags'     => 'mask',
+//        'allowable_class' => 'class_mask',
+//        'allowable_race'  => 'race_mask',
 
     );
 

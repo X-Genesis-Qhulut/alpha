@@ -11,22 +11,6 @@
 
 // See: https://mangoszero-docs.readthedocs.io/en/latest/database/world/quest-template.html
 
-
-function fixQuestText ($s)
-  {
-  $s = str_ireplace ('$n', "<name>", $s);
-  $s = str_ireplace ('$r', "<race>", $s);
-  $s = str_ireplace ('$c', "<class>", $s);
-
-  // gendered alternatives, eg. lad/lass, brother/sister, good sir/my lady etc.
-  // Example: "$gmister:lady;"    becomes "<mister/lady>"
-
-  $s = preg_replace ('/\$g ?([^:]+):([^;]+);/i', '<\1/\2>', $s);
-
-  $s = fixHTML ($s);
-  return str_ireplace ('$b', "<br>", $s);
-  } // end of fixQuestText
-
 function simulateQuest ($row)
   {
   global $id, $game_objects, $creatures, $zones, $quests, $spells, $items;
