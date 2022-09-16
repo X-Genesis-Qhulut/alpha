@@ -1023,7 +1023,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
       echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' >\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
-      echo "  <title>$location</title>\n";
+      echo "  <title>$location (click to copy)</title>\n";
       echo "</svg></div>\n";
 
       } // end of if we have a mapName
@@ -1413,8 +1413,11 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
   $searchURI = makeSearchURI (true);
 
   $funcName = getFunctionName ($func);
+  $scheme = $_SERVER['REQUEST_SCHEME'];
+  if (!$scheme)
+    $scheme = 'https';
 
-  $fallbackPage = fixHTML ($_SERVER['REQUEST_SCHEME'] . ':' . $_SERVER['SCRIPT_NAME']);
+  $fallbackPage = $scheme . ':' . fixHTML ($_SERVER['SCRIPT_NAME']);
 
   echo "
   <!-- PAGE CONTAINER-->
@@ -1893,7 +1896,7 @@ function loot_item_compare ($a, $b)
   global $items;
   if ($a ['ChanceOrQuestChance'] == $b ['ChanceOrQuestChance'])
     return $items [$a ['item']] <=> $items [$b ['item']];
-  return - ($a ['ChanceOrQuestChance'] <=> $b ['ChanceOrQuestChance']);
+  return - (abs ($a ['ChanceOrQuestChance']) <=> abs ($b ['ChanceOrQuestChance']));
   } // end of loot_item_compare
 
 function reference_item_compare ($a, $b)

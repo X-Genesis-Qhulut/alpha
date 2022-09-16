@@ -367,7 +367,7 @@ function creatureQuestLoot ($info)
                             array ('i', &$loot_id));
 
   $count = count ($results);
-  usort($results, 'item_compare');
+  usort($results, 'loot_item_compare');
 
   listItems ('Quest item loot', 'alpha_world.creature_loot_template', $count, $results,
     function ($row) use ($items)
