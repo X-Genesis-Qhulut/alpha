@@ -104,3 +104,12 @@ function modelPage (event)
 
   return false
   } // end of modelPage
+
+function goBack (pageType)
+  {
+  if (window.history.length > 1)
+    window.history.go(-1)
+  else
+    window.location.href = pageType
+  return false;
+  }

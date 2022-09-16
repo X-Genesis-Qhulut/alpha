@@ -55,7 +55,6 @@ function creatureTopLeft ($info)
       ";
 
 
-      echo "</img>\n";
     } // end of for all 4 possible display IDs
 
 $count = getCount ($row, 'display_id', 4);
@@ -227,14 +226,13 @@ function creatureSpells ($info)
 
   comment ('SPELLS THEY CAST');
 
-  startElementInformation ('Spells they cast', CREATURE_SPELLS, true);
- // echo "<div class='row-card-container'>\n";
-
   if ($row ['spell_list_id'])
     {
     $spellListRow = dbQueryOneParam ("SELECT * FROM ".CREATURE_SPELLS." WHERE entry = ?", array ('i', &$row ['spell_list_id']));
     if ($spellListRow)
       {
+
+      $results = array ();
 
       for ($i = 1; $i <= 8; $i++)
         {
@@ -261,16 +259,21 @@ function creatureSpells ($info)
           if ($spellListRow ["scriptId_$i"])
             $details .= "Script ID: "  . $spellListRow ["scriptId_$i"] . "\n";
 
-          listThing ($spells, $spellListRow ["spellId_$i"], 'show_spell', '', '', $details);
+          $results [] = array ( 'ID' => $spellListRow ["spellId_$i"], 'details' => $details );
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
 
       } // if we found the spell list
 
+    listItems ('Spells they cast', 'alpha_world.creature_spells', count ($results), $results,
+      function ($row) use ($spells)
+        {
+        listThing ($spells, $row ['ID'], 'show_spell', '', '', $row ['details']);
+        } // end listing function
+        );
+
     } // end of if they had a spell_list_id
 
-//  endDiv ('row-card-container');
-  endElementInformation ();
 
 } // end of creatureSpells
 
@@ -533,7 +536,7 @@ function creatureDetails ($info)
       $listedItemsCount = 0;
 
       if ($row ['spell_list_id'])
-        middleDetails ($info, 'creatureSpells');
+        creatureSpells ($info);
       creatureVendorItems ($info);
       creatureTrainer ($info);
       creatureQuestLoot ($info);

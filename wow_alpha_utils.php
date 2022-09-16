@@ -1020,12 +1020,11 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       $mapy -= $halfMapDotSize;
 
       $location = "$x $y $z $map";
-      echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'
-            onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)'
-            onclick='copyToClipboard (\"$location\")' >\n";
+      echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
+      echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' >\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
       echo "  <title>$location</title>\n";
-      echo "</svg>\n";
+      echo "</svg></div>\n";
 
       } // end of if we have a mapName
 
@@ -1415,6 +1414,7 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
 
   $funcName = getFunctionName ($func);
 
+  $searchForm = fixHTML ($_SERVER['REQUEST_SCHEME'] . ':' . $_SERVER['SCRIPT_NAME']);
 
   echo "
   <!-- PAGE CONTAINER-->
@@ -1424,7 +1424,7 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
     <div class='page-title'>
       <div>
         <button class='page-title__goback'>
-          <i class='fas fa-angle-left' onclick='window.history.go(-1); return false;' ></i>
+          <i class='fas fa-angle-left' onclick='goBack(\"$searchForm\")' ></i>
         </button>";
     if ($name)
       echo "
