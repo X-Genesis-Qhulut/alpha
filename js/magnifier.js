@@ -50,21 +50,20 @@ function onMouseMoveImg(e) {
 // When mouse hover a point, we display magnifier
 function onMouseEnterPoint(e) {
   // if magnifier is already open and point is in magnfier radius, we dont do anything
-  if (
-    _checkIfPointIsInMagnifier(e.target) &&
-    magnifier.style.display != "none"
-  ) {
+
+  const svg = e.target.childNodes[1];
+  if (_checkIfPointIsInMagnifier(svg) && magnifier.style.display != "none") {
     return;
   }
 
   _resetModifiedSpawnPoints();
   magnifier.style.display = "block";
   e.target.style.zIndex = "1001";
-  _alignMagnifierWithPoint(e);
+  _alignMagnifierWithPoint(svg);
 
   for (let point of spawnPoints) {
-    if (!point.isEqualNode(e.target) && _checkIfPointIsInMagnifier(point)) {
-      _correctMagnifiedPointPosition(e.target, point);
+    if (!point.isEqualNode(svg) && _checkIfPointIsInMagnifier(point)) {
+      _correctMagnifiedPointPosition(svg, point);
     }
   }
 }
@@ -91,11 +90,11 @@ function _updateMagnifierPosition() {
 }
 
 // When user hover a point, magnifier will align its center with it
-function _alignMagnifierWithPoint(e) {
+function _alignMagnifierWithPoint(point) {
   const { width, height } = actualMapInUse.target;
   const widthToAdd = _calculateWidthToAdd();
-  magnifierX = _domValueToInt(e.target.style.left) + widthToAdd;
-  magnifierY = _domValueToInt(e.target.style.top);
+  magnifierX = _domValueToInt(point.style.left) + widthToAdd;
+  magnifierY = _domValueToInt(point.style.top);
   _updateMagnifierPosition();
 }
 

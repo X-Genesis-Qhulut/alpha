@@ -107,7 +107,7 @@ a {
   }
   100% {
     opacity: 1;
-    transform: scale(1.03);
+    transform: scale(0.99);
   }
 }
 @keyframes float {
@@ -127,7 +127,7 @@ a {
 }
 .menu-bar-logo:hover {
   transition: all 500ms;
-  animation: shinescale 2s ease-in-out infinite;
+  animation: shinescale 2s normal ease infinite;
 }
 @media screen and (max-width: 700px) {
   .menu-bar-logo {

@@ -8,7 +8,7 @@
 
   &:hover {
     transition: all 500ms;
-    animation: shinescale 2s ease-in-out infinite;
+    animation: shinescale 2s normal ease infinite;
   }
 
   @include mobile-design {
