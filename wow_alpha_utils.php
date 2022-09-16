@@ -1414,7 +1414,7 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
 
   $funcName = getFunctionName ($func);
 
-  $searchForm = fixHTML ($_SERVER['REQUEST_SCHEME'] . ':' . $_SERVER['SCRIPT_NAME']);
+  $fallbackPage = fixHTML ($_SERVER['REQUEST_SCHEME'] . ':' . $_SERVER['SCRIPT_NAME']);
 
   echo "
   <!-- PAGE CONTAINER-->
@@ -1424,7 +1424,7 @@ function pageContent ($userInfo, $pageType, $name, $goback, $func, $table)
     <div class='page-title'>
       <div>
         <button class='page-title__goback'>
-          <i class='fas fa-angle-left' onclick='goBack(\"$searchForm\")' ></i>
+          <i class='fas fa-angle-left' onclick='goBack(\"$fallbackPage\")' ></i>
         </button>";
     if ($name)
       echo "
