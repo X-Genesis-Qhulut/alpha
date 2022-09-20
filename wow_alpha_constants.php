@@ -25,44 +25,51 @@ function lwr ($s)
   return $s;
   } // end of lwr
 
-define ('APPLIED_UPDATES_DBC',          '`' . DBC_DBNAME.   '`.' . lwr ('applied_updates'));
-define ('APPLIED_UPDATES_WORLD',        '`' . WORLD_DBNAME. '`.' . lwr ('applied_updates'));
-define ('CREATURE_LOOT_TEMPLATE',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_loot_template'));
-define ('CREATURE_QUEST_FINISHER',      '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_finisher'));
-define ('CREATURE_QUEST_STARTER',       '`' . WORLD_DBNAME. '`.' . lwr ('creature_quest_starter'));
-define ('CREATURE_SPELLS',              '`' . WORLD_DBNAME. '`.' . lwr ('creature_spells'));
-define ('CREATURE_TEMPLATE',            '`' . WORLD_DBNAME. '`.' . lwr ('creature_template'));
-define ('CREATURE_EQUIP_TEMPLATE',      '`' . WORLD_DBNAME. '`.' . lwr ('creature_equip_template'));
-define ('FACTION',                      '`' . DBC_DBNAME  . '`.' . lwr ('Faction'));
-define ('FACTIONTEMPLATE',              '`' . DBC_DBNAME  . '`.' . lwr ('FactionTemplate'));
-define ('GAMEOBJECT_QUESTRELATION',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_questrelation'));
-define ('GAMEOBJECT_INVOLVEDRELATION',  '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_involvedrelation'));
-define ('GAMEOBJECT_TEMPLATE',          '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_template'));
-define ('GAMEOBJECT_LOOT_TEMPLATE',     '`' . WORLD_DBNAME. '`.' . lwr ('gameobject_loot_template'));
-define ('ITEM_TEMPLATE',                '`' . WORLD_DBNAME. '`.' . lwr ('item_template'));
-define ('ITEMDISPLAYINFO',              '`' . DBC_DBNAME  . '`.' . lwr ('ItemDisplayInfo'));
-define ('MAP',                          '`' . DBC_DBNAME  . '`.' . lwr ('Map'));
-define ('NPC_VENDOR',                   '`' . WORLD_DBNAME. '`.' . lwr ('npc_vendor'));
-define ('PAGE_TEXT',                    '`' . WORLD_DBNAME. '`.' . lwr ('page_text'));
-define ('PICKPOCKETING_LOOT_TEMPLATE',  '`' . WORLD_DBNAME. '`.' . lwr ('pickpocketing_loot_template'));
-define ('SKINNING_LOOT_TEMPLATE',       '`' . WORLD_DBNAME. '`.' . lwr ('skinning_loot_template'));
-define ('QUEST_TEMPLATE',               '`' . WORLD_DBNAME. '`.' . lwr ('quest_template'));
-define ('REFERENCE_LOOT_TEMPLATE',      '`' . WORLD_DBNAME. '`.' . lwr ('reference_loot_template'));
-define ('SKILLLINE',                    '`' . DBC_DBNAME  . '`.' . lwr ('SkillLine'));
-define ('SPAWNS_CREATURES',             '`' . WORLD_DBNAME. '`.' . lwr ('spawns_creatures'));
-define ('SPAWNS_GAMEOBJECTS',           '`' . WORLD_DBNAME. '`.' . lwr ('spawns_gameobjects'));
-define ('SPELL',                        '`' . DBC_DBNAME  . '`.' . lwr ('Spell'));
-define ('SPELLICON',                    '`' . DBC_DBNAME  . '`.' . lwr ('SpellIcon'));
-define ('SPELLCASTTIMES',               '`' . DBC_DBNAME  . '`.' . lwr ('SpellCastTimes'));
-define ('SPELLDURATION',                '`' . DBC_DBNAME  . '`.' . lwr ('SpellDuration'));
-define ('SPELLRANGE',                   '`' . DBC_DBNAME  . '`.' . lwr ('SpellRange'));
-define ('SPELLVISUAL',                  '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisual'));
-define ('SPELLVISUALKIT',               '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisualKit'));
-define ('SPELLVISUALANIMNAME',          '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisualAnimName'));
-define ('SPELLVISUALEFFECTNAME',        '`' . DBC_DBNAME  . '`.' . lwr ('SpellVisualEffectName'));
-define ('TRAINER_TEMPLATE',             '`' . WORLD_DBNAME. '`.' . lwr ('trainer_template'));
-define ('WORLDMAPAREA',                 '`' . DBC_DBNAME  . '`.' . lwr ('WorldMapArea'));
-define ('WORLDPORTS',                   '`' . WORLD_DBNAME. '`.' . lwr ('worldports'));
+// these database names will be substituted below when doing queries
+
+define ('LIVE_DBC_DBNAME',   'alpha_dbc');
+define ('LIVE_WORLD_DBNAME', 'alpha_world');
+
+// table names as used on the live server (eg. `alpha_world`.creature_loot_template)
+
+define ('APPLIED_UPDATES_DBC',          '`' . LIVE_DBC_DBNAME.   '`.' . lwr ('applied_updates'));
+define ('APPLIED_UPDATES_WORLD',        '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('applied_updates'));
+define ('CREATURE_LOOT_TEMPLATE',       '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_loot_template'));
+define ('CREATURE_QUEST_FINISHER',      '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_quest_finisher'));
+define ('CREATURE_QUEST_STARTER',       '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_quest_starter'));
+define ('CREATURE_SPELLS',              '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_spells'));
+define ('CREATURE_TEMPLATE',            '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_template'));
+define ('CREATURE_EQUIP_TEMPLATE',      '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_equip_template'));
+define ('FACTION',                      '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('Faction'));
+define ('FACTIONTEMPLATE',              '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('FactionTemplate'));
+define ('GAMEOBJECT_QUEST_STARTER',     '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_quest_starter'));
+define ('GAMEOBJECT_QUEST_FINISHER',    '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_quest_finisher'));
+define ('GAMEOBJECT_TEMPLATE',          '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_template'));
+define ('GAMEOBJECT_LOOT_TEMPLATE',     '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_loot_template'));
+define ('ITEM_TEMPLATE',                '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('item_template'));
+define ('ITEMDISPLAYINFO',              '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('ItemDisplayInfo'));
+define ('MAP',                          '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('Map'));
+define ('NPC_VENDOR',                   '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('npc_vendor'));
+define ('PAGE_TEXT',                    '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('page_text'));
+define ('PICKPOCKETING_LOOT_TEMPLATE',  '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('pickpocketing_loot_template'));
+define ('SKINNING_LOOT_TEMPLATE',       '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('skinning_loot_template'));
+define ('QUEST_TEMPLATE',               '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('quest_template'));
+define ('REFERENCE_LOOT_TEMPLATE',      '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('reference_loot_template'));
+define ('SKILLLINE',                    '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SkillLine'));
+define ('SPAWNS_CREATURES',             '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('spawns_creatures'));
+define ('SPAWNS_GAMEOBJECTS',           '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('spawns_gameobjects'));
+define ('SPELL',                        '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('Spell'));
+define ('SPELLICON',                    '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellIcon'));
+define ('SPELLCASTTIMES',               '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellCastTimes'));
+define ('SPELLDURATION',                '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellDuration'));
+define ('SPELLRANGE',                   '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellRange'));
+define ('SPELLVISUAL',                  '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellVisual'));
+define ('SPELLVISUALKIT',               '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellVisualKit'));
+define ('SPELLVISUALANIMNAME',          '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellVisualAnimName'));
+define ('SPELLVISUALEFFECTNAME',        '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('SpellVisualEffectName'));
+define ('TRAINER_TEMPLATE',             '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('trainer_template'));
+define ('WORLDMAPAREA',                 '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('WorldMapArea'));
+define ('WORLDPORTS',                   '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('worldports'));
 
 // for drawing spawn points on the map
 define ('MAP_DOT_SIZE', 8); // pixels

@@ -20,7 +20,7 @@ function mapDetails ($info)
       global $id;
       $extras = $info ['extras'];
       comment ('MAP DETAILS');
-      showOneThing (MAP, 'alpha_dbc.map', 'ID', $id, "Map", "Directory",  $extras);
+      showOneThing (MAP, 'ID', $id, "Map", "Directory",  $extras);
       });
   } // end of mapDetails
 

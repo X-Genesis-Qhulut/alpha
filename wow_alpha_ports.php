@@ -14,7 +14,7 @@ function portTopLeft ($info)
   global $id;
       $extras = $info ['extras'];
       comment ('PORT DETAILS');
-        showOneThing (WORLDPORTS, 'alpha_world.worldports', 'entry', $id, "World Port", "name", $extras);
+        showOneThing (WORLDPORTS, 'entry', $id, "World Port", "name", $extras);
 
   } // end of portTopLeft
 
@@ -23,7 +23,7 @@ function portTopRight ($info)
   global $id;
   $row = $info ['row'];
 
-  showSpawnPoints (array ($row), 'Teleport location', 'alpha_world.worldports',
+  showSpawnPoints (array ($row), 'Teleport location', WORLDPORTS,
                     'x', 'y', 'z', 'map');
 
   } // end of portTopRight

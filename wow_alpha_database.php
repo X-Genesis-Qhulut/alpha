@@ -18,14 +18,22 @@ function GetSQLcount ($query, $select = "SELECT count(*) FROM ")
   return ($count);
   } // end of GetSQLcount
 
+// escape SQL queries appropriately
 function fixsql ($sql)
   {
   global $dblink;
-
   return mysqli_real_escape_string ($dblink, $sql);
   } // end of fixsql
 
+function fixDBname ($sql)
+  {
+  // fix up database name
 
+  $sql = str_replace ('`' . LIVE_DBC_DBNAME   . '`', '`' . DBC_DBNAME   . '`', $sql);
+  $sql = str_replace ('`' . LIVE_WORLD_DBNAME . '`', '`' . WORLD_DBNAME . '`', $sql);
+
+  return $sql;
+  } // end of fixDBname
 
 function showSQLerror ($sql)
   {
@@ -52,6 +60,7 @@ function showSQLerror ($sql)
 function dbQueryOne ($sql)
   {
   global $dblink;
+  $sql = fixDBname ($sql);
 
   $result = mysqli_query ($dblink, $sql);
   // false here means a bad query
@@ -81,6 +90,7 @@ function dbQueryOneParam ($sql, $params)
 function dbUpdate ($sql, $showError = true)
   {
   global $dblink;
+  $sql = fixDBname ($sql);
 
   $result = mysqli_query ($dblink, $sql);
   // false here means a bad query
@@ -99,6 +109,8 @@ function dbUpdate ($sql, $showError = true)
 function dbUpdateParam ($sql, $params, $showError = true)
   {
   global $dblink;
+
+  $sql = fixDBname ($sql);
 
   $stmt = mysqli_prepare ($dblink, $sql);
   // false here means a bad query
@@ -124,6 +136,7 @@ function dbUpdateParam ($sql, $params, $showError = true)
 function dbQuery ($sql)
   {
   global $dblink;
+  $sql = fixDBname ($sql);
 
   $result = mysqli_query ($dblink, $sql);
   // false here means a bad query
@@ -135,6 +148,7 @@ function dbQuery ($sql)
 function dbQueryParam_helper ($sql, $params, $max_rows = -1)
   {
   global $dblink;
+  $sql = fixDBname ($sql);
 
   $stmt = mysqli_prepare ($dblink, $sql);
   // false here means a bad query

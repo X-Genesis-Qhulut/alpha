@@ -16,7 +16,7 @@ function skillDetails ($info)
       global $id;
       $extras = $info ['extras'];
       comment ('MAP DETAILS');
-      showOneThing (SKILLLINE, 'alpha_dbc.skillline', 'ID', $id, "Skill", "DisplayName_enUS",  $extras);
+      showOneThing (SKILLLINE, 'ID', $id, "Skill", "DisplayName_enUS",  $extras);
       });
   } // end of skillDetails
 

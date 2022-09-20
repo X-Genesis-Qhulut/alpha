@@ -100,17 +100,17 @@ function listGameObjectQuests ($id)
   comment ('QUESTS GIVEN');
 
   // what quests they give
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE entry = ?", array ('i', &$id));
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_STARTER." WHERE entry = ?", array ('i', &$id));
 
 /*  I'm not so sure about this now ... The quest should exist, right?
 
-  $results = dbQueryParam ("SELECT T1.* FROM ".GAMEOBJECT_QUESTRELATION." AS T1
+  $results = dbQueryParam ("SELECT T1.* FROM ".GAMEOBJECT_QUEST_STARTER." AS T1
                             INNER JOIN ".QUEST_TEMPLATE." AS T2 ON (T1.quest = T2.entry)
                             WHERE T1.entry = ? AND T2.ignored = 0", array ('i', &$id));
 */
 
 
-  listItems ('Game object starts these quests', 'alpha_world.gameobject_questrelation', count ($results), $results,
+  listItems ('Game object starts these quests', GAMEOBJECT_QUEST_STARTER, count ($results), $results,
     function ($row) use ($quests)
       {
       listThing ($quests, $row ['quest'], 'show_quest');
@@ -121,17 +121,17 @@ function listGameObjectQuests ($id)
   comment ('QUESTS FINISHED');
 
  // what quests they finish
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE entry = ?", array ('i', &$id));
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_FINISHER." WHERE entry = ?", array ('i', &$id));
 
 /*  I'm not so sure about this now ... The quest should exist, right?
 
-  $results = dbQueryParam ("SELECT T1.* FROM ".GAMEOBJECT_INVOLVEDRELATION." AS T1
+  $results = dbQueryParam ("SELECT T1.* FROM ".GAMEOBJECT_QUEST_FINISHER." AS T1
                             INNER JOIN ".QUEST_TEMPLATE." AS T2 ON (T1.quest = T2.entry)
                             WHERE T1.entry = ? AND T2.ignored = 0", array ('i', &$id));
 */
 
 
-  listItems ('Game object finishes these quests', 'alpha_world.gameobject_involvedrelation', count ($results), $results,
+  listItems ('Game object finishes these quests', GAMEOBJECT_QUEST_FINISHER, count ($results), $results,
     function ($row) use ($quests)
       {
       listThing ($quests, $row ['quest'], 'show_quest');
@@ -160,7 +160,7 @@ function showGameObjectLoot ($info)
             ORDER BY ChanceOrQuestChance DESC", array ('i', &$row ['data1']));
 
     usort($lootResults, 'loot_item_compare');
-    listItems ('Gameobject loot', 'alpha_world.gameobject_loot_template', count ($lootResults), $lootResults,
+    listItems ('Game object loot', GAMEOBJECT_LOOT_TEMPLATE, count ($lootResults), $lootResults,
 
     function ($row) use ($items)
       {
@@ -174,43 +174,31 @@ function showGameObjectLoot ($info)
 
 function showGameObjectModel ($row)
 {
+  global $documentRoot, $executionDir;
 
   // ---------------- IMAGE OF GAME OBJECT -----------------
 
-/*
-  if ($row ["display_id$i"])
+  if ($row ["displayId"])
     {
-    $display_id = $row ["display_id$i"];
-    $icon = $display_id . '.webp';
-    if (!file_exists ("$documentRoot$executionDir/creatures/$icon"))
+    $display_id = $row ['displayId'];
+    $model = $display_id . '.webp';
+    if (!file_exists ("$documentRoot$executionDir/game_objects/$model"))
       {
-      comment ("$documentRoot$executionDir/creatures/$icon   NOT ON FILE");
-      $icon = 'missing_creature.png';
+      comment ("$documentRoot$executionDir/game_objects/$model   NOT ON FILE");
+      $model = 'missing_game_object.png';
       }
 
     echo "
       <!-- MODEL DISPLAY ID -->
       <img
         class='model-display'
-        src='creatures/$icon'
-        alt='Creature model for display ID $display_id'
+        src='game_objects/$model'
+        alt='Game object model for display ID $display_id'
       />
       <!-- END MODEL DISPLAY ID -->
       ";
     } // end of if non-zero display ID
 
-*/
-
-  $icon = 'missing_creature.png';
-   echo "
-      <!-- MODEL DISPLAY ID -->
-      <img
-        class='model-display'
-        src='creatures/$icon'
-        alt='Creature model'
-      />
-      <!-- END MODEL DISPLAY ID -->
-      ";
 
 } // end of showGameObjectModel
 
@@ -225,7 +213,7 @@ function gameobjectTopLeft ($info)
   showGameObjectModel ($row);
 
   comment ('SHORT LISTING OF FIELDS');
-  showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry',
+  showOneThing (GAMEOBJECT_TEMPLATE, 'entry',
               $id, "", "name", $extras, $limit);
 
 } // end of gameobjectTopLeft
@@ -257,7 +245,7 @@ function gameobjectTopRight ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
         WHERE $where AND spawn_map = 0", $param) ;
 
-  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_creatures',
+  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', SPAWNS_GAMEOBJECTS,
                 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
   comment ('KALIMDOR');
@@ -266,7 +254,7 @@ function gameobjectTopRight ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
         WHERE $where AND spawn_map = 1", $param);
 
-  showSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_creatures',
+  showSpawnPoints ($results, 'Spawn points - Kalimdor', SPAWNS_GAMEOBJECTS,
                 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
 
@@ -297,7 +285,7 @@ function gameobjectDetails ($info)
   bottomSection ($info, function ($info) use ($id)
       {
       $extras = $info ['extras'];
-      showOneThing (GAMEOBJECT_TEMPLATE, 'alpha_world.gameobject_template', 'entry', $id,
+      showOneThing (GAMEOBJECT_TEMPLATE, 'entry', $id,
                   "Database entry for game object", "name", $extras);
       });
 

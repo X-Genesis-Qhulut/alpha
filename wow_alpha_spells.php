@@ -250,7 +250,7 @@ function spellTrainers ()
                             array ('i', &$id));
 
 
-  listItems ('NPCs that train this spell', 'alpha_world.trainer_template', count ($results), $results,
+  listItems ('NPCs that train this spell', TRAINER_TEMPLATE, count ($results), $results,
     function ($row) use ($creatures)
       {
       listThing ($creatures, $row ['entry'], 'show_creature');
@@ -269,7 +269,7 @@ function spellItemCasters ()
                             array ('iiiii', &$id, &$id, &$id, &$id, &$id));
 
 
-  listItems ('Items that cast this spell', 'alpha_world.item_template', count ($results), $results,
+  listItems ('Items that cast this spell', ITEM_TEMPLATE, count ($results), $results,
     function ($row) use ($items)
       {
       listThing ($items, $row ['entry'], 'show_item');
@@ -304,7 +304,7 @@ function spellCasters ()
           INNER JOIN $creature_template ON ($creature_template.spell_list_id = $creature_spells.entry)
           WHERE ($where) AND $creature_template.entry <= " . MAX_CREATURE, $params);
 
-  listItems ('NPCs that cast this spell', 'alpha_world.creature_spells', count ($results), $results,
+  listItems ('NPCs that cast this spell', CREATURE_SPELLS, count ($results), $results,
     function ($row) use ($creatures)
       {
       listThing ($creatures, $row ['npc'], 'show_creature');
@@ -327,7 +327,7 @@ function spellTopLeft ($info)
   echo "<p></p>\n";
 
   comment ('SHORT LISTING OF FIELDS');
-  showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "", "Name_enUS", $extras, $limit);
+  showOneThing (SPELL, 'ID', $id, "", "Name_enUS", $extras, $limit);
 
 } // end of spellTopLeft
 
@@ -369,7 +369,7 @@ function spellDetails ($info)
       {
       $extras = $info ['extras'];
       comment ('SPELL DETAILS');
-      showOneThing (SPELL, 'alpha_dbc.spell', 'ID', $id, "Spell details", "Name_enUS", $extras);
+      showOneThing (SPELL, 'ID', $id, "Spell details", "Name_enUS", $extras);
       });
 
   } // end of spellDetails

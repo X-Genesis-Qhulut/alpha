@@ -727,7 +727,7 @@ function setUpSearch ($description, $sortFields, $headings)
 
 // shows all fields from any table
 // $limit is a table of the only keys we are interested in
-function showOneThing ($table, $table_display_name, $key, $id, $description, $nameField, $expand, $limit = false)
+function showOneThing ($table, $key, $id, $description, $nameField, $expand, $limit = false)
   {
   $info = dbQueryParam ("SHOW COLUMNS FROM $table", array ());
 
@@ -737,22 +737,6 @@ function showOneThing ($table, $table_display_name, $key, $id, $description, $na
     ShowWarning ("$description $id is not on the database");
     return;
     }
-
-/*
-  if ($nameField)
-    $name = " — " . fixHTML ($row [$nameField]);
-  else
-    $name = '';
-
-
-  echo "<h1 class='one_item'>" . fixHTML ($description) . " $id$name</h1>\n";
-  echo "<h2 class='one_item_table'>Table: " . fixHTML ($table_display_name) . "</h2>\n";
-
-
-  echo "<div class='one_thing_container'>\n";
-  echo "<div class='one_thing_section'>\n";
-*/
-
 
   if ($description)
     boxTitle ($description);
@@ -942,7 +926,7 @@ function convertGold ($amount)
   return $result;
 } // end of convertGold
 
-function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName, $mName)
+function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName, $mName, $mTypeName = false)
 {
   global $maps;
 
@@ -999,6 +983,18 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
     $y = $spawnRow [$yName];
     $z = $spawnRow [$zName];
     $map = $spawnRow [$mName];
+    $spawn_id = $spawnRow ['spawn_id'];
+    if ($mTypeName)
+      {
+      $movement_type = $spawnRow [$mTypeName];
+      if ($movement_type == 1)  // random
+        $wander_distance = ': ' . $spawnRow ['wander_distance'] . ' yards';
+      else
+        $wander_distance = '';
+      $movementType = ' [' . expandSimple (MOVEMENT_TYPE, $movement_type, false) . "$wander_distance]";
+      }
+    else
+      $movementType = '';
 
     if ($mapName)
       {
@@ -1023,7 +1019,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
       echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' >\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
-      echo "  <title>$location (click to copy)</title>\n";
+      echo "  <title>$location (click to copy)\nSpawn ID: $spawn_id. $movementType</title>\n";
       echo "</svg></div>\n";
 
       } // end of if we have a mapName
@@ -1055,7 +1051,7 @@ function endElementInformation ()
   endDiv ('element-information [element-information--independant]');
   } // end of endElementInformation
 
-function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName)
+function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName, $mTypeName = false)
   {
   global $maps;
   $count = count ($results);
@@ -1072,15 +1068,27 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     $y = $row [$yName];
     $z = $row [$zName];
     $map = $row [$mName];
+    $spawn_id = $row ['spawn_id'];
+    if ($mTypeName)
+      {
+      $movement_type = $row [$mTypeName];
+      if ($movement_type == 1)  // random
+        $wander_distance = ': ' . $row ['wander_distance'] . ' yards';
+      else
+        $wander_distance = '';
+      $movementType = ' [' . expandSimple (MOVEMENT_TYPE, $movement_type, false) . "$wander_distance]";
+      }
+    else
+      $movementType = '';
 
     if ($map < 2)
-       $description = "$x $y $z $map";
+       $description = "$x $y $z $map$movementType";
     else
        $description = "$x $y $z $map (" . fixHTML ($maps [$map]) . ")";
     echo "
     <div  class='row-card'>
     <span class='row-card__head'><i class='fas fa-globe'></i></span>
-    <span class='row-card__content'>$description</span>
+    <span class='row-card__content' title='Spawn ID: $spawn_id'>$description</span>
     <span class='row-card__extra'>
      <button  data-location='$x $y $z $map' onclick='copyContents(event)'  title='Click to copy spawn point to clipboard' >
      <i class='fas fa-copy'></i>

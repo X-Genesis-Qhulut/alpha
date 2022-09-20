@@ -171,7 +171,7 @@ function showItemVendors ()
  // who sells it
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE item = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
 
-  listItems ('Sold by', 'alpha_world.npc_vendor', count ($results), $results,
+  listItems ('Sold by', NPC_VENDOR, count ($results), $results,
     function ($row) use ($creatures)
       {
       $maxcount = $row ['maxcount'];
@@ -210,7 +210,7 @@ function showItemDrops ()
 
   // TODO: fix this - counts will be wrong
 
-  listItems ('Quest item dropped by', 'alpha_world.creature_loot_template',
+  listItems ('Quest item dropped by', CREATURE_LOOT_TEMPLATE,
             $count, $results,
     function ($row) use ($creatures)
       {
@@ -222,7 +222,7 @@ function showItemDrops ()
 
   $count = count($results) - $count;
 
-  listItems ('Item dropped by', 'alpha_world.creature_loot_template',
+  listItems ('Item dropped by', CREATURE_LOOT_TEMPLATE,
               $count, $results,
     function ($row) use ($creatures)
       {
@@ -249,7 +249,7 @@ function showItemDrops ()
           AND $creature_template.entry <= " . MAX_CREATURE . "
           ORDER BY $creature_template.name", array ('i', &$id));
 
-  listItems ('NPCs that drop this as reference loot', 'alpha_world.reference_loot_template',
+  listItems ('NPCs that drop this as reference loot', REFERENCE_LOOT_TEMPLATE,
              count($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
@@ -282,7 +282,7 @@ function showItemSkinningLoot ()
                             ORDER BY name", array ('i', &$id));
 
 
-   listItems ('Item can be skinned from', 'alpha_world.skinning_loot_template',
+   listItems ('Item can be skinned from', SKINNING_LOOT_TEMPLATE,
             count ($lootResults), $lootResults,
     function ($row) use ($creatures)
       {
@@ -315,7 +315,7 @@ function showCreatureEquips ()
 
   $results = dbQueryParam ("SELECT entry AS npc FROM ".CREATURE_EQUIP_TEMPLATE." WHERE ($fieldList) AND entry <= " . MAX_CREATURE, $params);
 
-  listItems ('Item is equipped by', 'alpha_world.skinning_loot_template',
+  listItems ('Item is equipped by', CREATURE_EQUIP_TEMPLATE,
           count ($results), $results,
   function ($row) use ($creatures)
     {
@@ -344,7 +344,7 @@ function showItemSpellReagents ()
 
   $results = dbQueryParam ("SELECT ID AS spell FROM ".SPELL." WHERE ($fieldList)", $params);
 
- listItems ('Item is a reagent for spell', 'alpha_dbc.Spell',
+ listItems ('Item is a reagent for spell', SPELL,
           count ($results), $results,
   function ($row) use ($spells)
     {
@@ -374,7 +374,7 @@ function showItemSpellProduced ()
 
   $results = dbQueryParam ("SELECT ID AS spell FROM ".SPELL." WHERE ($fieldList)", $params);
 
- listItems ('Item is produced by spell', 'alpha_dbc.Spell',
+ listItems ('Item is produced by spell', SPELL,
           count ($results), $results,
   function ($row) use ($spells)
     {
@@ -405,7 +405,7 @@ function showItemQuestRequirement ()
 
   $results = dbQueryParam ("SELECT entry AS quest FROM ".QUEST_TEMPLATE." WHERE ($fieldList)", $params);
 
-  listItems ('Item is a quest requirement', 'alpha_world.quest_required_items',
+  listItems ('Item is a quest requirement', QUEST_TEMPLATE,
           count ($results), $results,
   function ($row) use ($quests)
     {
@@ -442,7 +442,7 @@ function showItemQuestReward ()
 
   $results = dbQueryParam ("SELECT entry AS quest FROM ".QUEST_TEMPLATE." WHERE ($fieldList)", $params);
 
- listItems ('Item is a quest reward', 'alpha_world.quest_reward_items / alpha_world.quest_reward_item_choices',
+ listItems ('Item is a quest reward', QUEST_TEMPLATE,
           count ($results), $results,
   function ($row) use ($quests)
     {
@@ -460,7 +460,7 @@ function showItemQuestStart ()
 
   $results = dbQueryParam ("SELECT start_quest AS quest FROM ".ITEM_TEMPLATE." WHERE entry = ? AND start_quest > 0", array ('i', &$id));
 
- listItems ('Item starts a quest', 'alpha_world.quest_template / alpha_world.quest_reward_item_choices',
+ listItems ('Item starts a quest', ITEM_TEMPLATE,
           count ($results), $results,
   function ($row) use ($quests)
     {
@@ -511,7 +511,7 @@ function itemTopLeft ($info)
   echo "<p></p>\n";
 
   comment ('SHORT LISTING OF FIELDS');
-  showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry',
+  showOneThing (ITEM_TEMPLATE, 'entry',
               $id, "", "name", $extras, $limit);
 
 } // end of itemTopLeft
@@ -563,7 +563,7 @@ function itemDetails ($info)
       {
       $extras = $info ['extras'];
       comment ('ITEM DETAILS');
-      showOneThing (ITEM_TEMPLATE, 'alpha_world.item_template', 'entry',
+      showOneThing (ITEM_TEMPLATE, 'entry',
                     $id, "Item details", "name", $extras);
       });
 

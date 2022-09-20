@@ -545,8 +545,8 @@ function showMissingGameobjectQuestsDetails ()
   $gameobject_template = GAMEOBJECT_TEMPLATE;
 
   $tables = array (
-   GAMEOBJECT_QUESTRELATION,
-   GAMEOBJECT_INVOLVEDRELATION
+   GAMEOBJECT_QUEST_STARTER,
+   GAMEOBJECT_QUEST_FINISHER
   );
 
   foreach ($tables as $table)

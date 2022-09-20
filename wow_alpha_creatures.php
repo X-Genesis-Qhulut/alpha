@@ -98,7 +98,7 @@ if ($count > 1)
   endDiv ('caroussel-model');
 
   comment ('SHORT LISTING OF FIELDS');
-  showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry',
+  showOneThing (CREATURE_TEMPLATE, 'entry',
               $id, "", "name", $extras, $limit);
 
 } // end of creatureTopLeft
@@ -120,8 +120,8 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 0", $param) ;
 
-  $count += listSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', 'alpha_world.spawns_creatures',
-                'position_x', 'position_y', 'position_z', 'map');
+  $count += listSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
+                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('SPAWN POINTS - KALIMDOR');
 
@@ -129,8 +129,8 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 1", $param);
 
-  $count += listSpawnPoints ($results, 'Spawn points — Kalimdor', 'alpha_world.spawns_creatures',
-                'position_x', 'position_y', 'position_z', 'map');
+  $count += listSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
+                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
   comment ('SPAWN POINTS - OTHER');
@@ -139,8 +139,8 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map > 1", $param);
 
-  $count += listSpawnPoints ($results, 'Spawn points — Instances', 'alpha_world.spawns_creatures',
-                'position_x', 'position_y', 'position_z', 'map');
+  $count += listSpawnPoints ($results, 'Spawn points — Instances', SPAWNS_CREATURES,
+                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
   if (!$count)
@@ -157,7 +157,7 @@ function creatureTopMiddle ($info)
   // what quests they give
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE entry = ?", array ('i', &$id));
 
-  listItems ('NPC starts these quests', 'alpha_world.creature_quest_starter', count ($results), $results,
+  listItems ('NPC starts these quests', CREATURE_QUEST_STARTER, count ($results), $results,
     function ($row) use ($quests)
       {
       listThing ($quests, $row ['quest'], 'show_quest');
@@ -169,7 +169,7 @@ function creatureTopMiddle ($info)
   // what quests they finish
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE entry = ?", array ('i', &$id));
 
-  listItems ('NPC finishes these quests', 'alpha_world.creature_quest_finisher', count ($results), $results,
+  listItems ('NPC finishes these quests', CREATURE_QUEST_FINISHER, count ($results), $results,
     function ($row) use ($quests)
       {
       listThing ($quests, $row ['quest'], 'show_quest');
@@ -199,8 +199,8 @@ function creatureTopRight ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 0", $param) ;
 
-  showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', 'alpha_world.spawns_creatures',
-                'position_x', 'position_y', 'position_z', 'map');
+  showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
+                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('KALIMDOR');
 
@@ -208,8 +208,8 @@ function creatureTopRight ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 1", $param);
 
-  showSpawnPoints ($results, 'Spawn points — Kalimdor', 'alpha_world.spawns_creatures',
-                'position_x', 'position_y', 'position_z', 'map');
+  showSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
+                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
   comment ('END MAP SPAWN POINTS');
@@ -265,7 +265,7 @@ function creatureSpells ($info)
 
       } // if we found the spell list
 
-    listItems ('Spells they cast', 'alpha_world.creature_spells', count ($results), $results,
+    listItems ('Spells they cast', CREATURE_SPELLS, count ($results), $results,
       function ($row) use ($spells)
         {
         listThing ($spells, $row ['ID'], 'show_spell', '', '', $row ['details']);
@@ -288,7 +288,7 @@ function creatureVendorItems ($info)
   $results = dbQueryParam ("SELECT * FROM ".NPC_VENDOR." WHERE entry = ?", array ('i', &$id));
   usort($results, 'item_compare');
 
-  listItems ('NPC sells', 'alpha_world.npc_vendor', count ($results), $results,
+  listItems ('NPC sells', NPC_VENDOR, count ($results), $results,
     function ($row) use ($items)
       {
       $maxcount = $row ['maxcount'];
@@ -316,7 +316,7 @@ function creatureEquippedItems ($info)
 
   usort($totalResults, 'item_compare');
 
-  listItems ('NPC equips', 'alpha_world.creature_equip_template', count ($totalResults), $totalResults,
+  listItems ('NPC equips', CREATURE_EQUIP_TEMPLATE, count ($totalResults), $totalResults,
     function ($row) use ($items)
       {
       listThing ($items, $row ['item'], 'show_item');
@@ -338,7 +338,7 @@ function creatureTrainer ($info)
                             array ('i', &$row ['trainer_id']));
 
   usort($results, 'trainer_spell_compare');
-  listItems ('NPC trains', 'alpha_world.trainer_id', count ($results), $results,
+  listItems ('NPC trains', TRAINER_TEMPLATE, count ($results), $results,
     function ($row) use ($spells)
       {
       listThing ($spells, $row ['playerspell'], 'show_spell');
@@ -369,7 +369,7 @@ function creatureQuestLoot ($info)
   $count = count ($results);
   usort($results, 'loot_item_compare');
 
-  listItems ('Quest item loot', 'alpha_world.creature_loot_template', $count, $results,
+  listItems ('Quest item loot', CREATURE_LOOT_TEMPLATE, $count, $results,
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
@@ -404,7 +404,7 @@ function creatureLoot ($info)
   $count = count ($results);
   usort($results, 'loot_item_compare');
 
-  listItems ('Loot', 'alpha_world.creature_loot_template', $count, $results,
+  listItems ('Loot', CREATURE_LOOT_TEMPLATE, $count, $results,
     function ($row) use ($items)
       {
       listThing ($items, $row ['item'], 'show_item', roundChance ($row ['ChanceOrQuestChance']));
@@ -446,7 +446,7 @@ function creatureReferenceLoot ($info)
 
 
   usort ($lootResults, 'reference_item_compare');  // ordering by loot chance now
-  listItems ('Reference loot', 'alpha_world.reference_loot_template', count ($lootResults), $lootResults,
+  listItems ('Reference loot', REFERENCE_LOOT_TEMPLATE, count ($lootResults), $lootResults,
     function ($row) use ($items)
       {
       $chance = $row ['chance'];
@@ -480,7 +480,7 @@ function creaturePickpocketingLoot ($info)
                                WHERE entry = ?
                                ORDER BY ChanceOrQuestChance DESC", array ('i', &$loot_id));
   usort($lootResults, 'loot_item_compare');
-  listItems ('Pickpocketing loot', 'alpha_world.pickpocketing_loot_template', count ($lootResults), $lootResults,
+  listItems ('Pickpocketing loot', PICKPOCKETING_LOOT_TEMPLATE, count ($lootResults), $lootResults,
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
@@ -506,7 +506,7 @@ function creatureSkinningLoot ($info)
 
   $lootResults = dbQueryParam ("SELECT * FROM ".SKINNING_LOOT_TEMPLATE." WHERE entry = ?", array ('i', &$loot_id));
   usort($lootResults, 'loot_item_compare');
-  listItems ('Skinning loot', 'alpha_world.skinning_loot_template', count ($lootResults), $lootResults,
+  listItems ('Skinning loot', SKINNING_LOOT_TEMPLATE, count ($lootResults), $lootResults,
     function ($row) use ($items)
       {
       $chance = $row ['ChanceOrQuestChance'];
@@ -555,7 +555,7 @@ function creatureDetails ($info)
   bottomSection ($info, function ($info) use ($id)
       {
       $extras = $info ['extras'];
-      showOneThing (CREATURE_TEMPLATE, 'alpha_world.creature_template', 'entry', $id,
+      showOneThing (CREATURE_TEMPLATE, 'entry', $id,
                   "Database entry for NPC", "name", $extras);
       });
 

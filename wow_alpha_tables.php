@@ -15,12 +15,12 @@ function tableDetails ($info)
       {
       global $database, $table;
 
-      if ($database == 'alpha_dbc')
+      if ($database == LIVE_DBC_DBNAME)
         $realDatabase = DBC_DBNAME;
-      elseif ($database == 'alpha_world')
+      elseif ($database == LIVE_WORLD_DBNAME)
         $realDatabase = WORLD_DBNAME;
       else
-        Problem ("Invalid database specified, must be alpha_dbc or alpha_world");
+        Problem ("Invalid database specified, must be " . LIVE_DBC_DBNAME . " or " . LIVE_WORLD_DBNAME);
 
       $td  = function ($s) use (&$row) { tdx ($row  [$s]); };
       $tdr = function ($s) use (&$row) { tdx ($row  [$s], 'tdr'); };
@@ -113,8 +113,8 @@ function showAllTables ($info)
 
   bottomSectionMany ($info, function ($info)
       {
-      showTablesHelper (DBC_DBNAME, "alpha_dbc");
-      showTablesHelper (WORLD_DBNAME, "alpha_world");
+      showTablesHelper (DBC_DBNAME, LIVE_DBC_DBNAME);
+      showTablesHelper (WORLD_DBNAME, LIVE_WORLD_DBNAME);
       });
 } // end of showAllTables
 

@@ -16,7 +16,7 @@ function zoneDetails ($info)
       global $id;
       $extras = $info ['extras'];
       comment ('ZONE DETAILS');
-      showOneThing (WORLDMAPAREA, 'alpha_dbc.worldzonearea', 'ID', $id, "Zone", "AreaName", $extras);
+      showOneThing (WORLDMAPAREA, 'ID', $id, "Zone", "AreaName", $extras);
       });
   } // end of zoneDetails
 

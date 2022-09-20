@@ -34,7 +34,7 @@ function showOneSpellVisual ()
         bottomSection (false, function ($row)
           {
           global $id;
-          showOneThing (SPELLVISUAL, 'alpha_dbc.SpellVisual', 'ID',
+          showOneThing (SPELLVISUAL, 'ID',
                         $id, "Spell Visual", '',  array ());
           });
         },
@@ -113,7 +113,7 @@ function showOneSpellVisualAnimName ()
         bottomSection (false, function ($row)
           {
           global $id;
-          showOneThing (SPELLVISUALANIMNAME, 'alpha_dbc.SpellVisualAnimName', 'ID',
+          showOneThing (SPELLVISUALANIMNAME, 'ID',
                         $id, "Spell Visual Animation", '',  array ());
           });
         },
@@ -186,7 +186,7 @@ function showOneSpellVisualEffectName ()
         bottomSection (false, function ($row)
           {
           global $id;
-          showOneThing (SPELLVISUALEFFECTNAME, 'alpha_dbc.SpellVisualEffectName', 'ID',
+          showOneThing (SPELLVISUALEFFECTNAME, 'ID',
                         $id, "Spell Visual Effect", '',  array ());
           });
         },

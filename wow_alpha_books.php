@@ -63,7 +63,7 @@ function showText ()
 function bookTopLeft ($row)
 {
   global $id, $item, $items;
-  showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "", "", array (),
+  showOneThing (PAGE_TEXT, 'entry', $id, "", "", array (),
                 array ('entry', 'next_page'));
 } // end of bookTopLeft
 
@@ -113,7 +113,7 @@ function bookRelatedItem ($row)
 
   if (count ($results) > 0)
     {
-   listItems ('Items containing this page', 'alpha_world.item_template', count ($results), $results,
+   listItems ('Items containing this page', ITEM_TEMPLATE, count ($results), $results,
       function ($row) use ($items)
         {
         listThing ($items, $row ['item_key'], 'show_item');
@@ -145,7 +145,7 @@ function bookDetails ($row)
 
   bottomSection ($row, function ($row) use ($id)
       {
-      showOneThing (PAGE_TEXT, 'alpha_world.page_text', 'entry', $id, "Database entry for page", "", array ());
+      showOneThing (PAGE_TEXT, 'entry', $id, "Database entry for page", "", array ());
       });
 
   } // end of bookDetails

@@ -155,7 +155,7 @@ function simulateQuest ($row)
    echo "<br><b>Next quest in chain</b>: " . lookupThing ($quests, $row ['NextQuestInChain'], 'show_quest');
 
 
-  echo "</div>\n";    // end of simulated quest box
+  endDiv ('simulate_box quest');
 
 // ===============================================================================================================
 
@@ -169,22 +169,22 @@ function showQuestGivers ()
  // who gives this quest
 
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
-  listItems ('NPCs that start this quest', 'alpha_world.creature_quest_starter', count ($results) , $results,
+  listItems ('NPCs that start this quest', CREATURE_QUEST_STARTER, count ($results) , $results,
     function ($row) use ($creatures)
       {
       listThing ($creatures, $row ['entry'], 'show_creature');
       });
 
   $results = dbQueryParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE start_quest = ? AND ignored = 0", array ('i', &$id));
-  listItems ('Items that start this quest', 'alpha_world.item_template', count ($results) , $results,
+  listItems ('Items that start this quest', ITEM_TEMPLATE, count ($results) , $results,
     function ($row) use ($items)
       {
       listThing ($items, $row ['entry'], 'show_item');
       });
 
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUESTRELATION." WHERE quest = ?", array ('i', &$id));
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
 
-  listItems ('Game objects that start this quest', 'alpha_world.gameobject_questrelation', count ($results) , $results,
+  listItems ('Game objects that start this quest', GAMEOBJECT_QUEST_STARTER, count ($results) , $results,
     function ($row) use ($game_objects)
       {
       listThing ($game_objects, $row ['entry'], 'show_go');
@@ -199,15 +199,15 @@ function showQuestFinishers ()
   // who finishes this quest
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
 
-  listItems ('NPCs that finish this quest', 'alpha_world.creature_quest_finisher', count ($results) , $results,
+  listItems ('NPCs that finish this quest', CREATURE_QUEST_FINISHER, count ($results) , $results,
     function ($row) use ($creatures)
       {
       listThing ($creatures, $row ['entry'], 'show_creature');
       });
 
-  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_INVOLVEDRELATION." WHERE quest = ?", array ('i', &$id));
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
 
-  listItems ('Game objects that finish this quest', 'alpha_world.gameobject_involvedrelation', count ($results) , $results,
+  listItems ('Game objects that finish this quest', GAMEOBJECT_QUEST_FINISHER, count ($results) , $results,
     function ($row) use ($game_objects)
       {
       listThing ($game_objects, $row ['entry'], 'show_go');
@@ -267,7 +267,7 @@ function showQuestChain ()
 
   if (count ($foundQuests) > 1)
     {
-    listItems ('Quest chain', 'alpha_world.quest_template', count ($foundQuests) , $foundQuests,
+    listItems ('Quest chain', QUEST_TEMPLATE, count ($foundQuests) , $foundQuests,
       function ($quest) use ($quests, $id)
         {
         listThing ($quests, $quest, 'show_quest', $quest == $id ? '<- This' : '');
@@ -306,7 +306,7 @@ function questDetails ($info)
   bottomSection ($info, function ($info) use ($id)
       {
       $extras = $info ['extras'];
-      showOneThing (QUEST_TEMPLATE, 'alpha_world.quest_template', 'entry', $id,
+      showOneThing (QUEST_TEMPLATE, 'entry', $id,
                   "Database entry for quest", "Title", $extras);
       });
 
