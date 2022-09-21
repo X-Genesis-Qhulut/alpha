@@ -300,15 +300,145 @@ function questTopMiddle ($info)
   simulateQuest ($row);
   } // end of questTopMiddle
 
+function addCreatureToMapPoints ($which, $color)
+  {
+  global $questMapPoints;
+  global $creatures;
+
+  $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
+           ' AND ignored = 0 ';
+  $param = array ('iiii', &$which, &$which, &$which, &$which);
+
+  $spawnPoints = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES." WHERE $where", $param) ;
+
+  foreach ($spawnPoints as $spawnRow)
+    $questMapPoints [] = array (
+        'id'    => $spawnRow ['spawn_id'],
+        'X'     => $spawnRow ['position_x'],
+        'Y'     => $spawnRow ['position_y'],
+        'Z'     => $spawnRow ['position_z'],
+        'map'   => $spawnRow ['map'],
+        'color' => $color,
+        'name'  => $creatures [$which],
+        );
+  } // end of addCreatureToMapPoints
+
+function gameObjectToMapPoints ($which, $color)
+  {
+  global $questMapPoints;
+  global $game_objects;
+
+  $where = 'spawn_entry = ? AND ignored = 0 ';
+  $param = array ('i', &$which);
+
+  // show spawn points - Eastern Kingdoms
+  $spawnPoints = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS." WHERE $where", $param) ;
+
+  foreach ($spawnPoints as $spawnRow)
+    $questMapPoints [] = array (
+        'id'    => $spawnRow ['spawn_id'],
+        'X'     => $spawnRow ['spawn_positionX'],
+        'Y'     => $spawnRow ['spawn_positionY'],
+        'Z'     => $spawnRow ['spawn_positionZ'],
+        'map'   => $spawnRow ['spawn_map'],
+        'color' => $color,
+        'name'  => $game_objects [$which],
+        );
+
+  } // end of gameObjectToMapPoints
+
+function questTopRight ($info)
+  {
+  global $id;
+  global $questMapPoints;
+
+  // find where the quest giver NPC is spawned
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
+  foreach ($results as $row)
+    {
+    addCreatureToMapPoints ($row ['entry'], 'lightgreen');
+    } // end of quest givers
+
+  // find where the quest giver game object is spawned
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $row)
+    {
+    gameObjectToMapPoints ($row ['entry'], 'lightgreen');
+    } // end of quest giver game objects
+
+  // who finishes this quest
+  $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
+  foreach ($results as $row)
+    {
+    addCreatureToMapPoints ($row ['entry'], 'cyan');
+    } // end of quest finishers
+
+  // game objects that finish this quest
+  $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $row)
+    {
+    gameObjectToMapPoints ($row ['entry'], 'cyan');
+    } // end of quest finisher game objects
+
+  // creatures or game objects
+
+  $row = $info ['row'];
+
+  // creatures we have to kill
+  for ($n = 1; $n <= QUEST_REQUIRED_CREATURES; $n++)
+    {
+    $value = $row ["ReqCreatureOrGOId$n"];
+    if ($value)
+      {
+      if ($value < 0)
+        gameObjectToMapPoints (-$value, 'red');
+      else
+        addCreatureToMapPoints ($value, 'red');
+      }
+    } // end of for each creature or game object objective
+
+
+  comment ('QUEST INFORMATION ON MAP');
+
+  $mapPoints_0 = array ();
+  $mapPoints_1 = array ();
+
+  foreach ($questMapPoints as $mapPoint)
+    {
+    if ($mapPoint ['map'] == 0)
+      $mapPoints_0 [] = $mapPoint;
+    elseif ($mapPoint ['map'] == 1)
+      $mapPoints_1 [] = $mapPoint;
+    }
+
+  showSpawnPoints ($mapPoints_0, 'Quest information - Eastern Kingdoms', 'Multiple tables',
+                  'id', 'X', 'Y', 'Z', 'map');
+
+  comment ('KALIMDOR');
+
+  showSpawnPoints ($mapPoints_1, 'Quest information- Kalimdor', 'Multiple tables',
+                  'id', 'X', 'Y', 'Z', 'map');
+
+  comment ('QUEST INFORMATION ON MAP');
+
+
+  } // end of questTopRight
+
 function questDetails ($info)
   {
   global $id;
+
+  global $questMapPoints;
+
+  // for the quest starter, finisher, mobs, game objects and area triggers
+  $questMapPoints = array ();
 
   $row = $info ['row'];
 
   topSection    ($info, function ($info) use ($id)
       {
       topMiddle ($info, 'questTopMiddle');
+      topRight ($info,  'questTopRight');
       });
 
   middleSection ($info, function ($info) use ($id, $row)

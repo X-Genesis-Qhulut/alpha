@@ -984,6 +984,20 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     $z = $spawnRow [$zName];
     $map = $spawnRow [$mName];
     $spawn_id = $spawnRow [$idName];
+    if (array_key_exists ('color', $spawnRow))
+      {
+      $strokeColor = 'darkblue';
+      $fillColor = $spawnRow ['color'];
+      }
+    else
+      {
+      $strokeColor = MAP_DOT_STROKE;
+      $fillColor = MAP_DOT_FILL;
+      }
+    if (array_key_exists ('name', $spawnRow))
+      $name = $spawnRow ['name'];
+    else
+      $name = '';
     if ($mTypeName)
       {
       $movement_type = $spawnRow [$mTypeName];
@@ -991,10 +1005,10 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
         $wander_distance = ': ' . $spawnRow ['wander_distance'] . ' yards';
       else
         $wander_distance = '';
-      $movementType = ' [' . expandSimple (MOVEMENT_TYPE, $movement_type, false) . "$wander_distance]";
+      $movementType = ' [' . expandSimple (MOVEMENT_TYPE, $movement_type, false) . "$wander_distance] " . $name;
       }
     else
-      $movementType = '';
+      $movementType = $name;
 
     if ($mapName)
       {
@@ -1018,7 +1032,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
       $location = "$x $y $z $map";
       echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
       echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' >\n";
-      echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
+      echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='$fillColor' stroke='$strokeColor'/>\n";
       echo "  <title>$location (click to copy)\nID: $spawn_id. $movementType</title>\n";
       echo "</svg></div>\n";
 
