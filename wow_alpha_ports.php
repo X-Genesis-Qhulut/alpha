@@ -24,7 +24,7 @@ function portTopRight ($info)
   $row = $info ['row'];
 
   showSpawnPoints (array ($row), 'Teleport location', WORLDPORTS,
-                    'x', 'y', 'z', 'map');
+                    'entry', 'x', 'y', 'z', 'map');
 
   } // end of portTopRight
 

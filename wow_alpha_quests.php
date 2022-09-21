@@ -216,6 +216,22 @@ function showQuestFinishers ()
 
 } // end of showQuestFinishers
 
+
+function showQuestAreaTriggers ()
+{
+  global $id, $area_triggers;
+
+  // who finishes this quest
+  $results = dbQueryParam ("SELECT * FROM ".AREATRIGGER_QUEST_RELATION." WHERE quest = ?", array ('i', &$id));
+
+  listItems ('Area triggers used by this quest', AREATRIGGER_QUEST_RELATION, count ($results) , $results,
+    function ($row)  use ($area_triggers)
+      {
+      listThing ($area_triggers, $row ['id'], 'show_area_trigger');
+      });
+
+} // end of showQuestAreaTriggers
+
 function showQuestChain ()
 {
   global $id, $quests;
@@ -300,6 +316,7 @@ function questDetails ($info)
       showQuestGivers ();
       showQuestFinishers ();
       showQuestChain ();
+      showQuestAreaTriggers ();
 
       });
 

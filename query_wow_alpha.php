@@ -189,6 +189,12 @@ if ($action)
   while ($row = dbFetch ($results))
     $npc_factions [$row ['template_key']] = $row ['Name_enUS'];
   dbFree ($results);
+
+  $results = dbQuery ("SELECT * FROM " . AREATRIGGER);
+  while ($row = dbFetch ($results))
+    $area_triggers [$row ['ID']] = $row ['X'] . ' ' . $row ['Y'] . ' ' . $row ['Z'] . ' ' . $row ['ContinentID'];
+  dbFree ($results);
+
   } // end of having an action
 
 showBigMenu ();

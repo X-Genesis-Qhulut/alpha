@@ -196,12 +196,18 @@ function mainPage ()
 
   // OTHER TABLES
   oneCard ('Other tables', 'fas fa-table', "
-      <h3>Spell table</h3>
+      <h3>Spell visuals</h3>
       <ul>
         <li><a href='?action=spell_visuals'>Spell visuals</a></li>
         <li><a href='?action=spell_visual_anim_names'>Spell visuals animation names</a></li>
         <li><a href='?action=spell_visual_effect_names'>Spell visuals effect names</a></li>
       </ul>
+      <h3>Area triggers</h3>
+      <ul>
+        <li><a href='?action=area_triggers'>Area triggers</a></li>
+      </ul>
+
+
     ");
 
   // VALIDATION

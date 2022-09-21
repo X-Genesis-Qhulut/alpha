@@ -926,7 +926,7 @@ function convertGold ($amount)
   return $result;
 } // end of convertGold
 
-function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName, $mName, $mTypeName = false)
+function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yName, $zName, $mName, $mTypeName = false)
 {
   global $maps;
 
@@ -983,7 +983,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
     $y = $spawnRow [$yName];
     $z = $spawnRow [$zName];
     $map = $spawnRow [$mName];
-    $spawn_id = $spawnRow ['spawn_id'];
+    $spawn_id = $spawnRow [$idName];
     if ($mTypeName)
       {
       $movement_type = $spawnRow [$mTypeName];
@@ -1019,7 +1019,7 @@ function showSpawnPoints ($results, $heading, $tableName, $xName, $yName, $zName
       echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
       echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' >\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='".MAP_DOT_FILL."' stroke='".MAP_DOT_STROKE."'/>\n";
-      echo "  <title>$location (click to copy)\nSpawn ID: $spawn_id. $movementType</title>\n";
+      echo "  <title>$location (click to copy)\nID: $spawn_id. $movementType</title>\n";
       echo "</svg></div>\n";
 
       } // end of if we have a mapName
@@ -1051,7 +1051,7 @@ function endElementInformation ()
   endDiv ('element-information [element-information--independant]');
   } // end of endElementInformation
 
-function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $mName, $mTypeName = false)
+function listSpawnPoints ($results, $heading, $table, $idName, $xName, $yName, $zName, $mName, $mTypeName = false)
   {
   global $maps;
   $count = count ($results);
@@ -1068,7 +1068,7 @@ function listSpawnPoints ($results, $heading, $table, $xName, $yName, $zName, $m
     $y = $row [$yName];
     $z = $row [$zName];
     $map = $row [$mName];
-    $spawn_id = $row ['spawn_id'];
+    $spawn_id = $row [$idName];
     if ($mTypeName)
       {
       $movement_type = $row [$mTypeName];

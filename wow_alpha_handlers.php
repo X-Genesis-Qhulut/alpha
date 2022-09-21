@@ -143,6 +143,14 @@ define ('HANDLER_EXTRA', array (
                     'requires' => 'wow_alpha_validity.php',
         ),
 
+  'area_triggers' => array (
+                    'search'  => array (),
+                    'table'   => AREATRIGGER,
+                    'key'     => 'ID',
+                    'requires' => 'wow_alpha_area_triggers.php',
+        ),
+
+
    ));  // end of HANDLER_EXTRA
 
 // Names of handler functions for actions
@@ -210,6 +218,12 @@ define ('HANDLERS', array (
 
   'spell_visual_effect_names' => array ('func' =>  'showSpellVisualEffectNames',    'extra' => 'spell_visual_effect_names'),
   'show_spell_visual_effect'  => array ('func' =>  'showOneSpellVisualEffectName',  'extra' => 'spell_visual_effect_names'),
+
+  // area triggers
+
+  'area_triggers'             => array ('func' =>  'showAreaTriggers',              'extra' => 'area_triggers'),
+  'show_area_trigger'         => array ('func' =>  'showOneAreaTrigger',            'extra' => 'area_triggers'),
+
 
   // Utilites
 

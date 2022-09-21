@@ -32,6 +32,9 @@ define ('LIVE_WORLD_DBNAME', 'alpha_world');
 
 // table names as used on the live server (eg. `alpha_world`.creature_loot_template)
 
+define ('AREATRIGGER',                  '`' . LIVE_DBC_DBNAME.   '`.' . lwr ('AreaTrigger'));
+define ('AREATRIGGER_QUEST_RELATION',   '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('areatrigger_quest_relation'));
+define ('AREATRIGGER_TELEPORT',         '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('areatrigger_teleport'));
 define ('APPLIED_UPDATES_DBC',          '`' . LIVE_DBC_DBNAME.   '`.' . lwr ('applied_updates'));
 define ('APPLIED_UPDATES_WORLD',        '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('applied_updates'));
 define ('CREATURE_LOOT_TEMPLATE',       '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_loot_template'));
@@ -1002,6 +1005,7 @@ define ('ICONS', array (
   'show_spell'      => 'fa-book',
   'show_creature'   => 'fa-user',
   'show_go'         => 'fa-cube',
+  'show_area_trigger'  => 'fa-globe',
 ));
 
 ?>

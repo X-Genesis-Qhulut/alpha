@@ -121,7 +121,7 @@ function creatureTopMiddle ($info)
         WHERE $where AND map = 0", $param) ;
 
   $count += listSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
-                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
+                'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('SPAWN POINTS - KALIMDOR');
 
@@ -130,7 +130,7 @@ function creatureTopMiddle ($info)
         WHERE $where AND map = 1", $param);
 
   $count += listSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
-                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
+                'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
   comment ('SPAWN POINTS - OTHER');
@@ -140,7 +140,7 @@ function creatureTopMiddle ($info)
         WHERE $where AND map > 1", $param);
 
   $count += listSpawnPoints ($results, 'Spawn points — Instances', SPAWNS_CREATURES,
-                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
+                'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
   if (!$count)
@@ -200,7 +200,7 @@ function creatureTopRight ($info)
         WHERE $where AND map = 0", $param) ;
 
   showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
-                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
+                'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('KALIMDOR');
 
@@ -209,7 +209,7 @@ function creatureTopRight ($info)
         WHERE $where AND map = 1", $param);
 
   showSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
-                'position_x', 'position_y', 'position_z', 'map', 'movement_type');
+                'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
   comment ('END MAP SPAWN POINTS');

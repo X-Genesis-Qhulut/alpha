@@ -64,7 +64,7 @@ function listGameObjectSpawnPoints ($id)
             WHERE $where AND spawn_map = 0", $param);
 
   $count += listSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', 'alpha_world.spawns_gameobjects',
-                    'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+                    'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
   comment ('SPAWN POINTS - KALIMDOR');
 
@@ -73,7 +73,7 @@ function listGameObjectSpawnPoints ($id)
             WHERE $where AND spawn_map = 1", $param);
 
   $count += listSpawnPoints ($results, 'Spawn points - Kalimdor', 'alpha_world.spawns_gameobjects',
-                    'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+                    'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
   comment ('SPAWN POINTS - OTHER');
 
@@ -82,7 +82,7 @@ function listGameObjectSpawnPoints ($id)
             WHERE $where AND spawn_map > 1", $param);
 
   $count += listSpawnPoints ($results, 'Spawn points - Instances', 'alpha_world.spawns_gameobjects',
-                    'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+                    'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
   if (!$count)
     showNoSpawnPoints ();
@@ -246,7 +246,7 @@ function gameobjectTopRight ($info)
         WHERE $where AND spawn_map = 0", $param) ;
 
   showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', SPAWNS_GAMEOBJECTS,
-                'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+                'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
   comment ('KALIMDOR');
 
@@ -255,7 +255,7 @@ function gameobjectTopRight ($info)
         WHERE $where AND spawn_map = 1", $param);
 
   showSpawnPoints ($results, 'Spawn points - Kalimdor', SPAWNS_GAMEOBJECTS,
-                'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+                'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
 
   comment ('END MAP SPAWN POINTS');
