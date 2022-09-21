@@ -328,11 +328,7 @@ function gameObjectToMapPoints ($which, $color)
   global $questMapPoints;
   global $game_objects;
 
-  $where = 'spawn_entry = ? AND ignored = 0 ';
-  $param = array ('i', &$which);
-
-  // show spawn points - Eastern Kingdoms
-  $spawnPoints = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS." WHERE $where", $param) ;
+  $spawnPoints = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS." WHERE spawn_entry = ? AND ignored = 0 ", array ('i', &$which)) ;
 
   foreach ($spawnPoints as $spawnRow)
     $questMapPoints [] = array (
@@ -347,11 +343,31 @@ function gameObjectToMapPoints ($which, $color)
 
   } // end of gameObjectToMapPoints
 
+function areaTriggerToMapPoints ($which, $color)
+  {
+  global $questMapPoints;
+
+  $spawnPoints = dbQueryParam ("SELECT * FROM ".AREATRIGGER." WHERE ID = ?", array ('i', &$which)) ;
+
+  foreach ($spawnPoints as $spawnRow)
+    $questMapPoints [] = array (
+        'id'    => $spawnRow ['ID'],
+        'X'     => $spawnRow ['X'],
+        'Y'     => $spawnRow ['Y'],
+        'Z'     => $spawnRow ['Z'],
+        'map'   => $spawnRow ['ContinentID'],
+        'color' => $color,
+        'name'  => 'Area trigger',
+        );
+
+  } // end of areaTriggerToMapPoints
+
 function questTopRight ($info)
   {
   global $id;
   global $questMapPoints;
 
+  // ------------------------------------------------------------------------------------
   // find where the quest giver NPC is spawned
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_STARTER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
   foreach ($results as $row)
@@ -359,6 +375,7 @@ function questTopRight ($info)
     addCreatureToMapPoints ($row ['entry'], 'lightgreen');
     } // end of quest givers
 
+  // ------------------------------------------------------------------------------------
   // find where the quest giver game object is spawned
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_STARTER." WHERE quest = ?", array ('i', &$id));
   foreach ($results as $row)
@@ -366,6 +383,7 @@ function questTopRight ($info)
     gameObjectToMapPoints ($row ['entry'], 'lightgreen');
     } // end of quest giver game objects
 
+  // ------------------------------------------------------------------------------------
   // who finishes this quest
   $results = dbQueryParam ("SELECT * FROM ".CREATURE_QUEST_FINISHER." WHERE quest = ? AND entry <= " . MAX_CREATURE, array ('i', &$id));
   foreach ($results as $row)
@@ -373,6 +391,7 @@ function questTopRight ($info)
     addCreatureToMapPoints ($row ['entry'], 'cyan');
     } // end of quest finishers
 
+  // ------------------------------------------------------------------------------------
   // game objects that finish this quest
   $results = dbQueryParam ("SELECT * FROM ".GAMEOBJECT_QUEST_FINISHER." WHERE quest = ?", array ('i', &$id));
   foreach ($results as $row)
@@ -380,6 +399,7 @@ function questTopRight ($info)
     gameObjectToMapPoints ($row ['entry'], 'cyan');
     } // end of quest finisher game objects
 
+  // ------------------------------------------------------------------------------------
   // creatures or game objects
 
   $row = $info ['row'];
@@ -397,6 +417,35 @@ function questTopRight ($info)
       }
     } // end of for each creature or game object objective
 
+  // ------------------------------------------------------------------------------------
+  // items we have to obtain
+
+  // first get the items
+  $npcList = array ();    // this will be a list of the NPCs that drop items
+  for ($i = 1; $i <= QUEST_REQUIRED_ITEMS; $i++)
+    {
+    $item = $row ["ReqItemId$i"]; // which item
+    // now lookup who drops those items
+    $lootResults = dbQueryParam ("SELECT * FROM ".CREATURE_LOOT_TEMPLATE." WHERE item = ?",
+              array ('i', &$item));
+    foreach ($lootResults as $lootRow)
+      if (!in_array ($lootRow ['entry'], $npcList))  // don't add the same NPC twice
+        $npcList [] = $lootRow ['entry'];
+    } // for each required item
+
+  // now add those NPCs to the map
+  foreach ($npcList as $npc)
+    {
+    addCreatureToMapPoints ($npc, 'red');
+    } // end of quest item droppers
+
+  // ------------------------------------------------------------------------------------
+  // area triggers
+  $results = dbQueryParam ("SELECT id FROM ".AREATRIGGER_QUEST_RELATION." WHERE quest = ?", array ('i', &$id));
+  foreach ($results as $row)
+    {
+    areaTriggerToMapPoints ($row ['id'], 'white');
+    } // end of area triggers
 
   comment ('QUEST INFORMATION ON MAP');
 
@@ -411,6 +460,15 @@ function questTopRight ($info)
       $mapPoints_1 [] = $mapPoint;
     }
 
+  // if two maps are involved show the caroussel arrows
+  if (count ($mapPoints_0) && count ($mapPoints_1))
+    {
+    echo "<a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
+        ><i class='fas fa-angle-left'></i></a>\n";
+    echo "<a class='caroussel__right-arrow' href='#Kalimdor_map'
+        ><i class='fas fa-angle-right'></i></a>\n";
+    } // end of if two maps
+
   showSpawnPoints ($mapPoints_0, 'Quest information - Eastern Kingdoms', 'Multiple tables',
                   'id', 'X', 'Y', 'Z', 'map');
 
@@ -420,7 +478,6 @@ function questTopRight ($info)
                   'id', 'X', 'Y', 'Z', 'map');
 
   comment ('QUEST INFORMATION ON MAP');
-
 
   } // end of questTopRight
 

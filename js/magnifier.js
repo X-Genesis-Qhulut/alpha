@@ -150,7 +150,7 @@ function _correctMagnifiedPointPosition(referencePoint, point) {
   let updatedPoint = point.cloneNode();
 
   // we add/sub perimeter of spawn point to be more accurate
-  const perimeter = point.width.animVal.value;
+  const perimeter = point.width.animVal.value / 2;   // Qulut
   diffY = diffY < 0 ? diffY + perimeter : diffY - perimeter;
   diffX = diffX < 0 ? diffX + perimeter : diffX - perimeter;
   updatedPoint.style.top = `${_domValueToInt(point.style.top) - diffY}px`;
