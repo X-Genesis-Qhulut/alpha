@@ -60,7 +60,7 @@ function simulateQuest ($row)
 
   for ($n = 1; $n <= QUEST_REQUIRED_SPELLS; $n++)
     if ($row ["ReqSpellCast$n"])
-      echo ('Cast: ' . lookupThing ($spells, $row ["ReqSpellCast$n"], 'show_spell'). "<br>");
+      echo ('Cast: ' . lookupThing ($spells, $row ["ReqSpellCast$n"], 'show_spell'). "<br>\n");
 
   comment ('PROGRESS');
 
@@ -130,29 +130,29 @@ function simulateQuest ($row)
   $quest_type = $row ['Type'];
   if ($quest_type > 0)  // quest type
     {
-    echo "<br><b>Type</b>: " . expandSimple (QUEST_TYPE, $quest_type, false);
+    echo "\n<br><b>Type</b>: " . expandSimple (QUEST_TYPE, $quest_type, false);
     }
 
   $zone = $row ['ZoneOrSort'];
   if ($zone > 0)  // quest zone
     {
-    echo "<br><b>Zone</b>: " . expandSimple ($zones, $zone, false);
+    echo "\n<br><b>Zone</b>: " . expandSimple ($zones, $zone, false);
     }
-  echo "<br><b>Minimum level</b>: " . $row ['MinLevel'];
-  echo "<br><b>Quest level</b>: " . $row ['QuestLevel'];
+  echo "\n<br><b>Minimum level</b>: " . $row ['MinLevel'];
+  echo "\n<br><b>Quest level</b>: " . $row ['QuestLevel'];
   if ($row ['LimitTime'])
-    echo "<br><b>Time limit</b>: " . convertTimeGeneral ($row ['LimitTime'] * 1000);
+    echo "\n<br><b>Time limit</b>: " . convertTimeGeneral ($row ['LimitTime'] * 1000);
 
   $PrevQuestId = $row ['PrevQuestId'];
   if ($PrevQuestId > 0)
-    echo "<br><b>Requires completion of</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
+    echo "\n<br><b>Requires completion of</b>: " . lookupThing ($quests, $row ['PrevQuestId'], 'show_quest');
   if ($PrevQuestId < 0)
-    echo "<br><b>This quest must be active</b>: " . lookupThing ($quests, abs ($row ['PrevQuestId']), 'show_quest');
+    echo "\n<br><b>This quest must be active</b>: " . lookupThing ($quests, abs ($row ['PrevQuestId']), 'show_quest');
 
   if ($row ['NextQuestId'])
-   echo "<br><b>Next quest</b>: " . lookupThing ($quests, abs ($row ['NextQuestId']), 'show_quest');
+   echo "\n<br><b>Next quest</b>: " . lookupThing ($quests, abs ($row ['NextQuestId']), 'show_quest');
   if ($row ['NextQuestInChain'])
-   echo "<br><b>Next quest in chain</b>: " . lookupThing ($quests, $row ['NextQuestInChain'], 'show_quest');
+   echo "\n<br><b>Next quest in chain</b>: " . lookupThing ($quests, $row ['NextQuestInChain'], 'show_quest');
 
 
   endDiv ('simulate_box quest');
@@ -460,6 +460,8 @@ function questTopRight ($info)
       $mapPoints_1 [] = $mapPoint;
     }
 
+  comment ('ARROWS');
+
   // if two maps are involved show the caroussel arrows
   if (count ($mapPoints_0) && count ($mapPoints_1))
     {
@@ -468,6 +470,8 @@ function questTopRight ($info)
     echo "<a class='caroussel__right-arrow' href='#Kalimdor_map'
         ><i class='fas fa-angle-right'></i></a>\n";
     } // end of if two maps
+
+  comment ('EASTERN KINGDOMS');
 
   showSpawnPoints ($mapPoints_0, 'Quest information - Eastern Kingdoms', 'Multiple tables',
                   'id', 'X', 'Y', 'Z', 'map');

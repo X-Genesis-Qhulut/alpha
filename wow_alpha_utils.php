@@ -950,6 +950,8 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     $mapTopPoint = 4600;
     $mapWidth = 9500;
     $mapHeight = 19700;
+    $imageWidth = 272;
+    $imageHeight = 648;
     }
   elseif ($map1 > 0)
     {
@@ -958,6 +960,8 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     $mapTopPoint = 11700;
     $mapWidth = 11950;
     $mapHeight = 21050;
+    $imageWidth = 352;
+    $imageHeight = 697;
     }
 
   if (!$mapName)
@@ -966,12 +970,16 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
   comment ("Drawing $mapName");
 
   // get width and height
+
+
   $imageSize = getimagesize ("maps/$mapName.jpg");
   $imageWidth  = $imageSize [0];
   $imageHeight = $imageSize [1];
 
+
   echo "<div class='map-container'>";
   echo "<img src='maps/{$mapName}.jpg' style='display:block;
+          width:{$imageWidth}px; height:{$imageHeight}px;
           max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
           onmouseenter='onMouseEnterImg(event)' onmousemove='onMouseMoveImg(event)'
           alt='{$mapName} map' title='{$mapName} map' />\n";

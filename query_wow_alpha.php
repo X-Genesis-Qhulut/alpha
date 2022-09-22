@@ -41,6 +41,13 @@ Kalidar server:
   https://github.com/vmangos/core
   https://github.com/brotalnia/database
 
+
+Early maps:
+
+  https://www.reddit.com/r/classicwow/comments/bqd5zw/here_are_some_early_alphaconcept_maps/
+
+  https://wow.tools/maps/Kalimdor/4/5/-41.978/31.431
+
 */
 
 // Configuration: database name, password, etc.
