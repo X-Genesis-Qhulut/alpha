@@ -7,7 +7,7 @@ const spawnPoints = document.querySelectorAll(".spawn_point");
 let modifiedSpawnPoints = [];
 const magnifierHeight = 200;
 const magnifierWidth = 200;
-const magnifierZoomLevel = 3;
+const magnifierZoomLevel = 8;
 let magnifierX = 0;
 let magnifierY = 0;
 
@@ -150,7 +150,7 @@ function _correctMagnifiedPointPosition(referencePoint, point) {
   let updatedPoint = point.cloneNode();
 
   // we add/sub perimeter of spawn point to be more accurate
-  const perimeter = point.width.animVal.value / 2;   // Qulut
+  const perimeter = point.width.animVal.value / 2;
   diffY = diffY < 0 ? diffY + perimeter : diffY - perimeter;
   diffX = diffX < 0 ? diffX + perimeter : diffX - perimeter;
   updatedPoint.style.top = `${_domValueToInt(point.style.top) - diffY}px`;

@@ -1,7 +1,7 @@
 .caroussel {
   display: flex;
-  max-width: 272px;
-  max-height: 648px;
+  max-width: 345px;
+  max-height: 650px;
   overflow: hidden;
   margin-left: 2%;
   scroll-behavior: smooth;
@@ -18,6 +18,8 @@
 
   & img {
     animation: appearslowly 400ms ease-in-out;
+    width: 345px;
+    height: 650px;
   }
 
   &__left-arrow {
@@ -28,7 +30,7 @@
     font-weight: bold;
     padding: 0px 10px;
     top: 40%;
-    left: 270px;
+    left: 350px;
   }
 
   &__right-arrow {
@@ -39,7 +41,7 @@
     font-weight: bold;
     padding: 0px 10px;
     top: 40%;
-    left: 218px;
+    left: 280px;
   }
 
   @include tiny-laptop-design {

@@ -11,7 +11,7 @@
 }
 
 @mixin tablet-design {
-  @media screen and (max-width: 1200px) {
+  @media screen and (max-width: 1337px) {
     @content;
   }
 }

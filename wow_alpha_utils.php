@@ -944,35 +944,30 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
 
 
   // the display size
-    $imageWidth = 350;
-    $imageHeight = 700;
+  $imageWidth = 345;
+  $imageHeight = 650;
 
 
   $mapName = '';
   if ($map0 > 0)
     {
-    $mapName = 'Eastern_Kingdoms_big.webp';
-    /*
-    $mapLeftPoint = 3300;
-    $mapTopPoint = 4600;
-    $mapWidth = 9500;
-    $mapHeight = 19700;
-    */
-    $mapLeftPoint = 4266.161;
-    $mapTopPoint = 4642.642;
-    $mapWidth = 10582.808;
-    $mapHeight = 19943.789;
+    $mapName = 'Eastern_Kingdoms_medium.webp';
+    // see: map_calculations.lua to get these figures
+    $mapLeftPoint = 4267.7658363136;
+    $mapTopPoint  = 4657.9751308793;
+    $mapWidth     = 10568.022008253;
+    $mapHeight    = 19980.94603272;
 
     }
   elseif ($map1 > 0)
     {
-    $mapName = 'Kalimdor.jpg';
-    $mapLeftPoint = 4200;
-    $mapTopPoint = 11700;
-    $mapWidth = 11950;
-    $mapHeight = 21050;
-    $imageWidth = 352;
-    $imageHeight = 697;
+    $mapName = 'Kalimdor_medium.webp';
+    // see: map_calculations.lua to get these figures
+    $mapLeftPoint = 4999.1645634615;
+    $mapTopPoint  = 11762.411301222;
+    $mapWidth     = 13018.626923077;
+    $mapHeight    = 24575.090465226;
+
     }
 
   if (!$mapName)

@@ -213,7 +213,7 @@ a {
 .menu-bar-title p:last-child {
   font-size: 0.85em;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .menu-bar-title {
     justify-content: center;
     align-items: center;
@@ -278,7 +278,7 @@ a {
 .page-title--search {
   padding-right: 20px;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .page-title__table {
     font-size: 1.2em;
   }
@@ -426,7 +426,7 @@ a {
 .table-rows tr:nth-child(even) {
   background-color: #404040;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .table-rows {
     table-layout: fixed;
   }
@@ -496,7 +496,7 @@ a {
   object-fit: contain;
   animation: appearslowly 400ms ease-in-out;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .model-display {
     margin-top: 20px;
   }
@@ -670,7 +670,7 @@ a {
   width: 100%;
   text-align: justify;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .big-title__heading {
     font-size: 1.8em;
   }
@@ -776,7 +776,7 @@ a {
     flex-basis: 46%;
   }
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .card {
     flex-basis: 95%;
     margin-bottom: 30px;
@@ -853,7 +853,7 @@ a {
     font-size: 1em;
   }
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .search-bar label {
     font-size: 0.7em;
   }
@@ -973,7 +973,7 @@ a {
 .search-button:hover span {
   color: #7daaf1;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .search-button {
     visibility: hidden;
     width: 0px;
@@ -1011,7 +1011,7 @@ a {
   border-radius: 10px;
   border: 1px solid #535353;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .page-counter__results-count {
     display: none;
   }
@@ -1032,8 +1032,8 @@ a {
 
 .caroussel {
   display: flex;
-  max-width: 272px;
-  max-height: 648px;
+  max-width: 345px;
+  max-height: 650px;
   overflow: hidden;
   margin-left: 2%;
   scroll-behavior: smooth;
@@ -1048,6 +1048,8 @@ a {
 }
 .caroussel img {
   animation: appearslowly 400ms ease-in-out;
+  width: 345px;
+  height: 650px;
 }
 .caroussel__left-arrow {
   position: absolute;
@@ -1057,7 +1059,7 @@ a {
   font-weight: bold;
   padding: 0px 10px;
   top: 40%;
-  left: 270px;
+  left: 350px;
 }
 .caroussel__right-arrow {
   position: absolute;
@@ -1067,7 +1069,7 @@ a {
   font-weight: bold;
   padding: 0px 10px;
   top: 40%;
-  left: 218px;
+  left: 280px;
 }
 @media screen and (max-width: 1250px) {
   .caroussel img {
@@ -1105,7 +1107,7 @@ a {
 .simulate_box a {
   color: #7daaf1;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .simulate_box {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -1300,37 +1302,17 @@ a {
     width: 350px;
   }
 }
-@media screen and (max-width: 1333px) {
+@media screen and (max-width: 1405px) {
   .row-card {
-    width: 320px;
+    width: 300px;
   }
 }
-@media screen and (max-width: 1310px) {
+@media screen and (max-width: 1350px) {
   .row-card {
     width: 280px;
   }
 }
-@media screen and (max-width: 1268px) {
-  .row-card {
-    width: 270px;
-  }
-}
-@media screen and (max-width: 1259px) {
-  .row-card {
-    width: 260px;
-  }
-}
-@media screen and (max-width: 1225px) {
-  .row-card {
-    width: 240px;
-  }
-}
-@media screen and (max-width: 1205px) {
-  .row-card {
-    width: 220px;
-  }
-}
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .row-card {
     width: 100%;
   }
@@ -1494,7 +1476,7 @@ a {
   height: 100%;
   transition: all 300ms;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .menu-bar-main-container {
     width: unset;
   }
@@ -1562,7 +1544,7 @@ a {
 .menu-bar-nav-container a:last-child {
   margin-bottom: 20px;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .menu-bar-nav-container {
     width: 230px;
   }
@@ -1671,7 +1653,7 @@ a {
     max-height: 77vh;
   }
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .page-content {
     padding: 10px;
     max-height: 82.5vh;
@@ -1733,7 +1715,7 @@ a {
 .table-container--full table {
   max-width: unset;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .table-container {
     margin: 0px;
     margin-bottom: 100px;
@@ -1772,7 +1754,7 @@ a {
     margin-top: 10px;
   }
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .details-container {
     margin-bottom: 30px;
   }
@@ -1864,7 +1846,7 @@ a {
     flex-basis: 8%;
   }
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1337px) {
   .object-container__informations {
     padding: 0px;
     justify-content: center;
