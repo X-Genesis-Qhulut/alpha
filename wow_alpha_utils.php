@@ -942,20 +942,31 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     elseif ($spawnRow [$mName] == 1)
       $map1 ++;   // Kalimdor
 
+
+  // the display size
+    $imageWidth = 350;
+    $imageHeight = 700;
+
+
   $mapName = '';
   if ($map0 > 0)
     {
-    $mapName = 'Eastern_Kingdoms';
+    $mapName = 'Eastern_Kingdoms_big.webp';
+    /*
     $mapLeftPoint = 3300;
     $mapTopPoint = 4600;
     $mapWidth = 9500;
     $mapHeight = 19700;
-    $imageWidth = 272;
-    $imageHeight = 648;
+    */
+    $mapLeftPoint = 4266.161;
+    $mapTopPoint = 4642.642;
+    $mapWidth = 10582.808;
+    $mapHeight = 19943.789;
+
     }
   elseif ($map1 > 0)
     {
-    $mapName = 'Kalimdor';
+    $mapName = 'Kalimdor.jpg';
     $mapLeftPoint = 4200;
     $mapTopPoint = 11700;
     $mapWidth = 11950;
@@ -971,14 +982,15 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
 
   // get width and height
 
-
+/*
   $imageSize = getimagesize ("maps/$mapName.jpg");
   $imageWidth  = $imageSize [0];
   $imageHeight = $imageSize [1];
+*/
 
 
   echo "<div class='map-container'>";
-  echo "<img src='maps/{$mapName}.jpg' style='display:block;
+  echo "<img src='maps/{$mapName}' style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
           max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
           onmouseenter='onMouseEnterImg(event)' onmousemove='onMouseMoveImg(event)'
