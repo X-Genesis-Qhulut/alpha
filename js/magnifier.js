@@ -7,7 +7,7 @@ const spawnPoints = document.querySelectorAll(".spawn_point");
 let modifiedSpawnPoints = [];
 const magnifierHeight = 200;
 const magnifierWidth = 200;
-const magnifierZoomLevel = 8;
+const magnifierZoomLevel = 6;
 let magnifierX = 0;
 let magnifierY = 0;
 
