@@ -951,7 +951,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
   $mapName = '';
   if ($map0 > 0)
     {
-    $mapName = 'Eastern_Kingdoms_medium.webp';
+    $mapName = 'Eastern_Kingdoms';
     // see: map_calculations.lua to get these figures
     $mapLeftPoint = 4267.7658363136;
     $mapTopPoint  = 4657.9751308793;
@@ -961,12 +961,12 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     }
   elseif ($map1 > 0)
     {
-    $mapName = 'Kalimdor_medium.webp';
+    $mapName = 'Kalimdor';
     // see: map_calculations.lua to get these figures
-    $mapLeftPoint = 4999.1645634615;
-    $mapTopPoint  = 11762.411301222;
-    $mapWidth     = 13018.626923077;
-    $mapHeight    = 24575.090465226;
+    $mapLeftPoint = 5042.4865925889;
+    $mapTopPoint  = 11763.324337648;
+    $mapWidth     = 13100.059130778;
+    $mapHeight    = 24611.604572322;
 
     }
 
@@ -985,7 +985,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
 
 
   echo "<div class='map-container'>";
-  echo "<img src='maps/{$mapName}' style='display:block;
+  echo "<img src='maps/{$mapName}.webp' style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
           max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
           onmouseenter='onMouseEnterImg(event)' onmousemove='onMouseMoveImg(event)'
@@ -1040,9 +1040,10 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
 
       $mapDotSize = MAP_DOT_SIZE;
       $halfMapDotSize = MAP_DOT_SIZE / 2;
+      $quarterMapDotSize = MAP_DOT_SIZE / 4;
 
-      $mapx -= $halfMapDotSize;
-      $mapy -= $halfMapDotSize;
+ //     $mapx -= $halfMapDotSize;
+ //     $mapy -= $halfMapDotSize;
 
       $location = "$x $y $z $map";
       echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
