@@ -185,7 +185,7 @@ function _resetModifiedSpawnPoints() {
 
 // Return int value of DOM style property : 450px -> 450
 function _domValueToInt(value) {
-  return parseInt(value.split("px")[0]);
+  return parseFloat(value.split("px")[0]);
 }
 
 // Calculate distance between coords

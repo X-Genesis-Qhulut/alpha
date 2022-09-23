@@ -1035,8 +1035,8 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
       $mapx *= $imageWidth;     // width of JPG
       $mapy *= $imageHeight;    // height of JPG
 
-      $mapx = round ($mapx);
-      $mapy = round ($mapy);
+      $mapx = round ($mapx, 3);
+      $mapy = round ($mapy, 3);
 
       $mapDotSize = MAP_DOT_SIZE;
       $halfMapDotSize = MAP_DOT_SIZE / 2;
