@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
+  <!-- Developed using the latest technology by X'Genesis Qhulut -->
+
+  <!-- Front end CSS by Geo -->
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="title" content="WoW 0.5.3 Database" />
@@ -20,7 +25,6 @@
   <meta property="og:image:height" content="434" />
 
   <meta name="twitter:card" content="http://wow-refugee.com/alpha/thumbnail.jpg">
-
   <title>WoW 0.5.3 Database</title>
 <?php
 
@@ -82,7 +86,6 @@ includeStylesheet ("css/fontawesome/solid.css");
 //-----------------------------------------------------------------------------
 includeScript ("editing.js");
 includeScript ("js/magnifier.js");
-
 //-----------------------------------------------------------------------------
 // wrap up our head, and start our body
 //-----------------------------------------------------------------------------
@@ -90,8 +93,9 @@ includeScript ("js/magnifier.js");
   <link rel='icon' href='favicon.png' />
   </head>
   <body>
-    <!-- MAIN -->
-    <main class='main-container'>
+
+  <!-- MAIN -->
+  <main class='main-container'>
 
 <?php
 

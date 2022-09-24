@@ -31,29 +31,31 @@ function creatureTopLeft ($info)
     <div class='caroussel-model' id='caroussel-model' >
   ";
 
-  for ($i = 1; $i <= 4; $i++)   // should be 4 lol  TODO
+  for ($i = 1; $i <= 4; $i++)
     {
     $display_id = $row ["display_id$i"];
-    $model = $display_id . '.webp';
-    if (!file_exists ("$documentRoot$executionDir/creatures/$model"))
+    if ($display_id)
       {
-      comment ("$documentRoot$executionDir/creatures/$model   NOT ON FILE");
-      $model = 'missing_creature.png';
-      }
+      $model = $display_id . '.webp';
+      if (!file_exists ("$documentRoot$executionDir/creatures/$model"))
+        {
+        comment ("$documentRoot$executionDir/creatures/$model   NOT ON FILE");
+        $model = 'missing_creature.png';
+        }
 
-    $display = ($i == 1) ? 'block' : 'none';
+      $display = ($i == 1) ? 'block' : 'none';
 
-    echo "<!-- MODEL DISPLAY ID $display_id -->
-      <img
-        class='model-display'
-        src='creatures/$model'
-        alt='Creature model for display ID $display_id'
-        title='Model for display ID $display_id'
-        id='model$i'
-        style='display:$display;'
-      >
+      echo "<!-- MODEL DISPLAY ID $display_id -->
+        <img
+          class='model-display'
+          src='creatures/$model'
+          alt='Creature model for display ID $display_id'
+          title='Model for display ID $display_id'
+          id='model$i'
+          style='display:$display;'
+        >
       ";
-
+      } // end of having a display ID
 
     } // end of for all 4 possible display IDs
 

@@ -66,18 +66,16 @@ echo "
     <div class='menu-bar-header-container'>
 
 <a href='".EXECUTIONDIR."'>
-  <img
-    class='menu-bar-logo'
-    src='logo-small.png'
-    alt='Alpha Core'
-    title='Main menu'
-  />
+  <img class='menu-bar-logo' src='logo-small.png' alt='Alpha Core' title='Main menu'>
 </a>
 <div class='menu-bar-title'>
   <p>Database</p>
   <p>Alpha 0.5.3</p>
-</div>
-</div>
+";
+
+endDiv ('menu-bar-title');
+endDiv ('menu-bar-header-container');
+echo "
 <nav class='menu-bar-nav-container'>
 ";
 
@@ -366,7 +364,7 @@ function mainPage ()
           <a href='https://github.com/geo-tp/053-Database-Frontend'>Front end database repo</a>
         </li>
         <li>
-          <a href='https://github.com/geo-tp'>Geo github profile</a>
+          <a href='https://github.com/geo-tp'>Geo Github profile</a>
         </li>
       </ul>
 ");

@@ -988,6 +988,10 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
   echo "<img src='maps/{$mapName}.webp' style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
           max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
+          data-left='$mapLeftPoint'
+          data-top='$mapTopPoint'
+          data-width='$mapWidth'
+          data-height='$mapHeight'
           onmouseenter='onMouseEnterImg(event)' onmousemove='onMouseMoveImg(event)'
           alt='{$mapName} map' title='{$mapName} map' />\n";
 
@@ -1040,14 +1044,10 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
 
       $mapDotSize = MAP_DOT_SIZE;
       $halfMapDotSize = MAP_DOT_SIZE / 2;
-      $quarterMapDotSize = MAP_DOT_SIZE / 4;
-
- //     $mapx -= $halfMapDotSize;
- //     $mapy -= $halfMapDotSize;
 
       $location = "$x $y $z $map";
       echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
-      echo "<svg width='$mapDotSize' height='$mapDotSize' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' >\n";
+      echo "<svg width='{$mapDotSize}px' height='{$mapDotSize}px' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' data-spawnid='$spawn_id'>\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='$fillColor' stroke='$strokeColor'/>\n";
       echo "  <title>$location (click to copy)\nID: $spawn_id. $movementType</title>\n";
       echo "</svg></div>\n";
