@@ -7,7 +7,7 @@ const spawnPoints = document.querySelectorAll(".spawn_point");
 let modifiedSpawnPoints = [];
 const magnifierHeight = 200;
 const magnifierWidth = 200;
-const magnifierZoomLevel = 6;
+const magnifierZoomLevel = 7;
 let magnifierX = 0;
 let magnifierY = 0;
 
@@ -49,12 +49,13 @@ function onMouseMoveImg(e) {
 
 // When mouse hover a point, we display magnifier
 function onMouseEnterPoint(e) {
-  // if magnifier is already open and point is in magnfier radius, we dont do anything
-
-  const svg = e.target.childNodes[1];
-  if (_checkIfPointIsInMagnifier(svg) && magnifier.style.display != "none") {
+  // if magnifier is already open and point is in magnifier radius, we dont do anything
+  if (_checkIfPointIsInMagnifier(e.target.childNodes[1]) && magnifier.style.display != "none") {
     return;
   }
+
+  // make a copy because we might slightly alter its location
+  const svg = e.target.childNodes[1].cloneNode ();
 
   _resetModifiedSpawnPoints();
   magnifier.style.display = "block";
@@ -62,7 +63,7 @@ function onMouseEnterPoint(e) {
   _alignMagnifierWithPoint(svg);
 
   for (let point of spawnPoints) {
-    if (!point.isEqualNode(svg) && _checkIfPointIsInMagnifier(point)) {
+    if (_checkIfPointIsInMagnifier(point)) {
       _correctMagnifiedPointPosition(svg, point);
     }
   }
@@ -79,13 +80,16 @@ function _updateMagnifierPosition() {
   magnifier.style.top = `${magnifierY - magnifierHeight / 2}px`;
   magnifier.style.left = `${magnifierX - magnifierHeight / 2}px`;
 
+
   magnifier.style.backgroundPositionX = `${
     -magnifierX * magnifierZoomLevel +
     magnifierWidth / 2 +
     widthToAdd * magnifierZoomLevel
+    - 1  // allow for border
   }px`;
   magnifier.style.backgroundPositionY = `${
     -magnifierY * magnifierZoomLevel + magnifierHeight / 2
+    - 1   // allow for border
   }px`;
 }
 
@@ -93,8 +97,8 @@ function _updateMagnifierPosition() {
 function _alignMagnifierWithPoint(point) {
   const { width, height } = actualMapInUse.target;
   const widthToAdd = _calculateWidthToAdd();
-  magnifierX = _domValueToInt(point.style.left) + widthToAdd;
-  magnifierY = _domValueToInt(point.style.top);
+  magnifierX = _domValueToFloat(point.style.left) + widthToAdd;
+  magnifierY = _domValueToFloat(point.style.top);
   _updateMagnifierPosition();
 }
 
@@ -112,23 +116,12 @@ function _calculateWidthToAdd() {
   return widthToAdd;
 }
 
-// Calculate distance between 2 points and return result
-function _calculateDistanceBetweenPoints(point1, point2) {
-  const point1Y = _domValueToInt(point1.style.top);
-  const point1X = _domValueToInt(point1.style.left);
-  const point2Y = _domValueToInt(point2.style.top) + magnifierHeight / 2;
-  const point2X = _domValueToInt(point2.style.left) + magnifierHeight / 2;
-
-  return _calculateDistance(point1X, point1Y, point2X, point2Y);
-}
-
 // Check if point is in magnifier radius
 function _checkIfPointIsInMagnifier(point) {
   const widthToAdd = _calculateWidthToAdd();
-  // we had point width/2 to be sure that point cant be in between magnifier border
-  const radius = magnifierHeight / 2 + point.width.animVal.value / 2;
-  const pointX = _domValueToInt(point.style.left) + widthToAdd;
-  const pointY = _domValueToInt(point.style.top);
+  const radius = magnifierHeight / 2;
+  const pointX = _domValueToFloat(point.style.left) + widthToAdd;
+  const pointY = _domValueToFloat(point.style.top);
   const distance = _calculateDistance(magnifierX, magnifierY, pointX, pointY);
   return distance < radius;
 }
@@ -137,24 +130,25 @@ function _checkIfPointIsInMagnifier(point) {
 function _correctMagnifiedPointPosition(referencePoint, point) {
   // distance difference X between points
   let diffX =
-    (_domValueToInt(referencePoint.style.left) -
-      _domValueToInt(point.style.left)) *
+    (_domValueToFloat(referencePoint.style.left) -
+      _domValueToFloat(point.style.left)) *
     magnifierZoomLevel;
 
   // distance difference Y between points
   let diffY =
-    (_domValueToInt(referencePoint.style.top) -
-      _domValueToInt(point.style.top)) *
+    (_domValueToFloat(referencePoint.style.top) -
+      _domValueToFloat(point.style.top)) *
     magnifierZoomLevel;
 
   let updatedPoint = point.cloneNode();
 
   // we add/sub perimeter of spawn point to be more accurate
-  const perimeter = point.width.animVal.value / 2;
-  diffY = diffY < 0 ? diffY + perimeter : diffY - perimeter;
-  diffX = diffX < 0 ? diffX + perimeter : diffX - perimeter;
-  updatedPoint.style.top = `${_domValueToInt(point.style.top) - diffY}px`;
-  updatedPoint.style.left = `${_domValueToInt(point.style.left) - diffX}px`;
+  // const perimeter = point.width.animVal.value;
+  // diffY -= perimeter;
+  // diffX -= perimeter;
+
+  updatedPoint.style.top  = `${_domValueToFloat(referencePoint.style.top)  - diffY}px`;
+  updatedPoint.style.left = `${_domValueToFloat(referencePoint.style.left) - diffX}px`;
 
   // we push point into array to be able to reset its location later
   modifiedSpawnPoints.push({
@@ -183,8 +177,8 @@ function _resetModifiedSpawnPoints() {
   modifiedSpawnPoints = [];
 }
 
-// Return int value of DOM style property : 450px -> 450
-function _domValueToInt(value) {
+// Return float value of DOM style property : 450px -> 450
+function _domValueToFloat(value) {
   return parseFloat(value.split("px")[0]);
 }
 
