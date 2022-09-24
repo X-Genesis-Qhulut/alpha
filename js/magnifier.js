@@ -7,7 +7,7 @@ const spawnPoints = document.querySelectorAll(".spawn_point");
 let modifiedSpawnPoints = [];
 const magnifierHeight = 200;
 const magnifierWidth = 200;
-const magnifierZoomLevel = 7;
+const magnifierZoomLevel = 5;
 let magnifierX = 0;
 let magnifierY = 0;
 
@@ -16,6 +16,8 @@ function onMouseEnterImg(e) {
   const map = e.target;
   actualMapInUse = e;
   const { width, height } = map;
+
+  magnifier.style.display == "block";
 
   magnifier.style.height = `${magnifierHeight}px`;
   magnifier.style.width = `${magnifierWidth}px`;
@@ -28,7 +30,7 @@ function onMouseEnterImg(e) {
 // When mouse move on image, we verify if cursor is still in magnifier radius to hide it if not
 function onMouseMoveImg(e) {
   // if magnifier is closed, we dont need to do calculation
-  if (magnifier.style.display == "none") {
+  if (magnifier.style.display == "none" || !actualMapInUse) {
     return;
   }
 
@@ -49,13 +51,12 @@ function onMouseMoveImg(e) {
 
 // When mouse hover a point, we display magnifier
 function onMouseEnterPoint(e) {
-  // if magnifier is already open and point is in magnifier radius, we dont do anything
-  if (_checkIfPointIsInMagnifier(e.target.childNodes[1]) && magnifier.style.display != "none") {
+  // if magnifier is already open and point is in magnfier radius, we dont do anything
+
+  const svg = e.target.childNodes[1];
+  if (_checkIfPointIsInMagnifier(svg) && magnifier.style.display != "none") {
     return;
   }
-
-  // make a copy because we might slightly alter its location
-  const svg = e.target.childNodes[1].cloneNode ();
 
   _resetModifiedSpawnPoints();
   magnifier.style.display = "block";
@@ -63,7 +64,7 @@ function onMouseEnterPoint(e) {
   _alignMagnifierWithPoint(svg);
 
   for (let point of spawnPoints) {
-    if (_checkIfPointIsInMagnifier(point)) {
+    if (!point.isEqualNode(svg) && _checkIfPointIsInMagnifier(point)) {
       _correctMagnifiedPointPosition(svg, point);
     }
   }
@@ -80,22 +81,20 @@ function _updateMagnifierPosition() {
   magnifier.style.top = `${magnifierY - magnifierHeight / 2}px`;
   magnifier.style.left = `${magnifierX - magnifierHeight / 2}px`;
 
-
   magnifier.style.backgroundPositionX = `${
     -magnifierX * magnifierZoomLevel +
     magnifierWidth / 2 +
     widthToAdd * magnifierZoomLevel
-    - 1  // allow for border
+    - 1
   }px`;
   magnifier.style.backgroundPositionY = `${
     -magnifierY * magnifierZoomLevel + magnifierHeight / 2
-    - 1   // allow for border
+    - 1
   }px`;
 }
 
 // When user hover a point, magnifier will align its center with it
 function _alignMagnifierWithPoint(point) {
-  const { width, height } = actualMapInUse.target;
   const widthToAdd = _calculateWidthToAdd();
   magnifierX = _domValueToFloat(point.style.left) + widthToAdd;
   magnifierY = _domValueToFloat(point.style.top);
@@ -119,7 +118,8 @@ function _calculateWidthToAdd() {
 // Check if point is in magnifier radius
 function _checkIfPointIsInMagnifier(point) {
   const widthToAdd = _calculateWidthToAdd();
-  const radius = magnifierHeight / 2;
+  // we had point width/2 to be sure that point cant be in between magnifier border
+  const radius = magnifierHeight / 2 + point.width.animVal.value / 2;
   const pointX = _domValueToFloat(point.style.left) + widthToAdd;
   const pointY = _domValueToFloat(point.style.top);
   const distance = _calculateDistance(magnifierX, magnifierY, pointX, pointY);
@@ -141,14 +141,12 @@ function _correctMagnifiedPointPosition(referencePoint, point) {
     magnifierZoomLevel;
 
   let updatedPoint = point.cloneNode();
-
-  // we add/sub perimeter of spawn point to be more accurate
-  // const perimeter = point.width.animVal.value;
-  // diffY -= perimeter;
-  // diffX -= perimeter;
-
-  updatedPoint.style.top  = `${_domValueToFloat(referencePoint.style.top)  - diffY}px`;
-  updatedPoint.style.left = `${_domValueToFloat(referencePoint.style.left) - diffX}px`;
+  updatedPoint.style.top = `${
+    _domValueToFloat(referencePoint.style.top) - diffY
+  }px`;
+  updatedPoint.style.left = `${
+    _domValueToFloat(referencePoint.style.left) - diffX
+  }px`;
 
   // we push point into array to be able to reset its location later
   modifiedSpawnPoints.push({
@@ -177,12 +175,22 @@ function _resetModifiedSpawnPoints() {
   modifiedSpawnPoints = [];
 }
 
-// Return float value of DOM style property : 450px -> 450
+// Return float value of DOM style property : 450.13px -> 450.13
 function _domValueToFloat(value) {
   return parseFloat(value.split("px")[0]);
 }
 
 // Calculate distance between coords
 function _calculateDistance(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+  return Math.sqrt(Math.pow(x1 - 8 - x2, 2) + Math.pow(y1 - 8 - y2, 2));
 }
+
+// Calculate distance between 2 points and return result
+// function _calculateDistanceBetweenPoints(point1, point2) {
+//   const point1Y = _domValueToFloat(point1.style.top);
+//   const point1X = _domValueToFloat(point1.style.left);
+//   const point2Y = _domValueToFloat(point2.style.top) + magnifierHeight / 2;
+//   const point2X = _domValueToFloat(point2.style.left) + magnifierHeight / 2;
+
+//   return _calculateDistance(point1X, point1Y, point2X, point2Y);
+// }
