@@ -25,10 +25,11 @@ function creatureTopLeft ($info)
   $navDotSize = 13;
   $halfNavDotSize = $navDotSize / 2;
 
+  $count = getCount ($row, 'display_id', 4);
 
   echo "
     <!-- CAROUSSEL DISPLAY ID -->
-    <div class='caroussel-model' id='caroussel-model' >
+    <div class='caroussel-model' id='caroussel-model' data-modelcount='$count'>
   ";
 
   for ($i = 1; $i <= 4; $i++)
@@ -59,7 +60,6 @@ function creatureTopLeft ($info)
 
     } // end of for all 4 possible display IDs
 
-$count = getCount ($row, 'display_id', 4);
 $display3 = $count > 2 ? '' : 'none';
 $display4 = $count > 3 ? '' : 'none';
 
@@ -72,6 +72,7 @@ if ($count > 1)
       class='fas fa-circle'
       onclick='modelPage(event)'
       data-page='1'
+      style='color:whitesmoke'
     ></i>
     <i
       id='model_navigate2'

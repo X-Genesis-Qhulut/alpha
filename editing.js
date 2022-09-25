@@ -90,8 +90,9 @@ function copyContents (event)
 function modelPage (event)
   {
   var page = event.currentTarget.dataset.page
+  var model_count = document.getElementById('caroussel-model').dataset.modelcount
 
-  for (i = 1; i <= 4; i++)
+  for (i = 1; i <= model_count; i++)
     {
     document.getElementById('model' + i).style.display = 'none';
     document.getElementById('model_navigate' + i).style.color = 'darkgray';
