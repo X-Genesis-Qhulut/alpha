@@ -476,7 +476,7 @@ function showItemModel ($row)
   <!-- MODEL DISPLAY ID -->
   <img
     class='model-display'
-    src='missing_creature.png'
+    src='missing_creature.webp'
     alt='Item model'
   />
   <!-- END MODEL DISPLAY ID -->

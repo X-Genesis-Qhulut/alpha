@@ -185,7 +185,7 @@ function showGameObjectModel ($row)
     if (!file_exists ("$documentRoot$executionDir/game_objects/$model"))
       {
       comment ("$documentRoot$executionDir/game_objects/$model   NOT ON FILE");
-      $model = 'missing_game_object.png';
+      $model = 'missing_game_object.webp';
       }
 
     echo "

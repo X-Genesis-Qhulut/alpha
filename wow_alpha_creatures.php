@@ -41,7 +41,7 @@ function creatureTopLeft ($info)
       if (!file_exists ("$documentRoot$executionDir/creatures/$model"))
         {
         comment ("$documentRoot$executionDir/creatures/$model   NOT ON FILE");
-        $model = 'missing_creature.png';
+        $model = 'missing_creature.webp';
         }
 
       $display = ($i == 1) ? 'block' : 'none';
