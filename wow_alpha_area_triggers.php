@@ -57,14 +57,17 @@ function areatriggerTopRight ($info)
 
   $results = array ($row);
 
-  if ($row ['ContinentID'] == 0)
-    showSpawnPoints ($results, 'Area trigger - Eastern Kingdoms', AREATRIGGER,
-                  'ID', 'X', 'Y', 'Z', 'ContinentID');
 
   comment ('KALIMDOR');
 
   if ($row ['ContinentID'] == 1)
     showSpawnPoints ($results, 'Area trigger - Kalimdor', AREATRIGGER,
+                  'ID', 'X', 'Y', 'Z', 'ContinentID');
+
+  comment ('EASTERN KINGDONS');
+
+  if ($row ['ContinentID'] == 0)
+    showSpawnPoints ($results, 'Area trigger - Eastern Kingdoms', AREATRIGGER,
                   'ID', 'X', 'Y', 'Z', 'ContinentID');
 
   comment ('END AREA TRIGGER ON MAP');

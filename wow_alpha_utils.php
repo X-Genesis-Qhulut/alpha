@@ -1609,7 +1609,13 @@ function topRight ($userInfo, $func)
 
   comment ("TOP-RIGHT BOX : CAROUSSEL$funcName");
 
-  echo "<aside class='caroussel'>\n";
+  echo "<aside class='caroussel' onmouseleave='onMouseLeaveArea(event)'>
+    <div class='help-box'>
+    <i class='fas fa-arrow-pointer help-box__info-icon'></i>
+    <span class='help-box__content'> hover </span>
+    <span class='help-box__point'></span>
+    <span class='help-box__content'> to magnify </span>";
+  endDiv ('help-box');
 
   $func ($userInfo);   // output contents
 
@@ -1745,9 +1751,9 @@ function doArrowsForMap ($table, $where, $param, $mName)
 
   if ($map0 && $map1)
     {
-    echo "<a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
+    echo "<a class='caroussel__left-arrow' href='#Kalimdor_map'
         ><i class='fas fa-angle-left'></i></a>\n";
-    echo "<a class='caroussel__right-arrow' href='#Kalimdor_map'
+    echo "<a class='caroussel__right-arrow' href='#Eastern_Kingdoms_map'
         ><i class='fas fa-angle-right'></i></a>\n";
     } // we are showing both maps so we need both arrows
 

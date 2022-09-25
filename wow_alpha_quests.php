@@ -465,20 +465,20 @@ function questTopRight ($info)
   // if two maps are involved show the caroussel arrows
   if (count ($mapPoints_0) && count ($mapPoints_1))
     {
-    echo "<a class='caroussel__left-arrow' href='#Eastern_Kingdoms_map'
+    echo "<a class='caroussel__left-arrow' href='#Kalimdor_map'
         ><i class='fas fa-angle-left'></i></a>\n";
-    echo "<a class='caroussel__right-arrow' href='#Kalimdor_map'
+    echo "<a class='caroussel__right-arrow' href='#Eastern_Kingdoms_map'
         ><i class='fas fa-angle-right'></i></a>\n";
     } // end of if two maps
-
-  comment ('EASTERN KINGDOMS');
-
-  showSpawnPoints ($mapPoints_0, 'Quest information - Eastern Kingdoms', 'Multiple tables',
-                  'id', 'X', 'Y', 'Z', 'map');
 
   comment ('KALIMDOR');
 
   showSpawnPoints ($mapPoints_1, 'Quest information- Kalimdor', 'Multiple tables',
+                  'id', 'X', 'Y', 'Z', 'map');
+
+  comment ('EASTERN KINGDOMS');
+
+  showSpawnPoints ($mapPoints_0, 'Quest information - Eastern Kingdoms', 'Multiple tables',
                   'id', 'X', 'Y', 'Z', 'map');
 
   comment ('QUEST INFORMATION ON MAP');

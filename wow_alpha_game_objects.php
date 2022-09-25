@@ -239,15 +239,6 @@ function gameobjectTopRight ($info)
 
   doArrowsForMap (SPAWNS_GAMEOBJECTS, $where, $param, 'spawn_map');
 
-  comment ('EASTERN KINGDOMS');
-
-  // show spawn points - Eastern Kingdoms
-  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
-        WHERE $where AND spawn_map = 0", $param) ;
-
-  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', SPAWNS_GAMEOBJECTS,
-                'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
-
   comment ('KALIMDOR');
 
   // show spawn points - Kalimdor
@@ -255,6 +246,15 @@ function gameobjectTopRight ($info)
         WHERE $where AND spawn_map = 1", $param);
 
   showSpawnPoints ($results, 'Spawn points - Kalimdor', SPAWNS_GAMEOBJECTS,
+                'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
+
+  comment ('EASTERN KINGDOMS');
+
+  // show spawn points - Eastern Kingdoms
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_GAMEOBJECTS."
+        WHERE $where AND spawn_map = 0", $param) ;
+
+  showSpawnPoints ($results, 'Spawn points - Eastern Kingdoms', SPAWNS_GAMEOBJECTS,
                 'spawn_id', 'spawn_positionX', 'spawn_positionY', 'spawn_positionZ', 'spawn_map');
 
 

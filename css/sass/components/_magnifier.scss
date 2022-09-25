@@ -1,13 +1,11 @@
 .magnifier {
   position: absolute;
-  // z-index: 999;
+  z-index: 999;
   pointer-events: none;
   opacity: 1;
-  border: 1px solid lightblue;
   background-color: white;
   background-repeat: no-repeat;
   display: none;
-  border-radius: 100%;
   animation: appearslowlyandscale 200ms ease-out;
   transform: scale(1);
   transition: all 200ms;

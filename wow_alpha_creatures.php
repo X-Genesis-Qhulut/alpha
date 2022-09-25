@@ -189,21 +189,12 @@ function creatureTopRight ($info)
 
   comment ('SPAWN POINTS ON MAP');
 
-  comment ('EASTERN KINGDOMS');
 
   $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
            ' AND ignored = 0 ';
   $param = array ('iiii', &$id, &$id, &$id, &$id);
 
   doArrowsForMap (SPAWNS_CREATURES, $where, $param, 'map');
-
-
-  // show spawn points - Eastern Kingdoms
-  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
-        WHERE $where AND map = 0", $param) ;
-
-  showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
-                'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('KALIMDOR');
 
@@ -214,6 +205,14 @@ function creatureTopRight ($info)
   showSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
                 'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
+  comment ('EASTERN KINGDOMS');
+
+  // show spawn points - Eastern Kingdoms
+  $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
+        WHERE $where AND map = 0", $param) ;
+
+  showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
+                'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('END MAP SPAWN POINTS');
 

@@ -1,0 +1,47 @@
+.help-box {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 998;
+  background-color: $color2;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  border-radius: 15px 0px 0px 15px;
+  padding: 0px;
+  padding-right: 10px;
+  @include big-shadow;
+
+  &__info-icon {
+    margin-right: 10px;
+    color: white;
+    font-size: 0.8em;
+    padding: 4px 6px;
+    padding-left: 8px;
+    background-color: darken($color7, 20%);
+    border: 1px solid $color7;
+    border-radius: 100%;
+  }
+
+  &__point {
+    // display: none;
+    width: 7px;
+    height: 7px;
+    border: 1px solid black;
+    border-radius: 100%;
+    background-color: yellow;
+    margin: 0px 4px;
+
+    padding: 0px;
+  }
+
+  &__help-icon {
+    color: yellow;
+  }
+
+  &__content {
+    // display: none;
+    color: $color6;
+    font-size: 0.8em;
+  }
+}
