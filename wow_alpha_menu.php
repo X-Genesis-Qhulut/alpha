@@ -268,7 +268,7 @@ function mainPage ()
   oneCard ('Alpha Archive', 'fas fa-image', "
       <img
         class='card__content__cover'
-        src='./assets/img/archive.png'
+        src='./assets/img/archive.webp'
         alt=''
       />
       <h3>Browse old screenshots</h3>
