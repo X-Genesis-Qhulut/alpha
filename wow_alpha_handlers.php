@@ -17,11 +17,11 @@ define ('MENU', array (
   'Items'         => array ('action' => 'items',           'icon' => 'fa-gavel'),
   'Maps'          => array ('action' => 'maps',            'icon' => 'fa-map'),
   'Pages'         => array ('action' => 'books',           'icon' => 'fa-file'),
-  'Ports'         => array ('action' => 'ports',           'icon' => 'fa-globe'),
   'Quests'        => array ('action' => 'quests',          'icon' => 'fa-list'),
   'Skills'        => array ('action' => 'skills',          'icon' => 'fa-graduation-cap'),
   'Spells'        => array ('action' => 'spells',          'icon' => 'fa-book'),
   'Tables'        => array ('action' => 'tables',          'icon' => 'fa-table'),
+  'Teleports'     => array ('action' => 'ports',           'icon' => 'fa-globe'),
   'Zones'         => array ('action' => 'zones',           'icon' => 'fa-map-pin'),
 
 // more here
