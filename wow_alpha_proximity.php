@@ -45,7 +45,7 @@ function showProximityDetails ($info)
   $results = dbQueryParam ("SELECT *,
               SQRT(POWER(? - position_x, 2) + POWER(? - position_y, 2) + POWER(? - position_z, 2))
                AS distance
-            FROM ".SPAWNS_CREATURES."
+            FROM ".SPAWNS_CREATURES." LEFT JOIN ".CREATURE_TEMPLATE." ON (spawn_entry1 = entry)
             WHERE map = ? AND ignored = 0
             HAVING distance <= ?
             ORDER BY distance
@@ -75,7 +75,7 @@ function showProximityDetails ($info)
         <th>Entry</th>
         <th>Name</th>
         <th>Distance (yards)</th>
-        <th>Alternate</th>
+        <th>Flags</th>
         </tr>
       </thead>
       <tbody>
@@ -92,9 +92,9 @@ function showProximityDetails ($info)
         $id = $row ["spawn_entry$i"];
         tdh ("<a href='?action=show_creature&id=$id'>$id</a>");
         tdh ("<a href='?action=show_creature&id=$id'>" . fixHTML ($creatures [$id]) . "</a>");
-        td (round ($distance, 1));
-        if ($row ["spawn_entry2"])
-          td ('Yes');
+        td (round ($distance, 0));
+        if ($row ['npc_flags'])
+          td (expandShiftedMask (NPC_FLAG, $row ['npc_flags'], false));
         else
           td ('');
 

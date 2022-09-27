@@ -73,7 +73,7 @@ function showNearbyPorts ($info)
   th ('Y');
   th ('Z');
   th ('Map');
-  th ('Distance');
+  th ('Distance (yards)');
   echo "</tr>\n";
   echo "</thead>\n";
   echo "<tbody>\n";
@@ -118,10 +118,13 @@ function portDetails ($info)
       topRight ($info, 'portTopRight');
       });
 
-  bottomSection ($info, function ($info)
-      {
-      showNearbyPorts ($info);
-      });
+  if ($info ['row'] ['map'] <= 1)
+    {
+    bottomSection ($info, function ($info)
+        {
+        showNearbyPorts ($info);
+        });
+    }
 
   } // end of portDetails
 
