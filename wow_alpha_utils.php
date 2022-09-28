@@ -993,7 +993,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           data-width='$mapWidth'
           data-height='$mapHeight'
           onmouseenter='onMouseEnterImg(event)' onmousemove='onMouseMoveImg(event)'
-          alt='{$mapName} map' title='{$mapName} map' />\n";
+          alt='{$mapName} map' title='{$mapName} map' >\n";
 
   // draw an SVG circle for each spawn point
   foreach ($results as $spawnRow)
