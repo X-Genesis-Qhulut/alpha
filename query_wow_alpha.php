@@ -6,23 +6,23 @@
 
   <!-- Front end CSS by Geo -->
 
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="title" content="WoW 0.5.3 Database" />
-  <meta name="description" content="Database browser for Alpha core 0.5.3" />
+  <meta charset="utf-8" >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+  <meta name="title" content="WoW 0.5.3 Database" >
+  <meta name="description" content="Database browser for Alpha core 0.5.3" >
 
   <meta property="og:title" content="WoW Alpha Core Database Browser">
-  <meta property="og:type"  content="website" />
+  <meta property="og:type"  content="website" >
   <meta property="og:image" content="http://wow-refugee.com/alpha/thumbnail.jpg">
   <meta property="og:url"   content="http://wow-refugee.com/alpha/index.php">
   <meta property="og:description" content="A database browser for the World of Warcraft 0.5.3 Alpha release">
   <meta property="og:site_name"   content="WoW Refugee">
 
-  <meta property="og:image" content="http://wow-refugee.com/alpha/thumbnail.jpg" />
-  <meta property="og:image:secure_url" content="https://wow-refugee.com/alpha/thumbnail.jpg" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="800" />
-  <meta property="og:image:height" content="434" />
+  <meta property="og:image" content="http://wow-refugee.com/alpha/thumbnail.jpg" >
+  <meta property="og:image:secure_url" content="https://wow-refugee.com/alpha/thumbnail.jpg" >
+  <meta property="og:image:type" content="image/jpeg" >
+  <meta property="og:image:width" content="800" >
+  <meta property="og:image:height" content="434" >
 
   <meta name="twitter:card" content="http://wow-refugee.com/alpha/thumbnail.jpg">
   <title>WoW 0.5.3 Database</title>

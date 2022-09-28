@@ -49,15 +49,9 @@ function convertDate ($date)
 function showBigMenu ()
   {
 
-/*
-<div id='noscript_warning_id'>
-<p><i>(Enable Javascript to see nice icons on the menus.)</i></p>
-</div>
-
-<script>
-document.getElementById('noscript_warning_id').style.display = 'none';
-</script>
-*/
+$executionDir = EXECUTIONDIR;
+if (!$executionDir)
+  $executionDir = '/';
 
 echo "
 <!-- MENU NAV -->
@@ -65,7 +59,7 @@ echo "
   <div class='menu-bar-main-container'>
     <div class='menu-bar-header-container'>
 
-<a href='".EXECUTIONDIR."'>
+<a href='$executionDir'>
   <img class='menu-bar-logo' src='logo-small.png' alt='Alpha Core' title='Main menu'>
 </a>
 <div class='menu-bar-title'>
@@ -167,6 +161,26 @@ function mainPage ()
     <div class='creature-details page-content'>
       <div class='cards-container'>
       ";
+
+
+    echo "
+<div id='noscript_warning_id'>";
+
+  // UPDATES
+  oneCard ('Javascript required', 'fas fa-cog', "
+      <h3>Enable Javascript</h3>
+      <p>For full functionality please enable Javascript for this site.
+      ");
+
+echo "
+</div>
+
+<script>
+document.getElementById('noscript_warning_id').style.display = 'none';
+</script>
+      ";
+
+
 
   // UPDATES
   oneCard ('Updates', 'fas fa-calendar-days', "
