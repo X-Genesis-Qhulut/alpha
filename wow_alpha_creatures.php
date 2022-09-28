@@ -723,7 +723,7 @@ function og_creature ()
     $description = "Entry: $id, Display ID: $display_id";
     }
 
-  sendOgMeta ($title, $image, $description);
+  sendOgMeta ($title, $image, 'webp', $description);
 
   }   // end of og_creature
 

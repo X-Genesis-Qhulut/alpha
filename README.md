@@ -7,7 +7,7 @@ This is intended for browsing the database used in: <https://github.com/The-Alph
 * Alternatively, you can enter a database ID (number) directly to go to that item. For example, 4949 to view Thrall.
 * You can further filter on numeric fields (eg. items above a certain level)
 
-A public implementation of this code is at: <https://wow-refugee.com/alpha/>
+A public implementation of this code is at: <http://db.thealphaproject.eu/>
 
 If that goes down, see below for how to install it yourself.
 

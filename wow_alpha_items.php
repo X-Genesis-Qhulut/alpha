@@ -731,7 +731,7 @@ function og_item ()
     $description = "Entry: $id";
     }
 
-  sendOgMeta ($title, $image, $description);
+  sendOgMeta ($title, $image, 'png', $description);
 
 }   // end of og_item
 

@@ -42,22 +42,25 @@ $action  = getGP ('action', 40, $VALID_ACTION);
 // get ID (eg. spell ID)
 $id      = getGP ('id',      8, $VALID_NUMBER);
 
-  if (array_key_exists ($action, HANDLERS) && array_key_exists ('og', HANDLERS [$action]))
+  if ($action &&                                      // we have an action
+      array_key_exists ($action, HANDLERS) &&         // and it is valid and we have a handler for it
+      array_key_exists ('og', HANDLERS [$action]))    // and we have an og handler (Open Graphic)
     {
     $actionInfo = HANDLERS [$action];
     $extraInfo = HANDLER_EXTRA [$actionInfo ['extra']];
     // only pull in this file if we have to
     if (array_key_exists ('requires', $extraInfo))
       require ($extraInfo ['requires']);
-    $actionInfo ['og'] ();
+    $actionInfo ['og'] ();    // call this to output the OG stuff for the particular thing
     }
-  else
+  else     // otherwise use default OG stuff
     echo "
     <meta property='og:title' content='WoW Alpha Core Database Browser'>
     <meta property='og:image' content='/thumbnail.jpg'>
-    <meta property='og:image:width' content='800' >
+    <meta property='og:image:width' content='802' >
     <meta property='og:image:height' content='434' >
     <meta property='og:description' content='A database browser for the World of Warcraft 0.5.3 Alpha release'>
+    <meta property='og:image:type' content='image/jpeg' >
     ";
 
   // back to outputting the <head> stuff
@@ -67,7 +70,6 @@ $id      = getGP ('id',      8, $VALID_NUMBER);
   <meta property="og:url"   content="/index.php">
   <meta property="og:site_name"   content="The Alpha Project">
 
-  <meta property="og:image:type" content="image/jpeg" >
 
   <meta name="twitter:card" content="http://wow-refugee.com/alpha/thumbnail.jpg">
   <title>WoW 0.5.3 Database</title>

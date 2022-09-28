@@ -1957,7 +1957,7 @@ function creature_compare ($a, $b)
   return $creatures [$a ['npc']] <=> $creatures [$b ['npc']];
   } // end of item_compare
 
-function sendOgMeta ($title, $image, $description)
+function sendOgMeta ($title, $image, $imageType, $description)
   {
   global $documentRoot, $executionDir;
 
@@ -1974,9 +1974,10 @@ function sendOgMeta ($title, $image, $description)
   echo "
       <meta property='og:title' content='". fixHTML ($title) ."'>
       <meta property='og:image' content='". fixHTML ($image) ."'>
-      <meta property='og:image:width' content='$width' >
-      <meta property='og:image:height' content='$height' >
-      <meta property='og:description' content='". fixHTML ($description) . "'>
+      <meta property='og:image:width'   content='$width' >
+      <meta property='og:image:height'  content='$height' >
+      <meta property='og:image:type'    content='image/$imageType' >
+      <meta property='og:description'   content='". fixHTML ($description) . "'>
   ";
 
 } // end of sendOgMeta
