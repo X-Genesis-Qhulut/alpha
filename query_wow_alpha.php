@@ -9,20 +9,65 @@
   <meta charset="utf-8" >
   <meta name="viewport" content="width=device-width, initial-scale=1.0" >
   <meta name="title" content="WoW 0.5.3 Database" >
-  <meta name="description" content="Database browser for Alpha core 0.5.3" >
+<?php
 
-  <meta property="og:title" content="WoW Alpha Core Database Browser">
+// get appropriate image/title/description
+
+$documentRoot = $_SERVER['DOCUMENT_ROOT'];
+$dblink = false;
+
+// Configuration: database name, password, etc.
+require ("wow_alpha_config.php");
+
+//-----------------------------------------------------------------------------
+// open database, die on error
+//-----------------------------------------------------------------------------
+$dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
+if (mysqli_connect_errno())
+  MajorProblem ("Cannot connect to server " . DBSERVER . ':' . mysqli_connect_error());
+
+// useful stuff (utilities)
+require ("wow_alpha_utils.php");
+// tables of constants
+require ("wow_alpha_constants.php");
+// what functions we support and what handles them
+require ("wow_alpha_handlers.php");
+// database management
+require ("wow_alpha_database.php");
+
+$executionDir = EXECUTIONDIR;
+
+// get action
+$action  = getGP ('action', 40, $VALID_ACTION);
+// get ID (eg. spell ID)
+$id      = getGP ('id',      8, $VALID_NUMBER);
+
+  if (array_key_exists ($action, HANDLERS) && array_key_exists ('og', HANDLERS [$action]))
+    {
+    $actionInfo = HANDLERS [$action];
+    $extraInfo = HANDLER_EXTRA [$actionInfo ['extra']];
+    // only pull in this file if we have to
+    if (array_key_exists ('requires', $extraInfo))
+      require ($extraInfo ['requires']);
+    $actionInfo ['og'] ();
+    }
+  else
+    echo "
+    <meta property='og:title' content='WoW Alpha Core Database Browser'>
+    <meta property='og:image' content='/thumbnail.jpg'>
+    <meta property='og:image:width' content='800' >
+    <meta property='og:image:height' content='434' >
+    <meta property='og:description' content='A database browser for the World of Warcraft 0.5.3 Alpha release'>
+    ";
+
+  // back to outputting the <head> stuff
+
+?>
   <meta property="og:type"  content="website" >
-  <meta property="og:image" content="/thumbnail.jpg">
   <meta property="og:url"   content="/index.php">
-  <meta property="og:description" content="A database browser for the World of Warcraft 0.5.3 Alpha release">
-  <meta property="og:site_name"   content="WoW Refugee">
+  <meta property="og:site_name"   content="The Alpha Project">
 
-  <meta property="og:image" content="/thumbnail.jpg" >
-  <meta property="og:image:secure_url" content="/thumbnail.jpg" >
   <meta property="og:image:type" content="image/jpeg" >
-  <meta property="og:image:width" content="800" >
-  <meta property="og:image:height" content="434" >
 
   <meta name="twitter:card" content="http://wow-refugee.com/alpha/thumbnail.jpg">
   <title>WoW 0.5.3 Database</title>
@@ -54,8 +99,7 @@ Early maps:
 
 */
 
-// Configuration: database name, password, etc.
-require ("wow_alpha_config.php");
+
 
 // helper function for linking in stylesheets with a timestamp
 function includeStylesheet ($name)
@@ -99,16 +143,8 @@ includeScript ("js/magnifier.js");
 
 <?php
 
-// database management
-require ("wow_alpha_database.php");
 // main menu
 require ("wow_alpha_menu.php");
-// tables of constants
-require ("wow_alpha_constants.php");
-// what functions we support and what handles them
-require ("wow_alpha_handlers.php");
-// useful stuff
-require ("wow_alpha_utils.php");
 // field expansions
 require ("wow_alpha_fields.php");
 
@@ -116,9 +152,7 @@ require ("wow_alpha_fields.php");
 // START HERE
 //-----------------------------------------------------------------------------
 
-$documentRoot = $_SERVER['DOCUMENT_ROOT'];
-$dblink = false;
-$executionDir = EXECUTIONDIR;
+
 
 // incorporate our stylesheet
 
@@ -126,10 +160,7 @@ $executionDir = EXECUTIONDIR;
 // GET PARAMETERS FROM POST OR GET
 //-----------------------------------------------------------------------------
 
-// get action
-$action  = getGP ('action', 40, $VALID_ACTION);
-// get ID (eg. spell ID)
-$id      = getGP ('id',      8, $VALID_NUMBER);
+
 // get filter
 $filter  = getGP ('filter');
 // and secondary filter
@@ -163,13 +194,6 @@ $item      = getGP ('item',      8, $VALID_NUMBER);
 
 if (!$page || $page < 1)
   $page = 1;
-
-//-----------------------------------------------------------------------------
-// open database, die on error
-//-----------------------------------------------------------------------------
-$dblink = mysqli_connect(DBSERVER, DBUSER, DBPASSWORD, WORLD_DBNAME);
-if (mysqli_connect_errno())
-  MajorProblem ("Cannot connect to server " . DBSERVER . ':' . mysqli_connect_error());
 
 $PHP_SELF = $_SERVER['PHP_SELF'];
 
@@ -248,7 +272,7 @@ if ($action)
 
     // only pull in this file if we have to
     if (array_key_exists ('requires', $extraInfo))
-      require ($extraInfo ['requires']);
+      require_once ($extraInfo ['requires']);
 
     comment ('Executing ' . $actionInfo ['func']);
     // call the handler function

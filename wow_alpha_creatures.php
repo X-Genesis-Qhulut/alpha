@@ -688,4 +688,59 @@ function showCreatures ()
   wrapUpSearch ();
 
   } // end of showCreatures
+
+function og_creature ()
+{
+global $id, $documentRoot, $executionDir;
+
+if ($id)
+  $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+else
+  {
+  $id = 0;
+  $row = false;
+  }
+
+if (!$row)
+  {
+  $title = 'NPC not on file';
+  $image = '/creatures/missing_creature.webp';
+  $description = '';
+  }
+else
+  {
+  $title = $row ['name'];
+  if ($row ['subname'])
+    $title .= ' <' . $row ['subname'] . '>';
+  $display_id = $row ['display_id1'];
+  if ($display_id)
+    {
+    $model = $display_id . '.webp';
+    $image = "/creatures/$model";
+    }
+  else
+    $image = '/creatures/missing_creature.webp';
+  $description = "Entry: $id, Display ID: $display_id";
+  }
+
+$width = 800;
+$height = 500;
+
+$imageInfo = array ();
+if (file_exists ("$documentRoot$executionDir$image"))
+  {
+  list($width, $height, $type, $attr) = getimagesize ($documentRoot . $executionDir . $image);
+  } // if file exists
+
+
+echo "
+    <meta property='og:title' content='". fixHTML ($title) ."'>
+    <meta property='og:image' content='". fixHTML ($image) ."'>
+    <meta property='og:image:width' content='$width' >
+    <meta property='og:image:height' content='$height' >
+    <meta property='og:description' content='". fixHTML ($description) . "'>
+";
+
+}   // end of og_creature
+
 ?>

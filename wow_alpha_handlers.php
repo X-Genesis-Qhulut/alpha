@@ -173,8 +173,8 @@ define ('HANDLERS', array (
   'read_text'     => array ('func' =>  'showText',          'extra' => 'pages'),
 
   // Creatures (NPCs)
-  'creatures'     => array ('func'    => 'showCreatures',   'extra' => 'creatures'),
-  'show_creature' => array ('func' =>  'showOneCreature',   'extra' => 'creatures'),
+  'creatures'     => array ('func' => 'showCreatures',      'extra' => 'creatures'),
+  'show_creature' => array ('func' =>  'showOneCreature',   'extra' => 'creatures', 'og' => 'og_creature'),
 
   // Quests
   'quests'        => array ('func' =>  'showQuests',        'extra' => 'quests'),

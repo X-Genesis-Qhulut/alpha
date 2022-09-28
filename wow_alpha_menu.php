@@ -267,7 +267,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
         class='card__content__cover'
         src='./assets/img/alphacore.png'
         alt=''
-      />
+      >
       <h3>O.5.3 WoW Emulator</h3>
       <ul>
         <li>
@@ -284,7 +284,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
         class='card__content__cover'
         src='./assets/img/archive.webp'
         alt=''
-      />
+      >
       <h3>Browse old screenshots</h3>
       <ul>
         <li>
@@ -302,7 +302,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
         class='card__content__cover'
         src='./assets/img/discord.jpeg'
         alt=''
-      />
+      >
       <h3>Join Alpha core on discord</h3>
       <ul>
         <li>
@@ -319,7 +319,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
         class='card__content__cover'
         src='./assets/img/alakazam.jpg'
         alt=''
-      />
+      >
       <h3>Old WoW Beta Database</h3>
       <ul>
         <li>
@@ -337,7 +337,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
         class='card__content__cover'
         src='./assets/img/avatar.jpg'
         alt=''
-      />
+      >
       <h3>Created by  X'Genesis Qhulut</h3>
 
       <ul>
@@ -371,7 +371,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
         class='card__content__cover'
         src='./assets/img/napoleon.jpg'
         alt=''
-      />
+      >
       <h3>Created by Geo</h3>
       <ul>
         <li>
