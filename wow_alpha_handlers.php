@@ -169,7 +169,7 @@ define ('HANDLERS', array (
 
   // Items
   'items'         => array ('func' =>  'showItems',         'extra' => 'items'),
-  'show_item'     => array ('func' =>  'showOneItem',       'extra' => 'items'),
+  'show_item'     => array ('func' =>  'showOneItem',       'extra' => 'items', 'og' => 'og_item'),
   'read_text'     => array ('func' =>  'showText',          'extra' => 'pages'),
 
   // Creatures (NPCs)

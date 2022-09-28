@@ -1957,5 +1957,28 @@ function creature_compare ($a, $b)
   return $creatures [$a ['npc']] <=> $creatures [$b ['npc']];
   } // end of item_compare
 
+function sendOgMeta ($title, $image, $description)
+  {
+  global $documentRoot, $executionDir;
+
+  $width = 800;
+  $height = 500;
+
+  $imageInfo = array ();
+  if (file_exists ("$documentRoot$executionDir$image"))
+    {
+    list($width, $height, $type, $attr) = getimagesize ($documentRoot . $executionDir . $image);
+    } // if file exists
+
+
+  echo "
+      <meta property='og:title' content='". fixHTML ($title) ."'>
+      <meta property='og:image' content='". fixHTML ($image) ."'>
+      <meta property='og:image:width' content='$width' >
+      <meta property='og:image:height' content='$height' >
+      <meta property='og:description' content='". fixHTML ($description) . "'>
+  ";
+
+} // end of sendOgMeta
 
 ?>

@@ -694,4 +694,46 @@ function showItems ()
   wrapUpSearch ();
 
   } // end of showItems
-  ?>
+
+
+function og_item ()
+{
+  global $id, $documentRoot, $executionDir;
+
+  if ($id)
+    {
+    $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
+    $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
+    }
+  else
+    {
+    $id = 0;
+    $row = false;
+    $imageRow = false;
+    }
+
+  if (!$row)
+    {
+    $title = 'Item not on file';
+    $image = '/icons/INV_Misc_QuestionMark.png';
+    $description = '';
+    }
+  else
+    {
+    $title = $row ['name'];
+    if ($imageRow)
+      {
+      $icon = $imageRow ['InventoryIcon'] . '.png';
+      $image = "/icons/$icon";
+      }
+    else
+      $image = '/icons/INV_Misc_QuestionMark.png';
+    $description = "Entry: $id";
+    }
+
+  sendOgMeta ($title, $image, $description);
+
+}   // end of og_item
+
+
+?>
