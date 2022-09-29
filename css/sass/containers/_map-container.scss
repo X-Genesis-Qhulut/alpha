@@ -1,6 +1,19 @@
 .map-container {
   position: relative;
   // z-index: 999;
+  overflow: scroll;
+  min-width: 345px;
+  min-height: 650px;
+  scrollbar-width: none; /* Firefox 64 */
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  & img {
+    width: 345px;
+    height: 650px;
+  }
 
   & svg {
     :hover {

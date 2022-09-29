@@ -1054,26 +1054,39 @@ a {
 .caroussel__left-arrow {
   position: absolute;
   z-index: 50;
-  font-size: 4em;
-  color: #f9f9f9;
+  font-size: 2.5em;
+  color: #7daaf1;
   font-weight: bold;
-  padding: 0px 10px;
-  top: 40%;
-  left: 350px;
+  padding: 0px 5px;
+  top: 50%;
+  left: 355px;
+  border: 1px solid #535353;
+  background-color: #383838;
+  box-shadow: 0px 0px 9px #303030;
+  animation: appearslowly 500ms ease-in-out;
 }
 .caroussel__right-arrow {
   position: absolute;
   z-index: 50;
-  font-size: 4em;
-  color: #f9f9f9;
+  font-size: 2.5em;
   font-weight: bold;
-  padding: 0px 10px;
-  top: 40%;
-  left: 280px;
+  color: #7daaf1;
+  padding: 0px 5px;
+  top: 50%;
+  left: 300px;
+  border: 1px solid #535353;
+  background-color: #383838;
+  box-shadow: 0px 0px 9px #303030;
+  animation: appearslowly 500ms ease-in-out;
 }
 @media screen and (max-width: 1250px) {
   .caroussel img {
     border-radius: 0px 20px 0px 20px;
+  }
+}
+@media screen and (max-width: 1337px) {
+  .caroussel {
+    border-radius: 20px;
   }
 }
 @media screen and (max-width: 700px) {
@@ -1082,9 +1095,29 @@ a {
     width: 95%;
   }
 }
-@media screen and (max-width: 370px) {
+@media screen and (max-width: 450px) {
   .caroussel {
-    max-width: 230px;
+    max-width: 340px;
+  }
+}
+@media screen and (max-width: 430px) {
+  .caroussel {
+    max-width: 320px;
+  }
+}
+@media screen and (max-width: 430px) {
+  .caroussel {
+    max-width: 290px;
+  }
+}
+@media screen and (max-width: 380px) {
+  .caroussel {
+    max-width: 260px;
+  }
+}
+@media screen and (max-width: 330px) {
+  .caroussel {
+    max-width: 240px;
   }
 }
 
@@ -1156,7 +1189,6 @@ a {
   position: absolute;
   z-index: 1001;
   cursor: pointer;
-  transition: all 200ms;
 }
 
 .modal {
@@ -1237,7 +1269,7 @@ a {
 }
 
 .row-card {
-  background-color: #383838;
+  background-color: #434343;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1249,7 +1281,7 @@ a {
   padding-right: 4px;
   margin-top: 6.5px;
   font-size: 0.7em;
-  border: 1px solid #535353;
+  border: 1px solid #303030;
   box-shadow: 0px 0px 2px #1e1e1e;
   transition: all 300ms;
 }
@@ -1264,8 +1296,10 @@ a {
   padding-left: 5px;
   box-sizing: border-box;
   padding: 3px;
+  box-shadow: 0px 0px 6px #1e1e1e;
 }
 .row-card__head {
+  height: 21px;
   width: 18%;
   min-width: 18%;
   border-radius: 15px 0px 0px 15px;
@@ -1274,7 +1308,7 @@ a {
   justify-content: center;
 }
 .row-card__head i {
-  padding-right: 2px;
+  padding-left: 2px;
   color: #7daaf1;
 }
 .row-card__content {
@@ -1417,7 +1451,6 @@ a {
   display: none;
   animation: appearslowlyandscale 200ms ease-out;
   transform: scale(1);
-  transition: all 200ms;
 }
 
 .help-box {
@@ -1426,18 +1459,19 @@ a {
   right: 10px;
   z-index: 998;
   background-color: #242424;
-  opacity: 0.8;
+  opacity: 0.9;
   display: flex;
   align-items: center;
   border-radius: 15px 0px 0px 15px;
   padding: 0px;
   padding-right: 10px;
   box-shadow: 0px 0px 9px #303030;
+  animation: appearslowly 500ms ease-in-out;
 }
 .help-box__info-icon {
   margin-right: 10px;
   color: white;
-  font-size: 0.8em;
+  font-size: 1em;
   padding: 4px 6px;
   padding-left: 8px;
   background-color: #216ee7;
@@ -1908,6 +1942,18 @@ a {
 
 .map-container {
   position: relative;
+  overflow: scroll;
+  min-width: 345px;
+  min-height: 650px;
+  scrollbar-width: none;
+  /* Firefox 64 */
+}
+.map-container::-webkit-scrollbar {
+  display: none;
+}
+.map-container img {
+  width: 345px;
+  height: 650px;
 }
 .map-container svg :hover .magnifier {
   display: block;
@@ -1945,7 +1991,13 @@ a {
 }
 .row-card-container a:hover {
   opacity: 0.8;
+  transition: all 300ms;
 }
+.row-card-container a:hover span {
+  transition: all 300ms;
+  color: #7daaf1;
+}
+
 .dot-container {
   width: 100px;
   height: 20px;

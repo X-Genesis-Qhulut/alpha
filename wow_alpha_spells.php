@@ -94,7 +94,10 @@ function simulateSpell ($row)
 
   // look up the duration in yet another table again
   $spellDurationRow = dbQueryOneParam ("SELECT * FROM ".SPELLDURATION." WHERE ID = ?", array ('i', &$row ['DurationIndex']));
-  $duration = $spellDurationRow ['Duration'];
+  if ($spellDurationRow)
+    $duration = $spellDurationRow ['Duration'];
+  else
+    $duration = 0;
 
   // show what it casts
 

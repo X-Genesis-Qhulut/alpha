@@ -25,23 +25,32 @@
   &__left-arrow {
     position: absolute;
     z-index: 50;
-    font-size: 4em;
-    color: rgb(249, 249, 249);
+    font-size: 2.5em;
+    color: $color7;
     font-weight: bold;
-    padding: 0px 10px;
-    top: 40%;
-    left: 350px;
+    padding: 0px 5px;
+    top: 50%;
+    left: 355px;
+    border: 1px solid $color4;
+    background-color: $color3;
+    @include big-shadow;
+    animation: appearslowly 500ms ease-in-out;
   }
 
   &__right-arrow {
     position: absolute;
     z-index: 50;
-    font-size: 4em;
-    color: rgb(249, 249, 249);
+    font-size: 2.5em;
     font-weight: bold;
-    padding: 0px 10px;
-    top: 40%;
-    left: 280px;
+    color: $color7;
+    padding: 0px 5px;
+    top: 50%;
+    left: 300px;
+    border: 1px solid $color4;
+    background-color: $color3;
+
+    @include big-shadow;
+    animation: appearslowly 500ms ease-in-out;
   }
 
   @include tiny-laptop-design {
@@ -49,14 +58,36 @@
       border-radius: 0px 20px 0px 20px;
     }
   }
+
+  @include tablet-design {
+    border-radius: 20px;
+  }
+
   @include mobile-design {
     // margin-left: 0px;
     // margin-right: 0px;
+    // max-width: 290px;
     margin: 0px;
     width: 95%;
   }
 
-  @media screen and (max-width: 370px) {
-    max-width: 230px;
+  @media screen and (max-width: 450px) {
+    max-width: 340px;
+  }
+
+  @media screen and (max-width: 430px) {
+    max-width: 320px;
+  }
+
+  @media screen and (max-width: 430px) {
+    max-width: 290px;
+  }
+
+  @media screen and (max-width: 380px) {
+    max-width: 260px;
+  }
+
+  @media screen and (max-width: 330px) {
+    max-width: 240px;
   }
 }

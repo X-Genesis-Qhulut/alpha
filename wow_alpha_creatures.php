@@ -693,16 +693,22 @@ function og_creature ()
   {
   global $id, $documentRoot, $executionDir;
 
+  if ($id === false)
+    repositionSearch();
+
   if ($id)
     $row = dbQueryOneParam ("SELECT * FROM ".CREATURE_TEMPLATE." WHERE entry = ?", array ('i', &$id));
   else
     {
+    comment ("No ID for NPC");
     $id = 0;
     $row = false;
     }
 
   if (!$row)
     {
+    comment ("NPC not on file");
+
     $title = 'NPC not on file';
     $image = '/creatures/missing_creature.webp';
     $description = '';
@@ -719,7 +725,10 @@ function og_creature ()
       $image = "/creatures/$model";
       }
     else
+      {
+      comment ("No display ID for NPC");
       $image = '/creatures/missing_creature.webp';
+      }
     $description = "Entry: $id, Display ID: $display_id";
     }
 

@@ -51,6 +51,15 @@ $id      = getGP ('id',      8, $VALID_NUMBER);
     // only pull in this file if we have to
     if (array_key_exists ('requires', $extraInfo))
       require ($extraInfo ['requires']);
+    if (array_key_exists ('table', $extraInfo))
+      $mainTable = $extraInfo ['table'];
+    else
+      $mainTable = '';
+    // what the primary key is
+    if (array_key_exists ('key', $extraInfo))
+      $keyName = $extraInfo ['key'];
+    else
+      $keyName = '';
     $actionInfo ['og'] ();    // call this to output the OG stuff for the particular thing
     }
   else     // otherwise use default OG stuff

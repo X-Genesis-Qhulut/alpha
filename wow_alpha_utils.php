@@ -984,15 +984,33 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
 */
 
 
-  echo "<div class='map-container'>";
-  echo "<img src='maps/{$mapName}.webp' style='display:block;
+  echo "<div class='map-container'
+          onmousedown='onMouseDownMapContainer(event)'
+          onmouseup='onMouseUpMapContainer(event)'
+          onmouseleave='onMouseLeaveMapContainer(event)'
+          onmousemove='onMouseMoveMapContainer(event)'
+          onwheel='onMouseWheelMapContainer(event)'
+          draggable='false'
+          style='position:relative; background-color:#172e46;'
+          >";
+  echo "<img src='maps/{$mapName}.webp'
+          style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
-          max-width:initial; max-height:initial; margin:0;' id='{$mapName}_map'
-          data-left='$mapLeftPoint'
-          data-top='$mapTopPoint'
-          data-width='$mapWidth'
-          data-height='$mapHeight'
-          onmouseenter='onMouseEnterImg(event)' onmousemove='onMouseMoveImg(event)'
+          max-width:initial;
+          max-height:initial;
+          position:absolute;
+          left:0;
+          top:0;
+          margin:0;'
+          id='{$mapName}_map'
+          data-mapleft='$mapLeftPoint'
+          data-maptop='$mapTopPoint'
+          data-mapwidth='$mapWidth'
+          data-mapheight='$mapHeight'
+          data-width='$imageWidth'
+          data-height='$imageHeight'
+          onmouseenter='onMouseEnterImg(event)'
+          draggable='false'
           alt='{$mapName} map' title='{$mapName} map' >\n";
 
   // draw an SVG circle for each spawn point
@@ -1046,8 +1064,9 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
       $halfMapDotSize = MAP_DOT_SIZE / 2;
 
       $location = "$x $y $z $map";
-      echo "<div onmouseenter='onMouseEnterPoint(event)' onmouseleave='onMouseLeavePoint(event)' onclick='copyToClipboard (\"$location\")' >\n";
-      echo "<svg width='{$mapDotSize}px' height='{$mapDotSize}px' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;' data-spawnid='$spawn_id'>\n";
+      echo "<div onclick='clickOnSpawnPoint (event, \"$location\")' >\n";
+      echo "<svg width='{$mapDotSize}px' height='{$mapDotSize}px' class='spawn_point' style='top:{$mapy}px; left:{$mapx}px;'
+            data-left='{$mapx}' data-top='{$mapy}' data-spawnid='$spawn_id'>\n";
       echo "  <circle cx='$halfMapDotSize' cy='$halfMapDotSize' r='$halfMapDotSize' fill='$fillColor' stroke='$strokeColor'/>\n";
       echo "  <title>$location (click to copy)\nID: $spawn_id. $movementType</title>\n";
       echo "</svg></div>\n";
@@ -1609,18 +1628,18 @@ function topRight ($userInfo, $func)
 
   comment ("TOP-RIGHT BOX : CAROUSSEL$funcName");
 
-  echo "<aside class='caroussel' onmouseleave='onMouseLeaveArea(event)'>
-    <div class='help-box'>
+  echo "<aside class='caroussel'
+        onmousemove='onMouseMoveArea(event)'
+        id='spawn-map-caroussel'>
+    <div class='help-box' id='spawn-map-help-box'>
     <i class='fas fa-arrow-pointer help-box__info-icon'></i>
-    <span class='help-box__content'> hover </span>
-    <span class='help-box__point'></span>
-    <span class='help-box__content'> to magnify </span>";
+    <span class='help-box__content'> drag and zoom </span>";
   endDiv ('help-box');
 
   $func ($userInfo);   // output contents
 
   echo "<!-- MAGNIFIER -->
-      <div class='magnifier'></div>
+      <div class='magnifier' id='spawn-map-magnifier'></div>
       <!-- END MAGNIFIER -->";
 
   echo "</aside>\n";  // end of caroussel

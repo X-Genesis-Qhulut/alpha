@@ -82,7 +82,7 @@ function copyToClipboard(textToCopy) {
 // for copying a spawn point coordinates to the clipboard
 function copyContents (event)
   {
-  copyToClipboard (event.currentTarget.dataset.location)
+  clickOnSpawnPoint (event, event.currentTarget.dataset.location)
   return false
   } // end of copyContents
 
@@ -114,3 +114,10 @@ function goBack (pageType)
     window.location.href = pageType
   return false;
   }
+
+function clickOnSpawnPoint (event, location)
+  {
+  if (event.ctrlKey)
+    location = '.port ' + location;
+  copyToClipboard (location);
+  } // end of clickOnSpawnPoint
