@@ -1,211 +1,151 @@
-// ############### GLOBAL VARIABLES ##################
 
-const magnifier = document.querySelector(".magnifier");
-const kalimdor = document.querySelector("#Kalimdor_map");
-const easternKingdom = document.querySelector("#Eastern_Kingdoms_map");
-let actualMapInUse = null;
-const spawnPoints = document.querySelectorAll(".spawn_point");
-let modifiedSpawnPoints = [];
-const magnifierHeight = 1300;
-const magnifierWidth = 1300;
-const magnifierZoomLevel = 5;
-let magnifierX = 0;
-let magnifierY = 0;
+// mouse-down location
+var startDragX = 0;
+var startDragY = 0;
+var dragging = false;
+var currentImage = null
+var magnification = 1
+const zoomFactor = 1.5
 
-// ############### EVENT FUNCTIONS ##################
+function onMouseDownMapContainer (event)
+{
+console.log ('onMouseDownMapContainer')
+startDragX  = event.offsetX;
+startDragY  = event.offsetY;
+console.log (`mouse down at ${startDragX}, ${startDragY}`)
+dragging = true
+event.preventDefault();
 
-// When mouse leave caroussel, we close magnifier
-function onMouseLeaveArea(e) {
-  e;
-  _closeMagnifier();
 }
 
-// When mouse hover on image, we initialise magnifier without display it
-function onMouseEnterImg(e) {
-  const map = e.target;
-  actualMapInUse = e;
-  const { width, height } = map;
 
-  // Prevent display to be a empty string
-  if (magnifier.style.display == "") {
-    magnifier.style.display = "none";
-  }
+function onMouseUpMapContainer (event)
+{
+console.log ('onMouseUpMapContainer')
+dragging = false
 
-  magnifier.style.height = `${magnifierHeight}px`;
-  magnifier.style.width = `${magnifierWidth}px`;
-  magnifier.style.backgroundImage = `url(${map.src})`;
-  magnifier.style.backgroundSize = `${width * magnifierZoomLevel}px ${
-    height * magnifierZoomLevel
-  }px`;
-}
+} // end of onMouseUpMapContainer
 
-// When mouse move on image (UNUSED)
-function onMouseMoveImg(e) {
-  e;
-  return;
-}
+function onMouseLeaveMapContainer (event)
+{
+console.log ('onMouseLeaveMapContainer')
 
-// When mouse hover a point and magnifier is not open, we display magnifier
-function onMouseEnterPoint(e) {
-  const svg = e.target.childNodes[1];
+} // end of onMouseLeaveMapContainer
 
-  // if magnifier is already open, we do nothing
-  if (magnifier.style.display != "none") {
-    return;
-  }
-  _resetModifiedSpawnPoints();
-  magnifier.style.display = "block";
-  e.target.style.zIndex = "1001";
-  _alignMagnifierWithPoint(svg);
+function redrawSpawnPoints ()
+  {
+  var spawnPoints = document.getElementsByClassName("spawn_point")
+  var offsetX = getPosition (currentImage.style.left)
+  var offsetY = getPosition (currentImage.style.top)
 
-  for (let point of spawnPoints) {
-    if (!point.isEqualNode(svg) && _checkIfPointIsInActualMap(point)) {
-      _correctMagnifiedPointPosition(svg, point);
+  for (let i = 0; i < spawnPoints.length; i++)
+    {
+    spawnPoints[i].style.left = ((spawnPoints[i].dataset.left * magnification) + offsetX) + "px";
+    spawnPoints[i].style.top  = ((spawnPoints[i].dataset.top * magnification) + offsetY) + "px";
     }
-  }
-}
 
-// When mouse leave a point (UNUSED)
-function onMouseLeavePoint(e) {
-  e;
-  return;
-}
+  } // end of redrawSpawnPoints
 
-// ############### PRIVATE FUNCTIONS ##################
 
-// Set display to none and reset points to their original location
-function _closeMagnifier() {
-  magnifier.style.display = "none";
-  _resetModifiedSpawnPoints();
-}
+function onMouseMoveMapContainer (event)
+  {
+  event.preventDefault();
 
-// Update magnifier top/left and its background img position to new coords
-function _updateMagnifierPosition() {
-  const widthToAdd = _calculateWidthToAdd();
-  magnifier.style.top = `${magnifierY - magnifierHeight / 2}px`;
-  magnifier.style.left = `${magnifierX - magnifierHeight / 2}px`;
 
-  magnifier.style.backgroundPositionX = `${
-    -magnifierX * magnifierZoomLevel +
-    magnifierWidth / 2 +
-    widthToAdd * magnifierZoomLevel
-  }px`;
-  magnifier.style.backgroundPositionY = `${
-    -magnifierY * magnifierZoomLevel + magnifierHeight / 2
-  }px`;
-}
-
-// Magnifier will align its center with point
-function _alignMagnifierWithPoint(point) {
-  const widthToAdd = _calculateWidthToAdd();
-  magnifierX = _domValueToFloat(point.style.left) + widthToAdd;
-  magnifierY = _domValueToFloat(point.style.top);
-
-  _updateMagnifierPosition();
-}
-
-// Determine if both map are present in caroussel to add the first map width
-function _calculateWidthToAdd() {
-  let widthToAdd = 0;
-  if (
-    kalimdor != null &&
-    easternKingdom != null &&
-    actualMapInUse.target.isEqualNode(easternKingdom)
-  ) {
-    widthToAdd = easternKingdom.width;
-  }
-
-  return widthToAdd;
-}
-
-// Check if point is in actual map hovered by mouse
-function _checkIfPointIsInActualMap(point) {
-  if (!actualMapInUse) {
+  console.log ('onMouseMoveMapContainer')
+  if (!dragging)
     return;
-  }
 
-  const mapContainer = actualMapInUse.target.parentNode;
-  const mapChildren = mapContainer.children;
-  for (let element of mapChildren) {
-    let mapPoint = element.firstElementChild;
-    if (mapPoint && mapPoint.isEqualNode(point)) {
-      return true;
+  var offsetX = event.offsetX;
+  var offsetY = event.offsetY;
+
+  var diffX = startDragX - offsetX;
+  var diffY = startDragY - offsetY;
+
+  if (!currentImage)
+    {
+    console.log ('No image')
+    return
     }
-  }
 
-  return false;
+  console.log (`Moved X by ${diffX} and Y by ${diffY}`)
+  currentImage.style.left = (getPosition (currentImage.style.left) - diffX) + "px"
+  currentImage.style.top  = (getPosition (currentImage.style.top)  - diffY) + "px"
+
+  console.log (`New position = ${currentImage.style.left}, ${currentImage.style.top}`)
+
+  redrawSpawnPoints ()
+
+  } // end of onMouseMoveMapContainer
+
+function onMouseWheelMapContainer (event)
+{
+  event.preventDefault();
+
+  if (!currentImage)
+    {
+    console.log ('No image')
+    return
+    }
+
+  // where is mouse over?
+  var offsetX = event.offsetX;
+  var offsetY = event.offsetY;
+
+  console.log (`X = ${offsetX}, Y = ${offsetY}`)
+
+  // where does the image start? (it may be offscreen)
+  var imageLeft = getPosition (currentImage.style.left)
+  var imageTop  = getPosition (currentImage.style.top)
+
+  // normalise as if it were not scrolled
+  offsetX += imageLeft
+  offsetY += imageTop
+
+  // how far through image is mouse assuming no magnification
+  var mouseX = (offsetX - imageLeft ) / magnification
+  var mouseY = (offsetY - imageTop  ) / magnification
+
+  console.log (`mouseX = ${mouseX}, mouseY = ${mouseY}`)
+
+  var oldMagnification = magnification
+  magnification *= event.deltaY > 0 ? 1/zoomFactor : zoomFactor
+
+  console.log (`Magnification now ${magnification}`)
+
+  // adjust image size
+  currentImage.style.width  = (currentImage.dataset.width  * magnification) + "px"
+  currentImage.style.height = (currentImage.dataset.height * magnification) + "px"
+
+  // the new left and top should be the same as before, adjusting for the new magnification
+ // currentImage.style.left = (imageLeft) -((mouseX) * (magnification / oldMagnification - 1)) + "px"
+ // currentImage.style.top  = (imageTop ) -((mouseY) * (magnification / oldMagnification - 1)) + "px"
+
+  currentImage.style.left = - ((offsetX * (magnification - 1)))  + "px"
+  currentImage.style.top  = - ((offsetY * (magnification - 1)))  + "px"
+
+  console.log (`New dimensions = ${currentImage.style.width}, ${currentImage.style.height}`)
+  console.log (`New position = ${currentImage.style.left}, ${currentImage.style.top}`)
+
+  redrawSpawnPoints ()
+
 }
 
-// Update spawn point location to fit zoom
-function _correctMagnifiedPointPosition(referencePoint, point) {
-  // distance difference X between points
-  let diffX =
-    (_domValueToFloat(referencePoint.style.left) -
-      _domValueToFloat(point.style.left)) *
-    magnifierZoomLevel;
+// caroussel ??
+function onMouseMoveArea (event)
+{
+//console.log ('onMouseMoveArea')
 
-  // distance difference Y between points
-  let diffY =
-    (_domValueToFloat(referencePoint.style.top) -
-      _domValueToFloat(point.style.top)) *
-    magnifierZoomLevel;
+} // end of onMouseMoveArea
 
-  let updatedPoint = point.cloneNode();
-  updatedPoint.style.top = `${
-    _domValueToFloat(referencePoint.style.top) - diffY
-  }px`;
-  updatedPoint.style.left = `${
-    _domValueToFloat(referencePoint.style.left) - diffX
-  }px`;
+function onMouseEnterImg (event)
+{
+console.log ('onMouseEnterImg')
+currentImage = event.target;
+} // end of onMouseEnterImg
 
-  // we push point into array to be able to reset its location later
-  modifiedSpawnPoints.push({
-    point,
-    originalY: point.style.top,
-    originalX: point.style.left,
-  });
 
-  point.style.top = updatedPoint.style.top;
-  point.style.left = updatedPoint.style.left;
-}
-
-// We set original point location when magnifier is closed
-function _resetModifiedSpawnPoints() {
-  for (let elem of modifiedSpawnPoints) {
-    elem.point.style.top = elem.originalY;
-    elem.point.style.left = elem.originalX;
-    elem.point.style.display = "block";
-  }
-  modifiedSpawnPoints = [];
-}
-
-// Return float value of DOM style property : 450.13px -> 450.13
-function _domValueToFloat(value) {
-  return parseFloat(value.split("px")[0]);
-}
-
-// Calculate distance between coords
-function _calculateDistance(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-}
-
-// Calculate distance between 2 points and return result
-// function _calculateDistanceBetweenPoints(point1, point2) {
-//   const point1Y = _domValueToFloat(point1.style.top);
-//   const point1X = _domValueToFloat(point1.style.left);
-//   const point2Y = _domValueToFloat(point2.style.top) + magnifierHeight / 2;
-//   const point2X = _domValueToFloat(point2.style.left) + magnifierHeight / 2;
-
-//   return _calculateDistance(point1X, point1Y, point2X, point2Y);
-// }
-
-// Check if point is in magnifier radius
-// function _checkIfPointIsInMagnifier(point) {
-//   const widthToAdd = _calculateWidthToAdd();
-//   // we had point width/2 to be sure that point cant be in between magnifier border
-//   const radius = magnifierHeight / 2 + point.width.animVal.value / 2;
-//   const pointX = _domValueToFloat(point.style.left) + widthToAdd;
-//   const pointY = _domValueToFloat(point.style.top);
-//   const distance = _calculateDistance(magnifierX, magnifierY, pointX, pointY);
-//   return distance < radius;
-// }
+function getPosition (which)
+  {
+  return parseFloat (which.split ("px") [0])
+  } // end of getPosition
