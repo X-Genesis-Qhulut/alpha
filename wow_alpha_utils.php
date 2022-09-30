@@ -1639,9 +1639,12 @@ function topRight ($userInfo, $func)
 
   $func ($userInfo);   // output contents
 
-  echo "<!-- MAGNIFIER -->
-      <div class='magnifier' id='spawn-map-magnifier'></div>
-      <!-- END MAGNIFIER -->";
+  echo "
+  <!-- MAP HIGHLIGHTER -->
+  <div class='map-highlighter' id='spawn-map-highlighter'>
+    <i class='fas fa-arrows-to-circle'></i>
+     ";
+  endDiv ('spawn-map-highlighter');
 
   echo "</aside>\n";  // end of caroussel
 
@@ -1771,10 +1774,12 @@ function doArrowsForMap ($table, $where, $param, $mName)
 
   if ($map0 && $map1)
     {
+    echo "<div id='caroussel_arrows'>\n";
     echo "<a class='caroussel__left-arrow' href='#Kalimdor_map'
         ><i class='fas fa-angle-left'></i></a>\n";
     echo "<a class='caroussel__right-arrow' href='#Eastern_Kingdoms_map'
         ><i class='fas fa-angle-right'></i></a>\n";
+    endDiv ('caroussel_arrows');
     } // we are showing both maps so we need both arrows
 
 } // end of doArrowsForMap

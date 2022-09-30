@@ -7,6 +7,20 @@ var startDragY = 0;     //   "
 var dragging = false;   // are we dragging?
 var magnification = 1   // initial magnification
 const zoomFactor = 1.1  // amount to change when you zoom
+const spawnHighlightMaxDistance = 40  // if spawns fall within this number of pixels, show the highlighter
+
+function hideHelp ()
+{
+  // hide help box
+  var element = document.getElementById ('spawn-map-help-box')
+  if (element)
+    element.style.display = 'none';
+  element = document.getElementById ('caroussel_arrows')
+  if (element)
+    element.style.display = 'none';
+
+} // end of hideHelp
+
 
 // mouse down (start of drag) - remember starting point
 function onMouseDownMapContainer (event)
@@ -23,6 +37,11 @@ function onMouseDownMapContainer (event)
   dragging = true
 
   event.target.cursor = "grabbing"
+
+  hideHelp ()
+
+
+
   } // end of onMouseDownMapContainer
 
 // mouse up (end of drag)
@@ -113,9 +132,6 @@ function onMouseMoveMapContainer (event)
   if (!currentImage)
     return
 
-
-  console.log (`node = ${event.target.nodeName}, ID = ${event.target.id}, offsetX = ${offsetX}, offsetY = ${offsetY}`)
-
   // difference between where we started and where we are now
   var diffX = startDragX - offsetX;
   var diffY = startDragY - offsetY;
@@ -137,6 +153,9 @@ function onMouseWheelMapContainer (event)
   if (!currentImage)
     return
 
+  // hide help box
+  hideHelp ()
+
  // where does the image start? (it may be offscreen)
   var imageLeft = getPosition (currentImage.style.left)
   var imageTop  = getPosition (currentImage.style.top)
@@ -145,15 +164,12 @@ function onMouseWheelMapContainer (event)
   var offsetX = event.offsetX;
   var offsetY = event.offsetY;
 
-
-
   // if mouse over a spawn point, find where the spawn point is
   if (event.target.nodeName == 'circle')
     {
     offsetX = getPosition (event.target.parentNode.style.left) - imageLeft
     offsetY = getPosition (event.target.parentNode.style.top)  - imageTop
     } // end of if over a spawn point
-
 
   // how far through image is mouse assuming no magnification
   // (image may start offscreen)
@@ -196,3 +212,43 @@ function getPosition (which)
   {
   return parseFloat (which.split ("px") [0])
   } // end of getPosition
+
+// Apply highlight if there is only one point on maps
+function applyHighLightOnFirstPoint() {
+  var spawnPoints = document.getElementsByClassName("spawn_point")
+
+  if (spawnPoints.length < 1)
+    return;
+
+  var x1 = spawnPoints[0].dataset.left
+  var y1  = spawnPoints[0].dataset.top
+  var maxDistance = 0
+
+  for (var i = 1; i < spawnPoints.length; i++)
+    {
+    var x = spawnPoints[i].dataset.left
+    var y  = spawnPoints[i].dataset.top
+    var distance = Math.sqrt (Math.pow (x - x1, 2) + Math.pow (y - y1, 2))
+    maxDistance = Math.max (maxDistance, distance)
+    } // end of for
+
+  if (maxDistance > spawnHighlightMaxDistance) {
+    return;
+  }
+
+  const highlighter = document.querySelector("#spawn-map-highlighter");
+
+  const firstPoint = spawnPoints[0];
+  // we had 1px stroke
+  const pointRadius = (firstPoint.width.animVal.value + 1) / 2;
+  // we display it before taking his width
+  highlighter.style.display = "block";
+  const highlighterRadius = highlighter.clientWidth / 2;
+  const totalRadius = highlighterRadius - pointRadius;
+  highlighter.style.top = `${parseFloat(firstPoint.style.top) - totalRadius}px`;
+  highlighter.style.left = `${
+    parseFloat(firstPoint.style.left) - totalRadius
+  }px`;
+}
+
+applyHighLightOnFirstPoint();
