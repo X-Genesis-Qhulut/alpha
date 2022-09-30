@@ -18,6 +18,11 @@ function hideHelp ()
   element = document.getElementById ('caroussel_arrows')
   if (element)
     element.style.display = 'none';
+  element = document.getElementById ('spawn-map-highlighter')
+  if (element)
+    element.style.display = 'none';
+
+
 
 } // end of hideHelp
 
