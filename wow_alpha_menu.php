@@ -293,7 +293,6 @@ document.getElementById('noscript_warning_id').style.display = 'none';
           >
         </li>
       </ul>
-      <p style='font-size:small;'>(Needs Javascript)</p>
   ");
 
   // DISCORD
@@ -378,7 +377,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
           <a href='https://github.com/geo-tp/053-Database-Frontend'>Front end database repo</a>
         </li>
         <li>
-          <a href='https://github.com/geo-tp'>Geo Github profile</a>
+          <a href='https://github.com/geo-tp'>Github profile</a>
         </li>
       </ul>
 ");

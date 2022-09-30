@@ -1,4 +1,4 @@
-// MAGNIFIER
+// MAGNIFIER - written by X'Genesis Qhulut in September 2022
 
 // global variables
 
@@ -52,9 +52,9 @@ function onMouseUpMapContainer (event)
 // redraw spawn points based on their original position multiplied by the magnification factor
 function redrawSpawnPoints (currentImage)
   {
-  var spawnPoints = document.getElementsByClassName("spawn_point")
-  var offsetX = getPosition (currentImage.style.left)
-  var offsetY = getPosition (currentImage.style.top)
+  const spawnPoints = document.getElementsByClassName("spawn_point")
+  const offsetX = getPosition (currentImage.style.left)
+  const offsetY = getPosition (currentImage.style.top)
 
   for (var i = 0; i < spawnPoints.length; i++)
     {
@@ -76,9 +76,9 @@ function findImageInfo (event)
       break
 
     element = element.parentNode;
-    }
+    } // end of while we haven't found the map container
 
-  var currentImage = element.querySelector("img")
+  const currentImage = element.querySelector("img")
 
   // where does the image start? (it may be offscreen)
   var imageLeft = getPosition (currentImage.style.left)
@@ -121,14 +121,14 @@ function onMouseMoveMapContainer (event)
     return
     }
 
-  var [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
+  const [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
 
   if (!currentImage)
     return
 
   // difference between where we started and where we are now
-  var diffX = startDragX - offsetX;
-  var diffY = startDragY - offsetY;
+  const diffX = startDragX - offsetX;
+  const diffY = startDragY - offsetY;
 
   // move it by the difference between where we started and where we are now
   currentImage.style.left = (getPosition (currentImage.style.left) - diffX) + "px"
@@ -142,7 +142,7 @@ function onMouseWheelMapContainer (event)
 {
   event.preventDefault();
 
-  var [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
+  const [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
 
   if (!currentImage)
     return
@@ -152,12 +152,12 @@ function onMouseWheelMapContainer (event)
 
   // how far through image is mouse assuming no magnification
   // (image may start offscreen)
-  var mouseX = offsetX / magnification
-  var mouseY = offsetY / magnification
+  const mouseX = offsetX / magnification
+  const mouseY = offsetY / magnification
 
   // how far cursor is through container
-  var cursorX = offsetX + imageLeft
-  var cursorY = offsetY + imageTop
+  const cursorX = offsetX + imageLeft
+  const cursorY = offsetY + imageTop
 
   magnification *= event.deltaY > 0 ? 1/zoomFactor : zoomFactor
 
@@ -201,26 +201,22 @@ function applyHighLightOnFirstPoint() {
     totalTop  += parseFloat (spawnPoints[i].dataset.top)
     } // end of for
 
-  var averageX = totalLeft / spawnPoints.length
-  var averageY = totalTop / spawnPoints.length
-
-  console.log (`average left = ${averageX}, top = ${averageY}`)
-
+  const averageX = totalLeft / spawnPoints.length
+  const averageY = totalTop / spawnPoints.length
   var maxDistance = 0
 
   // now find the distance from all points to the average, and remember the largest
   for (var i = 0; i < spawnPoints.length; i++)
     {
-    var x = parseFloat (spawnPoints[i].dataset.left)
-    var y  = parseFloat (spawnPoints[i].dataset.top)
-    var distance = Math.sqrt (Math.pow (x - averageX, 2) + Math.pow (y - averageY, 2))
+    const x = parseFloat (spawnPoints[i].dataset.left)
+    const y  = parseFloat (spawnPoints[i].dataset.top)
+    const distance = Math.sqrt (Math.pow (x - averageX, 2) + Math.pow (y - averageY, 2))
     maxDistance = Math.max (maxDistance, distance)
     } // end of for
 
   // if too big, draw no highlight
   if (maxDistance > spawnHighlightMaxDistance)
     return;
-
 
   const highlighter = document.querySelector("#spawn-map-highlighter");
 
