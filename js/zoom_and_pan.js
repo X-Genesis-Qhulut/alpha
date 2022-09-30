@@ -2,6 +2,8 @@
 
 // global variables
 
+// Note: 10% webp quality on small map, 91% on big map
+
 var startDragX = 0;     // mouse-down location (start of drag)
 var startDragY = 0;     //   "
 var dragging = false;   // are we dragging?
@@ -162,7 +164,7 @@ function onMouseWheelMapContainer (event)
   magnification *= event.deltaY > 0 ? 1/zoomFactor : zoomFactor
 
   // constrain to 0.5 to 30 magnification
-  magnification = Math.min (magnification, 30)
+  magnification = Math.min (magnification, 40)
   magnification = Math.max (magnification, 0.5)
 
   // adjust image size
@@ -172,6 +174,16 @@ function onMouseWheelMapContainer (event)
   // move image so that the place under the cursor is still under it
   currentImage.style.left = - mouseX * magnification +  cursorX + "px"
   currentImage.style.top  = - mouseY * magnification +  cursorY + "px"
+
+ // load a high def map if needed
+  const mapUseHighDef = currentImage.src.includes("big");
+  if (!mapUseHighDef && magnification > 8) {
+    const mapSplittedSrc = currentImage.src.split(".");
+    // last element of array is img ext
+    const imageExt = mapSplittedSrc.pop();
+    const imagePath = mapSplittedSrc.join(".");
+    currentImage.src = `${imagePath}_big.${imageExt}`;
+  }
 
   redrawSpawnPoints (currentImage)
 

@@ -140,7 +140,7 @@ includeStylesheet ("css/fontawesome/solid.css");
 // get our scripts
 //-----------------------------------------------------------------------------
 includeScript ("editing.js");
-includeScript ("js/magnifier.js");
+includeScript ("js/zoom_and_pan.js");
 //-----------------------------------------------------------------------------
 // wrap up our head, and start our body
 //-----------------------------------------------------------------------------
