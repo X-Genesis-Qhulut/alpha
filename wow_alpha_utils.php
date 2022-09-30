@@ -1642,7 +1642,6 @@ function topRight ($userInfo, $func)
   echo "
   <!-- MAP HIGHLIGHTER -->
   <div class='map-highlighter' id='spawn-map-highlighter'>
-    <i class='fas fa-arrows-to-circle'></i>
      ";
   endDiv ('spawn-map-highlighter');
 

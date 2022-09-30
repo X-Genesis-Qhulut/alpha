@@ -161,21 +161,6 @@ function onMouseWheelMapContainer (event)
   // hide help box
   hideHelp ()
 
- // where does the image start? (it may be offscreen)
-  var imageLeft = getPosition (currentImage.style.left)
-  var imageTop  = getPosition (currentImage.style.top)
-
-  // where is mouse over? - relative to the IMAGE not the container
-  var offsetX = event.offsetX;
-  var offsetY = event.offsetY;
-
-  // if mouse over a spawn point, find where the spawn point is
-  if (event.target.nodeName == 'circle')
-    {
-    offsetX = getPosition (event.target.parentNode.style.left) - imageLeft
-    offsetY = getPosition (event.target.parentNode.style.top)  - imageTop
-    } // end of if over a spawn point
-
   // how far through image is mouse assuming no magnification
   // (image may start offscreen)
   var mouseX = offsetX / magnification
@@ -219,16 +204,20 @@ function getPosition (which)
   } // end of getPosition
 
 // Apply highlight if there is only one point on maps
+// or a lot of points close together (less than spawnHighlightMaxDistance from the first one checked)
 function applyHighLightOnFirstPoint() {
   var spawnPoints = document.getElementsByClassName("spawn_point")
 
+  // give up if no spawn points
   if (spawnPoints.length < 1)
     return;
 
+  // get the location of the first one
   var x1 = spawnPoints[0].dataset.left
   var y1  = spawnPoints[0].dataset.top
   var maxDistance = 0
 
+  // now find the distance from all the others to the first, and remember the largest
   for (var i = 1; i < spawnPoints.length; i++)
     {
     var x = spawnPoints[i].dataset.left
@@ -237,9 +226,10 @@ function applyHighLightOnFirstPoint() {
     maxDistance = Math.max (maxDistance, distance)
     } // end of for
 
-  if (maxDistance > spawnHighlightMaxDistance) {
+  // if too big, draw no highlight
+  if (maxDistance > spawnHighlightMaxDistance)
     return;
-  }
+
 
   const highlighter = document.querySelector("#spawn-map-highlighter");
 
