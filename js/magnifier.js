@@ -11,11 +11,18 @@ const zoomFactor = 1.1  // amount to change when you zoom
 // mouse down (start of drag) - remember starting point
 function onMouseDownMapContainer (event)
   {
-  startDragX  = event.offsetX;
-  startDragY  = event.offsetY;
-  dragging = true
-  event.target.cursor = "grabbing"
   event.preventDefault();
+  var [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
+
+  if (!currentImage)
+    return
+
+  startDragX  = offsetX
+  startDragY  = offsetY
+
+  dragging = true
+
+  event.target.cursor = "grabbing"
   } // end of onMouseDownMapContainer
 
 // mouse up (end of drag)
@@ -30,7 +37,7 @@ function onMouseLeaveMapContainer (event)
   } // end of onMouseLeaveMapContainer
 
 // redraw spawn points based on their original position multiplied by the magnification factor
-function redrawSpawnPoints ()
+function redrawSpawnPoints (currentImage)
   {
   var spawnPoints = document.getElementsByClassName("spawn_point")
   var offsetX = getPosition (currentImage.style.left)
@@ -44,6 +51,48 @@ function redrawSpawnPoints ()
 
   } // end of redrawSpawnPoints
 
+function findImageInfo (event)
+  {
+  var element = event.target;
+  while (true)
+    {
+    if (!element)
+      return [ false, false, false, false, false ]
+
+    if (element.classList && element.classList.contains ("map-container"))
+      break
+
+    element = element.parentNode;
+    }
+
+  var currentImage = element.querySelector("img")
+
+  // where does the image start? (it may be offscreen)
+  var imageLeft = getPosition (currentImage.style.left)
+  var imageTop  = getPosition (currentImage.style.top)
+
+  var offsetX = event.offsetX;
+  var offsetY = event.offsetY;
+
+  // if mouse over a spawn point, find where the spawn point is
+  if (event.target.nodeName == 'circle')
+    {
+    offsetX = getPosition (event.target.parentNode.style.left) - imageLeft
+    offsetY = getPosition (event.target.parentNode.style.top)  - imageTop
+    } // end of if over a spawn point
+  else if (event.target.nodeName == 'svg')
+    {
+    offsetX = getPosition (event.target.style.left) - imageLeft
+    offsetY = getPosition (event.target.style.top)  - imageTop
+    } // end of if over a SVG point
+  else if (event.target.nodeName == 'DIV')
+    {
+    return [ false, false, false, false, false ]
+    } // end of if over a DIV point
+
+  return [ currentImage, imageLeft, imageTop, offsetX, offsetY ]
+
+  }   // end of findImage
 
 function onMouseMoveMapContainer (event)
   {
@@ -59,21 +108,23 @@ function onMouseMoveMapContainer (event)
     return
     }
 
-  var offsetX = event.offsetX;
-  var offsetY = event.offsetY;
+  var [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
+
+  if (!currentImage)
+    return
+
+
+  console.log (`node = ${event.target.nodeName}, ID = ${event.target.id}, offsetX = ${offsetX}, offsetY = ${offsetY}`)
 
   // difference between where we started and where we are now
   var diffX = startDragX - offsetX;
   var diffY = startDragY - offsetY;
 
-  // find the appropriate image
-  currentImage = event.target.closest ('img')
-
   // move it by the difference between where we started and where we are now
   currentImage.style.left = (getPosition (currentImage.style.left) - diffX) + "px"
   currentImage.style.top  = (getPosition (currentImage.style.top)  - diffY) + "px"
 
-  redrawSpawnPoints ()
+  redrawSpawnPoints (currentImage)
 
   } // end of onMouseMoveMapContainer
 
@@ -81,24 +132,37 @@ function onMouseWheelMapContainer (event)
 {
   event.preventDefault();
 
-  currentImage = event.target.closest ('img')
+  var [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
+
+  if (!currentImage)
+    return
+
+ // where does the image start? (it may be offscreen)
+  var imageLeft = getPosition (currentImage.style.left)
+  var imageTop  = getPosition (currentImage.style.top)
 
   // where is mouse over? - relative to the IMAGE not the container
   var offsetX = event.offsetX;
   var offsetY = event.offsetY;
 
-  // where does the image start? (it may be offscreen)
-  var imageLeft = getPosition (currentImage.style.left)
-  var imageTop  = getPosition (currentImage.style.top)
+
+
+  // if mouse over a spawn point, find where the spawn point is
+  if (event.target.nodeName == 'circle')
+    {
+    offsetX = getPosition (event.target.parentNode.style.left) - imageLeft
+    offsetY = getPosition (event.target.parentNode.style.top)  - imageTop
+    } // end of if over a spawn point
+
 
   // how far through image is mouse assuming no magnification
   // (image may start offscreen)
-  var mouseX = (event.offsetX) / magnification
-  var mouseY = (event.offsetY) / magnification
+  var mouseX = offsetX / magnification
+  var mouseY = offsetY / magnification
 
   // how far cursor is through container
-  var cursorX = event.offsetX + imageLeft
-  var cursorY = event.offsetY + imageTop
+  var cursorX = offsetX + imageLeft
+  var cursorY = offsetY + imageTop
 
   magnification *= event.deltaY > 0 ? 1/zoomFactor : zoomFactor
 
@@ -114,7 +178,7 @@ function onMouseWheelMapContainer (event)
   currentImage.style.left = - mouseX * magnification +  cursorX + "px"
   currentImage.style.top  = - mouseY * magnification +  cursorY + "px"
 
-  redrawSpawnPoints ()
+  redrawSpawnPoints (currentImage)
 
 } // end of onMouseWheelMapContainer
 

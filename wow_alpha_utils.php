@@ -985,6 +985,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
 
 
   echo "<div class='map-container'
+          id='map-container-$mapName'
           onmousedown='onMouseDownMapContainer(event)'
           onmouseup='onMouseUpMapContainer(event)'
           onmouseleave='onMouseLeaveMapContainer(event)'
@@ -992,7 +993,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           onwheel='onMouseWheelMapContainer(event)'
           draggable='false'
           style='position:relative; background-color:#172e46;'
-          >";
+          >\n";
   echo "<img src='maps/{$mapName}.webp'
           style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
