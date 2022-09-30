@@ -988,7 +988,6 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           id='map-container-$mapName'
           onmousedown='onMouseDownMapContainer(event)'
           onmouseup='onMouseUpMapContainer(event)'
-          onmouseleave='onMouseLeaveMapContainer(event)'
           onmousemove='onMouseMoveMapContainer(event)'
           onwheel='onMouseWheelMapContainer(event)'
           draggable='false'
@@ -1010,7 +1009,6 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           data-mapheight='$mapHeight'
           data-width='$imageWidth'
           data-height='$imageHeight'
-          onmouseenter='onMouseEnterImg(event)'
           draggable='false'
           alt='{$mapName} map' title='{$mapName} map' >\n";
 
@@ -1630,7 +1628,6 @@ function topRight ($userInfo, $func)
   comment ("TOP-RIGHT BOX : CAROUSSEL$funcName");
 
   echo "<aside class='caroussel'
-        onmousemove='onMouseMoveArea(event)'
         id='spawn-map-caroussel'>
     <div class='help-box' id='spawn-map-help-box'>
     <i class='fas fa-arrow-pointer help-box__info-icon'></i>

@@ -7,22 +7,21 @@ var startDragY = 0;     //   "
 var dragging = false;   // are we dragging?
 var magnification = 1   // initial magnification
 const zoomFactor = 1.1  // amount to change when you zoom
-const spawnHighlightMaxDistance = 40  // if spawns fall within this number of pixels, show the highlighter
+const spawnHighlightMaxDistance = 38  // if spawns fall within this number of pixels, show the highlighter
 
 function hideHelp ()
 {
-  // hide help box
-  var element = document.getElementById ('spawn-map-help-box')
-  if (element)
-    element.style.display = 'none';
-  element = document.getElementById ('caroussel_arrows')
-  if (element)
-    element.style.display = 'none';
-  element = document.getElementById ('spawn-map-highlighter')
-  if (element)
-    element.style.display = 'none';
-
-
+  // hide all these things
+  [
+  'spawn-map-help-box',
+  'caroussel_arrows',
+  'spawn-map-highlighter',
+  ].forEach(id =>
+    {
+    var element = document.getElementById (id)
+    if (element)
+      element.style.display = 'none';
+   })
 
 } // end of hideHelp
 
@@ -38,15 +37,9 @@ function onMouseDownMapContainer (event)
 
   startDragX  = offsetX
   startDragY  = offsetY
-
   dragging = true
-
   event.target.cursor = "grabbing"
-
   hideHelp ()
-
-
-
   } // end of onMouseDownMapContainer
 
 // mouse up (end of drag)
@@ -55,10 +48,6 @@ function onMouseUpMapContainer (event)
   dragging = false
   event.target.cursor = "unset"
   } // end of onMouseUpMapContainer
-
-function onMouseLeaveMapContainer (event)
-  {
-  } // end of onMouseLeaveMapContainer
 
 // redraw spawn points based on their original position multiplied by the magnification factor
 function redrawSpawnPoints (currentImage)
@@ -188,16 +177,6 @@ function onMouseWheelMapContainer (event)
 
 } // end of onMouseWheelMapContainer
 
-// caroussel ??
-function onMouseMoveArea (event)
-  {
-  } // end of onMouseMoveArea
-
-function onMouseEnterImg (event)
-  {
-  } // end of onMouseEnterImg
-
-
 function getPosition (which)
   {
   return parseFloat (which.split ("px") [0])
@@ -212,17 +191,29 @@ function applyHighLightOnFirstPoint() {
   if (spawnPoints.length < 1)
     return;
 
-  // get the location of the first one
-  var x1 = spawnPoints[0].dataset.left
-  var y1  = spawnPoints[0].dataset.top
+  var totalLeft = 0
+  var totalTop = 0
+
+  // find average of the points
+  for (var i = 0; i < spawnPoints.length; i++)
+    {
+    totalLeft += parseFloat (spawnPoints[i].dataset.left)
+    totalTop  += parseFloat (spawnPoints[i].dataset.top)
+    } // end of for
+
+  var averageX = totalLeft / spawnPoints.length
+  var averageY = totalTop / spawnPoints.length
+
+  console.log (`average left = ${averageX}, top = ${averageY}`)
+
   var maxDistance = 0
 
-  // now find the distance from all the others to the first, and remember the largest
-  for (var i = 1; i < spawnPoints.length; i++)
+  // now find the distance from all points to the average, and remember the largest
+  for (var i = 0; i < spawnPoints.length; i++)
     {
-    var x = spawnPoints[i].dataset.left
-    var y  = spawnPoints[i].dataset.top
-    var distance = Math.sqrt (Math.pow (x - x1, 2) + Math.pow (y - y1, 2))
+    var x = parseFloat (spawnPoints[i].dataset.left)
+    var y  = parseFloat (spawnPoints[i].dataset.top)
+    var distance = Math.sqrt (Math.pow (x - averageX, 2) + Math.pow (y - averageY, 2))
     maxDistance = Math.max (maxDistance, distance)
     } // end of for
 
@@ -240,10 +231,8 @@ function applyHighLightOnFirstPoint() {
   highlighter.style.display = "block";
   const highlighterRadius = highlighter.clientWidth / 2;
   const totalRadius = highlighterRadius - pointRadius;
-  highlighter.style.top = `${parseFloat(firstPoint.style.top) - totalRadius}px`;
-  highlighter.style.left = `${
-    parseFloat(firstPoint.style.left) - totalRadius
-  }px`;
-}
+  highlighter.style.top = `${averageY - totalRadius}px`;
+  highlighter.style.left = `${averageX - totalRadius}px`;
+} // end of applyHighLightOnFirstPoint
 
 applyHighLightOnFirstPoint();
