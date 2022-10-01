@@ -15,44 +15,22 @@ const spawnHighlightMaxDistance = 38  // if spawns fall within this number of pi
 
 function hideHelp ()
 {
-  var action = 'none'
-  if (magnification <= 1.1)
-    action = 'block';
 
-  if (magnification <= 1.1)
+  // hide all these things
+  [
+  'spawn-map-help-box',
+  'spawn-map-highlighter',
+  'map-arrow-right',
+  'map-arrow-left',
+  ].forEach(id =>
     {
-    // show all these things
-    [
-    'spawn-map-help-box',
-    ].forEach(id =>
+    var element = document.getElementById (id)
+    if (element)
       {
-      var element = document.getElementById (id)
-      if (element)
-        {
-        element.style.display = 'block';
-        }
-     })  // end of foreach
-    } // end of magnification <= 1.1
-  else
-    // magnification > 1.1
-    {
-    // hide all these things
-    [
-    'spawn-map-help-box',
-    'spawn-map-highlighter',
-    'map-arrow-right',
-    'map-arrow-left',
-    ].forEach(id =>
-      {
-      var element = document.getElementById (id)
-      if (element)
-        {
-        element.style.display = 'none';
-        }
-     }) // end of foreach
+      element.style.display = 'none';
+      }
+   }) // end of foreach
 
-
-    } // end of magnification > 1.1
 
 } // end of hideHelp
 
@@ -69,7 +47,7 @@ function onMouseDownMapContainer (event)
   startDragX  = offsetX
   startDragY  = offsetY
   dragging = true
-  event.target.cursor = "grabbing"
+  event.target.style.cursor = "grabbing"
   hideHelp ()
   } // end of onMouseDownMapContainer
 
@@ -77,7 +55,7 @@ function onMouseDownMapContainer (event)
 function onMouseUpMapContainer (event)
   {
   dragging = false
-  event.target.cursor = "unset"
+  event.target.style.cursor = "unset"
 
   // check for Alt key - to give the location
 
