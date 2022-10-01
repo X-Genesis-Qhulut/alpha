@@ -957,7 +957,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     $mapTopPoint  = 4657.9751308793;
     $mapWidth     = 10568.022008253;
     $mapHeight    = 19980.94603272;
-
+    $mapNumber    = 0;
     }
   elseif ($map1 > 0)
     {
@@ -967,7 +967,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     $mapTopPoint  = 11763.324337648;
     $mapWidth     = 13100.059130778;
     $mapHeight    = 24611.604572322;
-
+    $mapNumber    = 1;
     }
 
   if (!$mapName)
@@ -1007,6 +1007,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           data-maptop='$mapTopPoint'
           data-mapwidth='$mapWidth'
           data-mapheight='$mapHeight'
+          data-mapnumber='$mapNumber'
           data-width='$imageWidth'
           data-height='$imageHeight'
           draggable='false'

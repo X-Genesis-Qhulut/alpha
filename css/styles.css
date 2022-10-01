@@ -1032,10 +1032,35 @@ a {
 
 .caroussel {
   display: flex;
-  max-width: 345px;
+  flex-basis: 29%;
   max-height: 650px;
-  overflow: hidden;
   margin-left: 2%;
+  position: relative;
+  border-radius: 20px 0px 0px 20px;
+  transition: all 300ms;
+}
+.caroussel img {
+  animation: appearslowly 400ms ease-in-out;
+  width: 345px;
+  height: 650px;
+}
+.caroussel__button-enlarge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #7daaf1;
+  z-index: 999;
+  border-radius: 100%;
+  padding: 5px 7px;
+  border: 1px solid #919191;
+  background-color: #383838;
+  transition: all 300ms;
+  cursor: pointer;
+}
+.caroussel__maps {
+  display: flex;
+  width: 100%;
+  overflow: scroll;
   scroll-behavior: smooth;
   -ms-overflow-style: none;
   /* for Internet Explorer, Edge */
@@ -1045,48 +1070,21 @@ a {
   background-color: transparent;
   box-shadow: 0px 0px 9px #303030;
   border-radius: 20px 0px 0px 20px;
-}
-.caroussel img {
-  animation: appearslowly 400ms ease-in-out;
-  width: 345px;
-  height: 650px;
-}
-.caroussel__left-arrow {
-  position: absolute;
-  z-index: 50;
-  font-size: 2.5em;
-  color: #7daaf1;
-  font-weight: bold;
-  padding: 0px 5px;
-  top: 50%;
-  left: 355px;
-  border: 1px solid #535353;
-  background-color: #383838;
-  box-shadow: 0px 0px 9px #303030;
-  animation: appearslowly 500ms ease-in-out;
-}
-.caroussel__right-arrow {
-  position: absolute;
-  z-index: 50;
-  font-size: 2.5em;
-  font-weight: bold;
-  color: #7daaf1;
-  padding: 0px 5px;
-  top: 50%;
-  left: 300px;
-  border: 1px solid #535353;
-  background-color: #383838;
-  box-shadow: 0px 0px 9px #303030;
-  animation: appearslowly 500ms ease-in-out;
+  transition: all 300ms;
+  background-color: #172e46;
 }
 @media screen and (max-width: 1250px) {
   .caroussel img {
     border-radius: 0px 20px 0px 20px;
   }
+  .caroussel__button-enlarge {
+    display: none;
+  }
 }
 @media screen and (max-width: 1337px) {
   .caroussel {
     border-radius: 20px;
+    flex-basis: 70%;
   }
 }
 @media screen and (max-width: 700px) {
@@ -1097,12 +1095,12 @@ a {
 }
 @media screen and (max-width: 450px) {
   .caroussel {
-    max-width: 340px;
+    max-width: 380px;
   }
 }
 @media screen and (max-width: 430px) {
   .caroussel {
-    max-width: 320px;
+    max-width: 370px;
   }
 }
 @media screen and (max-width: 430px) {
@@ -1457,30 +1455,12 @@ a {
   box-shadow: 0px 0px 20px 20px rgba(0, 0, 0, 0.496);
   border-radius: 100%;
 }
-.map-highlighter i {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 30px;
-  opacity: 0.5;
-  color: red;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.map-highlighter i::before {
-  animation: 1s appearslowly ease-in-out;
-  animation-delay: 1s;
-  animation-iteration-count: 3;
-  opacity: 0;
-}
 
 .help-box {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  z-index: 998;
+  z-index: 999;
   background-color: #242424;
   opacity: 0.9;
   display: flex;
@@ -1941,8 +1921,10 @@ a {
     margin-bottom: 0px;
   }
   .object-container__informations__details2 {
+    display: flex;
+    flex-grow: 1;
     margin: unset;
-    flex-basis: 100%;
+    flex-basis: 80%;
     border-radius: 0px 20px 0px 20px;
     padding-bottom: 20px;
     margin-bottom: 20px;
@@ -1964,21 +1946,29 @@ a {
 
 .map-container {
   position: relative;
-  overflow: scroll;
-  min-width: 345px;
+  min-width: 100%;
   min-height: 650px;
-  scrollbar-width: none;
-  /* Firefox 64 */
+  overflow: hidden;
 }
-.map-container::-webkit-scrollbar {
-  display: none;
+.map-container__arrow {
+  position: absolute;
+  z-index: 50;
+  font-size: 2.5em;
+  color: #7daaf1;
+  font-weight: bold;
+  padding: 0px 5px;
+  border: 1px solid #535353;
+  background-color: #383838;
+  box-shadow: 0px 0px 9px #303030;
+  animation: appearslowly 500ms ease-in-out;
 }
-.map-container img {
-  width: 345px;
-  height: 650px;
+.map-container__arrow--left {
+  top: 50%;
+  left: 10px;
 }
-.map-container svg :hover .magnifier {
-  display: block;
+.map-container__arrow--right {
+  top: 50%;
+  right: 10px;
 }
 
 .modal-container {

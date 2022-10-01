@@ -22,3 +22,25 @@ function copyToClipboard(textToCopy) {
     });
   }
 } // end of copyToClipboard
+
+// Update map width and height when Zoom occurs
+function _updateMapSize() {
+  if (!actualMapInUse) {
+    return;
+  }
+  actualMapInUse.setAttribute(
+    "style",
+    `width:${defaultMapWidth * actualZoomLevel}px; height:${
+      defaultMapHeight * actualZoomLevel
+    }px`
+  );
+}
+// Hide element to help spot arrow if there is only one
+function _hideHighlight() {
+  spawnMapHighlighter.style.display = "none";
+}
+
+function clickOnSpawnPoint(event, location) {
+  if (event.ctrlKey) location = ".port " + location;
+  copyToClipboard(location);
+} // end of clickOnSpawnPoint

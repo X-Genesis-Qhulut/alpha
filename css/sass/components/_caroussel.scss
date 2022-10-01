@@ -1,20 +1,13 @@
 .caroussel {
   display: flex;
-  max-width: 345px;
+  flex-basis: 29%;
   max-height: 650px;
-  overflow: hidden;
   margin-left: 2%;
-  scroll-behavior: smooth;
-  -ms-overflow-style: none; /* for Internet Explorer, Edge */
-  scrollbar-width: none; /* for Firefox */
-  position: relative;
-  background-color: transparent;
-  @include big-shadow;
-  border-radius: 20px 0px 0px 20px;
 
-  // ::-webkit-scrollbar {
-  //   display: none;
-  // }
+  position: relative;
+
+  border-radius: 20px 0px 0px 20px;
+  transition: all 300ms;
 
   & img {
     animation: appearslowly 400ms ease-in-out;
@@ -22,61 +15,63 @@
     height: 650px;
   }
 
-  &__left-arrow {
+  &__button-enlarge {
     position: absolute;
-    z-index: 50;
-    font-size: 2.5em;
+    top: 10px;
+    left: 10px;
     color: $color7;
-    font-weight: bold;
-    padding: 0px 5px;
-    top: 50%;
-    left: 355px;
-    border: 1px solid $color4;
+    z-index: 999;
+    border-radius: 100%;
+    padding: 5px 7px;
+    border: 1px solid $color5;
     background-color: $color3;
-    @include big-shadow;
-    animation: appearslowly 500ms ease-in-out;
+    transition: all 300ms;
+    cursor: pointer;
   }
 
-  &__right-arrow {
-    position: absolute;
-    z-index: 50;
-    font-size: 2.5em;
-    font-weight: bold;
-    color: $color7;
-    padding: 0px 5px;
-    top: 50%;
-    left: 300px;
-    border: 1px solid $color4;
-    background-color: $color3;
-
+  &__maps {
+    display: flex;
+    width: 100%;
+    overflow: scroll;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    scrollbar-width: none; /* for Firefox */
+    position: relative;
+    background-color: transparent;
     @include big-shadow;
-    animation: appearslowly 500ms ease-in-out;
+    border-radius: 20px 0px 0px 20px;
+    transition: all 300ms;
+    background-color: #172e46;
+  }
+
+  @include laptop-design {
   }
 
   @include tiny-laptop-design {
     & img {
       border-radius: 0px 20px 0px 20px;
     }
+    &__button-enlarge {
+      display: none;
+    }
   }
 
   @include tablet-design {
     border-radius: 20px;
+    flex-basis: 70%;
   }
 
   @include mobile-design {
-    // margin-left: 0px;
-    // margin-right: 0px;
-    // max-width: 290px;
     margin: 0px;
     width: 95%;
   }
 
   @media screen and (max-width: 450px) {
-    max-width: 340px;
+    max-width: 380px;
   }
 
   @media screen and (max-width: 430px) {
-    max-width: 320px;
+    max-width: 370px;
   }
 
   @media screen and (max-width: 430px) {

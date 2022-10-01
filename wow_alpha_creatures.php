@@ -265,14 +265,16 @@ function creatureSpells ($info)
           }   // end of if this spell entry is there (non-zero)
         } // end of for each of the 8 possible spells
 
+      listItems ('Spells they cast', CREATURE_SPELLS, count ($results), $results,
+        function ($row) use ($spells)
+          {
+          listThing ($spells, $row ['ID'], 'show_spell', '', '', $row ['details']);
+          } // end listing function
+          );
+
+
       } // if we found the spell list
 
-    listItems ('Spells they cast', CREATURE_SPELLS, count ($results), $results,
-      function ($row) use ($spells)
-        {
-        listThing ($spells, $row ['ID'], 'show_spell', '', '', $row ['details']);
-        } // end listing function
-        );
 
     } // end of if they had a spell_list_id
 

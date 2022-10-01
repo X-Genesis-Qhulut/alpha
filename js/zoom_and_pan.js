@@ -9,6 +9,8 @@ var startDragY = 0;     //   "
 var dragging = false;   // are we dragging?
 var magnification = 1   // initial magnification
 const zoomFactor = 1.1  // amount to change when you zoom
+const maxZoom = 40      // maximum magnification
+const minZoom = 0.5     // minimum magnification
 const spawnHighlightMaxDistance = 38  // if spawns fall within this number of pixels, show the highlighter
 
 function hideHelp ()
@@ -49,6 +51,41 @@ function onMouseUpMapContainer (event)
   {
   dragging = false
   event.target.cursor = "unset"
+
+  // check for Alt key - to give the location
+
+  if (!event.altKey)
+    return
+
+  var [ currentImage, imageLeft, imageTop, offsetX, offsetY ] = findImageInfo (event)
+
+  if (!currentImage)
+    return
+
+  // map coordinates in yards
+  const mapWidth = currentImage.dataset.mapwidth
+  const mapHeight = currentImage.dataset.mapheight
+  const mapLeft = currentImage.dataset.mapleft
+  const mapTop = currentImage.dataset.maptop
+  const mapNumber = currentImage.dataset.mapnumber
+
+  const imageWidth = currentImage.dataset.width
+  const imageHeight = currentImage.dataset.height
+
+  // how far through image is mouse assuming no magnification
+  // (image may start offscreen)
+  const mouseX = offsetX / magnification
+  const mouseY = offsetY / magnification
+
+  // distance through map we are (from 0 to 1)
+  const xOffset = mouseX / imageWidth
+  const yOffset = mouseY / imageHeight
+
+  const x = mapLeft - mapWidth  * xOffset
+  const y = mapTop  - mapHeight * yOffset
+
+  copyToClipboard (`.port ${Math.round (y * 1000) / 1000} ${Math.round (x * 1000) / 1000} 300 ${mapNumber}`)
+
   } // end of onMouseUpMapContainer
 
 // redraw spawn points based on their original position multiplied by the magnification factor
@@ -164,8 +201,8 @@ function onMouseWheelMapContainer (event)
   magnification *= event.deltaY > 0 ? 1/zoomFactor : zoomFactor
 
   // constrain to 0.5 to 30 magnification
-  magnification = Math.min (magnification, 40)
-  magnification = Math.max (magnification, 0.5)
+  magnification = Math.min (magnification, maxZoom)
+  magnification = Math.max (magnification, minZoom)
 
   // adjust image size
   currentImage.style.width  = (currentImage.dataset.width  * magnification) + "px"

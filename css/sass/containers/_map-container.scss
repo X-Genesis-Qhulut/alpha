@@ -1,25 +1,29 @@
 .map-container {
   position: relative;
-  // z-index: 999;
-  overflow: scroll;
-  min-width: 345px;
+  min-width: 100%;
   min-height: 650px;
-  scrollbar-width: none; /* Firefox 64 */
+  overflow: hidden;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  &__arrow {
+    position: absolute;
+    z-index: 50;
+    font-size: 2.5em;
+    color: $color7;
+    font-weight: bold;
+    padding: 0px 5px;
+    border: 1px solid $color4;
+    background-color: $color3;
+    @include big-shadow;
+    animation: appearslowly 500ms ease-in-out;
 
-  & img {
-    width: 345px;
-    height: 650px;
-  }
+    &--left {
+      top: 50%;
+      left: 10px;
+    }
 
-  & svg {
-    :hover {
-      .magnifier {
-        display: block;
-      }
+    &--right {
+      top: 50%;
+      right: 10px;
     }
   }
 }
