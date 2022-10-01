@@ -19,18 +19,40 @@ function hideHelp ()
   if (magnification <= 1.1)
     action = 'block';
 
-  // hide all these things
-  [
-  'spawn-map-help-box',
-  'spawn-map-highlighter',
-  'map-arrow-right',
-  'map-arrow-left',
-  ].forEach(id =>
+  if (magnification <= 1.1)
     {
-    var element = document.getElementById (id)
-    if (element)
-      element.style.display = action;
-   })
+    // show all these things
+    [
+    'spawn-map-help-box',
+    ].forEach(id =>
+      {
+      var element = document.getElementById (id)
+      if (element)
+        {
+        element.style.display = 'block';
+        }
+     })  // end of foreach
+    } // end of magnification <= 1.1
+  else
+    // magnification > 1.1
+    {
+    // hide all these things
+    [
+    'spawn-map-help-box',
+    'spawn-map-highlighter',
+    'map-arrow-right',
+    'map-arrow-left',
+    ].forEach(id =>
+      {
+      var element = document.getElementById (id)
+      if (element)
+        {
+        element.style.display = 'none';
+        }
+     }) // end of foreach
+
+
+    } // end of magnification > 1.1
 
 } // end of hideHelp
 
@@ -241,9 +263,14 @@ function getPosition (which)
 function applyHighLightOnFirstPoint() {
   var spawnPoints = document.getElementsByClassName("spawn_point")
 
+  const highlighter = document.querySelector("#spawn-map-highlighter");
+
   // give up if no spawn points
   if (spawnPoints.length < 1)
+    {
+    highlighter.style.display = "none";
     return;
+    }
 
   var totalLeft = 0
   var totalTop = 0
@@ -270,9 +297,10 @@ function applyHighLightOnFirstPoint() {
 
   // if too big, draw no highlight
   if (maxDistance > spawnHighlightMaxDistance)
+    {
+    highlighter.style.display = "none";
     return;
-
-  const highlighter = document.querySelector("#spawn-map-highlighter");
+    }
 
   const firstPoint = spawnPoints[0];
   // we had 1px stroke
