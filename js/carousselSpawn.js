@@ -37,3 +37,19 @@ function changeMapInCaroussel(event) {
     easterKingdomsContainer.style.display = "block";
   }
 }
+
+// Show arrow if both map-container are present
+function determinateArrowToDisplay() {
+  const kalimdorContainer = document.querySelector("#map-container-Kalimdor");
+  const easterKingdomsContainer = document.querySelector(
+    "#map-container-Eastern_Kingdoms"
+  );
+
+  if (kalimdorContainer && easterKingdomsContainer) {
+    const mapArrowLeft = document.querySelector("#map-arrow-left");
+    const mapArrowRight = document.querySelector("#map-arrow-right");
+    mapArrowLeft.style.display = "block";
+    mapArrowRight.style.display = "block";
+  }
+}
+determinateArrowToDisplay();

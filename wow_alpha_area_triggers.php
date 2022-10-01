@@ -57,6 +57,7 @@ function areatriggerTopRight ($info)
 
   $results = array ($row);
 
+  echo "<div class='caroussel__maps'>\n";
 
   comment ('KALIMDOR');
 
@@ -72,6 +73,7 @@ function areatriggerTopRight ($info)
 
   comment ('END AREA TRIGGER ON MAP');
 
+  endDiv ('caroussel__maps');
 
   } // end of areatriggerTopRight
 

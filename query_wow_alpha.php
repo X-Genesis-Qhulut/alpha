@@ -141,6 +141,7 @@ includeStylesheet ("css/fontawesome/solid.css");
 //-----------------------------------------------------------------------------
 includeScript ("editing.js");
 includeScript ("js/zoom_and_pan.js");
+includeScript ("js/carousselSpawn.js");
 //-----------------------------------------------------------------------------
 // wrap up our head, and start our body
 //-----------------------------------------------------------------------------

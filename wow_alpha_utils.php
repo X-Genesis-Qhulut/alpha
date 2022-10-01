@@ -993,6 +993,26 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           draggable='false'
           style='position:relative; background-color:#172e46;'
           >\n";
+
+  if ($mapNumber == 1)
+    echo "<a
+            id='map-arrow-right'
+            class='map-container__arrow map-container__arrow--right'
+            onclick='changeMapInCaroussel(event)'
+            ><i class='fas fa-angle-right'></i
+          ></a>
+      ";
+
+  if ($mapNumber == 0)
+    echo "
+          <a
+            id='map-arrow-left'
+            class='map-container__arrow map-container__arrow--left'
+            onclick='changeMapInCaroussel(event)'
+            ><i class='fas fa-angle-left'></i
+          ></a>
+          ";
+
   echo "<img src='maps/{$mapName}.webp'
           style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
@@ -1632,8 +1652,18 @@ function topRight ($userInfo, $func)
         id='spawn-map-caroussel'>
     <div class='help-box' id='spawn-map-help-box'>
     <i class='fas fa-arrow-pointer help-box__info-icon'></i>
-    <span class='help-box__content'> drag and zoom </span>";
+    <span class='help-box__content'> drag and zoom </span>
+    ";
+
   endDiv ('help-box');
+
+  echo "
+    <button
+      onclick='resizeCaroussel(event)'
+      class='caroussel__button-enlarge'>
+    <i class='fas fa-angles-left'></i>
+    </button>
+    ";
 
   $func ($userInfo);   // output contents
 

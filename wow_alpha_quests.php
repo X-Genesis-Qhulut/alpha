@@ -460,8 +460,11 @@ function questTopRight ($info)
       $mapPoints_1 [] = $mapPoint;
     }
 
+  echo "<div class='caroussel__maps'>\n";
+
   comment ('ARROWS');
 
+/*
   // if two maps are involved show the caroussel arrows
   if (count ($mapPoints_0) && count ($mapPoints_1))
     {
@@ -470,6 +473,7 @@ function questTopRight ($info)
     echo "<a class='caroussel__right-arrow' href='#Eastern_Kingdoms_map'
         ><i class='fas fa-angle-right'></i></a>\n";
     } // end of if two maps
+*/
 
   comment ('KALIMDOR');
 
@@ -482,6 +486,8 @@ function questTopRight ($info)
                   'id', 'X', 'Y', 'Z', 'map');
 
   comment ('QUEST INFORMATION ON MAP');
+
+  endDiv ('caroussel__maps');
 
   } // end of questTopRight
 

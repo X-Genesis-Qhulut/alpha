@@ -53,8 +53,12 @@ function portTopRight ($info)
 
   $nearbyResults [] = $row;
 
+  echo "<div class='caroussel__maps'>\n";
+
   showSpawnPoints ($nearbyResults, 'Teleport location', WORLDPORTS,
                     'entry', 'x', 'y', 'z', 'map');
+
+  endDiv ('caroussel__maps');
 
   } // end of portTopRight
 

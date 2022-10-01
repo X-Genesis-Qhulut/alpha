@@ -15,16 +15,21 @@ const spawnHighlightMaxDistance = 38  // if spawns fall within this number of pi
 
 function hideHelp ()
 {
+  var action = 'none'
+  if (magnification <= 1.1)
+    action = 'block';
+
   // hide all these things
   [
   'spawn-map-help-box',
-  'caroussel_arrows',
   'spawn-map-highlighter',
+  'map-arrow-right',
+  'map-arrow-left',
   ].forEach(id =>
     {
     var element = document.getElementById (id)
     if (element)
-      element.style.display = 'none';
+      element.style.display = action;
    })
 
 } // end of hideHelp

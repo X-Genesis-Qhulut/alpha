@@ -189,12 +189,13 @@ function creatureTopRight ($info)
 
   comment ('SPAWN POINTS ON MAP');
 
+  echo "<div class='caroussel__maps'>\n";
 
   $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
            ' AND ignored = 0 ';
   $param = array ('iiii', &$id, &$id, &$id, &$id);
 
-  doArrowsForMap (SPAWNS_CREATURES, $where, $param, 'map');
+//  doArrowsForMap (SPAWNS_CREATURES, $where, $param, 'map');
 
   comment ('KALIMDOR');
 
@@ -215,6 +216,8 @@ function creatureTopRight ($info)
                 'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('END MAP SPAWN POINTS');
+
+  endDiv ('caroussel__maps');
 
   } // end of creatureTopRight
 

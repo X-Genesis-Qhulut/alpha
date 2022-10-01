@@ -233,11 +233,12 @@ function gameobjectTopRight ($info)
 
   comment ('SPAWN POINTS ON MAP');
 
+  echo "<div class='caroussel__maps'>\n";
 
   $where = 'spawn_entry = ? AND ignored = 0';
   $param = array ('i', &$id);
 
-  doArrowsForMap (SPAWNS_GAMEOBJECTS, $where, $param, 'spawn_map');
+ // doArrowsForMap (SPAWNS_GAMEOBJECTS, $where, $param, 'spawn_map');
 
   comment ('KALIMDOR');
 
@@ -259,6 +260,8 @@ function gameobjectTopRight ($info)
 
 
   comment ('END MAP SPAWN POINTS');
+
+  endDiv ('caroussel__maps');
 
 } // end of gameobjectTopRight
 
