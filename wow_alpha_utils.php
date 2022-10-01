@@ -1651,7 +1651,7 @@ function topRight ($userInfo, $func)
   echo "<aside class='caroussel'
         id='spawn-map-caroussel'>
     <div class='help-box' id='spawn-map-help-box'>
-    <i class='fas fa-arrow-pointer help-box__info-icon'></i>
+    <i class='fas fa-computer-mouse help-box__info-icon'></i>
     <span class='help-box__content'> drag and zoom </span>
     ";
 
