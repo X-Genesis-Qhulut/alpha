@@ -3,6 +3,11 @@
   left: 0px;
   bottom: 0px;
   z-index: 1002;
+  transition: all 300ms;
+
+  &:hover {
+    opacity: 1;
+  }
 
   &:hover > div {
     display: block;

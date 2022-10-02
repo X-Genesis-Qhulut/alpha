@@ -1018,13 +1018,17 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           ></a>
           ";
 
+  $left = 0;
+  if ($showMap)
+    $left = '300px';
+
   echo "<img src='maps/{$mapName}.webp'
           style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
           max-width:initial;
           max-height:initial;
           position:absolute;
-          left:0;
+          left:$left;
           top:0;
           margin:0;'
           id='{$mapName}_map'
@@ -1669,7 +1673,7 @@ function showMapHelp ()
 
     <!-- SHORTCUTBOX -->
     <div class='shortcut-box' id='shortcut-box'>
-      <i class='fas fa-computer-mouse'></i>
+      <i class='fas fa-computer-mouse' id='shortcut-icon'></i>
       <div class='shortcut-box__content'>
         <p class='shortcut-box__content__key'>Click and drag</p>
         <p class='shortcut-box__content__description'>
@@ -1693,7 +1697,11 @@ function showMapHelp ()
         </p>
         <p class='shortcut-box__content__key' style='font-size:large;'>&laquo;</p>
         <p class='shortcut-box__content__description'>
-          Expand map size
+          Make map wider
+        </p>
+        <p class='shortcut-box__content__key' style='font-size:large;'>&raquo;</p>
+        <p class='shortcut-box__content__description'>
+          Make map narrower
         </p>
       </div>
     </div>

@@ -17,18 +17,30 @@ function hideHelp ()
 {
 
   // hide all these things
-  [
+ ;[
   'spawn-map-help-box',
   'spawn-map-highlighter',
   'map-arrow-right',
   'map-arrow-left',
-  'shortcut-box',
   ].forEach(id =>
     {
     var element = document.getElementById (id)
     if (element)
       {
       element.style.display = 'none';
+      }
+   }) // end of foreach
+
+
+  // lower opacity of all these things
+  ;[
+  'shortcut-icon',
+  ].forEach(id =>
+    {
+    var element = document.getElementById (id)
+    if (element)
+      {
+      element.style.opacity = '0.4';
       }
    }) // end of foreach
 
@@ -49,7 +61,6 @@ function onMouseDownMapContainer (event)
   startDragY  = offsetY
   dragging = true
   event.target.style.cursor = "grabbing"
-  hideHelp ()
   } // end of onMouseDownMapContainer
 
 // mouse up (end of drag)
@@ -98,8 +109,8 @@ function onMouseUpMapContainer (event)
 function redrawSpawnPoints (currentImage)
   {
   const spawnPoints = document.getElementsByClassName("spawn_point")
-  const offsetX = getPosition (currentImage.style.left)
-  const offsetY = getPosition (currentImage.style.top)
+  const offsetX = currentImage.offsetLeft
+  const offsetY = currentImage.offsetTop
 
   for (var i = 0; i < spawnPoints.length; i++)
     {
@@ -126,8 +137,9 @@ function findImageInfo (event)
   const currentImage = element.querySelector("img")
 
   // where does the image start? (it may be offscreen)
-  var imageLeft = getPosition (currentImage.style.left)
-  var imageTop  = getPosition (currentImage.style.top)
+//  var imageLeft = getPosition (currentImage.style.left)
+  var imageLeft = currentImage.offsetLeft;
+  var imageTop  = currentImage.offsetTop;
 
   var offsetX = event.offsetX;
   var offsetY = event.offsetY;
@@ -159,6 +171,8 @@ function onMouseMoveMapContainer (event)
   if (!dragging)
     return;
 
+  hideHelp ()
+
   // if button is now up they must have released it outside the container
   if (event.buttons == 0)
     {
@@ -176,8 +190,8 @@ function onMouseMoveMapContainer (event)
   const diffY = startDragY - offsetY;
 
   // move it by the difference between where we started and where we are now
-  currentImage.style.left = (getPosition (currentImage.style.left) - diffX) + "px"
-  currentImage.style.top  = (getPosition (currentImage.style.top)  - diffY) + "px"
+  currentImage.style.left = (imageLeft - diffX) + "px"
+  currentImage.style.top  = (imageTop  - diffY) + "px"
 
   redrawSpawnPoints (currentImage)
 
