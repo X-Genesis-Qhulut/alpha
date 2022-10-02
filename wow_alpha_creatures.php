@@ -110,10 +110,11 @@ function creatureTopMiddle ($info)
   {
   global $id;
   global $quests, $spells, $items;
+  global $countOfSpawnPoints;
 
   comment ('SPAWN POINTS - EASTERN KINGDOMS');
 
-  $count = 0;
+  $countOfSpawnPoints = 0;
 
   $where = '(spawn_entry1 = ? OR spawn_entry2 = ? OR spawn_entry3 = ? OR spawn_entry4 = ?)' .
            ' AND ignored = 0 ';
@@ -123,7 +124,7 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 0", $param) ;
 
-  $count += listSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
+  $countOfSpawnPoints += listSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
                 'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
   comment ('SPAWN POINTS - KALIMDOR');
@@ -132,7 +133,7 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 1", $param);
 
-  $count += listSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
+  $countOfSpawnPoints += listSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
                 'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
@@ -142,11 +143,11 @@ function creatureTopMiddle ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map > 1", $param);
 
-  $count += listSpawnPoints ($results, 'Spawn points — Instances', SPAWNS_CREATURES,
+  $countOfSpawnPoints += listSpawnPoints ($results, 'Spawn points — Instances', SPAWNS_CREATURES,
                 'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
 
-  if (!$count)
+  if (!$countOfSpawnPoints)
     showNoSpawnPoints ();
 
   comment ('END SPAWN POINTS');
@@ -180,12 +181,13 @@ function creatureTopMiddle ($info)
       , true  // goes up top, slightly different CSS
       );
 
+  return $countOfSpawnPoints;
 
   } // end of creatureTopMiddle
 
 function creatureTopRight ($info)
   {
-  global $id;
+  global $id, $creatures;
 
   comment ('SPAWN POINTS ON MAP');
 
@@ -203,6 +205,10 @@ function creatureTopRight ($info)
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 1", $param);
 
+  // add in creature name
+  foreach ($results as &$row)
+    $row ['name'] = $creatures [$id];
+
   showSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
                 'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
 
@@ -211,6 +217,10 @@ function creatureTopRight ($info)
   // show spawn points - Eastern Kingdoms
   $results = dbQueryParam ("SELECT * FROM ".SPAWNS_CREATURES."
         WHERE $where AND map = 0", $param) ;
+
+  // add in creature name
+  foreach ($results as &$row)
+    $row ['name'] = $creatures [$id];
 
   showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
                 'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type');
@@ -531,9 +541,11 @@ function creatureDetails ($info)
 
   topSection    ($info, function ($info)
       {
+      global $countOfSpawnPoints;
       topLeft   ($info, 'creatureTopLeft');
       topMiddle ($info, 'creatureTopMiddle');
-      topRight  ($info , 'creatureTopRight');
+      if ($countOfSpawnPoints > 0)
+        topRight  ($info , 'creatureTopRight');
       });
 
   middleSection ($info, function ($info) use ($row)

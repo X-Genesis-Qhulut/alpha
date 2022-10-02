@@ -1044,12 +1044,26 @@ a {
   width: 345px;
   height: 650px;
 }
+.caroussel--independant {
+  margin: 2% auto;
+  max-width: 1200px;
+  width: 80%;
+}
+.caroussel--independant button:first-child {
+  display: none;
+}
+@media screen and (max-width: 700px) {
+  .caroussel--independant {
+    margin: 10px;
+    width: 95%;
+  }
+}
 .caroussel__button-enlarge {
   position: absolute;
   top: 10px;
   left: 10px;
   color: #7daaf1;
-  z-index: 999;
+  z-index: 1002;
   border-radius: 100%;
   padding: 5px 7px;
   border: 1px solid #919191;
@@ -1073,6 +1087,9 @@ a {
   transition: all 300ms;
   background-color: #172e46;
 }
+.caroussel__maps::-webkit-scrollbar {
+  display: none;
+}
 @media screen and (max-width: 1250px) {
   .caroussel img {
     border-radius: 0px 20px 0px 20px;
@@ -1089,33 +1106,12 @@ a {
 }
 @media screen and (max-width: 700px) {
   .caroussel {
-    margin: 0px;
-    width: 95%;
+    flex-basis: 95%;
   }
 }
-@media screen and (max-width: 450px) {
-  .caroussel {
-    max-width: 380px;
-  }
-}
-@media screen and (max-width: 430px) {
-  .caroussel {
-    max-width: 370px;
-  }
-}
-@media screen and (max-width: 430px) {
-  .caroussel {
-    max-width: 290px;
-  }
-}
-@media screen and (max-width: 380px) {
-  .caroussel {
-    max-width: 260px;
-  }
-}
-@media screen and (max-width: 330px) {
-  .caroussel {
-    max-width: 240px;
+@media screen and (max-width: 1335px) {
+  .caroussel__button-enlarge {
+    display: none;
   }
 }
 
@@ -1460,7 +1456,7 @@ a {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  z-index: 999;
+  z-index: 1002;
   background-color: #242424;
   opacity: 0.9;
   display: flex;
@@ -1470,6 +1466,7 @@ a {
   padding-right: 10px;
   box-shadow: 0px 0px 9px #303030;
   animation: appearslowly 500ms ease-in-out;
+  border: 1px solid #383838;
 }
 .help-box__info-icon {
   margin-right: 10px;
@@ -1495,6 +1492,62 @@ a {
 .help-box__content {
   color: #d9d9d9;
   font-size: 0.8em;
+}
+
+.shortcut-box {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  z-index: 1002;
+}
+.shortcut-box:hover > div {
+  display: block;
+}
+.shortcut-box i {
+  position: absolute;
+  left: 12px;
+  bottom: 11px;
+  color: white;
+  border-radius: 14px 0px 10px 14px;
+  padding: 4px 10px;
+  border: 1px solid #919191;
+  background-color: #216ee7;
+  transition: all 300ms;
+  z-index: 50;
+  box-shadow: 0px 0px 9px #303030;
+}
+.shortcut-box__content {
+  display: none;
+  position: absolute;
+  margin: 0px;
+  padding: 10px 20px;
+  padding-top: 20px;
+  left: 12px;
+  bottom: 12px;
+  width: 140px;
+  min-height: 160px;
+  border-radius: 20px;
+  background-color: #242424;
+  box-shadow: 0px 0px 9px #303030;
+  color: white;
+  flex-direction: column;
+  padding-bottom: 25px;
+  border: 1px solid #535353;
+  animation: appearslowly 500ms ease-in-out;
+}
+.shortcut-box__content p {
+  margin: 0px;
+  padding: 0px;
+}
+.shortcut-box__content p:nth-child(even) {
+  margin-bottom: 10px;
+}
+.shortcut-box__content__key {
+  color: #7daaf1;
+  font-size: 0.8em;
+}
+.shortcut-box__content__description {
+  font-size: 0.75em;
 }
 
 .main-container {
@@ -1953,7 +2006,7 @@ a {
 .map-container__arrow {
   display: none;
   position: absolute;
-  z-index: 50;
+  z-index: 1002;
   font-size: 2.5em;
   color: #7daaf1;
   font-weight: bold;

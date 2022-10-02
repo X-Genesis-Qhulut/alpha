@@ -38,4 +38,4 @@ assets/img/Eastern_Kingdoms_big.webp
 assets/img/Kalimdor_big.webp
 js/highlighter.js
 js/magnifier.js
-
+*.geany

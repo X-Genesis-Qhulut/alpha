@@ -22,6 +22,7 @@ function hideHelp ()
   'spawn-map-highlighter',
   'map-arrow-right',
   'map-arrow-left',
+  'shortcut-box',
   ].forEach(id =>
     {
     var element = document.getElementById (id)
@@ -242,6 +243,10 @@ function applyHighLightOnFirstPoint() {
   var spawnPoints = document.getElementsByClassName("spawn_point")
 
   const highlighter = document.querySelector("#spawn-map-highlighter");
+
+  // give up if no highlighter or spawn points
+  if (!highlighter || !spawnPoints)
+    return;
 
   // give up if no spawn points
   if (spawnPoints.length < 1)

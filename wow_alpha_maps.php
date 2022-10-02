@@ -12,9 +12,68 @@
 // https://wowdev.wiki/DB/WorldMapArea
 
 
+function mapshowMap ()
+  {
+  global $id;
+
+  //echo "<div class='object-container page-content'>\n";
+
+  comment ('MAP');
+
+  echo "
+    <!-- CAROUSSEL -->
+    <aside
+      class='caroussel caroussel--independant'
+      id='spawn-map-caroussel'
+    >
+    ";
+
+  echo "<div class='caroussel__maps'>\n";
+
+  showMapHelp ();
+
+  if ($id == 1)
+    {
+
+    comment ('KALIMDOR');
+
+    $results = array ();
+
+    showSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
+                  'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type', true);
+    } // end if Kalimdor
+
+  if ($id == 0)
+    {
+    comment ('EASTERN KINGDOMS');
+
+    $results = array ();
+
+    showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
+                  'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type', true);
+
+    } // end if Eastern Kingdoms
+
+  comment ('END MAP');
+
+  endDiv ('caroussel__maps');
+
+  echo "</aside>\n";
+
+ // endDiv ('object-container page-content');
+
+  } // end of mapshowMap
+
 
 function mapDetails ($info)
   {
+  global $id;
+
+  if ($id == 0 || $id == 1)
+    {
+    mapshowMap ();
+    }
+
   bottomSection ($info, function ($info)
       {
       global $id;

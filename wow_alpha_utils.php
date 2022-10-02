@@ -926,11 +926,11 @@ function convertGold ($amount)
   return $result;
 } // end of convertGold
 
-function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yName, $zName, $mName, $mTypeName = false)
+function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yName, $zName, $mName, $mTypeName = false, $showMap = false)
 {
   global $maps;
 
-  if (count ($results) == 0)
+  if (count ($results) == 0 && $showMap === false)
     return;
 
   $map0 = 0;
@@ -942,6 +942,11 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
     elseif ($spawnRow [$mName] == 1)
       $map1 ++;   // Kalimdor
 
+  if ($showMap !== false)
+    if ($showMap === 0)
+      $map0 = 1;
+    else
+      $map1 = 1;
 
   // the display size
   $imageWidth = 345;
@@ -1640,6 +1645,63 @@ function topMiddle ($userInfo, $func)
 
 } // end of topLeft
 
+function showMapHelp ()
+  {
+
+  echo "
+  <!-- MAP UI -->
+  <div id='spawn-map-user-interface'>
+    <!-- HIGHLIGTHER -->
+    <div class='map-highlighter' id='spawn-map-highlighter'></div>
+    <!-- END HIGHLIGHTER -->
+
+
+    <!-- HELP-BOX -->
+
+    <!--
+    <div class='help-box' id='spawn-map-help-box'>
+      <i class='fas fa-computer-mouse help-box__info-icon'></i>
+      <span class='help-box__content'> drag and zoom </span>
+    </div>
+    -->
+
+    <!-- END HELP BOX -->
+
+    <!-- SHORTCUTBOX -->
+    <div class='shortcut-box' id='shortcut-box'>
+      <i class='fas fa-computer-mouse'></i>
+      <div class='shortcut-box__content'>
+        <p class='shortcut-box__content__key'>Click and drag</p>
+        <p class='shortcut-box__content__description'>
+          Pan map (move left/right, up/down)
+        </p>
+        <p class='shortcut-box__content__key'>Mouse wheel</p>
+        <p class='shortcut-box__content__description'>
+          Zoom in and out
+        </p>
+        <p class='shortcut-box__content__key'>Click on spawn point</p>
+        <p class='shortcut-box__content__description'>
+          Copy location of spawn point to clipboard
+        </p>
+        <p class='shortcut-box__content__key'>Ctrl+Click on spawn point</p>
+        <p class='shortcut-box__content__description'>
+          Copy \".port\" + location of spawn point to clipboard
+        </p>
+        <p class='shortcut-box__content__key'>Alt+Click anywhere</p>
+        <p class='shortcut-box__content__description'>
+          Copy \".port\" + location of mouse to clipboard
+        </p>
+        <p class='shortcut-box__content__key' style='font-size:large;'>&laquo;</p>
+        <p class='shortcut-box__content__description'>
+          Expand map size
+        </p>
+      </div>
+    </div>
+    <!-- END SHORTCUT BOX -->
+";
+  endDiv ('spawn-map-user-interface');
+
+  } // end of showMapHelp
 
 // THIS GOES INSIDE: topSection
 function topRight ($userInfo, $func)
@@ -1650,20 +1712,16 @@ function topRight ($userInfo, $func)
 
   echo "<aside class='caroussel'
         id='spawn-map-caroussel'>
-    <div class='help-box' id='spawn-map-help-box'>
-    <i class='fas fa-computer-mouse help-box__info-icon'></i>
-    <span class='help-box__content'> drag and zoom </span>
-    ";
-
-  endDiv ('help-box');
-
-  echo "
     <button
       onclick='resizeCaroussel(event)'
-      class='caroussel__button-enlarge'>
+      class='caroussel__button-enlarge'
+      title='Expand/contract map'
+      >
     <i class='fas fa-angles-left'></i>
     </button>
     ";
+
+  showMapHelp ();
 
   $func ($userInfo);   // output contents
 
