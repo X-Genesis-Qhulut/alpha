@@ -271,7 +271,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
       <h3>O.5.3 WoW Emulator</h3>
       <ul>
         <li>
-          <a href='https://github.com/The-Alpha-Project'
+          <a href='https://github.com/The-Alpha-Project/alpha-core'
             >Alpha core main repo</a
           >
         </li>

@@ -55,6 +55,16 @@
       border-radius: 20px;
       @include big-shadow;
       position: relative;
+      max-height: 650px;
+
+      & > div:last-child {
+        flex-grow: 1;
+        overflow-y: scroll;
+
+        & div:nth-child(3) {
+          max-height: unset;
+        }
+      }
     }
 
     &__items {
