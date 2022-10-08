@@ -740,6 +740,11 @@ function og_creature ()
       {
       $model = $display_id . '.webp';
       $image = "/creatures/$model";
+      if (!file_exists ("$documentRoot$executionDir/creatures/$model"))
+        {
+        comment ("$documentRoot$executionDir/creatures/$model   NOT ON FILE");
+        $image = '/creatures/missing_creature.webp';
+        } // end if not on file
       }
     else
       {

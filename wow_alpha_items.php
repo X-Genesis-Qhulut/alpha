@@ -700,10 +700,14 @@ function og_item ()
 {
   global $id, $documentRoot, $executionDir;
 
+  if ($id === false)
+    repositionSearch();
+
   if ($id)
     {
     $row = dbQueryOneParam ("SELECT * FROM ".ITEM_TEMPLATE." WHERE entry = ?", array ('i', &$id));
-    $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
+    if ($row)
+      $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
     }
   else
     {
@@ -725,6 +729,10 @@ function og_item ()
       {
       $icon = $imageRow ['InventoryIcon'] . '.png';
       $image = "/icons/$icon";
+      if (!file_exists ("$documentRoot$executionDir/icons/$icon"))
+        {
+        $image = '/icons/INV_Misc_QuestionMark.png';
+        }
       }
     else
       $image = '/icons/INV_Misc_QuestionMark.png';
