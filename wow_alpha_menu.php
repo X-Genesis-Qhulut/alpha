@@ -46,6 +46,40 @@ function convertDate ($date)
        substr ($date, 0, 4) . ((strlen ($date) > 8) ? " - sequence: " . substr ($date, 8, 1) : '');
 } // end of convertDate
 
+function getLatestCommit ()
+{
+    global $documentRoot, $executionDir;
+
+    $cmd = "git --git-dir $documentRoot$executionDir/.git log --oneline -7 ";
+
+    $descriptorspec = array(
+       0 => array('pipe', 'r'),  // stdin is a pipe that the child will read from
+       1 => array('pipe', 'w'),  // stdout is a pipe that the child will write to
+       2 => array('pipe', 'w')   // stderr is a pipe that the child will write to
+    );
+
+    $process = proc_open($cmd, $descriptorspec, $pipes);
+
+    $value = '';
+
+    if (is_resource($process))
+      {
+      fwrite($pipes[0], $value);
+      fclose($pipes[0]);
+
+      $gitInfo = stream_get_contents($pipes[1]);
+      fclose($pipes[1]);
+      $error = stream_get_contents($pipes[2]);
+      fclose($pipes[2]);
+      $return_value = proc_close($process);
+      return $gitInfo;
+      }  // end of process opened OK
+    else
+      return false;
+
+} // end of getLatestCommit
+
+
 function showBigMenu ()
   {
 
@@ -400,6 +434,21 @@ document.getElementById('noscript_warning_id').style.display = 'none';
       <p>Blizzard Entertainment is a trademark or registered trademark of Blizzard Entertainment, Inc. in the U.S. and/or other countries. All rights reserved.</p>
       </div>
 ");
+
+  $commitInfo = getLatestCommit ();
+
+  if ($commitInfo)
+    {
+    $commitInfo = fixHTML ($commitInfo);
+    $commitInfo = str_replace ("\n", "\n<li>", Trim($commitInfo));
+
+    // BACK-END INFO
+    oneCard ('Recent changes', 'fas fa-info', "
+      <h3>Latest commits to browser</h3>
+
+        <div style='font-size:smaller;'><ul><li>$commitInfo</ul></div>
+      ");
+  } // end of having commit info
 
   // WRAP UP PAGE
 echo "
