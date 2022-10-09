@@ -226,8 +226,6 @@ function onMouseWheelMapContainer (event)
   magnification = Math.min (magnification, maxZoom)
   magnification = Math.max (magnification, minZoom)
 
-  console.log (`magnification now ${magnification}`)
-
   // adjust image size
   currentImage.style.width  = (currentImage.dataset.width  * magnification) + "px"
   currentImage.style.height = (currentImage.dataset.height * magnification) + "px"
@@ -245,7 +243,6 @@ function onMouseWheelMapContainer (event)
     const imageExt = mapSplittedSrc.pop();
     const imagePath = mapSplittedSrc.join(".");
     currentImage.src = `${imagePath}_big.${imageExt}`;
-    console.log ('switching to big map')
   } // end of not using medium or large map
 
  // load a high def map if needed
@@ -258,7 +255,6 @@ function onMouseWheelMapContainer (event)
       currentImage.src = `${imagePath}ger.${imageExt}`;
     else         // add bigger to the end
       currentImage.src = `${imagePath}_bigger.${imageExt}`;
-    console.log ('switching to bigger map')
   } // end of not using large map
 
 
