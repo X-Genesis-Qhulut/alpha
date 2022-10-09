@@ -14,6 +14,7 @@ const minZoom = 0.5     // minimum magnification
 const spawnHighlightMaxDistance = 38  // if spawns fall within this number of pixels, show the highlighter
 const mediumZoom = 8;
 const largeZoom = 16;
+var currentZoom = 'small'
 
 function hideHelp ()
 {
@@ -238,16 +239,27 @@ function onMouseWheelMapContainer (event)
 
   const baseName = currentImage.dataset.basename
   const extension = currentImage.dataset.extension
-  const currentName = currentImage.src
 
   // adjust map image file name depending on amount of magnification
   // we downgrade when zooming out because the browser struggles to resize very large files down very small
-  if (magnification < mediumZoom && currentName != (baseName + extension))
+  if (magnification < mediumZoom && currentZoom != 'small')
+    {
+//    console.log (`switching to small map`)
     currentImage.src = baseName + extension
-  else if (magnification >= mediumZoom && magnification < largeZoom && currentName != (baseName + '_big' + extension))
+    currentZoom = 'small'
+    }
+  else if (magnification >= mediumZoom && magnification < largeZoom && currentZoom != 'medium')
+    {
+//    console.log ('switching to medium map')
     currentImage.src = baseName + '_big' + extension
-  else if (magnification >= largeZoom && currentName != (baseName + '_bigger' + extension))
+    currentZoom = 'medium'
+    }
+  else if (magnification >= largeZoom && currentZoom != 'large')
+    {
+//    console.log ('switching to large map')
     currentImage.src = baseName + '_bigger' + extension
+    currentZoom = 'large'
+    }
 
 //  console.log (`magnification = ${magnification}, file name = ${currentImage.src}`)
 
