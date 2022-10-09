@@ -40,7 +40,7 @@ function mapshowMap ()
     $results = array ();
 
     showSpawnPoints ($results, 'Spawn points — Kalimdor', SPAWNS_CREATURES,
-                  'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type', true);
+                  'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type', 1);
     } // end if Kalimdor
 
   if ($id == 0)
@@ -50,7 +50,7 @@ function mapshowMap ()
     $results = array ();
 
     showSpawnPoints ($results, 'Spawn points — Eastern Kingdoms', SPAWNS_CREATURES,
-                  'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type', true);
+                  'spawn_id', 'position_x', 'position_y', 'position_z', 'map', 'movement_type', 0);
 
     } // end if Eastern Kingdoms
 

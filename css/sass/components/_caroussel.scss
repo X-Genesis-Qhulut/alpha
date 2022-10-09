@@ -19,13 +19,26 @@
     margin: 2% auto;
     max-width: 1200px;
     width: 80%;
+    max-height: unset;
+    min-height: 80vh;
 
     & button:first-child {
       display: none;
     }
+
     @include mobile-design {
       margin: 10px;
       width: 95%;
+    }
+
+    @include medium-height {
+      min-height: 75vh;
+      max-height: 75vh;
+    }
+
+    @include small-height {
+      min-height: 65vh;
+      max-height: 65vh;
     }
   }
 

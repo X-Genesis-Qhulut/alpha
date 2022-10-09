@@ -1047,6 +1047,8 @@ a {
   margin: 2% auto;
   max-width: 1200px;
   width: 80%;
+  max-height: unset;
+  min-height: 80vh;
 }
 .caroussel--independant button:first-child {
   display: none;
@@ -1055,6 +1057,18 @@ a {
   .caroussel--independant {
     margin: 10px;
     width: 95%;
+  }
+}
+@media screen and (max-height: 900px) {
+  .caroussel--independant {
+    min-height: 75vh;
+    max-height: 75vh;
+  }
+}
+@media screen and (max-height: 600px) {
+  .caroussel--independant {
+    min-height: 65vh;
+    max-height: 65vh;
   }
 }
 .caroussel__button-enlarge {

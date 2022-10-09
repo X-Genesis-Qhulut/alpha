@@ -1019,7 +1019,7 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           ";
 
   $left = 0;
-  if ($showMap)
+  if ($showMap !== false)
     $left = '300px';
 
 //           srcset='maps/{$mapName}_big.webp 1000px, maps/{$mapName}_bigger.webp 2000px'
