@@ -751,7 +751,11 @@ function og_creature ()
       comment ("No display ID for NPC");
       $image = '/creatures/missing_creature.webp';
       }
-    $description = "Entry: $id, Display ID: $display_id";
+    $level_min = $row ['level_min'];
+    $level_max = $row ['level_max'];
+    $description = "Entry: $id, Display ID: $display_id, Level: $level_min";
+    if ($level_min != $level_max)
+      $description .= "–$level_max";
     }
 
   sendOgMeta ($title, $image, 'webp', $description);
