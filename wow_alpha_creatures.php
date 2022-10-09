@@ -197,8 +197,6 @@ function creatureTopRight ($info)
            ' AND ignored = 0 ';
   $param = array ('iiii', &$id, &$id, &$id, &$id);
 
-//  doArrowsForMap (SPAWNS_CREATURES, $where, $param, 'map');
-
   comment ('KALIMDOR');
 
   // show spawn points - Kalimdor
@@ -756,6 +754,11 @@ function og_creature ()
     $description = "Entry: $id, Display ID: $display_id, Level: $level_min";
     if ($level_min != $level_max)
       $description .= "–$level_max";
+
+    $npc_flags = $row ['npc_flags'];
+    if ($npc_flags)
+      $description .= ', Flags: ' . expandNpcFlagsMask ($npc_flags, false);
+
     }
 
   sendOgMeta ($title, $image, 'webp', $description);

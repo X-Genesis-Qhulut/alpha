@@ -1431,9 +1431,9 @@ function expandItemSubclassMask ($itemClass, $mask)
   return expandMask (ITEM_SUBCLASSES [$itemClass], $mask);
 } // end of expandItemSubclassMask
 
-function expandNpcFlagsMask ($mask)
+function expandNpcFlagsMask ($mask, $showMask = true)
 {
-  return expandShiftedMask (NPC_FLAG, $mask, true);
+  return expandShiftedMask (NPC_FLAG, $mask, $showMask);
 } // end of expandNpcFlagsMask
 
 function expandSpellTargetTypeMask ($mask)
@@ -1694,14 +1694,6 @@ function showMapHelp ()
         <p class='shortcut-box__content__key'>Alt+Click anywhere</p>
         <p class='shortcut-box__content__description'>
           Copy \".port\" + location of mouse to clipboard
-        </p>
-        <p class='shortcut-box__content__key' style='font-size:large;'>&laquo;</p>
-        <p class='shortcut-box__content__description'>
-          Make map wider
-        </p>
-        <p class='shortcut-box__content__key' style='font-size:large;'>&raquo;</p>
-        <p class='shortcut-box__content__description'>
-          Make map narrower
         </p>
       </div>
     </div>
