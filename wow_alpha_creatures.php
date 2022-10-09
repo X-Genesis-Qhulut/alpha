@@ -757,7 +757,7 @@ function og_creature ()
 
     $npc_flags = $row ['npc_flags'];
     if ($npc_flags)
-      $description .= ', Flags: ' . expandNpcFlagsMask ($npc_flags, false);
+      $description .= ', ' . expandNpcFlagsMask ($npc_flags, false);
 
     }
 
