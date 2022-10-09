@@ -1,4 +1,4 @@
-// MAGNIFIER - written by X'Genesis Qhulut in September 2022
+20// MAGNIFIER - written by X'Genesis Qhulut in September 2022
 
 // global variables
 
@@ -12,6 +12,8 @@ const zoomFactor = 1.1  // amount to change when you zoom
 const maxZoom = 40      // maximum magnification
 const minZoom = 0.5     // minimum magnification
 const spawnHighlightMaxDistance = 38  // if spawns fall within this number of pixels, show the highlighter
+const mediumZoom = 8;
+const largeZoom = 20;
 
 function hideHelp ()
 {
@@ -224,6 +226,8 @@ function onMouseWheelMapContainer (event)
   magnification = Math.min (magnification, maxZoom)
   magnification = Math.max (magnification, minZoom)
 
+  console.log (`magnification now ${magnification}`)
+
   // adjust image size
   currentImage.style.width  = (currentImage.dataset.width  * magnification) + "px"
   currentImage.style.height = (currentImage.dataset.height * magnification) + "px"
@@ -232,15 +236,31 @@ function onMouseWheelMapContainer (event)
   currentImage.style.left = - mouseX * magnification +  cursorX + "px"
   currentImage.style.top  = - mouseY * magnification +  cursorY + "px"
 
- // load a high def map if needed
-  const mapUseHighDef = currentImage.src.includes("big");
-  if (!mapUseHighDef && magnification > 8) {
+ // load a medium def map if needed
+  const mapUseMediumDef = currentImage.src.includes("big.");
+  const mapUseHighDef = currentImage.src.includes("bigger.");
+  if (!mapUseMediumDef && !mapUseHighDef && magnification > mediumZoom) {
     const mapSplittedSrc = currentImage.src.split(".");
     // last element of array is img ext
     const imageExt = mapSplittedSrc.pop();
     const imagePath = mapSplittedSrc.join(".");
     currentImage.src = `${imagePath}_big.${imageExt}`;
-  }
+    console.log ('switching to big map')
+  } // end of not using medium or large map
+
+ // load a high def map if needed
+  if (!mapUseHighDef && magnification > largeZoom) {
+    const mapSplittedSrc = currentImage.src.split(".");
+    // last element of array is img ext
+    const imageExt = mapSplittedSrc.pop();
+    const imagePath = mapSplittedSrc.join(".");
+    if (mapUseMediumDef)    // so big becomes bigger
+      currentImage.src = `${imagePath}ger.${imageExt}`;
+    else         // add bigger to the end
+      currentImage.src = `${imagePath}_bigger.${imageExt}`;
+    console.log ('switching to bigger map')
+  } // end of not using large map
+
 
   redrawSpawnPoints (currentImage)
 

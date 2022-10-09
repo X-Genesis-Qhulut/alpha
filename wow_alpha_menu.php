@@ -275,6 +275,12 @@ document.getElementById('noscript_warning_id').style.display = 'none';
             >Alpha core main repo</a
           >
         </li>
+        <li>
+          <a href='https://github.com/The-Alpha-Project/alpha-core/issues'
+            >Issues (bugs)</a
+          >
+        </li>
+
       </ul>
 ");
 
