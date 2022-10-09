@@ -734,7 +734,7 @@ function og_creature ()
     {
     $title = $row ['name'];
     if ($row ['subname'])
-      $title .= ' <' . $row ['subname'] . '>';
+      $title .= ' ‹' . $row ['subname'] . '›';
     $display_id = $row ['display_id1'];
     if ($display_id)
       {
