@@ -13,7 +13,7 @@ const maxZoom = 40      // maximum magnification
 const minZoom = 0.5     // minimum magnification
 const spawnHighlightMaxDistance = 38  // if spawns fall within this number of pixels, show the highlighter
 const mediumZoom = 8;
-const largeZoom = 20;
+const largeZoom = 16;
 
 function hideHelp ()
 {
@@ -235,28 +235,21 @@ function onMouseWheelMapContainer (event)
   currentImage.style.top  = - mouseY * magnification +  cursorY + "px"
 
  // load a medium def map if needed
-  const mapUseMediumDef = currentImage.src.includes("big.");
-  const mapUseHighDef = currentImage.src.includes("bigger.");
-  if (!mapUseMediumDef && !mapUseHighDef && magnification > mediumZoom) {
-    const mapSplittedSrc = currentImage.src.split(".");
-    // last element of array is img ext
-    const imageExt = mapSplittedSrc.pop();
-    const imagePath = mapSplittedSrc.join(".");
-    currentImage.src = `${imagePath}_big.${imageExt}`;
-  } // end of not using medium or large map
 
- // load a high def map if needed
-  if (!mapUseHighDef && magnification > largeZoom) {
-    const mapSplittedSrc = currentImage.src.split(".");
-    // last element of array is img ext
-    const imageExt = mapSplittedSrc.pop();
-    const imagePath = mapSplittedSrc.join(".");
-    if (mapUseMediumDef)    // so big becomes bigger
-      currentImage.src = `${imagePath}ger.${imageExt}`;
-    else         // add bigger to the end
-      currentImage.src = `${imagePath}_bigger.${imageExt}`;
-  } // end of not using large map
+  const baseName = currentImage.dataset.basename
+  const extension = currentImage.dataset.extension
+  const currentName = currentImage.src
 
+  // adjust map image file name depending on amount of magnification
+  // we downgrade when zooming out because the browser struggles to resize very large files down very small
+  if (magnification < mediumZoom && currentName != (baseName + extension))
+    currentImage.src = baseName + extension
+  else if (magnification >= mediumZoom && magnification < largeZoom && currentName != (baseName + '_big' + extension))
+    currentImage.src = baseName + '_big' + extension
+  else if (magnification >= largeZoom && currentName != (baseName + '_bigger' + extension))
+    currentImage.src = baseName + '_bigger' + extension
+
+//  console.log (`magnification = ${magnification}, file name = ${currentImage.src}`)
 
   redrawSpawnPoints (currentImage)
 

@@ -1039,6 +1039,8 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
           data-mapnumber='$mapNumber'
           data-width='$imageWidth'
           data-height='$imageHeight'
+          data-basename='maps/{$mapName}'
+          data-extension='.webp'
           draggable='false'
           alt='{$mapName} map' title='{$mapName} map' >\n";
 
