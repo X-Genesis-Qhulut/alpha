@@ -235,6 +235,7 @@ function onMouseWheelMapContainer (event)
   currentImage.style.left = - mouseX * magnification +  cursorX + "px"
   currentImage.style.top  = - mouseY * magnification +  cursorY + "px"
 
+
  // load a medium def map if needed
 
   const baseName = currentImage.dataset.basename
@@ -242,13 +243,18 @@ function onMouseWheelMapContainer (event)
 
   // adjust map image file name depending on amount of magnification
   // we downgrade when zooming out because the browser struggles to resize very large files down very small
+
+  /*
   if (magnification < mediumZoom && currentZoom != 'small')
     {
 //    console.log (`switching to small map`)
     currentImage.src = baseName + extension
     currentZoom = 'small'
     }
-  else if (magnification >= mediumZoom && magnification < largeZoom && currentZoom != 'medium')
+  else
+*/
+
+  if (magnification >= mediumZoom && magnification < largeZoom && currentZoom != 'medium')
     {
 //    console.log ('switching to medium map')
     currentImage.src = baseName + '_big' + extension
@@ -260,6 +266,7 @@ function onMouseWheelMapContainer (event)
     currentImage.src = baseName + '_bigger' + extension
     currentZoom = 'large'
     }
+
 
 //  console.log (`magnification = ${magnification}, file name = ${currentImage.src}`)
 

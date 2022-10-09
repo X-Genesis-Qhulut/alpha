@@ -1022,6 +1022,9 @@ function showSpawnPoints ($results, $heading, $tableName, $idName, $xName, $yNam
   if ($showMap)
     $left = '300px';
 
+//           srcset='maps/{$mapName}_big.webp 1000px, maps/{$mapName}_bigger.webp 2000px'
+
+
   echo "<img src='maps/{$mapName}.webp'
           style='display:block;
           width:{$imageWidth}px; height:{$imageHeight}px;
