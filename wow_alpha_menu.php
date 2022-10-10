@@ -48,7 +48,11 @@ function convertDate ($date)
 
 function getLatestCommit ()
 {
-    global $documentRoot, $executionDir;
+    global $documentRoot;
+
+    $executionDir = EXECUTIONDIR;
+    if (!$executionDir)
+      $executionDir = '/';
 
     $cmd = "git --git-dir $documentRoot$executionDir/.git log --oneline -7 ";
 
@@ -71,6 +75,8 @@ function getLatestCommit ()
       fclose($pipes[1]);
       $error = stream_get_contents($pipes[2]);
       fclose($pipes[2]);
+      if ($error)
+        comment ("Error: $error");
       $return_value = proc_close($process);
       return $gitInfo;
       }  // end of process opened OK
@@ -201,9 +207,10 @@ function mainPage ()
 <div id='noscript_warning_id'>";
 
   // UPDATES
-  oneCard ('Javascript required', 'fas fa-cog', "
-      <h3>Enable Javascript</h3>
-      <p>For full functionality please enable Javascript for this site.
+  oneCard ('JavaScript required', 'fas fa-cog', "
+      <h3>Please enable JavaScript</h3>
+      <hr>
+      <p>For full functionality please enable JavaScript for this site.
       ");
 
 echo "
