@@ -242,6 +242,18 @@ It should now be ready to run. Try connecting to index.php (or query_wow_alpha.p
 
 ---
 
+## Recent changes
+
+A "card" on the main menu shows the most recent commits to the browser. This may silently fail if the web server does not have ownership of the Git repository. You may need to do this (in the top-level "alpha" directory):
+
+```
+sudo chgrp -R www-data .git
+```
+
+If there is an error in obtaining the Git information the error message will be placed as an HTML comment in the page source.
+
+---
+
 ## How to apply updates
 
 To update the database browser, just connect to the appropriate directory on your web server (eg. /var/www/html/alpha) and do:
