@@ -35,12 +35,53 @@ require ("wow_alpha_handlers.php");
 // database management
 require ("wow_alpha_database.php");
 
-$executionDir = EXECUTIONDIR;
+  $executionDir = EXECUTIONDIR;
 
-// get action
-$action  = getGP ('action', 40, $VALID_ACTION);
-// get ID (eg. spell ID)
-$id      = getGP ('id',      8, $VALID_NUMBER);
+  // get action
+  $action  = getGP ('action', 40, $VALID_ACTION);
+  // get ID (eg. spell ID)
+  $id      = getGP ('id',      8, $VALID_NUMBER);
+
+  //-----------------------------------------------------------------------------
+  // GET PARAMETERS FROM POST OR GET
+  //-----------------------------------------------------------------------------
+
+
+  // get filter
+  $filter  = getGP ('filter');
+  // and secondary filter
+  $filter_column = getGP ('filter_column', 30, $VALID_SQL_ID);
+  // secondary filter comparison
+  $filter_compare = getGP ('filter_compare', 30, $VALID_ACTION);
+  // secondary filter value - a number, a hex number or a float
+  $filter_value = getGP ('filter_value');
+  // convert from hex or binary to decimal for the SQL query
+  if (preg_match ('/^0[xX]([0-9A-Fa-f]+)$/', $filter_value, $matches))
+    $fixed_filter_value = hexdec ($matches [1]);
+  elseif (preg_match ('/^0[bB]([01]+)$/', $filter_value, $matches))
+    $fixed_filter_value = bindec ($matches [1]);
+  else
+    $fixed_filter_value = $filter_value;
+
+  // get sorting order
+  $sort_order = getGP ('sort_order', 30, $VALID_SQL_ID);
+  // get page number
+  $page = getGP ('page',      8, $VALID_NUMBER);
+
+  // table name
+  $table  = getG ('table', 30, $VALID_SQL_ID);
+  // database name
+  $database  = getG ('database', 15, $VALID_SQL_ID);
+
+  // for page text, the item which leads to the text
+  $item      = getGP ('item',      8, $VALID_NUMBER);
+
+  // work out page number
+
+  if (!$page || $page < 1)
+    $page = 1;
+
+  $PHP_SELF = $_SERVER['PHP_SELF'];
 
   if ($action &&                                      // we have an action
       array_key_exists ($action, HANDLERS) &&         // and it is valid and we have a handler for it
@@ -48,18 +89,8 @@ $id      = getGP ('id',      8, $VALID_NUMBER);
     {
     $actionInfo = HANDLERS [$action];
     $extraInfo = HANDLER_EXTRA [$actionInfo ['extra']];
-    // only pull in this file if we have to
-    if (array_key_exists ('requires', $extraInfo))
-      require ($extraInfo ['requires']);
-    if (array_key_exists ('table', $extraInfo))
-      $mainTable = $extraInfo ['table'];
-    else
-      $mainTable = '';
-    // what the primary key is
-    if (array_key_exists ('key', $extraInfo))
-      $keyName = $extraInfo ['key'];
-    else
-      $keyName = '';
+    getExtraInfoForTable ($extraInfo);
+
     $actionInfo ['og'] ();    // call this to output the OG stuff for the particular thing
     }
   else     // otherwise use default OG stuff
@@ -111,6 +142,40 @@ Early maps:
 */
 
 
+function getExtraInfoForTable ($extraInfo)
+  {
+  global $searchFields, $extraWhere, $mainTable, $keyName;
+
+    // set up some global variables for use elsewhere
+
+    // fields to search for string matches
+    if (array_key_exists ('search', $extraInfo))
+      $searchFields = $extraInfo ['search'];
+    else
+      $searchFields = array ();
+
+    // extra "where" conditions, like max creature ID
+    if (array_key_exists ('where', $extraInfo))
+      $extraWhere = $extraInfo ['where'];
+    else
+      $extraWhere = '';
+
+    // what table to search
+    if (array_key_exists ('table', $extraInfo))
+      $mainTable = $extraInfo ['table'];
+    else
+      $mainTable = '';
+
+    // what the primary key is
+    if (array_key_exists ('key', $extraInfo))
+      $keyName = $extraInfo ['key'];
+    else
+      $keyName = '';
+
+    // only pull in this file if we have to
+    if (array_key_exists ('requires', $extraInfo))
+      require_once ($extraInfo ['requires']);
+  } // end of getExtraInfoForTable
 
 // helper function for linking in stylesheets with a timestamp
 function includeStylesheet ($name)
@@ -166,49 +231,6 @@ require ("wow_alpha_fields.php");
 
 
 
-// incorporate our stylesheet
-
-//-----------------------------------------------------------------------------
-// GET PARAMETERS FROM POST OR GET
-//-----------------------------------------------------------------------------
-
-
-// get filter
-$filter  = getGP ('filter');
-// and secondary filter
-$filter_column = getGP ('filter_column', 30, $VALID_SQL_ID);
-// secondary filter comparison
-$filter_compare = getGP ('filter_compare', 30, $VALID_ACTION);
-// secondary filter value - a number, a hex number or a float
-$filter_value = getGP ('filter_value');
-// convert from hex or binary to decimal for the SQL query
-if (preg_match ('/^0[xX]([0-9A-Fa-f]+)$/', $filter_value, $matches))
-  $fixed_filter_value = hexdec ($matches [1]);
-elseif (preg_match ('/^0[bB]([01]+)$/', $filter_value, $matches))
-  $fixed_filter_value = bindec ($matches [1]);
-else
-  $fixed_filter_value = $filter_value;
-
-// get sorting order
-$sort_order = getGP ('sort_order', 30, $VALID_SQL_ID);
-// get page number
-$page = getGP ('page',      8, $VALID_NUMBER);
-
-// table name
-$table  = getG ('table', 30, $VALID_SQL_ID);
-// database name
-$database  = getG ('database', 15, $VALID_SQL_ID);
-
-// for page text, the item which leads to the text
-$item      = getGP ('item',      8, $VALID_NUMBER);
-
-// work out page number
-
-if (!$page || $page < 1)
-  $page = 1;
-
-$PHP_SELF = $_SERVER['PHP_SELF'];
-
 //-----------------------------------------------------------------------------
 // grab things we are likely to cross-reference a lot
 //-----------------------------------------------------------------------------
@@ -257,34 +279,7 @@ if ($action)
     $extraInfo = HANDLER_EXTRA [$actionInfo ['extra']];
 
     // set up some global variables for use elsewhere
-
-    // fields to search for string matches
-    if (array_key_exists ('search', $extraInfo))
-      $searchFields = $extraInfo ['search'];
-    else
-      $searchFields = array ();
-
-    // extra "where" conditions, like max creature ID
-    if (array_key_exists ('where', $extraInfo))
-      $extraWhere = $extraInfo ['where'];
-    else
-      $extraWhere = '';
-
-    // what table to search
-    if (array_key_exists ('table', $extraInfo))
-      $mainTable = $extraInfo ['table'];
-    else
-      $mainTable = '';
-
-    // what the primary key is
-    if (array_key_exists ('key', $extraInfo))
-      $keyName = $extraInfo ['key'];
-    else
-      $keyName = '';
-
-    // only pull in this file if we have to
-    if (array_key_exists ('requires', $extraInfo))
-      require_once ($extraInfo ['requires']);
+    getExtraInfoForTable ($extraInfo);
 
     comment ('Executing ' . $actionInfo ['func']);
     // call the handler function
