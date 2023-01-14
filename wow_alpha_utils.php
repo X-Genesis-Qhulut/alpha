@@ -2047,6 +2047,11 @@ function trainer_spell_compare ($a, $b)
 function item_compare ($a, $b)
   {
   global $items;
+  if (!array_key_exists ($a ['item'], $items))
+    return -1;
+  if (!array_key_exists ($b ['item'], $items))
+    return 11;
+
   return $items [$a ['item']] <=> $items [$b ['item']];
   } // end of item_compare
 
