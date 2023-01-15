@@ -2047,11 +2047,18 @@ function trainer_spell_compare ($a, $b)
 function item_compare ($a, $b)
   {
   global $items;
+
+  // if neither item exists, compare equal
+  if (!array_key_exists ($a ['item'], $items) && !array_key_exists ($b ['item'], $items))
+    return 0;
+  // if the A item doesn't exist, compare less than
   if (!array_key_exists ($a ['item'], $items))
     return -1;
+  // if the B item doesn't exist, compare greater than
   if (!array_key_exists ($b ['item'], $items))
     return 1;
 
+  // compare the item names
   return $items [$a ['item']] <=> $items [$b ['item']];
   } // end of item_compare
 
