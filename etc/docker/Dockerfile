@@ -1,8 +1,6 @@
 FROM alpine:latest
 
-RUN apk update && apk --no-cache add php8 php8-mysqli
+RUN apk update && apk --no-cache add php php-mysqli
+COPY --chmod=755 entry.sh /
 
-COPY entry.sh /
-RUN chmod +x /entry.sh
-
-CMD /entry.sh
+ENTRYPOINT ["/entry.sh"]
