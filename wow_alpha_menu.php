@@ -123,6 +123,12 @@ echo "
     echo "<span>$desc</span>";
     echo "</a>\n";
     }
+
+  // We add link to display id browser in main menu
+  echo "<a href='http://displayidbrowser.com/' class='menu-bar-button' target='_blank'>";
+  echo "<i class='fas fa-file-image'></i>";
+  echo "<span>Models</span>";
+  echo "</a>\n";
 ?>
     </nav>
     <div class="menu-bar-social-container">
