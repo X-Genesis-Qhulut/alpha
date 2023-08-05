@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
 
-  <!-- Developed using the latest technology by X'Genesis Qhulut -->
+  <!-- Developed using the latest technology by X'Genesis Qhulut
+            Author: 1EDD3757F43D3FBA1F4933670937787C
+  -->
 
   <!-- Front end CSS by Geo -->
 
