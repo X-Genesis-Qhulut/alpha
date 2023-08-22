@@ -202,7 +202,7 @@ If you are planning to submit an update to the database via the Alpha Core GitHu
 
     sed -E '/(^delimiter)|(^\s+if)|(^begin)|(^\s*end)/d' \
         etc/databases/dbc/updates/updates.sql \
-      > etc/databases/dbc/updates/fixed_world_updates.sql
+      > etc/databases/dbc/updates/fixed_dbc_updates.sql
     ```
 
     Then, "source" those two files you just created (fixed_world_updates.sql and fixed_dbc_updates.sql) instead of "updates.sql" as in the instructions above.

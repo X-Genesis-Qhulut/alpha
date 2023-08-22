@@ -43,6 +43,7 @@ define ('CREATURE_QUEST_FINISHER',      '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('cr
 define ('CREATURE_QUEST_STARTER',       '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_quest_starter'));
 define ('CREATURE_SPELLS',              '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_spells'));
 define ('CREATURE_TEMPLATE',            '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_template'));
+define ('CREATURE_CLASSLEVELSTATS',     '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_classlevelstats'));
 define ('CREATURE_EQUIP_TEMPLATE',      '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('creature_equip_template'));
 define ('FACTION',                      '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('Faction'));
 define ('FACTIONTEMPLATE',              '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('FactionTemplate'));
