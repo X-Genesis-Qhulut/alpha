@@ -493,20 +493,29 @@ function itemTopLeft ($info)
   $extras = $info ['extras'];
   $limit = $info ['limit'];
 
-  comment ('ICON');
+  comment ('MODEL / ICON');
 
-  $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
+  // see if we have a model
 
-  if ($imageRow)
-    {
-    $icon = $imageRow ['InventoryIcon'] . '.png';
-    if (file_exists ("$documentRoot$executionDir/icons/$icon"))
-      echo "<img src='icons/$icon' alt='Item icon' title='" . fixHTML ($imageRow ['InventoryIcon']) . "'>\n";
+  $model = $row ['display_id']. '.webp';
+  if (file_exists ("$documentRoot$executionDir/models/$model"))
+    echo "<img src='models/$model' alt='Item model' >\n";
+  else
+    { // no model, use icon instead
+
+    $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
+
+    if ($imageRow)
+      {
+      $icon = $imageRow ['InventoryIcon'] . '.png';
+      if (file_exists ("$documentRoot$executionDir/icons/$icon"))
+        echo "<img src='icons/$icon' alt='Item icon' title='" . fixHTML ($imageRow ['InventoryIcon']) . "'>\n";
+      else
+        echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
+      }
     else
       echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
-    }
-  else
-    echo "<img src='icons/INV_Misc_QuestionMark.png' alt='Item icon' title='INV_Misc_QuestionMark'>\n";
+    } // end of if no model
 
   echo "<p></p>\n";
 
