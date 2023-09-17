@@ -641,7 +641,6 @@ function showOneCreature ()
     'level_min',
     'health_multiplier',
     'mana_multiplier',
-    'armor_multiplier',
     'faction',
     'npc_flags',
 
