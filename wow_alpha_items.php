@@ -5,6 +5,29 @@
   Date:   August 2022
 
   See LICENSE for license details.
+
+
+  Image conversion to webp:
+
+  --------------------------
+  #!/bin/bash
+
+  find . -type f -name "*.png" -exec sh -c '
+    for pathname do
+
+      filename=$(basename -- "$pathname")
+      extension="${filename##*.}"
+      filename="${filename%.*}"
+
+      if [ "${pathname%.*}.webp" -ot "$pathname" ] || [ ! -f "${pathname%.*}.webp" ]; then
+        echo "Doing $pathname"
+        convert -auto-orient -scale 1000 -normalize -strip "$pathname" "${pathname%.*}.webp"
+
+      fi
+    done' sh {} +
+
+  --------------------------
+
 */
 
 
