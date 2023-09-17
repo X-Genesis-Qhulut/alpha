@@ -1888,7 +1888,7 @@ function checkID ()
 function setTitle ($what)
   {
   // we don't want single quotes in the title, so we put a backslash in front of them
-  echo "\n<script> document.title = 'WoW DB | " .  str_replace("'", "\\'", $what) . "' </script>\n";
+  echo "\n<script> document.title = '" .  str_replace("'", "\\'", $what) . " | WoW DB' </script>\n";
   } // end of setTitle
 
 // so we can tweak later how many decimal points for chance displays
