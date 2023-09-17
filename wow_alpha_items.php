@@ -522,7 +522,7 @@ function itemTopLeft ($info)
 
   $model = $row ['display_id']. '.webp';
   if (file_exists ("$documentRoot$executionDir/models/$model"))
-    echo "<img src='models/$model' alt='Item model' >\n";
+    echo "<img src='models/$model' alt='Item model' id='item_model'>\n";
   else
     { // no model, use icon instead
 
