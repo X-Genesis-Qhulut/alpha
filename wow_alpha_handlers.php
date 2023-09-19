@@ -246,6 +246,7 @@ define ('HANDLERS', array (
   'spell_missing_item'  => array ('func' =>  'showMissingSpellItems',       'extra' => 'validation'),
   'item_missing_spell'  => array ('func' =>  'showMissingItemSpells',       'extra' => 'validation'),
   'item_unused'         => array ('func' =>  'showUnusedItems',             'extra' => 'validation'),
+  'item_no_model'       => array ('func' =>  'showMissingItemModels',       'extra' => 'validation'),
 
 )); // end of HANDLERS
 
