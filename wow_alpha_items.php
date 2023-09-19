@@ -493,20 +493,6 @@ function showItemQuestStart ()
 
 } // end of showItemQuestStart
 
-function showItemModel ($row)
-{
-  echo "
-  <!-- MODEL DISPLAY ID -->
-  <img
-    class='model-display'
-    src='missing_creature.webp'
-    alt='Item model'
-  />
-  <!-- END MODEL DISPLAY ID -->
-  ";
-} // end of showItemModel
-
-
 function itemTopLeft ($info)
 {
   global $id;
@@ -516,16 +502,19 @@ function itemTopLeft ($info)
   $extras = $info ['extras'];
   $limit = $info ['limit'];
 
-  comment ('MODEL / ICON');
 
   // see if we have a model
 
-  $model = $row ['display_id']. '.webp';
+  $display_id = $row ['display_id'];
+  $model = $display_id . '.webp';
   if (file_exists ("$documentRoot$executionDir/models/$model"))
-    echo "<img src='models/$model' alt='Item model' id='item_model'>\n";
+    {
+    comment ("MODEL DISPLAY FOR $display_id");
+    echo "<img id='item_model' src='models/$model' alt='Item model' title='Display ID $display_id' />";
+    }
   else
     { // no model, use icon instead
-
+    comment ("ICON DISPLAY FOR $model");
     $imageRow = dbQueryOneParam ("SELECT * FROM ".ITEMDISPLAYINFO." WHERE ID = ?", array ('i', &$row ['display_id']));
 
     if ($imageRow)
