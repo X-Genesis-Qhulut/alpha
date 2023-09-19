@@ -507,10 +507,10 @@ function itemTopLeft ($info)
 
   $display_id = $row ['display_id'];
   $model = $display_id . '.webp';
-  if (file_exists ("$documentRoot$executionDir/models/$model"))
+  if (file_exists ("$documentRoot$executionDir/items/$model"))
     {
     comment ("MODEL DISPLAY FOR $display_id");
-    echo "<img id='item_model' src='models/$model' alt='Item model' title='Display ID $display_id' />";
+    echo "<img id='item_model' src='items/$model' alt='Item model' title='Display ID $display_id' />";
     }
   else
     { // no model, use icon instead

@@ -298,6 +298,7 @@ document.getElementById('noscript_warning_id').style.display = 'none';
         <li><a href='?action=no_item_text'>Items with no text</a></li>
         <li><a href='?action=item_missing_spell'>Items with missing spells</a></li>
         <li><a href='?action=item_unused'>Items which are not used</a></li>
+        <li><a href='?action=item_no_model'>Items with missing model</a></li>
       </ul>
 
       <h3>Spells</h3>

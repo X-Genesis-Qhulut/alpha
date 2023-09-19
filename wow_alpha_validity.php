@@ -1089,6 +1089,69 @@ function showUnusedItems ()
     } , ITEM_TEMPLATE);
   } // end of showUnusedItems
 
+function missing_item__model_compare ($a, $b)
+  {
+  global $items;
+  // $items has the name keyed by the entry, thus this sorts in name order
+  return $items [$a ['item_key']] <=> $items [$b ['item_key']];
+  } // end of missing_item__model_compare
+
+// analyse items to see if they don't have a model file
+function showMissingItemModelsDetails ($info)
+{
+  global $documentRoot, $executionDir;
+
+  $totalCount = 0;
+
+  $item_template = ITEM_TEMPLATE;
+
+  // get all items
+  $results = dbQuery (
+         "SELECT T1.entry AS item_key, T1.display_id AS item_model
+          FROM $item_template AS T1
+          WHERE T1.display_id <> 0 AND ignored = 0
+          ");
+
+  $missingModels = array ();
+  while ($row = dbFetch ($results))
+    {
+    $model = $row ['item_model'] . '.webp';
+    if (!file_exists ("$documentRoot$executionDir/items/$model"))
+      {
+      $missingModels [] = $row;
+      }
+    } // end of for each row
+  dbFree ($results);
+
+  $count = count ($missingModels);
+  $totalCount += $count;
+  usort ($missingModels, 'missing_item__model_compare');
+
+  if ($count)
+    {
+    $info = array ('heading' => "Items with no model",
+                   'rows' => $missingModels,
+                   'label' => 'Model',
+                   'field' => 'item_model');
+    bottomDetails ($info, 'listBadItems');
+    } // end of if any rows
+
+
+  if ($totalCount == 0)
+    showNoProblems ();
+
+} // end of showMissingItemModelsDetails
+
+function showMissingItemModels ()
+  {
+  setTitle ("Items with missing models");
+
+  pageContent (false, 'Validation', 'Items with missing models',  '', function ($info)
+    {
+    bottomSectionMany ($info, 'showMissingItemModelsDetails');
+    } , ITEM_TEMPLATE);
+  } // end of showMissingItemModels
+
 
 
 
