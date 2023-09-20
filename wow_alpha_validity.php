@@ -1110,7 +1110,7 @@ function showMissingItemModelsDetails ($info)
          "SELECT T1.entry AS item_key, T1.display_id AS item_model
           FROM $item_template AS T1
           WHERE T1.display_id <> 0 AND ignored = 0
-          ");
+          AND T1.display_id <= " . MAX_ITEM_MODEL);
 
   $missingModels = array ();
   while ($row = dbFetch ($results))

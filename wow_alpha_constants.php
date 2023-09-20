@@ -14,6 +14,7 @@
 define ('QUERY_LIMIT', 200);
 define ('MAX_CREATURE', 5759);          // creatures > this are not in 0.5.3 alpha
 define ('MAX_CREATURE_MODEL', 4185);    // creatures > this we don't have a model for
+define ('MAX_ITEM_MODEL', 11802);       // items > this we don't have a model for
 define ('NEARBY_PORTS_DISTANCE', 1500);  // how far to look for nearby ports (yards)
 
 // table names
