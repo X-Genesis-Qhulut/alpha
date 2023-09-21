@@ -2137,6 +2137,9 @@ function ShowStats ()
   }
 
   </style>
+  <link rel='icon' href='favicon.png'>
+  </head>
+  <body>
   ";
 
   echo "<h1>Query engine stats</h1>
@@ -2146,18 +2149,18 @@ function ShowStats ()
   $row = dbQueryOne ("SELECT COUNT(*) AS counter FROM stats.query_stats");
   echo "<li>";
   echo $row ['counter'];
-  echo " queries made.";
+  echo " queries made.\n";
 
   // distinct IPs
   $row = dbQueryOne ("SELECT COUNT(DISTINCT(IP_Address_Hash)) AS counter FROM stats.query_stats;");
   echo "<li>";
   echo $row ['counter'];
-  echo " distinct IP addresses made queries.";
+  echo " distinct IP addresses made queries.\n";
 
   // actions chosen
   $results = dbQuery ("SELECT Action, COUNT(*) AS counter FROM stats.query_stats GROUP BY Action ORDER BY Action");
 
-  echo "<li>Different actions chosen:<p><table>
+  echo "<li>Different actions chosen:\n<p><table>
   <tr><th>Action</th><th>Count</th>\n";
 
   while ($row = dbFetch ($results))
