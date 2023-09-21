@@ -2143,22 +2143,45 @@ function ShowStats ()
   ";
 
   echo "<h1>Query engine stats</h1>
-  <ul>";
+  <hr><ul>";
 
   // count of queries
-  $row = dbQueryOne ("SELECT COUNT(*) AS counter FROM stats.query_stats");
+  $row = dbQueryOne ("SELECT COUNT(*) AS counter
+                      FROM stats.query_stats");
   echo "<li>";
   echo $row ['counter'];
   echo " queries made.\n";
 
   // distinct IPs
-  $row = dbQueryOne ("SELECT COUNT(DISTINCT(IP_Address_Hash)) AS counter FROM stats.query_stats;");
+  $row = dbQueryOne ("SELECT COUNT(DISTINCT(IP_Address_Hash)) AS counter
+                      FROM stats.query_stats;");
   echo "<li>";
   echo $row ['counter'];
   echo " distinct IP addresses made queries.\n";
 
+  // IP addresses doing 10 or more queries
+  $results = dbQuery ("SELECT IP_Address_Hash, COUNT(*) AS counter
+                      FROM stats.query_stats
+                      GROUP BY IP_Address_Hash
+                      HAVING COUNTER >= 10
+                      ORDER BY IP_Address_Hash;");
+
+  echo "<li>Users doing 10 or more queries:\n<p><table>
+  <tr><th>User reference</th><th>Count</th>\n";
+
+  while ($row = dbFetch ($results))
+    {
+    echo "<tr><td>" . htmlspecialchars ($row ['IP_Address_Hash']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
+    }
+  dbFree ($results);
+  echo "</table><p>\n";
+
   // actions chosen
-  $results = dbQuery ("SELECT Action, COUNT(*) AS counter FROM stats.query_stats GROUP BY Action ORDER BY Action");
+  $results = dbQuery ("SELECT Action, COUNT(*) AS counter
+                      FROM stats.query_stats
+                      WHERE Action <> 'stats'
+                      GROUP BY Action
+                      ORDER BY Action");
 
   echo "<li>Different actions chosen:\n<p><table>
   <tr><th>Action</th><th>Count</th>\n";
@@ -2171,7 +2194,10 @@ function ShowStats ()
   echo "</table><p>\n";
 
     // search filters
-  $results = dbQuery ("SELECT Filter, COUNT(*) AS counter FROM stats.query_stats GROUP BY Filter ORDER BY Filter");
+  $results = dbQuery ("SELECT Filter, COUNT(*) AS counter
+                      FROM stats.query_stats
+                      GROUP BY Filter
+                      ORDER BY Filter");
 
   echo "<li>Different searches:<p><table>
   <tr><th>Filter</th><th>Count</th>\n";
@@ -2185,6 +2211,10 @@ function ShowStats ()
 
   // done with list
   echo "</ul>\n";
+
+  $PHP_SELF = $_SERVER['PHP_SELF'];
+
+  echo "<hr><a href='$PHP_SELF'>Back to home page</a>\n";
 
 echo "
   </body>
