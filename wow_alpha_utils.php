@@ -2179,7 +2179,6 @@ function ShowStats ()
   // actions chosen
   $results = dbQuery ("SELECT Action, COUNT(*) AS counter
                       FROM stats.query_stats
-                      WHERE Action <> 'stats'
                       GROUP BY Action
                       ORDER BY Action");
 
