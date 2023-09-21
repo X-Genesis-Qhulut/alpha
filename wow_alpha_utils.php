@@ -2131,6 +2131,12 @@ function ShowStats ()
     text-align:right;
   }
 
+  .highlight {
+    background-color: rgba(0,0,255,0.15);
+    padding: 3px;
+    font-family: sans-serif;
+  }
+
   body {
     background-color: whitesmoke;
     margin: 1em;
@@ -2173,8 +2179,9 @@ function ShowStats ()
     {
     echo "<tr><td>" . htmlspecialchars ($row ['IP_Address_Hash']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
     }
-  dbFree ($results);
   echo "</table><p>\n";
+  echo dbRows($results) . " such users.\n";
+  dbFree ($results);
 
   // actions chosen
   $results = dbQuery ("SELECT Action, COUNT(*) AS counter
@@ -2189,8 +2196,9 @@ function ShowStats ()
     {
     echo "<tr><td>" . htmlspecialchars ($row ['Action']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
     }
-  dbFree ($results);
   echo "</table><p>\n";
+  echo dbRows($results) . " different actions.\n";
+  dbFree ($results);
 
     // search filters
   $results = dbQuery ("SELECT Action, Filter, Wanted_ID,
@@ -2204,15 +2212,27 @@ function ShowStats ()
 
   while ($row = dbFetch ($results))
     {
+    $Wanted_ID = $row ['Wanted_ID'];
+    if (!$Wanted_ID)
+      $Wanted_ID = '';
     echo "<tr>
           <td>" . $row ['Date_Formatted'] . "</td>
           <td>" . htmlspecialchars ($row ['Action']) . "</td>
           <td>" . $row ['Filter'] . "</td>
-          <td class='right'>" . $row ['Wanted_ID'] . "</td>
+          <td class='right'>" . $Wanted_ID . "</td>
           </tr>\n";
     }
-  dbFree ($results);
   echo "</table><p>\n";
+  echo dbRows($results) . " searches.\n";
+  dbFree ($results);
+
+  $row = dbQueryOne ("SELECT DATE_FORMAT(MIN(When_Done), '%e %b %Y %r') AS Earliest_Date,
+                             DATE_FORMAT(MAX(When_Done), '%e %b %Y %r') AS Latest_Date
+                      FROM stats.query_stats");
+
+  echo "<li>Stats from <span class='highlight'>" . $row ['Earliest_Date'] .
+        "</span> to <span class='highlight'>" . $row ['Latest_Date'] . "</span>\n";
+
 
   // done with list
   echo "</ul>\n";
