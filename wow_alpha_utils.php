@@ -2193,17 +2193,23 @@ function ShowStats ()
   echo "</table><p>\n";
 
     // search filters
-  $results = dbQuery ("SELECT Filter, COUNT(*) AS counter
+  $results = dbQuery ("SELECT Action, Filter, Wanted_ID,
+                      DATE_FORMAT(When_Done, '%e %b %Y %r') AS Date_Formatted
                       FROM stats.query_stats
-                      GROUP BY Filter
-                      ORDER BY Filter");
+                      WHERE Filter <> ''
+                      ORDER BY When_Done");
 
-  echo "<li>Different searches:<p><table>
-  <tr><th>Filter</th><th>Count</th>\n";
+  echo "<li>Searches:<p><table>
+  <tr><th>Date/Time</th><th>Action</th><th>Filter</th><th>ID</th>\n";
 
   while ($row = dbFetch ($results))
     {
-    echo "<tr><td>" . htmlspecialchars ($row ['Filter']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
+    echo "<tr>
+          <td>" . $row ['Date_Formatted'] . "</td>
+          <td>" . htmlspecialchars ($row ['Action']) . "</td>
+          <td>" . $row ['Filter'] . "</td>
+          <td class='right'>" . $row ['Wanted_ID'] . "</td>
+          </tr>\n";
     }
   dbFree ($results);
   echo "</table><p>\n";
