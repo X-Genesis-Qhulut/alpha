@@ -196,6 +196,16 @@ function includeScript ($name)
   } // end if includeScript
 
 //-----------------------------------------------------------------------------
+// show stats if wanted
+//-----------------------------------------------------------------------------
+
+  if ($action == 'stats')
+    {
+    ShowStats ();
+    return;
+    }
+
+//-----------------------------------------------------------------------------
 // get our style sheets
 //-----------------------------------------------------------------------------
 includeStylesheet ("css/normalize.css");
@@ -216,7 +226,6 @@ includeScript ("js/carousselSpawn.js");
   <link rel='icon' href='favicon.png'>
   </head>
   <body>
-
   <!-- MAIN -->
   <main class='main-container'>
 

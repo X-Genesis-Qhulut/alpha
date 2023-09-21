@@ -2109,4 +2109,84 @@ function sendOgMeta ($title, $image, $imageType, $description)
 
 } // end of sendOgMeta
 
+function ShowStats ()
+{
+  // quick style sheet
+  echo "<style>
+  table, td, th {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px 10px;
+    background-color: white;
+    font-family: sans-serif;
+  }
+
+  th {
+     color: white;
+     background-color: darkblue;
+     border: 1px solid white;
+  }
+
+  .right {
+    text-align:right;
+  }
+
+  body {
+    background-color: whitesmoke;
+    margin: 1em;
+  }
+
+  </style>
+  ";
+
+  echo "<h1>Query engine stats</h1>
+  <ul>";
+
+  // count of queries
+  $row = dbQueryOne ("SELECT COUNT(*) AS counter FROM stats.query_stats");
+  echo "<li>";
+  echo $row ['counter'];
+  echo " queries made.";
+
+  // distinct IPs
+  $row = dbQueryOne ("SELECT COUNT(DISTINCT(IP_Address_Hash)) AS counter FROM stats.query_stats;");
+  echo "<li>";
+  echo $row ['counter'];
+  echo " distinct IP addresses made queries.";
+
+  // actions chosen
+  $results = dbQuery ("SELECT Action, COUNT(*) AS counter FROM stats.query_stats GROUP BY Action ORDER BY Action");
+
+  echo "<li>Different actions chosen:<p><table>
+  <tr><th>Action</th><th>Count</th>\n";
+
+  while ($row = dbFetch ($results))
+    {
+    echo "<tr><td>" . htmlspecialchars ($row ['Action']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
+    }
+  dbFree ($results);
+  echo "</table><p>\n";
+
+    // search filters
+  $results = dbQuery ("SELECT Filter, COUNT(*) AS counter FROM stats.query_stats GROUP BY Filter ORDER BY Filter");
+
+  echo "<li>Different searches:<p><table>
+  <tr><th>Filter</th><th>Count</th>\n";
+
+  while ($row = dbFetch ($results))
+    {
+    echo "<tr><td>" . htmlspecialchars ($row ['Filter']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
+    }
+  dbFree ($results);
+  echo "</table><p>\n";
+
+  // done with list
+  echo "</ul>\n";
+
+echo "
+  </body>
+</html>";
+
+} // end of ShowStats
+
 ?>
