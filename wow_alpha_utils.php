@@ -2204,11 +2204,11 @@ function ShowStats ()
   $results = dbQuery ("SELECT Action, Filter, Wanted_ID,
                       DATE_FORMAT(When_Done, '%e %b %Y %r') AS Date_Formatted
                       FROM stats.query_stats
-                      WHERE Filter <> ''
+                      WHERE Filter <> '' AND Wanted_ID = 0
                       ORDER BY When_Done");
 
   echo "<li>Searches:<p><table>
-  <tr><th>Date/Time</th><th>Action</th><th>Filter</th><th>ID</th>\n";
+  <tr><th>Date/Time</th><th>Action</th><th>Filter</th>\n";
 
   while ($row = dbFetch ($results))
     {
@@ -2219,7 +2219,6 @@ function ShowStats ()
           <td>" . $row ['Date_Formatted'] . "</td>
           <td>" . htmlspecialchars ($row ['Action']) . "</td>
           <td>" . $row ['Filter'] . "</td>
-          <td class='right'>" . $Wanted_ID . "</td>
           </tr>\n";
     }
   echo "</table><p>\n";
