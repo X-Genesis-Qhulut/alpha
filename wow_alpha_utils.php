@@ -2111,6 +2111,8 @@ function sendOgMeta ($title, $image, $imageType, $description)
 
 function ShowStats ()
 {
+  $QUERY_LIMIT = 25;    // how many queries they have to do to be counted
+
   // quick style sheet
   echo "<style>
   table, td, th {
@@ -2152,42 +2154,43 @@ function ShowStats ()
   <hr><ul>";
 
   // count of queries
-  $row = dbQueryOne ("SELECT COUNT(*) AS counter
+  $row = dbQueryOne ("SELECT COUNT(*) AS `counter`
                       FROM stats.query_stats");
   echo "<li>";
   echo $row ['counter'];
   echo " queries made.\n";
 
   // distinct IPs
-  $row = dbQueryOne ("SELECT COUNT(DISTINCT(IP_Address_Hash)) AS counter
+  $row = dbQueryOne ("SELECT COUNT(DISTINCT(`IP_Address_Hash`)) AS `counter`
                       FROM stats.query_stats;");
   echo "<li>";
   echo $row ['counter'];
   echo " distinct IP addresses made queries.\n";
 
-  // IP addresses doing 10 or more queries
-  $results = dbQuery ("SELECT IP_Address_Hash, COUNT(*) AS counter
+  // IP addresses doing $QUERY_LIMIT or more queries
+  $results = dbQuery ("SELECT `IP_Address_Hash`, COUNT(*) AS `counter`
                       FROM stats.query_stats
-                      GROUP BY IP_Address_Hash
-                      HAVING COUNTER >= 10
-                      ORDER BY IP_Address_Hash;");
+                      GROUP BY `IP_Address_Hash`
+                      HAVING `counter` >= $QUERY_LIMIT
+                      ORDER BY `IP_Address_Hash`;");
 
-  echo "<li>Users doing 10 or more queries:\n<p><table>
+  echo "<li>Users doing $QUERY_LIMIT or more queries:\n<p><table>
   <tr><th>User reference</th><th>Count</th>\n";
 
   while ($row = dbFetch ($results))
     {
-    echo "<tr><td>" . htmlspecialchars ($row ['IP_Address_Hash']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
+    echo "<tr><td>" . htmlspecialchars ($row ['IP_Address_Hash']) . "</td>
+          <td class='right'>" . $row ['counter'] . "</td></tr>\n";
     }
   echo "</table><p>\n";
   echo dbRows($results) . " such users.\n";
   dbFree ($results);
 
   // actions chosen
-  $results = dbQuery ("SELECT Action, COUNT(*) AS counter
+  $results = dbQuery ("SELECT `Action`, COUNT(*) AS `counter`
                       FROM stats.query_stats
-                      GROUP BY Action
-                      ORDER BY Action");
+                      GROUP BY `Action`
+                      ORDER BY `Action`");
 
   echo "<li>Different actions chosen:\n<p><table>
   <tr><th>Action</th><th>Count</th>\n";
@@ -2201,10 +2204,10 @@ function ShowStats ()
   dbFree ($results);
 
     // search filters
-  $results = dbQuery ("SELECT Action, Filter, Wanted_ID,
-                      DATE_FORMAT(When_Done, '%e %b %Y %r') AS Date_Formatted
+  $results = dbQuery ("SELECT `Action`, `Filter`, `Wanted_ID`,
+                      DATE_FORMAT(`When_Done`, '%e %b %Y %r') AS `Date_Formatted`
                       FROM stats.query_stats
-                      WHERE Filter <> '' AND Wanted_ID = 0
+                      WHERE `Filter` <> '' AND `Wanted_ID` = 0
                       ORDER BY When_Done");
 
   echo "<li>Searches:<p><table>
@@ -2218,19 +2221,21 @@ function ShowStats ()
     echo "<tr>
           <td>" . $row ['Date_Formatted'] . "</td>
           <td>" . htmlspecialchars ($row ['Action']) . "</td>
-          <td>" . $row ['Filter'] . "</td>
+          <td>" . htmlspecialchars ($row ['Filter']) . "</td>
           </tr>\n";
     }
   echo "</table><p>\n";
   echo dbRows($results) . " searches.\n";
   dbFree ($results);
 
-  $row = dbQueryOne ("SELECT DATE_FORMAT(MIN(When_Done), '%e %b %Y %r') AS Earliest_Date,
-                             DATE_FORMAT(MAX(When_Done), '%e %b %Y %r') AS Latest_Date
+  $row = dbQueryOne ("SELECT DATE_FORMAT(MIN(`When_Done`), '%e %b %Y %r') AS `Earliest_Date`,
+                             DATE_FORMAT(MAX(`When_Done`), '%e %b %Y %r') AS `Latest_Date`,
+                             TO_DAYS(MAX(`When_Done`)) - TO_DAYS(MIN(`When_Done`))  AS `Number_Of_Days`
                       FROM stats.query_stats");
 
-  echo "<li>Stats from <span class='highlight'>" . $row ['Earliest_Date'] .
-        "</span> to <span class='highlight'>" . $row ['Latest_Date'] . "</span>\n";
+  echo "<li>Stats from <span class='highlight'>" . htmlspecialchars($row ['Earliest_Date']) .
+           "</span> to <span class='highlight'>" . htmlspecialchars($row ['Latest_Date']) . "</span>
+           (<span class='highlight'>" . $row['Number_Of_Days'] . " days</span>)\n";
 
 
   // done with list
