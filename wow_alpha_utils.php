@@ -2109,9 +2109,32 @@ function sendOgMeta ($title, $image, $imageType, $description)
 
 } // end of sendOgMeta
 
+function GetHashedIP ()
+{
+    // try and work out their IP address
+    $ip = $_SERVER ['REMOTE_ADDR'];
+    if (!$ip)
+      $ip = $_ENV ['REMOTE_ADDR'];
+    return md5 ($ip);  // hash it for privacy
+}   // end of GetHashedIP
+
+// Record usage stats
+function RecordStats ()
+{
+    global $action, $filter, $id;
+
+    $ip_address = GetHashedIP();
+    dbUpdateParam ("INSERT INTO stats.query_stats (When_Done, Action, Filter, Wanted_ID, IP_Address_Hash)
+                  VALUES (NOW(), ?, ?, ?, ?)",
+                  array ('ssis', &$action, &$filter, &$id, &$ip_address));
+}   // end of RecordStats
+
+// Display usage stats
 function ShowStats ()
 {
   $QUERY_LIMIT = 25;    // how many queries they have to do to be counted
+
+  comment ("STYLE SHEET FOR STATS");
 
   // quick style sheet
   echo "<style>
@@ -2139,9 +2162,19 @@ function ShowStats ()
     font-family: sans-serif;
   }
 
+  .summary {
+     border-bottom: 5px solid Blue;
+     width: fit-content;
+     margin-bottom: 2em;
+  }
+
   body {
     background-color: whitesmoke;
     margin: 1em;
+  }
+
+  li {
+    margin:1em;
   }
 
   </style>
@@ -2150,7 +2183,9 @@ function ShowStats ()
   <body>
   ";
 
-  echo "<h1>Query engine stats</h1>
+  comment ("SHOW USAGE STATS");
+
+  echo "<h1>WoW Alpha Database query engine statistics</h1>
   <hr><ul>";
 
   // count of queries
@@ -2183,7 +2218,7 @@ function ShowStats ()
           <td class='right'>" . $row ['counter'] . "</td></tr>\n";
     }
   echo "</table><p>\n";
-  echo dbRows($results) . " such users.\n";
+  echo "<p class='summary'>" . dbRows($results) . " such users</p>\n";
   dbFree ($results);
 
   // actions chosen
@@ -2200,7 +2235,7 @@ function ShowStats ()
     echo "<tr><td>" . htmlspecialchars ($row ['Action']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
     }
   echo "</table><p>\n";
-  echo dbRows($results) . " different actions.\n";
+  echo "<p class='summary'>" . dbRows($results) . " different actions</p>\n";
   dbFree ($results);
 
     // search filters
@@ -2225,7 +2260,7 @@ function ShowStats ()
           </tr>\n";
     }
   echo "</table><p>\n";
-  echo dbRows($results) . " searches.\n";
+  echo "<p class='summary'>" . dbRows($results) . " searches</p>\n";
   dbFree ($results);
 
   $row = dbQueryOne ("SELECT DATE_FORMAT(MIN(`When_Done`), '%e %b %Y %H:%i:%S') AS `Earliest_Date`,
@@ -2237,6 +2272,12 @@ function ShowStats ()
            "</span> to <span class='highlight'>" . htmlspecialchars($row ['Latest_Date']) . "</span>
            (<span class='highlight'>" . $row['Number_Of_Days'] . " days</span>)\n";
 
+
+  $row = dbQueryOne ("SELECT DATE_FORMAT(NOW(), '%e %b %Y %H:%i:%S') AS `Time_Now`");
+
+  echo "<li>Time now: <span class='highlight'>" . htmlspecialchars($row ['Time_Now']) . "</span>\n";
+
+  echo "<li>You are user: <span class='highlight'>" .    htmlspecialchars (GetHashedIP()) . "</span>\n";
 
   // done with list
   echo "</ul>\n";

@@ -201,6 +201,7 @@ function includeScript ($name)
 
   if ($action == 'stats')
     {
+    RecordStats ();     // record *this* action (stats)
     ShowStats ();
     return;
     }
@@ -281,15 +282,7 @@ showBigMenu ();
 
 // record this query
 
-// try and work out their IP address
-$ip = $_SERVER ['REMOTE_ADDR'];
-if (!$ip)
-  $ip = $_ENV ['REMOTE_ADDR'];
-
-$ip_address = md5 ($ip);  // hash it for privacy
-dbUpdateParam ("INSERT INTO stats.query_stats (When_Done, Action, Filter, Wanted_ID, IP_Address_Hash)
-              VALUES (NOW(), ?, ?, ?, ?)",
-              array ('ssis', &$action, &$filter, &$id, &$ip_address));
+RecordStats ();
 
 //-----------------------------------------------------------------------------
 // if there was an action, find its handler and call it
