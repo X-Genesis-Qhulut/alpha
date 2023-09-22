@@ -7,6 +7,20 @@
 
   See LICENSE for license details.
 
+
+  Creation for "stats" database:
+
+    USE stats;
+    CREATE TABLE `query_stats` (
+      `ID` int(11) NOT NULL AUTO_INCREMENT,
+      `When_Done` datetime NOT NULL,
+      `Action` varchar(20) DEFAULT NULL,
+      `Filter` varchar(30) DEFAULT NULL,
+      `Wanted_ID` int(11) DEFAULT NULL,
+      `IP_Address_Hash` varchar(32) NOT NULL,
+      PRIMARY KEY (`ID`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 */
 
 // general function for getting a count of something

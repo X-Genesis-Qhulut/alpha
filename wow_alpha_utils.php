@@ -2228,8 +2228,8 @@ function ShowStats ()
   echo dbRows($results) . " searches.\n";
   dbFree ($results);
 
-  $row = dbQueryOne ("SELECT DATE_FORMAT(MIN(`When_Done`), '%e %b %Y %r') AS `Earliest_Date`,
-                             DATE_FORMAT(MAX(`When_Done`), '%e %b %Y %r') AS `Latest_Date`,
+  $row = dbQueryOne ("SELECT DATE_FORMAT(MIN(`When_Done`), '%e %b %Y %H:%i:%S') AS `Earliest_Date`,
+                             DATE_FORMAT(MAX(`When_Done`), '%e %b %Y %H:%i:%S') AS `Latest_Date`,
                              TO_DAYS(MAX(`When_Done`)) - TO_DAYS(MIN(`When_Done`))  AS `Number_Of_Days`
                       FROM stats.query_stats");
 
