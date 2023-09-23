@@ -357,7 +357,7 @@ echo "
                 value='" . fixHTML ($filter) . "'
                 placeholder='ID or regular expression'
                 autofocus='autofocus'
-                title='Enter a number, text, or a regular expression'
+                title='Enter a number, text, or a regular expression.\nRegexp help at: regex101.com'
               />
               <label for='sort_order'>Sort by</label>
               <select

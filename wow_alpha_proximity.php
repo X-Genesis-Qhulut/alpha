@@ -145,7 +145,7 @@ function showProximity ()
             value='" . fixHTML ($prox_location) . "'
             placeholder='x y z map'
             autofocus='autofocus'
-            title='Enter a number, text, or a regular expression'
+            title='Enter a number, text, or a regular expression.\nRegexp help at: regex101.com'
             name='prox_location'
             />
         </div>
