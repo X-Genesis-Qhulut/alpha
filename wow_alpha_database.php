@@ -15,7 +15,7 @@
       `ID` int(11) NOT NULL AUTO_INCREMENT,
       `When_Done` datetime NOT NULL,
       `Action` varchar(20) DEFAULT NULL,
-      `Filter` varchar(30) DEFAULT NULL,
+      `Filter` varchar(255) DEFAULT NULL,
       `Wanted_ID` int(11) DEFAULT NULL,
       `IP_Address_Hash` varchar(32) NOT NULL,
       PRIMARY KEY (`ID`)

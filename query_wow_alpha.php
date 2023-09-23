@@ -201,8 +201,9 @@ function includeScript ($name)
 
   if ($action == 'stats')
     {
-    RecordStats ();     // record *this* action (stats)
     ShowStats ();
+    RecordStats ();     // record *this* action (stats) *after* we show the stats
+                        // - otherwise *now* is always the latest query
     return;
     }
 

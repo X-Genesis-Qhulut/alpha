@@ -2123,10 +2123,12 @@ function RecordStats ()
 {
     global $action, $filter, $id;
 
+    $my_action = substr ($action, 0, 20);   // max length of action allowed for in table
+    $my_filter = substr ($filter, 0, 255);  // max length of filter allowed for in table
     $ip_address = GetHashedIP();
     dbUpdateParam ("INSERT INTO stats.query_stats (When_Done, Action, Filter, Wanted_ID, IP_Address_Hash)
                   VALUES (NOW(), ?, ?, ?, ?)",
-                  array ('ssis', &$action, &$filter, &$id, &$ip_address));
+                  array ('ssis', &$my_action, &$my_filter, &$id, &$ip_address));
 }   // end of RecordStats
 
 // Display usage stats
@@ -2240,7 +2242,7 @@ function ShowStats ()
 
     // search filters
   $results = dbQuery ("SELECT `Action`, `Filter`, `Wanted_ID`,
-                      DATE_FORMAT(`When_Done`, '%e %b %Y %r') AS `Date_Formatted`
+                      DATE_FORMAT(`When_Done`, '%e %b %Y %H:%i:%S') AS `Date_Formatted`
                       FROM stats.query_stats
                       WHERE `Filter` <> '' AND `Wanted_ID` = 0
                       ORDER BY When_Done");
