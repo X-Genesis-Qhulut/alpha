@@ -2187,6 +2187,11 @@ function ShowStats ()
 
   comment ("SHOW USAGE STATS");
 
+  $stats_row = dbQueryOne ("SELECT DATE_FORMAT(MIN(`When_Done`), '%e %b %Y %H:%i:%S') AS `Earliest_Date`,
+                             DATE_FORMAT(MAX(`When_Done`), '%e %b %Y %H:%i:%S') AS `Latest_Date`,
+                             TO_DAYS(MAX(`When_Done`)) - TO_DAYS(MIN(`When_Done`))  AS `Number_Of_Days`
+                      FROM stats.query_stats");
+
   echo "<h1>WoW Alpha Database query engine statistics</h1>
   <hr><ul>";
 
@@ -2195,7 +2200,7 @@ function ShowStats ()
                       FROM stats.query_stats");
   echo "<li>";
   echo $row ['counter'];
-  echo " queries made.\n";
+  echo " queries made over " . $stats_row['Number_Of_Days'] . " days.\n";
 
   // distinct IPs
   $row = dbQueryOne ("SELECT COUNT(DISTINCT(`IP_Address_Hash`)) AS `counter`
@@ -2204,15 +2209,16 @@ function ShowStats ()
   echo $row ['counter'];
   echo " distinct IP addresses made queries.\n";
 
-  // IP addresses doing $QUERY_LIMIT or more queries
+  // IP addresses who made a search at some point
   $results = dbQuery ("SELECT `IP_Address_Hash`, COUNT(*) AS `counter`
                       FROM stats.query_stats
+                      WHERE `IP_Address_Hash` IN
+                         (SELECT  `IP_Address_Hash` FROM stats.query_stats  WHERE Filter <> '' GROUP BY `IP_Address_Hash`)
                       GROUP BY `IP_Address_Hash`
-                      HAVING `counter` >= $QUERY_LIMIT
                       ORDER BY `IP_Address_Hash`;");
 
-  echo "<li>Users doing $QUERY_LIMIT or more queries:\n<p><table>
-  <tr><th>User reference</th><th>Count</th>\n";
+  echo "<li>Users who made searches:\n<p><table>
+  <tr><th>User reference</th><th>Activity</th>\n";
 
   while ($row = dbFetch ($results))
     {
@@ -2265,14 +2271,9 @@ function ShowStats ()
   echo "<p class='summary'>" . dbRows($results) . " searches</p>\n";
   dbFree ($results);
 
-  $row = dbQueryOne ("SELECT DATE_FORMAT(MIN(`When_Done`), '%e %b %Y %H:%i:%S') AS `Earliest_Date`,
-                             DATE_FORMAT(MAX(`When_Done`), '%e %b %Y %H:%i:%S') AS `Latest_Date`,
-                             TO_DAYS(MAX(`When_Done`)) - TO_DAYS(MIN(`When_Done`))  AS `Number_Of_Days`
-                      FROM stats.query_stats");
-
-  echo "<li>Stats from <span class='highlight'>" . htmlspecialchars($row ['Earliest_Date']) .
-           "</span> to <span class='highlight'>" . htmlspecialchars($row ['Latest_Date']) . "</span>
-           (<span class='highlight'>" . $row['Number_Of_Days'] . " days</span>)\n";
+  echo "<li>Stats from <span class='highlight'>" . htmlspecialchars($stats_row ['Earliest_Date']) .
+           "</span> to <span class='highlight'>" . htmlspecialchars($stats_row ['Latest_Date']) . "</span>
+           (<span class='highlight'>" . $stats_row['Number_Of_Days'] . " days</span>)\n";
 
 
   $row = dbQueryOne ("SELECT DATE_FORMAT(NOW(), '%e %b %Y %H:%i:%S') AS `Time_Now`");
