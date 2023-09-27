@@ -2215,7 +2215,7 @@ function ShowStats ()
                       WHERE `IP_Address_Hash` IN
                          (SELECT  `IP_Address_Hash` FROM stats.query_stats  WHERE Filter <> '' GROUP BY `IP_Address_Hash`)
                       GROUP BY `IP_Address_Hash`
-                      ORDER BY `IP_Address_Hash`;");
+                      ORDER BY `counter` DESC;");
 
   echo "<li>Users who made searches:\n<p><table>
   <tr><th>User reference</th><th>Activity</th>\n";
