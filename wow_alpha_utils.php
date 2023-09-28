@@ -2215,9 +2215,10 @@ function ShowStats ()
                       WHERE `IP_Address_Hash` IN
                          (SELECT  `IP_Address_Hash` FROM stats.query_stats  WHERE Filter <> '' GROUP BY `IP_Address_Hash`)
                       GROUP BY `IP_Address_Hash`
+                      HAVING `counter` >= $QUERY_LIMIT
                       ORDER BY `counter` DESC;");
 
-  echo "<li>Users who made searches:\n<p><table>
+  echo "<li>Users who made more than $QUERY_LIMIT searches:\n<p><table>
   <tr><th>User reference</th><th>Activity</th>\n";
 
   while ($row = dbFetch ($results))
@@ -2229,13 +2230,30 @@ function ShowStats ()
   echo "<p class='summary'>" . dbRows($results) . " such users</p>\n";
   dbFree ($results);
 
-  // actions chosen
+  // actions chosen (action order)
   $results = dbQuery ("SELECT `Action`, COUNT(*) AS `counter`
                       FROM stats.query_stats
                       GROUP BY `Action`
                       ORDER BY `Action`");
 
   echo "<li>Different actions chosen:\n<p><table>
+  <tr><th>Action</th><th>Count</th>\n";
+
+  while ($row = dbFetch ($results))
+    {
+    echo "<tr><td>" . htmlspecialchars ($row ['Action']) . "</td><td class='right'>" . $row ['counter'] . "</td></tr>\n";
+    }
+  echo "</table><p>\n";
+  echo "<p class='summary'>" . dbRows($results) . " different actions</p>\n";
+  dbFree ($results);
+
+  // actions chosen (popularity order)
+  $results = dbQuery ("SELECT `Action`, COUNT(*) AS `counter`
+                      FROM stats.query_stats
+                      GROUP BY `Action`
+                      ORDER BY `counter` DESC, `Action`");
+
+  echo "<li>Actions by popularity:\n<p><table>
   <tr><th>Action</th><th>Count</th>\n";
 
   while ($row = dbFetch ($results))
