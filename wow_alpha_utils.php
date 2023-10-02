@@ -2123,7 +2123,7 @@ function RecordStats ()
 {
     global $action, $filter, $id;
 
-    $my_action = substr ($action, 0, 20);   // max length of action allowed for in table
+    $my_action = substr ($action, 0, 30);   // max length of action allowed for in table
     $my_filter = substr ($filter, 0, 255);  // max length of filter allowed for in table
     $ip_address = GetHashedIP();
     dbUpdateParam ("INSERT INTO stats.query_stats (When_Done, Action, Filter, Wanted_ID, IP_Address_Hash)
@@ -2134,6 +2134,18 @@ function RecordStats ()
 // Display usage stats
 function ShowStats ()
 {
+
+/*
+
+Analyse disk taken by stats table:
+
+SELECT table_schema "DB Name", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB"
+ FROM information_schema.tables
+ GROUP BY table_schema;
+
+ */
+
+
   $QUERY_LIMIT = 25;    // how many queries they have to do to be counted
 
   comment ("STYLE SHEET FOR STATS");
