@@ -104,7 +104,7 @@ function showOneSpellVisualAnimName ()
     } // end of not finding it
 
   // page content
-  pageContent (false, 'Spell Visual Anim Name', $row ['Name'], 'spell_visual_anim_names',
+  pageContent ($row, 'Spell Visual Anim Name', $row ['Name'], 'spell_visual_anim_names',
        function ($row)
         {
         setTitle ("Spell Visual Anim Name " . $row ['Name']);
@@ -177,7 +177,7 @@ function showOneSpellVisualEffectName ()
     } // end of not finding it
 
   // page content
-  pageContent (false, 'Spell Visual Effect Name', $row ['FileName'], 'spell_visual_effect_names',
+  pageContent ($row, 'Spell Visual Effect Name', $row ['FileName'], 'spell_visual_effect_names',
        function ($row)
         {
         setTitle ("Spell Visual Effect Name " . $row ['FileName']);
