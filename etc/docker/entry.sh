@@ -6,9 +6,8 @@ mkdir -p $BASEDIR
 cd $BASEDIR 
 
 if [ ! -f "$BASEDIR/wow_alpha_config.php" ]; then
-  # cp $BASEDIR/wow_alpha_config.php.dist $BASEDIR/wow_alpha_config.php
 
-  cat <<EOF >>wow_alpha_config.php
+cat <<EOF >>wow_alpha_config.php
 <?php
 define ('DBSERVER',     'sql');
 define ('DBUSER',       'root');
@@ -31,4 +30,4 @@ if [ ! -f "$BASEDIR/index.php" ]; then
     ln -s $BASEDIR/query_wow_alpha.php $BASEDIR/index.php
 fi
 
-php -S 0.0.0.0:3000
+php -S 0.0.0.0:3000 -t $BASEDIR

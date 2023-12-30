@@ -7,7 +7,7 @@ services:
     build: etc/docker
     hostname: alpha
     volumes:
-      - ./:/opt/alpha
+      - .:/opt/alpha/
     ports:
       - 3000:3000
     restart: on-failure
