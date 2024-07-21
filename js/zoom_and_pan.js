@@ -1,4 +1,4 @@
-20// MAGNIFIER - written by X'Genesis Qhulut in September 2022
+// MAGNIFIER - written by X'Genesis Qhulut in September 2022
 
 // global variables
 
