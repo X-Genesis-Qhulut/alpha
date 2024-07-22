@@ -449,7 +449,7 @@ function showItemQuestReward ()
   $params = array ('');
   for ($i = 1; $i <= QUEST_REWARD_ITEMS; $i++)
     {
-    $fields [] = "RewItemCount$i";
+    $fields [] = "RewItemId$i";
     $params [0] .= 'i';
     $params [] = &$id;
     }
