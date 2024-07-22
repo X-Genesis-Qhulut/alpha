@@ -1000,7 +1000,7 @@ function showUnusedItemsDetails ()
     $fields [] = "ReqItemId$i";
   // item rewards
   for ($i = 1; $i <= QUEST_REWARD_ITEMS; $i++)
-    $fields [] = "RewItemCount$i";
+    $fields [] = "RewItemId$i";
   // item choice rewards
   for ($i = 1; $i <= QUEST_REWARD_ITEM_CHOICES; $i++)
     $fields [] = "RewChoiceItemId$i";
