@@ -50,6 +50,7 @@ define ('FACTION',                      '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('Fa
 define ('FACTIONTEMPLATE',              '`' . LIVE_DBC_DBNAME  . '`.' . lwr ('FactionTemplate'));
 define ('GAMEOBJECT_QUEST_STARTER',     '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_quest_starter'));
 define ('GAMEOBJECT_QUEST_FINISHER',    '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_quest_finisher'));
+define ('GAMEOBJECT_QUESTRELATION',     '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_quest_relation'));
 define ('GAMEOBJECT_TEMPLATE',          '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_template'));
 define ('GAMEOBJECT_LOOT_TEMPLATE',     '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('gameobject_loot_template'));
 define ('ITEM_TEMPLATE',                '`' . LIVE_WORLD_DBNAME. '`.' . lwr ('item_template'));
