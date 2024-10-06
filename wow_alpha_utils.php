@@ -1392,7 +1392,7 @@ function getItemSubClass ($which)
   global $lastItemClass;
 
   if ($which >= 0 && $lastItemClass >= 0 && array_key_exists ($lastItemClass, ITEM_SUBCLASSES))
-    return expandSimple (ITEM_SUBCLASSES [$lastItemClass], $which - 1, false);
+    return expandSimple (ITEM_SUBCLASSES [$lastItemClass], $which, false);
   else
     return $which;
 } // end of getItemSubClass
