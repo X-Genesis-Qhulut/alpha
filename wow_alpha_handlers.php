@@ -90,7 +90,7 @@ define ('HANDLER_EXTRA', array (
         ),
 
   'zones' => array (
-                    'search'  => array ('directory'),
+                    'search'  => array ('AreaName'),
                     'table'   => WORLDMAPAREA,
                     'key'     => 'ID',
                     'requires' => 'wow_alpha_zones.php',
